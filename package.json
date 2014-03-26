@@ -9,6 +9,6 @@
     "reactify": "~0.10.0",
     "browserify": "~3.33.0",
     "watchify": "~0.6.3",
-    "uglifyjs": "~2.3.6"
+    "uglify-js": "~2.4.13"
   }
 }
