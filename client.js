@@ -139,7 +139,7 @@ var Form = React.createClass({
 
                 <ul>
                 {this.state.updates.map(function(update) {
-                    return <li className="animated fadeIn">{update}</li>;
+                    return <li className="animated bounceInDown">{update}</li>;
                 })}
                 </ul>
 
@@ -151,7 +151,9 @@ var Form = React.createClass({
     },
 
     handleAddUpdate: function() {
-        this.addUpdate(this.refs.updateText.getDOMNode().value);
+        var el = this.refs.updateText.getDOMNode();
+        this.addUpdate(el.value);
+        el.value = "";
     },
 
     addUpdate: function(text) {
