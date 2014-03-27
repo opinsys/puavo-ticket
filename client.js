@@ -165,6 +165,7 @@ var Form = React.createClass({
 
     componentDidUpdate: function() {
         var self = this;
+        if (this.state.currentForm !== "extra") return;
         if (this._read) return;
         self._read = true;
         setTimeout(this.addUpdate.bind(self, "Petri luki pyyntösi"), 5000);
