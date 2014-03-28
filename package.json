@@ -13,6 +13,7 @@
     "express": "~3.5.1",
     "browserify-middleware": "~2.4.0",
     "react-async": "~0.8.0",
-    "react-router-component": "~0.15.3"
+    "react-router-component": "~0.15.3",
+    "routes": "~0.2.0"
   }
 }
