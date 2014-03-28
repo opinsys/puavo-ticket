@@ -1,32 +1,42 @@
 /** @jsx React.DOM */
 var React = require("react");
+var Promise = require("bluebird");
 
 var Route = require("./react-route");
 var Link = Route.Link;
+
+var RouteExisting = Route.create("/ticket/:id");
+var RouteNew = Route.create(/\/new.*/);
+var RouteMore = Route.create("/new/more");
+
+var TicketLink = Route.createLink("/ticket/:id");
+
+function generateUID(key) {
+    key = "uid-" + key;
+    var current = parseInt(localStorage[key] || 1, 10);
+    current++;
+    localStorage[key]  = current;
+    return current;
+}
+
+function save(ticket) {
+    if (!ticket.uid) ticket.uid = generateUID("ticket");
+    return Promise.delay(1000).then(function() {
+        localStorage["ticket-" + ticket.uid] = JSON.stringify(ticket);
+        return { uid: ticket.uid };
+    });
+}
+
+function load(uid) {
+    return Promise.delay(1000).then(function() {
+        return JSON.parse(localStorage["ticket-" + uid]);
+    });
+}
 
 var More = React.createClass({
     render: function() {
         return (
             <div>
-
-                <Link href="/more/other">other</Link>
-                <Link href="/more/info">info</Link>
-                <Route path={/.*info$/} name="info">
-                    <div>
-                    hoho
-                    </div>
-                    <div>
-                    hoho2
-                    </div>
-                </Route>
-
-                <h2>Tukipyyntö on lähetetty!</h2>
-
-                <blockquote>
-                    <h3>{this.props.title}</h3>
-                    <p>{this.props.description}</p>
-                </blockquote>
-
                 <h2>Lisätiedot</h2>
 
                 <p>Nopeuttaaksesi tukipyynnön käsittelyä on erittäin
@@ -88,35 +98,13 @@ var More = React.createClass({
     }
 });
 
+var SimilarTickets = React.createClass({
 
-var Form = React.createClass({
-
-    getInitialState: function() {
-        return {
-            currentForm: "description",
-            description: "",
-            updates: [],
-            title: ""
-        };
-    },
-
-
-    gotoDescription: function() {
-        this.setState({ currentForm: "description" });
-    },
-
-    handleChange: function() {
-        this.setState({
-            description: this.refs.description.getDOMNode().value,
-            title: this.refs.title.getDOMNode().value,
-        });
-    },
-
-    renderSimilarTickets: function() {
-        if (this.state.title.length < 5) return;
-        if (this.state.description.length < 5) return;
+    render: function() {
+        if (this.props.title.length < 5) return <noscript />;
+        if (this.props.description.length < 5) return <noscript />;
         return (
-            <div className="animated fadeIn">
+            <div className="animated fadeIn similar-tickets">
                 <h2>Samankaltaiset tukipyynnöt</h2>
                 <ul>
                     <li>
@@ -136,12 +124,93 @@ var Form = React.createClass({
         );
     },
 
-    renderDescriptionForm: function() {
+});
+
+
+var Form = React.createClass({
+
+    getInitialState: function() {
+        return {
+            description: "",
+            title: "",
+            displayExtra: true,
+            saving: null,
+            updates: []
+        };
+    },
+
+    handleChange: function() {
+        this.setState({
+            description: this.refs.description.getDOMNode().value,
+            title: this.refs.title.getDOMNode().value,
+        });
+    },
+
+    isOperating: function() {
+        return this.state.saving || this.state.loading;
+    },
+
+    handleSave: function() {
+        var saving = save({
+            uid: this.state.uid,
+            title: this.state.title,
+            description: this.state.description
+        });
+
+        this.setState({ saving: saving });
+
+        var self = this;
+        saving.then(function(res) {
+            Route.navigate("/ticket/" + res.uid);
+            self.setState({
+                saving: null,
+                uid: res.uid
+            });
+        });
+
+        saving.catch(function(err) {
+            console.error("Saving failed!", err);
+        });
+    },
+
+    componentWillMount: function() {
+        if (!RouteExisting.match) return;
+
+        var loading = load(RouteExisting.match.params.id);
+        this.setState({ loading: loading });
+
+        var self = this;
+        loading.then(function(res) {
+            self.setState({
+                loading: null,
+                title: res.title,
+                description: res.description,
+                uid: res.uid
+            });
+        });
+
+    },
+
+    render: function() {
         return (
             <div>
 
-                {this.renderSimilarTickets()}
+                {this.isOperating() && <p>Ladataan...</p>}
+
+                <RouteExisting>
+                    <Link href="/new">Luo uusi</Link>
+                </RouteExisting>
+
+
+                <RouteNew>
+                    <SimilarTickets
+                        title={this.state.title}
+                        description={this.state.description}
+                    />
+                </RouteNew>
+
                 <input
+                    disabled={this.isOperating()}
                     autoFocus
                     ref="title"
                     type="text"
@@ -149,28 +218,38 @@ var Form = React.createClass({
                     value={this.state.title}
                     placeholder="Otsikko" />
                 <textarea
+                    disabled={this.isOperating()}
                     ref="description"
                     placeholder="Kuvaus ongelmastasi"
                     value={this.state.description}
                     onChange={this.handleChange}
                 />
+
                 <div className="button-wrap">
-                    <button onClick={this.handleSave}>Lähetä</button>
+                    <button
+                        disabled={this.isOperating()}
+                        onClick={this.handleSave} >Tallenna</button>
                 </div>
 
-                <Link href="/more/">lisää</Link>
-                <br />
-                <Link href="/">pois</Link>
+                <p>
+                    <TicketLink id="8" >Foo ticket</TicketLink>
+                </p>
 
-                <Route path="/more/:foo?" name="more">
+                <RouteNew>
+                    <Link href="/new/more">Lisätiedot</Link>
+                </RouteNew>
+
+                <RouteMore>
+                    <Link href="/new">Piilota</Link>
                     <More
                         title={this.state.title}
                         description={this.state.description}
                         updates={this.state.updates}
                     />
-                </Route>
+                </RouteMore>
+
             </div>
-            );
+        );
     },
 
 
@@ -185,10 +264,6 @@ var Form = React.createClass({
         text += " - " + new Date().toString();
         updates.push(text);
         this.setState({ updates: updates });
-    },
-
-    render: function() {
-        return this.renderDescriptionForm();
     }
 
 });
@@ -198,7 +273,7 @@ var Main = React.createClass({
         return (
             <div className="main">
                 <h1>Tukipyyntö</h1>
-                <Form />
+                <Form match="/ticket/:id" />
             </div>
         );
     }

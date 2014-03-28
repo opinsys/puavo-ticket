@@ -5,13 +5,15 @@
   "author": "",
   "license": "GPLv2",
   "dependencies": {
-    "react": "~0.9.0",
-    "reactify": "~0.9.0",
+    "react": "~0.10.0",
+    "reactify": "~0.10.0",
     "browserify": "~3.33.0",
     "watchify": "~0.6.3",
     "uglify-js": "~2.4.13",
     "express": "~3.5.1",
     "browserify-middleware": "~2.4.0",
-    "routes": "~0.2.0"
+    "routes": "epeli/routes.js#splats",
+    "bluebird": "~1.1.1",
+    "lodash": "~2.4.1"
   }
 }
