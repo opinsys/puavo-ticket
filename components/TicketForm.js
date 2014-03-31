@@ -11,8 +11,7 @@ var TicketModel = require("../TicketModel");
 var routes = require("./routes");
 var RouteNew = routes.RouteNew;
 var RouteExisting = routes.RouteExisting;
-var TicketLink = routes.TicketLink;
-var NewTicketLink = routes.NewTicketLink;
+var LinkTicket = routes.LinkTicket;
 
 var TicketForm = React.createClass({
 
@@ -52,7 +51,7 @@ var TicketForm = React.createClass({
     handleSave: function() {
         var self = this;
         this.props.ticketModel.save().done(function() {
-            TicketLink.navigate({ uid: self.state.uid });
+            LinkTicket.navigate({ uid: self.state.uid });
             Lightbox.displayComponent(
                 <div>
                     <h1>Tukipyyntö tallennettu!</h1>
@@ -72,9 +71,6 @@ var TicketForm = React.createClass({
 
                 {this.isOperating() && <p>Ladataan...</p>}
 
-                <RouteExisting>
-                    <NewTicketLink>Uusi tukipyyntö</NewTicketLink>
-                </RouteExisting>
 
 
                 <RouteNew>
