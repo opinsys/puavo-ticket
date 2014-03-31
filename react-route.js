@@ -3,6 +3,7 @@ var React = require("react");
 var createRoutes = require("routes");
 var xtend = require("xtend");
 
+
 function noop() { }
 
 var Route = {};
@@ -10,20 +11,6 @@ var Route = {};
 Route.create = function(path) {
 
     var _Route =  React.createClass({
-
-        componentWillMount: function() {
-            _Route.components.push(this);
-            // _Route.matchRoute();
-        },
-
-        componentWillReceiveProps: function() {
-            // _Route.matchRoute();
-        },
-
-        componentWillUnmount: function() {
-            var i = _Route.components.indexOf(this);
-            if (i > -1) _Route.components.splice(i, 1);
-        },
 
         getMatch: function() {
             return _Route.match;
@@ -51,9 +38,6 @@ Route.create = function(path) {
 
     _Route.matchRoute = function() {
         _Route.match = _Route.router.match(Route.getCurrentRoute());
-        _Route.components.forEach(function(component) {
-            component.forceUpdate();
-        });
         return _Route.match;
     };
 
@@ -61,7 +45,6 @@ Route.create = function(path) {
     _Route.matchRoute();
     return _Route;
 };
-
 
 
 Route.renderPathTemplate = function(tmpl, props) {
@@ -113,23 +96,42 @@ Route.createLink = function(hrefTemplate, override) {
 };
 
 var routes = [];
+var rootComponents = [];
 
 var Link = Route.createLink(":href");
 
-function updateStates() {
+function updateRoutes() {
     routes.forEach(function(r) {
         r.matchRoute();
     });
+
+    rootComponents.forEach(function(component) {
+        component.forceUpdate();
+    });
 }
+
+
+Route.Mixin = {
+    componentDidMount: function() {
+        rootComponents.push(this);
+    },
+
+    componentWillUnmount: function() {
+        var i = rootComponents.indexOf(this);
+        if (i > -1) rootComponents.splice(i, 1);
+    }
+};
 
 Route.navigate = function(url) {
     history.pushState({}, "", url);
-    updateStates();
+    console.log("navigate!");
+    updateRoutes();
 };
 
-window.onpopstate = function() {
-    updateStates();
-};
+window.addEventListener("popstate", function() {
+    console.log("popstate!");
+    updateRoutes();
+});
 
 Route.getCurrentRoute = function() {
     return window.location.pathname;

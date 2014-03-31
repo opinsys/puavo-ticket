@@ -10,17 +10,18 @@ var SimilarTickets = require("./components/SimilarTickets");
 var TicketUpdates = require("./components/TicketUpdates");
 
 var Route = require("./react-route");
-// var Link = Route.Link;
 
 var RouteExisting = Route.create("/ticket/:uid");
 var RouteNew = Route.create(/\/new.*/);
-// var RouteMore = Route.create("/new/more");
 
 var TicketLink = Route.createLink("/ticket/:uid");
 var NewTicketLink = Route.createLink("/new");
 
-
 var Form = React.createClass({
+
+    propTypes: {
+        ticketModel: TicketModel.Type.isRequired
+    },
 
     getInitialState: function() {
         return {
@@ -133,16 +134,22 @@ var Form = React.createClass({
 
 var Main = React.createClass({
 
+    mixins: [Route.Mixin],
+
+    propTypes: {
+        ticketModel: TicketModel.Type.isRequired
+    },
+
     render: function() {
         return (
             <div className="main">
-                <h1>Tukipyyntö</h1>
+                <h1>Tukipalvelu</h1>
                 <RouteNew>
-                    <Form ticketModel={new TicketModel()} />
+                    <Form ticketModel={this.props.ticketModel} />
                 </RouteNew>
 
                 <RouteExisting>
-                    <Form ticketModel={new TicketModel()} />
+                    <Form ticketModel={this.props.ticketModel} />
                 </RouteExisting>
 
             </div>
@@ -151,4 +158,6 @@ var Main = React.createClass({
 
 });
 
-React.renderComponent(<Main />, document.getElementById("app"));
+var _ticketModel = new TicketModel();
+
+React.renderComponent(<Main ticketModel={_ticketModel} />, document.getElementById("app"));
