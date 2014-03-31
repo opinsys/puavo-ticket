@@ -1,71 +1,91 @@
 /** @jsx React.DOM */
-var React = require("react");
-var Promise = require("bluebird");
+var React = require("react/addons");
+// var Promise = require("bluebird");
+
+var TicketModel = require("./TicketModel");
 
 var Lightbox = require("./components/Lightbox");
 
 var Route = require("./react-route");
-var Link = Route.Link;
+// var Link = Route.Link;
 
 var RouteExisting = Route.create("/ticket/:uid");
 var RouteNew = Route.create(/\/new.*/);
-var RouteMore = Route.create("/new/more");
+// var RouteMore = Route.create("/new/more");
 
 var TicketLink = Route.createLink("/ticket/:uid");
 var NewTicketLink = Route.createLink("/new");
 
-function generateUID(key) {
-    key = "uid-" + key;
-    var current = parseInt(localStorage[key] || 1, 10);
-    current++;
-    localStorage[key]  = current;
-    return current;
-}
-function save(ticket) {
-    if (!ticket.uid) ticket.uid = generateUID("ticket");
-    return Promise.delay(200).then(function() {
-        localStorage["ticket-" + ticket.uid] = JSON.stringify(ticket);
-        return { uid: ticket.uid };
-    });
-}
-function load(uid) {
-    return Promise.delay(200).then(function() {
-        return JSON.parse(localStorage["ticket-" + uid]);
-    });
-}
+var TicketModelType = React.PropTypes.shape({
+    save: React.PropTypes.func.isRequired,
+    load: React.PropTypes.func.isRequired,
+    addUpdate: React.PropTypes.func.isRequired
+});
+
 
 var AddUsers = React.createClass({
+
+    propTypes: {
+        ticketModel: TicketModelType.isRequired
+    },
+
+    handleOk: function() {
+        this.props.ticketModel.addUpdate({
+            type: "username",
+            value: "Käyttäjä 'epeli' liitettiin pyyntöön"
+        });
+        Lightbox.removeCurrentComponent();
+    },
+
     render: function() {
         return (
             <div>
                 <h1>Liitä käyttäjiä tukipyyntöön</h1>
                 <p><i>Tähän hieno automaattisesti käyttäjiä hakeva multi select input juttu.</i></p>
-                <button onClick={Lightbox.removeCurrentComponent}>OK</button>
+                <button onClick={this.handleOk}>OK</button>
             </div>
         );
     }
 });
 
 var AddDevices = React.createClass({
+
+    propTypes: {
+        ticketModel: TicketModelType.isRequired
+    },
+
+    handleOk: function() {
+        this.props.ticketModel.addUpdate({
+            type: "device",
+            value: "Laite toimisto-06 liitettiin pyyntöön"
+        });
+        Lightbox.removeCurrentComponent();
+    },
+
     render: function() {
         return (
             <div>
                 <h1>Liitä laitteita tukipyyntöön</h1>
                 <p><i>Tähän hieno automaattisesti käyttäjiä hakeva multi select input juttu.</i></p>
-                <button onClick={Lightbox.removeCurrentComponent}>OK</button>
+                <button onClick={this.handleOk}>OK</button>
             </div>
         );
     }
+
 });
 
 var MetadataButtons = React.createClass({
 
+    propTypes: {
+        ticketModel: TicketModelType.isRequired
+    },
+
     handleAddUsers: function(e) {
-        Lightbox.displayComponent(AddUsers());
+        Lightbox.displayComponent(AddUsers({ ticketModel: this.props.ticketModel }));
     },
 
     handleAddDevices: function(e) {
-        Lightbox.displayComponent(AddDevices());
+        Lightbox.displayComponent(AddDevices({ ticketModel: this.props.ticketModel }));
     },
 
     render: function() {
@@ -86,6 +106,18 @@ var MetadataButtons = React.createClass({
 
 var TicketUpdates = React.createClass({
 
+    propTypes: {
+        ticketModel: TicketModelType.isRequired
+    },
+
+    handleAddTextUpdate: function(e) {
+        var el = this.refs.updateText.getDOMNode();
+        this.props.ticketModel.addUpdate({
+            type: "text",
+            value: el.value
+        });
+        el.value = "";
+    },
 
     render: function() {
         return (
@@ -94,13 +126,13 @@ var TicketUpdates = React.createClass({
 
                 <ul>
                 {this.props.updates.map(function(update) {
-                    return <li className="animated bounceInDown">{update}</li>;
+                    return <li key={update.value} className="animated bounceInDown">{update.value} - {update.added.toString()}</li>;
                 })}
                 </ul>
 
                 <input type="text" ref="updateText" />
-                <button onClick={this.props.handleAddUpdate}>Lisää päivitys</button>
-                <MetadataButtons />
+                <button onClick={this.handleAddTextUpdate}>Lisää päivitys</button>
+                <MetadataButtons ticketModel={this.props.ticketModel} />
             </div>
         );
     }
@@ -158,55 +190,29 @@ var Form = React.createClass({
         return this.state.saving || this.state.loading;
     },
 
+    componentWillMount: function() {
+        console.log("binding model to" , this);
+        this.props.ticketModel.bindToComponent(this);
+        if (RouteExisting.match) {
+            this.props.ticketModel.load(RouteExisting.match.params.uid);
+        }
+    },
+
     handleSave: function() {
-        var saving = save({
-            uid: this.state.uid,
-            title: this.state.title,
-            description: this.state.description
-        });
-
-        this.setState({ saving: saving });
-
         var self = this;
-        saving.then(function(res) {
-            self.setState({
-                saving: null,
-                uid: res.uid
-            });
-            TicketLink.navigate({ uid: res.uid });
+        this.props.ticketModel.save().done(function() {
+            TicketLink.navigate({ uid: self.state.uid });
             Lightbox.displayComponent(
                 <div>
                     <h1>Tukipyyntö tallennettu!</h1>
                     <p>Nopeuttaaksesi tukipyynnön käsittelyä on erittäin suositeltua lisätä tarkentavia tietoja.</p>
-                    <MetadataButtons />
+                    <MetadataButtons ticketModel={self.props.ticketModel} />
                     <button onClick={Lightbox.removeCurrentComponent}>
                         Myöhemmin
                     </button>
                 </div>
             );
         });
-
-        saving.catch(function(err) {
-            console.error("Saving failed!", err);
-        });
-    },
-
-    componentWillMount: function() {
-        if (!RouteExisting.match) return;
-
-        var loading = load(RouteExisting.match.params.uid);
-        this.setState({ loading: loading });
-
-        var self = this;
-        loading.then(function(res) {
-            self.setState({
-                loading: null,
-                title: res.title,
-                description: res.description,
-                uid: res.uid
-            });
-        });
-
     },
 
     render: function() {
@@ -216,7 +222,7 @@ var Form = React.createClass({
                 {this.isOperating() && <p>Ladataan...</p>}
 
                 <RouteExisting>
-                    <NewTicketLink />
+                    <NewTicketLink>Uusi tukipyyntö</NewTicketLink>
                 </RouteExisting>
 
 
@@ -249,11 +255,16 @@ var Form = React.createClass({
                         onClick={this.handleSave} >Tallenna</button>
                 </div>
 
+                <RouteNew>
+                    <MetadataButtons ticketModel={this.props.ticketModel} />
+                </RouteNew>
+
                 <RouteExisting>
                     <TicketUpdates
                         title={this.state.title}
                         description={this.state.description}
                         updates={this.state.updates}
+                        ticketModel={this.props.ticketModel}
                     />
                 </RouteExisting>
 
@@ -262,21 +273,9 @@ var Form = React.createClass({
     },
 
 
-    handleAddUpdate: function() {
-        var el = this.refs.updateText.getDOMNode();
-        this.addUpdate(el.value);
-        el.value = "";
-    },
 
-    addUpdate: function(text) {
-        var updates = this.state.updates;
-        text += " - " + new Date().toString();
-        updates.push(text);
-        this.setState({ updates: updates });
-    }
 
 });
-
 
 
 var Main = React.createClass({
@@ -285,15 +284,18 @@ var Main = React.createClass({
         return (
             <div className="main">
                 <h1>Tukipyyntö</h1>
-                <Form />
+                <RouteNew>
+                    <Form ticketModel={new TicketModel()} />
+                </RouteNew>
+
+                <RouteExisting>
+                    <Form ticketModel={new TicketModel()} />
+                </RouteExisting>
+
             </div>
         );
     }
 
 });
 
-var main = <Main />;
-React.renderComponent(main, document.getElementById("app"));
-// Route.change = function() {
-//     main.forceUpdate();
-// };
+React.renderComponent(<Main />, document.getElementById("app"));
