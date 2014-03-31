@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 var React = require("react");
 var createRoutes = require("routes");
+var xtend = require("xtend");
 
 function noop() { }
 
@@ -62,58 +63,58 @@ Route.create = function(path) {
 };
 
 
+
 Route.renderPathTemplate = function(tmpl, props) {
     var fields = tmpl.match(/\:[a-zA-Z]+/g);
+    if (!fields) return tmpl;
     fields.forEach(function(field) {
         var key = field.substring(1);
         var value = props[key];
-        if (typeof value !== "string") value = "";
-        // TODO: replace all
-        tmpl = tmpl.replace(field, value);
+
+        if (typeof value === "undefined") {
+            throw new Error("prop \"" + key + "\" missing for link template " + tmpl);
+        }
+
+        if (value === null) value = "";
+
+        // replace all http://stackoverflow.com/a/1145525/153718
+        tmpl = tmpl.split(field).join(value);
     });
 
     return tmpl;
 };
 
-Route.createLink = function(pathTemplate) {
-    return React.createClass({
+Route.createLink = function(hrefTemplate, override) {
+    var Link = React.createClass(xtend({
 
-        computeHref: function() {
-            return Route.renderPathTemplate(pathTemplate, this.props);
+        renderHref: function() {
+            return Route.renderPathTemplate(hrefTemplate, this.props);
         },
 
-        handleClick: function(e) {
-            e.preventDefault();
-            Route.navigate(this.computeHref());
+        navigate: function(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            Route.navigate(this.renderHref());
         },
 
         render: function() {
             return (
-                <a href={this.computeHref()} onClick={this.handleClick}>
+                <a href={this.renderHref()} onClick={this.navigate}>
                     {this.props.children}
                 </a>
             );
         }
-    });
+    }, override));
+
+    Link.navigate = function(props) {
+        Route.navigate(Route.renderPathTemplate(hrefTemplate, props));
+    };
+
+    return Link;
 };
 
 var routes = [];
 
-
-var Link = React.createClass({
-    handleClick: function(e) {
-        e.preventDefault();
-        Route.navigate(this.props.href);
-    },
-
-    render: function() {
-        return (
-            <a href={this.props.href} onClick={this.handleClick}>
-                {this.props.children}
-            </a>
-        );
-    }
-});
+var Link = Route.createLink(":href");
 
 function updateStates() {
     routes.forEach(function(r) {

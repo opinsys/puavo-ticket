@@ -2,14 +2,17 @@
 var React = require("react");
 var Promise = require("bluebird");
 
+var Lightbox = require("./components/Lightbox");
+
 var Route = require("./react-route");
 var Link = Route.Link;
 
-var RouteExisting = Route.create("/ticket/:id");
+var RouteExisting = Route.create("/ticket/:uid");
 var RouteNew = Route.create(/\/new.*/);
 var RouteMore = Route.create("/new/more");
 
-var TicketLink = Route.createLink("/ticket/:id");
+var TicketLink = Route.createLink("/ticket/:uid");
+var NewTicketLink = Route.createLink("/new");
 
 function generateUID(key) {
     key = "uid-" + key;
@@ -18,70 +21,75 @@ function generateUID(key) {
     localStorage[key]  = current;
     return current;
 }
-
 function save(ticket) {
     if (!ticket.uid) ticket.uid = generateUID("ticket");
-    return Promise.delay(1000).then(function() {
+    return Promise.delay(200).then(function() {
         localStorage["ticket-" + ticket.uid] = JSON.stringify(ticket);
         return { uid: ticket.uid };
     });
 }
-
 function load(uid) {
-    return Promise.delay(1000).then(function() {
+    return Promise.delay(200).then(function() {
         return JSON.parse(localStorage["ticket-" + uid]);
     });
 }
 
-var More = React.createClass({
+var AddUsers = React.createClass({
     render: function() {
         return (
             <div>
-                <h2>Lisätiedot</h2>
+                <h1>Liitä käyttäjiä tukipyyntöön</h1>
+                <p><i>Tähän hieno automaattisesti käyttäjiä hakeva multi select input juttu.</i></p>
+                <button onClick={Lightbox.removeCurrentComponent}>OK</button>
+            </div>
+        );
+    }
+});
 
-                <p>Nopeuttaaksesi tukipyynnön käsittelyä on erittäin
-                    suositeltua lisätä tarkentavia tietoja.</p>
+var AddDevices = React.createClass({
+    render: function() {
+        return (
+            <div>
+                <h1>Liitä laitteita tukipyyntöön</h1>
+                <p><i>Tähän hieno automaattisesti käyttäjiä hakeva multi select input juttu.</i></p>
+                <button onClick={Lightbox.removeCurrentComponent}>OK</button>
+            </div>
+        );
+    }
+});
 
-                <table>
-                    <tr>
-                        <th>Pyyntöön liittyvät laitteet</th>
-                        <td>
-                            <select>
-                                <option>--</option>
-                                <option>neukkari</option>
-                                <option>dell-xps</option>
-                                <option>yoga-pro</option>
-                            </select> +
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Pyyntöön liittyvät käyttäjä tunnukset</th>
-                        <td>
-                            <select>
-                                <option>--</option>
-                                <option>epeli</option>
-                                <option>hannele</option>
-                                <option>vm</option>
-                                <option>jouni</option>
-                            </select> +
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Kuvakaappaus</th>
-                        <td>
-                            <button>Ota kuvakaappaus</button> +
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Liitetiedosto</th>
-                        <td>
-                            <button>Valitse...</button> +
-                        </td>
-                    </tr>
-                </table>
+var MetadataButtons = React.createClass({
 
-                <h2>Päivitykset</h2>
+    handleAddUsers: function(e) {
+        Lightbox.displayComponent(AddUsers());
+    },
 
+    handleAddDevices: function(e) {
+        Lightbox.displayComponent(AddDevices());
+    },
+
+    render: function() {
+        return (
+            <div className="metadata">
+                Liitä
+                <div className="actions" >
+                    <button onClick={this.handleAddDevices} className="fa fa-laptop" title="Laite"></button>
+                    <button onClick={this.handleAddUsers}className="fa fa-user" title="Käyttäjätunnus"></button>
+                    <button className="fa fa-cloud-upload" title="Liitetiedosto"></button>
+                    <button className="fa fa-play-circle-o" title="Kuvakaappaus"></button>
+                </div>
+            </div>
+        );
+    }
+});
+
+
+var TicketUpdates = React.createClass({
+
+
+    render: function() {
+        return (
+            <div>
                 <p>Tiedot tukipyynnön etenemisestä</p>
 
                 <ul>
@@ -92,7 +100,7 @@ var More = React.createClass({
 
                 <input type="text" ref="updateText" />
                 <button onClick={this.props.handleAddUpdate}>Lisää päivitys</button>
-
+                <MetadataButtons />
             </div>
         );
     }
@@ -161,11 +169,21 @@ var Form = React.createClass({
 
         var self = this;
         saving.then(function(res) {
-            Route.navigate("/ticket/" + res.uid);
             self.setState({
                 saving: null,
                 uid: res.uid
             });
+            TicketLink.navigate({ uid: res.uid });
+            Lightbox.displayComponent(
+                <div>
+                    <h1>Tukipyyntö tallennettu!</h1>
+                    <p>Nopeuttaaksesi tukipyynnön käsittelyä on erittäin suositeltua lisätä tarkentavia tietoja.</p>
+                    <MetadataButtons />
+                    <button onClick={Lightbox.removeCurrentComponent}>
+                        Myöhemmin
+                    </button>
+                </div>
+            );
         });
 
         saving.catch(function(err) {
@@ -176,7 +194,7 @@ var Form = React.createClass({
     componentWillMount: function() {
         if (!RouteExisting.match) return;
 
-        var loading = load(RouteExisting.match.params.id);
+        var loading = load(RouteExisting.match.params.uid);
         this.setState({ loading: loading });
 
         var self = this;
@@ -198,7 +216,7 @@ var Form = React.createClass({
                 {this.isOperating() && <p>Ladataan...</p>}
 
                 <RouteExisting>
-                    <Link href="/new">Luo uusi</Link>
+                    <NewTicketLink />
                 </RouteExisting>
 
 
@@ -231,22 +249,13 @@ var Form = React.createClass({
                         onClick={this.handleSave} >Tallenna</button>
                 </div>
 
-                <p>
-                    <TicketLink id="8" >Foo ticket</TicketLink>
-                </p>
-
-                <RouteNew>
-                    <Link href="/new/more">Lisätiedot</Link>
-                </RouteNew>
-
-                <RouteMore>
-                    <Link href="/new">Piilota</Link>
-                    <More
+                <RouteExisting>
+                    <TicketUpdates
                         title={this.state.title}
                         description={this.state.description}
                         updates={this.state.updates}
                     />
-                </RouteMore>
+                </RouteExisting>
 
             </div>
         );
@@ -268,12 +277,15 @@ var Form = React.createClass({
 
 });
 
+
+
 var Main = React.createClass({
+
     render: function() {
         return (
             <div className="main">
                 <h1>Tukipyyntö</h1>
-                <Form match="/ticket/:id" />
+                <Form />
             </div>
         );
     }
@@ -281,7 +293,7 @@ var Main = React.createClass({
 });
 
 var main = <Main />;
-React.renderComponent(main, document.body);
+React.renderComponent(main, document.getElementById("app"));
 // Route.change = function() {
 //     main.forceUpdate();
 // };

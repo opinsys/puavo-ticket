@@ -14,6 +14,7 @@
     "browserify-middleware": "~2.4.0",
     "routes": "epeli/routes.js#splats",
     "bluebird": "~1.1.1",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "xtend": "~2.2.0"
   }
 }

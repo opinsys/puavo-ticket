@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <title></title>
         <link rel="stylesheet" href="/animate.css" />
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
         <style>
           a:visited {
             color: blue;
@@ -58,9 +59,56 @@
             font-size: 9pt;
           }
 
+          .metadata {
+            margin: 1em;
+          }
+
+          .metadata button {
+            width: auto;
+          }
+
+          .metadata .actions {
+            display: inline;
+            margin-left: 1em;
+          }
+
+          .lightbox-bg, .lightbox {
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+          }
+
+          .lightbox-bg {
+            background-color: green;
+            opacity: 0.3;
+          }
+
+          .lightbox {
+            background-color: transparent;
+            z-index: 1001;
+            top: 1em;
+          }
+          .lightbox > .lightbox-wrap {
+            z-index: 1001;
+            padding: 1em;
+            top: 1em;
+            margin: 0 auto;
+            width: 40em;
+            background-color: white !important;
+            width: 40em;
+            max-width: 90%;
+          }
+
         </style>
     </head>
     <body>
+      <div id="app"></div>
+      <div id="lightbox-container"></div>
       <script src="/bundle.js" charset="utf-8"></script>
     </body>
 </html>
