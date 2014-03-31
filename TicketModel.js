@@ -89,5 +89,10 @@ TicketModel.prototype.load = function(uid) {
     });
 };
 
+TicketModel.Type = React.PropTypes.shape({
+    save: React.PropTypes.func.isRequired,
+    load: React.PropTypes.func.isRequired,
+    addUpdate: React.PropTypes.func.isRequired
+});
 
 module.exports = TicketModel;

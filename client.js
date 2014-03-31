@@ -5,6 +5,9 @@ var React = require("react/addons");
 var TicketModel = require("./TicketModel");
 
 var Lightbox = require("./components/Lightbox");
+var MetadataButtons = require("./components/MetadataButtons");
+var SimilarTickets = require("./components/SimilarTickets");
+var TicketUpdates = require("./components/TicketUpdates");
 
 var Route = require("./react-route");
 // var Link = Route.Link;
@@ -15,156 +18,6 @@ var RouteNew = Route.create(/\/new.*/);
 
 var TicketLink = Route.createLink("/ticket/:uid");
 var NewTicketLink = Route.createLink("/new");
-
-var TicketModelType = React.PropTypes.shape({
-    save: React.PropTypes.func.isRequired,
-    load: React.PropTypes.func.isRequired,
-    addUpdate: React.PropTypes.func.isRequired
-});
-
-
-var AddUsers = React.createClass({
-
-    propTypes: {
-        ticketModel: TicketModelType.isRequired
-    },
-
-    handleOk: function() {
-        this.props.ticketModel.addUpdate({
-            type: "username",
-            value: "Käyttäjä 'epeli' liitettiin pyyntöön"
-        });
-        Lightbox.removeCurrentComponent();
-    },
-
-    render: function() {
-        return (
-            <div>
-                <h1>Liitä käyttäjiä tukipyyntöön</h1>
-                <p><i>Tähän hieno automaattisesti käyttäjiä hakeva multi select input juttu.</i></p>
-                <button onClick={this.handleOk}>OK</button>
-            </div>
-        );
-    }
-});
-
-var AddDevices = React.createClass({
-
-    propTypes: {
-        ticketModel: TicketModelType.isRequired
-    },
-
-    handleOk: function() {
-        this.props.ticketModel.addUpdate({
-            type: "device",
-            value: "Laite toimisto-06 liitettiin pyyntöön"
-        });
-        Lightbox.removeCurrentComponent();
-    },
-
-    render: function() {
-        return (
-            <div>
-                <h1>Liitä laitteita tukipyyntöön</h1>
-                <p><i>Tähän hieno automaattisesti käyttäjiä hakeva multi select input juttu.</i></p>
-                <button onClick={this.handleOk}>OK</button>
-            </div>
-        );
-    }
-
-});
-
-var MetadataButtons = React.createClass({
-
-    propTypes: {
-        ticketModel: TicketModelType.isRequired
-    },
-
-    handleAddUsers: function(e) {
-        Lightbox.displayComponent(AddUsers({ ticketModel: this.props.ticketModel }));
-    },
-
-    handleAddDevices: function(e) {
-        Lightbox.displayComponent(AddDevices({ ticketModel: this.props.ticketModel }));
-    },
-
-    render: function() {
-        return (
-            <div className="metadata">
-                Liitä
-                <div className="actions" >
-                    <button onClick={this.handleAddDevices} className="fa fa-laptop" title="Laite"></button>
-                    <button onClick={this.handleAddUsers}className="fa fa-user" title="Käyttäjätunnus"></button>
-                    <button className="fa fa-cloud-upload" title="Liitetiedosto"></button>
-                    <button className="fa fa-play-circle-o" title="Kuvakaappaus"></button>
-                </div>
-            </div>
-        );
-    }
-});
-
-
-var TicketUpdates = React.createClass({
-
-    propTypes: {
-        ticketModel: TicketModelType.isRequired
-    },
-
-    handleAddTextUpdate: function(e) {
-        var el = this.refs.updateText.getDOMNode();
-        this.props.ticketModel.addUpdate({
-            type: "text",
-            value: el.value
-        });
-        el.value = "";
-    },
-
-    render: function() {
-        return (
-            <div>
-                <p>Tiedot tukipyynnön etenemisestä</p>
-
-                <ul>
-                {this.props.updates.map(function(update) {
-                    return <li key={update.value} className="animated bounceInDown">{update.value} - {update.added.toString()}</li>;
-                })}
-                </ul>
-
-                <input type="text" ref="updateText" />
-                <button onClick={this.handleAddTextUpdate}>Lisää päivitys</button>
-                <MetadataButtons ticketModel={this.props.ticketModel} />
-            </div>
-        );
-    }
-});
-
-var SimilarTickets = React.createClass({
-
-    render: function() {
-        if (this.props.title.length < 5) return <noscript />;
-        if (this.props.description.length < 5) return <noscript />;
-        return (
-            <div className="animated fadeIn similar-tickets">
-                <h2>Samankaltaiset tukipyynnöt</h2>
-                <ul>
-                    <li>
-                        <a href="#">xmoto ei löydy menusta</a>
-                    </li>
-                    <li>
-                        <a href="#">bsdgames paketin asennus</a>
-                    </li>
-                    <li>
-                        <a href="#">milloin tulee trusty</a>
-                    </li>
-                </ul>
-                <p>
-                    Ethän avaa toista tukipyyntöä samasta aiheesta. Kiitos.
-                </p>
-            </div>
-        );
-    },
-
-});
 
 
 var Form = React.createClass({
