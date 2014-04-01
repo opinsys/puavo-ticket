@@ -1,19 +1,20 @@
 /** @jsx React.DOM */
 var React = require("react/addons");
+var Route = require("./react-route");
+Route.root = "/foo";
 
 var TicketForm = require("./components/TicketForm");
 var TicketList = require("./components/TicketList");
 
 var TicketModel = require("./TicketModel");
 
-var Route = require("./react-route");
+
 var routes = require("./components/routes");
 var RouteNew = routes.RouteNew;
 var RouteExisting = routes.RouteExisting;
 var RouteTicketList = routes.RouteTicketList;
 var LinkNewTicket = routes.LinkNewTicket;
 var LinkTicketList = routes.LinkTicketList;
-
 
 var Menu = React.createClass({
     render: function() {

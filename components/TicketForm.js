@@ -80,6 +80,27 @@ var TicketForm = React.createClass({
                     />
                 </RouteNew>
 
+                <RouteExisting>
+                    <div style={{border: "1px solid red", margin: "1em", padding: "1em", opacity: 0.5}}>
+                        <h3>Tällä tukipyynnöllä ei ole käsittelijää!</h3>
+                        <select>
+                            <option>valitse...</option>
+                            <option>hannele</option>
+                            <option>petri</option>
+                            <option>antti</option>
+                            <option>mikko</option>
+                            <option>esa</option>
+                            <option>tuomas</option>
+                            <option>juha</option>
+                        </select>
+
+                        <p>
+                            <i>tämä näkyy vain henkilökunnalle</i>
+                        </p>
+
+                    </div>
+                </RouteExisting>
+
                 <input
                     disabled={this.isOperating()}
                     autoFocus

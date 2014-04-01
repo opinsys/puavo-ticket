@@ -34,7 +34,7 @@ TicketModel.prototype.save = function() {
     var self = this;
     var ticket = _.pick(this._component.state, KEYS);
 
-    var saving =  Promise.delay(200).then(function() {
+    var saving =  Promise.delay(1000).then(function() {
         if (!ticket.uid) ticket.uid = generateUID("ticket");
         localStorage["ticket-" + ticket.uid] = JSON.stringify(ticket);
 
@@ -75,7 +75,7 @@ TicketModel.prototype.load = function(uid) {
     if (!this.uid) throw new Error("Cannot load without uid");
     if (!this._component) throw new Error("Cannot load before component is bound with bindToComponent");
 
-    var loading =  Promise.delay(200).then(function() {
+    var loading =  Promise.delay(1000).then(function() {
         return JSON.parse(localStorage["ticket-" + self.uid]);
     });
 
