@@ -52,14 +52,18 @@ TicketModel.prototype.save = function() {
     return saving;
 };
 
-TicketModel.prototype.addUpdate = function(update) {
+
+TicketModel.prototype.addUpdate = function(updates) {
     var self = this;
-    update = reactUpdate(update, { added: {$set: new Date()} });
+
+    updates = [].concat(updates).map(function(update) {
+        return reactUpdate(update, { added: {$set: new Date()} });
+    });
 
     return new Promise(function(resolve, reject){
         self._component.setState(
             reactUpdate(self._component.state, {
-                updates: {$push: [update]}
+                updates: {$push: updates}
             }),
             resolve
         );

@@ -24,8 +24,8 @@ var TicketUpdates = React.createClass({
                 <p>Tiedot tukipyynnön etenemisestä</p>
 
                 <ul>
-                {this.props.updates.map(function(update) {
-                    return <li key={update.value} className="animated bounceInDown">{update.value} - {update.added.toString()}</li>;
+                {this.props.updates.map(function(update, i) {
+                    return <li key={i} className="animated bounceInDown">{update.value} - {update.added.toString()}</li>;
                 })}
                 </ul>
 

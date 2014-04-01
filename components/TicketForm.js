@@ -5,6 +5,8 @@ var Lightbox = require("./Lightbox");
 var MetadataButtons = require("./MetadataButtons");
 var SimilarTickets = require("./SimilarTickets");
 var TicketUpdates = require("./TicketUpdates");
+var SelectUsers = require("./SelectUsers");
+
 
 var TicketModel = require("../TicketModel");
 
@@ -65,13 +67,18 @@ var TicketForm = React.createClass({
         });
     },
 
+    handleUserSelect: function(e) {
+        this.props.ticketModel.addUpdate({
+            type: "manager",
+            value: e.target.value + " lisättiin käsittelijäksi"
+        });
+    },
+
     render: function() {
         return (
             <div>
 
                 {this.isOperating() && <p>Ladataan...</p>}
-
-
 
                 <RouteNew>
                     <SimilarTickets
@@ -83,16 +90,7 @@ var TicketForm = React.createClass({
                 <RouteExisting>
                     <div style={{border: "1px solid red", margin: "1em", padding: "1em", opacity: 0.5}}>
                         <h3>Tällä tukipyynnöllä ei ole käsittelijää!</h3>
-                        <select>
-                            <option>valitse...</option>
-                            <option>hannele</option>
-                            <option>petri</option>
-                            <option>antti</option>
-                            <option>mikko</option>
-                            <option>esa</option>
-                            <option>tuomas</option>
-                            <option>juha</option>
-                        </select>
+                        <SelectUsers onChange={this.handleUserSelect} />
 
                         <p>
                             <i>tämä näkyy vain henkilökunnalle</i>

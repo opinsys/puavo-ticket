@@ -1,7 +1,11 @@
 /** @jsx React.DOM */
 var React = require("react/addons");
+var _ = require("lodash");
+
 var Lightbox = require("./Lightbox");
 var TicketModel = require("../TicketModel");
+var SelectUsers = require("./SelectUsers");
+
 
 var AddUsers = React.createClass({
 
@@ -9,12 +13,35 @@ var AddUsers = React.createClass({
         ticketModel: TicketModel.Type.isRequired
     },
 
+    getInitialState: function() {
+        return {
+            users: [],
+        };
+    },
+
     handleOk: function() {
-        this.props.ticketModel.addUpdate({
-            type: "username",
-            value: "Käyttäjä 'epeli' liitettiin pyyntöön"
+        this.setState({ saving: true });
+
+        var users = this.state.users.map(function(username) {
+            return {
+                type: "username",
+                value: username + " lisättiin tukipyyntöön"
+            };
         });
-        Lightbox.removeCurrentComponent();
+
+        this.props.ticketModel.addUpdate(users).then(function() {
+            Lightbox.removeCurrentComponent();
+        });
+
+    },
+
+    handleUserSelect: function(e) {
+        if (e.target.value) {
+            this.setState({
+                users: _.uniq(this.state.users.concat(e.target.value))
+            });
+        }
+
     },
 
     render: function() {
@@ -22,7 +49,13 @@ var AddUsers = React.createClass({
             <div>
                 <h1>Liitä käyttäjiä tukipyyntöön</h1>
                 <p><i>Tähän hieno automaattisesti käyttäjiä hakeva multi select input juttu.</i></p>
-                <button onClick={this.handleOk}>OK</button>
+                <SelectUsers onChange={this.handleUserSelect} />
+                <ul>
+                    {this.state.users.map(function(user) {
+                        return <li>{user}</li>;
+                    })}
+                </ul>
+                <button onClick={this.handleOk} disabled={!!this.state.saving}>Lisää</button>
             </div>
         );
     }
