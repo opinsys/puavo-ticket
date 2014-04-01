@@ -7,6 +7,7 @@ var xtend = require("xtend");
 function noop() { }
 
 var Route = {};
+Route.mountPoint = "";
 
 Route.create = function(path) {
 
@@ -123,7 +124,7 @@ Route.Mixin = {
 };
 
 Route.navigate = function(url) {
-    history.pushState({}, "", url);
+    history.pushState({}, "", Route.mountPoint + url);
     console.log("navigate!");
     updateRoutes();
 };
@@ -134,7 +135,17 @@ window.addEventListener("popstate", function() {
 });
 
 Route.getCurrentRoute = function() {
-    return window.location.pathname;
+    var realPath = window.location.pathname;
+    if (!Route.mountPoint) return realPath || "/";
+    if (realPath.substring(0, Route.mountPoint.length) !== Route.mountPoint) {
+        console.error(
+            "Route.mountPoint does not match with current url!",
+            Route.mountPoint, realPath
+         );
+         return;
+    }
+    realPath = realPath.slice(Route.mountPoint.length);
+    return realPath || "/";
 };
 
 Route.Link = Link;
