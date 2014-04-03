@@ -13,8 +13,15 @@
     "express": "~3.5.1",
     "browserify-middleware": "~2.4.0",
     "routes": "epeli/routes.js#splats",
-    "bluebird": "~1.1.1",
+    "bluebird": "1.0.8",
     "lodash": "~2.4.1",
-    "xtend": "~2.2.0"
+    "xtend": "~2.2.0",
+    "sequelize": "~1.7.0",
+    "sqlite3": "~2.2.0",
+    "bookshelf": "~0.6.8",
+    "knex": "~0.5.13",
+    "mocha": "~1.18.2",
+    "chai": "~1.9.1",
+    "chai-as-promised": "~4.1.1"
   }
 }
