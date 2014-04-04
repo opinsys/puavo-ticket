@@ -1,6 +1,7 @@
 
 var Bookshelf = require("bookshelf");
 var Comment = require("./Comment");
+var _ = require("lodash");
 
 var Ticket = Bookshelf.DB.Model.extend({
     tableName: "tickets",
@@ -14,6 +15,12 @@ var Ticket = Bookshelf.DB.Model.extend({
 
     comments: function() {
         return this.hasMany(Comment, "ticket");
+    },
+
+    addComment: function(comment) {
+        return Comment.forge(_.extend({}, comment, {
+            ticket: this.get("id"),
+        })).save();
     }
 
 });

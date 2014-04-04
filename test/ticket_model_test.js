@@ -1,10 +1,7 @@
-/*global it, describe, before, beforeEach, after, afterEach */
+/*global it, describe */
 
-var Promise = require("bluebird");
-var DB = require("../db");
 var Ticket = require("../models/Ticket");
 var assert = require("./assert");
-
 
 describe("Ticket model", function() {
     it("Instance can be created", function() {
@@ -26,5 +23,39 @@ describe("Ticket model", function() {
         return assert.becomes(savedTicket, title);
 
     });
+
+    it("can have comments", function() {
+        var ticketId = Ticket.forge({
+            title: "computer does not work",
+            description: "It just doesn't"
+        })
+        .save()
+        .then(function(ticket) {
+            return ticket.addComment({
+                comment: "foo"
+            })
+            .then(function() {
+                return ticket.get("id");
+            });
+        });
+
+        return ticketId.then(function(id) {
+            return Ticket.forge({ id: id })
+                .fetch({ withRelated: "comments" })
+                .then(function(ticket) {
+                    assert.equal(
+                        ticket.related("comments").length,
+                        1,
+                        "should have one comment"
+                    );
+
+                    var comment = ticket.related("comments").models[0];
+
+                    assert.equal(comment.get("comment"), "foo");
+                });
+        });
+
+    });
+
 });
 
