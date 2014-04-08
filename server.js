@@ -25,6 +25,7 @@ app.get("/api/tickets", function(req, res, next) {
 app.get("/api/tickets/:id", function(req, res, next) {
     Ticket.forge({ id: req.params.id }).fetch()
     .then(function(ticket) {
+        if (!ticket) return res.json(404, { error: "no such ticket" });
         res.json(ticket.toJSON());
     })
     .catch(next);
@@ -43,6 +44,7 @@ app.put("/api/tickets/:id", function(req, res, next) {
     Ticket.forge({ id: req.params.id })
     .fetch()
     .then(function(ticket) {
+        if (!ticket) return res.json(404, { error: "no such ticket" });
         ticket.set(req.body);
         return ticket.save();
     })
