@@ -2,9 +2,10 @@
 require("./db");
 var browserify = require("browserify-middleware");
 var express = require("express");
-var Ticket = require("./models/Ticket");
+var Ticket = require("./models/server/Ticket");
 
 var app = express();
+app.use(express.bodyParser());
 
 app.use(express.static(__dirname));
 
@@ -13,11 +14,44 @@ app.get("/bundle.js", browserify("./client.js", {
 }));
 
 
-app.get("/api/tickets", function(req, res) {
-    Ticket.collection().fetch().then(function(coll) {
+app.get("/api/tickets", function(req, res, next) {
+    Ticket.collection().fetch()
+    .then(function(coll) {
         res.json(coll.toJSON());
-    });
+    })
+    .catch(next);
 });
+
+app.get("/api/tickets/:id", function(req, res, next) {
+    Ticket.forge({ id: req.params.id }).fetch()
+    .then(function(ticket) {
+        res.json(ticket.toJSON());
+    })
+    .catch(next);
+});
+
+app.post("/api/tickets", function(req, res, next) {
+    Ticket.forge(req.body)
+    .save()
+    .then(function(ticket) {
+        res.json(ticket.toJSON());
+    })
+    .catch(next);
+});
+
+app.put("/api/tickets/:id", function(req, res, next) {
+    Ticket.forge({ id: req.params.id })
+    .fetch()
+    .then(function(ticket) {
+        ticket.set(req.body);
+        return ticket.save();
+    })
+    .then(function(ticket) {
+        res.json(ticket.toJSON());
+    })
+    .catch(next);
+});
+
 
 app.get("/*", function(req, res) {
     res.sendfile(__dirname + "/views/index.html");

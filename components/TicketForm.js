@@ -1,14 +1,12 @@
 /** @jsx React.DOM */
 var React = require("react/addons");
+var Promise = require("bluebird");
 
 var Lightbox = require("./Lightbox");
 var MetadataButtons = require("./MetadataButtons");
 var SimilarTickets = require("./SimilarTickets");
 var TicketUpdates = require("./TicketUpdates");
 var SelectUsers = require("./SelectUsers");
-
-
-var TicketModel = require("../TicketModel");
 
 var routes = require("./routes");
 var RouteNew = routes.RouteNew;
@@ -17,48 +15,39 @@ var LinkTicket = routes.LinkTicket;
 
 var TicketForm = React.createClass({
 
-    propTypes: {
-        ticketModel: TicketModel.Type.isRequired
-    },
-
-    getInitialState: function() {
-        return {
-            description: "",
-            title: "",
-            displayExtra: true,
-            saving: null,
-            updates: []
-        };
-    },
+    // propTypes: {
+    //     ticketModel: TicketModel.Type.isRequired
+    // },
 
     handleChange: function() {
-        this.setState({
+        this.props.ticketModel.set({
             description: this.refs.description.getDOMNode().value,
             title: this.refs.title.getDOMNode().value,
         });
     },
 
     isOperating: function() {
-        return this.state.saving || this.state.loading;
+        return this.props.ticketModel.isOperating();
     },
 
     componentWillMount: function() {
         console.log("binding model to" , this);
-        this.props.ticketModel.bindToComponent(this);
         if (RouteExisting.match) {
-            this.props.ticketModel.load(RouteExisting.match.params.uid);
+            this.props.ticketModel.set({ id: RouteExisting.match.params.id });
+            this.props.ticketModel.fetch();
         }
     },
 
     handleSave: function() {
         var self = this;
-        this.props.ticketModel.save().done(function() {
-            LinkTicket.navigate({ uid: self.state.uid });
+        this.props.ticketModel.save().then(function(foo) {
+            LinkTicket.navigate({ id: self.props.ticketModel.get("id") });
+
             Lightbox.displayComponent(
                 <div>
                     <h1>Tukipyyntö tallennettu!</h1>
                     <p>Nopeuttaaksesi tukipyynnön käsittelyä on erittäin suositeltua lisätä tarkentavia tietoja.</p>
-                    <MetadataButtons ticketModel={self.props.ticketModel} />
+                    {/* <MetadataButtons ticketModel={self.props.ticketModel} /> */}
                     <button onClick={Lightbox.removeCurrentComponent}>
                         Myöhemmin
                     </button>
@@ -67,14 +56,8 @@ var TicketForm = React.createClass({
         });
     },
 
-    handleUserSelect: function(e) {
-        this.props.ticketModel.addUpdate({
-            type: "manager",
-            value: e.target.value + " lisättiin käsittelijäksi"
-        });
-    },
-
     render: function() {
+        console.log("render form", this.isOperating());
         return (
             <div>
 
@@ -82,8 +65,7 @@ var TicketForm = React.createClass({
 
                 <RouteNew>
                     <SimilarTickets
-                        title={this.state.title}
-                        description={this.state.description}
+                        ticketModel={this.props.ticketModel}
                     />
                 </RouteNew>
 
@@ -105,13 +87,13 @@ var TicketForm = React.createClass({
                     ref="title"
                     type="text"
                     onChange={this.handleChange}
-                    value={this.state.title}
+                    value={this.props.ticketModel.get("title")}
                     placeholder="Otsikko" />
                 <textarea
                     disabled={this.isOperating()}
                     ref="description"
                     placeholder="Kuvaus ongelmastasi"
-                    value={this.state.description}
+                    value={this.props.ticketModel.get("description")}
                     onChange={this.handleChange}
                 />
 
@@ -121,18 +103,6 @@ var TicketForm = React.createClass({
                         onClick={this.handleSave} >Tallenna</button>
                 </div>
 
-                <RouteNew>
-                    <MetadataButtons ticketModel={this.props.ticketModel} />
-                </RouteNew>
-
-                <RouteExisting>
-                    <TicketUpdates
-                        title={this.state.title}
-                        description={this.state.description}
-                        updates={this.state.updates}
-                        ticketModel={this.props.ticketModel}
-                    />
-                </RouteExisting>
 
             </div>
         );

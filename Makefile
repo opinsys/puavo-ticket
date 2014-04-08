@@ -11,6 +11,4 @@ migrate:
 
 .PHONY: test
 test:
-	rm book.db
-	$(MAKE) migrate
-	mocha -C test/*_test.js
+	mocha -C test/*/*_test.js

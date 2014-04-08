@@ -1,13 +1,21 @@
-/*global it, describe */
+/*global it, describe, before */
 
-var Ticket = require("../models/Ticket");
-var assert = require("./assert");
+var setupTestDatabase = require("../setupTestDatabase");
+
+var Ticket = require("../../models/server/Ticket");
+var assert = require("assert");
+
 
 describe("Ticket model", function() {
+
+    before(function() {
+        return setupTestDatabase();
+    });
+
     it("Instance can be created", function() {
         var title = "Computer does not work :(";
 
-        var savedTicket = Ticket.forge({
+        return Ticket.forge({
             title: title,
             description: "It just doesn't"
         })
@@ -16,11 +24,8 @@ describe("Ticket model", function() {
             return Ticket.forge({ id: ticket.get("id") }).fetch();
         })
         .then(function(ticket) {
-            return ticket.get("title");
-        })
-        ;
-
-        return assert.becomes(savedTicket, title);
+             assert.equal(title, ticket.get("title"));
+        });
 
     });
 
@@ -55,6 +60,23 @@ describe("Ticket model", function() {
                 });
         });
 
+    });
+
+    it("can be edited", function() {
+        var id;
+        return Ticket.collection().fetch()
+            .then(function(coll) {
+                var ticket = coll.first();
+                id = ticket.get("id");
+                ticket.set("title", "new title");
+                return ticket.save();
+            })
+            .then(function() {
+                return Ticket.forge({ id: id }).fetch();
+            })
+            .then(function(ticket) {
+                assert.equal(ticket.get("title"), "new title");
+            });
     });
 
 });

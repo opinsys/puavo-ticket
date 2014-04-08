@@ -4,10 +4,11 @@ var Route = require("./react-route");
 Route.root = "/foo";
 
 var TicketForm = require("./components/TicketForm");
-var TicketList = require("./components/TicketList");
+// var TicketList = require("./components/TicketList");
 
-var TicketModel = require("./TicketModel");
+// var TicketModel = require("./TicketModel");
 
+var Ticket = require("./models/client/Ticket");
 
 var routes = require("./components/routes");
 var RouteNew = routes.RouteNew;
@@ -16,24 +17,28 @@ var RouteTicketList = routes.RouteTicketList;
 var LinkNewTicket = routes.LinkNewTicket;
 var LinkTicketList = routes.LinkTicketList;
 
-var Menu = React.createClass({
-    render: function() {
-        return (
-            <ul className="link-menu">
-                {[].concat(this.props.children).map(function(item) {
-                    return <li>{item}</li>;
-                })}
-            </ul>
-        );
-    }
-});
+
+var $ = require("jquery");
+var Backbone = require("backbone");
+Backbone.$ = $;
+
 
 var Main = React.createClass({
 
     mixins: [Route.Mixin],
 
-    propTypes: {
-        ticketModel: TicketModel.Type.isRequired
+    getInitialState: function() {
+        return {
+            ticketModel: new Ticket()
+        };
+    },
+
+    componentDidMount: function() {
+        console.log("binding model");
+        var self = this;
+        this.state.ticketModel.on("change save:done fetch:done", function() {
+            self.forceUpdate();
+        });
     },
 
     render: function() {
@@ -42,27 +47,7 @@ var Main = React.createClass({
 
                 <h1>Tukipalvelu</h1>
 
-                <RouteNew>
-                    <Menu>
-                        <LinkTicketList>Näytä olemassa olevat tukipyynnöt</LinkTicketList>
-                    </Menu>
-                    <TicketForm ticketModel={this.props.ticketModel} />
-                </RouteNew>
-
-                <RouteExisting>
-                    <Menu>
-                        <LinkNewTicket>Uusi tukipyyntö</LinkNewTicket>
-                        <LinkTicketList>Näytä muut tukipyynnöt</LinkTicketList>
-                    </Menu>
-                    <TicketForm ticketModel={this.props.ticketModel} />
-                </RouteExisting>
-
-                <RouteTicketList>
-                    <Menu>
-                        <LinkNewTicket>Uusi tukipyyntö</LinkNewTicket>
-                    </Menu>
-                    <TicketList />
-                </RouteTicketList>
+                <TicketForm ticketModel={this.state.ticketModel} />
 
             </div>
         );
@@ -70,6 +55,5 @@ var Main = React.createClass({
 
 });
 
-var _ticketModel = new TicketModel();
 
-React.renderComponent(<Main ticketModel={_ticketModel} />, document.getElementById("app"));
+React.renderComponent(<Main />, document.getElementById("app"));

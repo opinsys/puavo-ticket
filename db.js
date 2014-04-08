@@ -1,5 +1,8 @@
 var Bookshelf = require("bookshelf");
 var config = require("./config");
-module.exports = Bookshelf.DB = Bookshelf.initialize(config.database);
-
+function init() {
+    Bookshelf.DB = Bookshelf.initialize(config.database);
+}
+init();
+module.exports = init;
 

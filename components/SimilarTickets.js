@@ -4,8 +4,8 @@ var React = require("react/addons");
 var SimilarTickets = React.createClass({
 
     render: function() {
-        if (this.props.title.length < 5) return <noscript />;
-        if (this.props.description.length < 5) return <noscript />;
+        if (this.props.ticketModel.get("title").length < 5) return <noscript />;
+        if (this.props.ticketModel.get("description").length < 5) return <noscript />;
         return (
             <div className="animated fadeIn similar-tickets">
                 <h2>Samankaltaiset tukipyynnöt</h2>

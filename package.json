@@ -13,7 +13,6 @@
     "express": "~3.5.1",
     "browserify-middleware": "~2.4.0",
     "routes": "epeli/routes.js#splats",
-    "bluebird": "1.0.8",
     "lodash": "~2.4.1",
     "xtend": "~2.2.0",
     "sequelize": "~1.7.0",
@@ -22,6 +21,12 @@
     "knex": "~0.5.13",
     "mocha": "~1.18.2",
     "chai": "~1.9.1",
-    "chai-as-promised": "~4.1.1"
+    "chai-as-promised": "~4.1.1",
+    "supertest": "~0.10.0",
+    "superagent": "~0.17.0",
+    "backbone.cocktail": "~0.5.7",
+    "jquery": "~2.1.0",
+    "backbone": "~1.1.2",
+    "bluebird": "~1.2.1"
   }
 }

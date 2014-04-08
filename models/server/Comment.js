@@ -1,4 +1,5 @@
 
+require("../../db");
 var Bookshelf = require("bookshelf");
 
 var Comment = Bookshelf.DB.Model.extend({
