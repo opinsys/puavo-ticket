@@ -3,10 +3,6 @@ var React = require("react/addons");
 
 var SelectUsers = React.createClass({
 
-    propTypes: {
-        onChange: React.PropTypes.func.isRequired
-    },
-
     render: function() {
         return (
             <select onChange={this.props.onChange}>

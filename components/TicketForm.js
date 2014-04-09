@@ -1,23 +1,13 @@
 /** @jsx React.DOM */
 var React = require("react/addons");
-var Promise = require("bluebird");
 
 var Lightbox = require("./Lightbox");
-var MetadataButtons = require("./MetadataButtons");
 var SimilarTickets = require("./SimilarTickets");
-var TicketUpdates = require("./TicketUpdates");
-var SelectUsers = require("./SelectUsers");
 
 var routes = require("./routes");
-var RouteNew = routes.RouteNew;
-var RouteExisting = routes.RouteExisting;
 var LinkTicket = routes.LinkTicket;
 
 var TicketForm = React.createClass({
-
-    // propTypes: {
-    //     ticketModel: TicketModel.Type.isRequired
-    // },
 
     handleChange: function() {
         this.props.ticketModel.set({
@@ -31,9 +21,8 @@ var TicketForm = React.createClass({
     },
 
     componentWillMount: function() {
-        console.log("binding model to" , this);
-        if (RouteExisting.match) {
-            this.props.ticketModel.set({ id: RouteExisting.match.params.id });
+        if (routes.existingTicket.match) {
+            this.props.ticketModel.set({ id: routes.existingTicket.match.params.id });
             this.props.ticketModel.fetch();
         }
     },
@@ -41,8 +30,9 @@ var TicketForm = React.createClass({
     handleSave: function() {
         var self = this;
         this.props.ticketModel.save().then(function(foo) {
-            LinkTicket.navigate({ id: self.props.ticketModel.get("id") });
+            if (routes.existingTicket.match) return;
 
+            LinkTicket.navigate({ id: self.props.ticketModel.get("id") });
             Lightbox.displayComponent(
                 <div>
                     <h1>Tukipyyntö tallennettu!</h1>
@@ -53,33 +43,24 @@ var TicketForm = React.createClass({
                     </button>
                 </div>
             );
+
         });
     },
 
+    renderSimilarTickets: function() {
+        if (routes.newTicket.match) {
+            return <SimilarTickets ticketModel={this.props.ticketModel} />;
+        }
+    },
+
     render: function() {
-        console.log("render form", this.isOperating());
+
         return (
             <div>
 
                 {this.isOperating() && <p>Ladataan...</p>}
 
-                <RouteNew>
-                    <SimilarTickets
-                        ticketModel={this.props.ticketModel}
-                    />
-                </RouteNew>
-
-                <RouteExisting>
-                    <div style={{border: "1px solid red", margin: "1em", padding: "1em", opacity: 0.5}}>
-                        <h3>Tällä tukipyynnöllä ei ole käsittelijää!</h3>
-                        <SelectUsers onChange={this.handleUserSelect} />
-
-                        <p>
-                            <i>tämä näkyy vain henkilökunnalle</i>
-                        </p>
-
-                    </div>
-                </RouteExisting>
+                {this.renderSimilarTickets()}
 
                 <input
                     disabled={this.isOperating()}

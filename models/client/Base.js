@@ -5,12 +5,13 @@ var Base = Backbone.Model.extend({
 
     save: function() {
         var self = this;
+        self.trigger("save:start");
 
         this.saving = Promise.cast(
             Backbone.Model.prototype.save.apply(this, arguments)
-        ).then(function() {
+        ).delay(1000).then(function() {
             self.saving = null;
-            self.trigger("save:done");
+            self.trigger("save:end");
         });
 
         return this.saving;
@@ -18,12 +19,13 @@ var Base = Backbone.Model.extend({
 
     fetch: function() {
         var self = this;
+        self.trigger("fetch:start");
 
         this.fetching = Promise.cast(
             Backbone.Model.prototype.fetch.apply(this, arguments)
         ).then(function() {
             self.fetching = null;
-            self.trigger("fetch:done");
+            self.trigger("fetch:end");
         });
 
         return this.fetching;
@@ -31,8 +33,6 @@ var Base = Backbone.Model.extend({
 
 
     isOperating: function() {
-        console.log("saving", this.saving);
-        console.log("fetching", this.fetching);
         return !!(this.saving || this.fetching);
     }
 

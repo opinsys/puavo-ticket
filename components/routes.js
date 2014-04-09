@@ -3,9 +3,9 @@ var Route = require("../react-route");
 
 
 module.exports = {
-    RouteTicketList: Route.create("/"),
-    RouteExisting: Route.create("/ticket/:id"),
-    RouteNew: Route.create(/\/new.*/),
+    ticketList: Route.create("/"),
+    existingTicket: Route.create("/ticket/:id"),
+    newTicket: Route.create(/\/new.*/),
 
     LinkTicket: Route.createLink("/ticket/:id"),
     LinkNewTicket: Route.createLink("/new"),

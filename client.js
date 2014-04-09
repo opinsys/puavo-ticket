@@ -11,21 +11,24 @@ var TicketForm = require("./components/TicketForm");
 var Ticket = require("./models/client/Ticket");
 
 var routes = require("./components/routes");
-var RouteNew = routes.RouteNew;
-var RouteExisting = routes.RouteExisting;
-var RouteTicketList = routes.RouteTicketList;
-var LinkNewTicket = routes.LinkNewTicket;
-var LinkTicketList = routes.LinkTicketList;
-
+var ListenToMixin = require("./ListenToMixin");
 
 var $ = require("jquery");
 var Backbone = require("backbone");
 Backbone.$ = $;
 
 
+var TicketList = React.createClass({
+    render: function() {
+        return (
+        );
+    }
+});
+
+
 var Main = React.createClass({
 
-    mixins: [Route.Mixin],
+    mixins: [Route.Mixin, ListenToMixin],
 
     getInitialState: function() {
         return {
@@ -34,11 +37,24 @@ var Main = React.createClass({
     },
 
     componentDidMount: function() {
-        console.log("binding model");
         var self = this;
-        this.state.ticketModel.on("change save:done fetch:done", function() {
-            self.forceUpdate();
+        this.listenTo(
+            this.state.ticketModel,
+            "change save:end fetch:end save:start fetch:start",
+            function(e) {
+                console.log("force update!", e);
+                self.forceUpdate();
         });
+    },
+
+    renderTicketList: function() {
+
+    },
+
+    renderTicketForm: function() {
+        if (routes.newTicket.match || routes.existingTicket.match) {
+            return <TicketForm ticketModel={this.state.ticketModel} />;
+        }
     },
 
     render: function() {
@@ -47,7 +63,8 @@ var Main = React.createClass({
 
                 <h1>Tukipalvelu</h1>
 
-                <TicketForm ticketModel={this.state.ticketModel} />
+                {this.renderTicketForm()}
+
 
             </div>
         );
