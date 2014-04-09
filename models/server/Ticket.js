@@ -36,5 +36,15 @@ var Ticket = Bookshelf.DB.Model.extend({
 
 });
 
+Ticket.fetchByVisibility = function(visibilities) {
+    return Ticket
+    .collection()
+    .query(function(queryBuilder) {
+        queryBuilder
+        .join("visibilities", "tickets.id", "=", "visibilities.ticket")
+        .whereIn("visibilities.entity", visibilities);
+    })
+    .fetch();
+};
 
 module.exports = Ticket;

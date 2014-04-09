@@ -117,14 +117,7 @@ describe("Ticket model", function() {
                 return withVisibility;
             })
             .then(function() {
-                return Ticket
-                .collection()
-                .query(function(qb) {
-                    qb
-                    .join("visibilities", "tickets.id", "=", "visibilities.ticket")
-                    .whereIn("visibilities.entity", ["school:1"]);
-                })
-                .fetch();
+                return Ticket.fetchByVisibility(["school:1"]);
             })
             .then(function(coll) {
                 assert.equal(1, coll.size());
