@@ -17,8 +17,17 @@ exports.up = function(knex, Promise) {
             table.dateTime("updated");
             table.integer("ticket");
         }),
-    ]);
 
+        knex.schema.createTable("visibilities", function(table) {
+            table.increments("id");
+            table.string("comment");
+            table.string("entity");
+            table.dateTime("created");
+            table.dateTime("updated");
+            table.integer("ticket");
+        }),
+
+    ]);
 };
 
 exports.down = function(knex, Promise) {

@@ -1,5 +1,7 @@
 /*global it, describe, before */
 
+var Promise = require("bluebird");
+
 var setupTestDatabase = require("../setupTestDatabase");
 
 var Ticket = require("../../models/server/Ticket");
@@ -77,6 +79,60 @@ describe("Ticket model", function() {
             .then(function(ticket) {
                 assert.equal(ticket.get("title"), "new title");
             });
+    });
+
+    describe("visibilities", function() {
+
+        it("foo", function() {
+            var withVisibility = Ticket.forge({
+                title: "With visibility",
+                description: "desc"
+            })
+            .save()
+            .then(function(ticket) {
+                return ticket.addVisibility({
+                    entity: "school:1",
+                    comment: "This ticket affect whole school"
+                });
+            });
+
+            var otherTickets = [
+                { title: "foo1", description: "bar" },
+                { title: "foo2", description: "bar" },
+                { title: "foo2", description: "bar" }
+            ].map(function(data) {
+                return Ticket
+                .forge(data)
+                .save()
+                .then(function(ticket) {
+                    return ticket.addVisibility({
+                        entity: "bad",
+                        comment: "for the other ticket"
+                    });
+                });
+            });
+
+            return Promise.all(otherTickets)
+            .then(function() {
+                return withVisibility;
+            })
+            .then(function() {
+                return Ticket
+                .collection()
+                .query(function(qb) {
+                    qb
+                    .join("visibilities", "tickets.id", "=", "visibilities.ticket")
+                    .whereIn("visibilities.entity", ["school:1"]);
+                })
+                .fetch();
+            })
+            .then(function(coll) {
+                assert.equal(1, coll.size());
+                console.log(coll.first().toJSON());
+            });
+
+        });
+
     });
 
 });

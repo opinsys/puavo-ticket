@@ -1,6 +1,7 @@
 
 var Bookshelf = require("bookshelf");
 var Comment = require("./Comment");
+var Visibility = require("./Visibility");
 var _ = require("lodash");
 
 var Ticket = Bookshelf.DB.Model.extend({
@@ -15,6 +16,16 @@ var Ticket = Bookshelf.DB.Model.extend({
 
     comments: function() {
         return this.hasMany(Comment, "ticket");
+    },
+
+    visibilities: function() {
+        return this.hasMany(Visibility, "ticket");
+    },
+
+    addVisibility: function(visibility) {
+        return Visibility.forge(_.extend({}, visibility, {
+            ticket: this.get("id"),
+        })).save();
     },
 
     addComment: function(comment) {
