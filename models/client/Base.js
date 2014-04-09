@@ -1,41 +1,39 @@
 var Backbone = require("backbone");
 var Promise = require("bluebird");
 
+
+function promiseWrap(name, orig) {
+    return function() {
+        var self = this;
+        self.trigger(name + ":start");
+
+        self[name] = Promise.delay(1000) // simulate slow network
+        .then(function() {
+            return Promise.cast(orig.apply(self, arguments));
+        })
+        .then(function() {
+            self[name] = null;
+            self.trigger(name + ":end");
+        });
+
+        return self[name];
+    };
+}
+
 var Base = Backbone.Model.extend({
 
-    save: function() {
-        var self = this;
-        self.trigger("save:start");
+    fetch: promiseWrap("fetching", Backbone.Model.prototype.fetch),
 
-        this.saving = Promise.cast(
-            Backbone.Model.prototype.save.apply(this, arguments)
-        ).delay(1000).then(function() {
-            self.saving = null;
-            self.trigger("save:end");
-        });
-
-        return this.saving;
-    },
-
-    fetch: function() {
-        var self = this;
-        self.trigger("fetch:start");
-
-        this.fetching = Promise.cast(
-            Backbone.Model.prototype.fetch.apply(this, arguments)
-        ).then(function() {
-            self.fetching = null;
-            self.trigger("fetch:end");
-        });
-
-        return this.fetching;
-    },
-
+    save: promiseWrap("saving", Backbone.Model.prototype.save),
 
     isOperating: function() {
         return !!(this.saving || this.fetching);
     }
 
+});
+
+Base.Collection = Backbone.Collection.extend({
+    fetch: promiseWrap("fetching", Backbone.Collection.prototype.fetch),
 });
 
 module.exports = Base;

@@ -121,7 +121,7 @@ describe("Ticket model", function() {
             })
             .then(function(coll) {
                 assert.equal(1, coll.size());
-                console.log(coll.first().toJSON());
+                assert.equal("With visibility", coll.first().get("title"));
             });
 
         });

@@ -23,6 +23,7 @@ var Ticket = Bookshelf.DB.Model.extend({
     },
 
     addVisibility: function(visibility) {
+
         return Visibility.forge(_.extend({}, visibility, {
             ticket: this.get("id"),
         })).save();

@@ -11,16 +11,57 @@ var TicketForm = require("./components/TicketForm");
 var Ticket = require("./models/client/Ticket");
 
 var routes = require("./components/routes");
+var LinkNewTicket = routes.LinkNewTicket;
+var LinkTicket = routes.LinkTicket;
+
 var ListenToMixin = require("./ListenToMixin");
 
 var $ = require("jquery");
 var Backbone = require("backbone");
 Backbone.$ = $;
 
-
 var TicketList = React.createClass({
+
+    mixins: [ListenToMixin],
+
+    getInitialState: function() {
+        return {
+            ticketCollection: Ticket.collection(),
+        };
+    },
+
+    componentDidMount: function() {
+        var self = this;
+
+        this.listenTo(
+            this.state.ticketCollection, "all", function(e) {
+                console.log("collection update", e, !!self.state.ticketCollection.fetching);
+                self.forceUpdate();
+        });
+
+        this.state.ticketCollection.fetch();
+
+    },
+
     render: function() {
+        console.log("render list", Date.now(), !! this.state.ticketCollection.fetching);
         return (
+            <div>
+                <h2>Päivittyneet tukipyynnöt</h2>
+                {this.state.ticketCollection.fetching && <p>Ladataan...</p>}
+                <ul>
+                    {this.state.ticketCollection.map(function(ticket) {
+                        return (
+                            <li key={ticket.get("id")}>
+                                <LinkTicket id={ticket.get("id")}>
+                                {ticket.get("title")}
+                                </LinkTicket>
+                            </li>
+                        );
+                    })}
+                </ul>
+                <LinkNewTicket>Uusi</LinkNewTicket>
+            </div>
         );
     }
 });
@@ -30,30 +71,10 @@ var Main = React.createClass({
 
     mixins: [Route.Mixin, ListenToMixin],
 
-    getInitialState: function() {
-        return {
-            ticketModel: new Ticket()
-        };
-    },
-
-    componentDidMount: function() {
-        var self = this;
-        this.listenTo(
-            this.state.ticketModel,
-            "change save:end fetch:end save:start fetch:start",
-            function(e) {
-                console.log("force update!", e);
-                self.forceUpdate();
-        });
-    },
-
-    renderTicketList: function() {
-
-    },
 
     renderTicketForm: function() {
         if (routes.newTicket.match || routes.existingTicket.match) {
-            return <TicketForm ticketModel={this.state.ticketModel} />;
+            return <TicketForm />;
         }
     },
 
@@ -63,8 +84,9 @@ var Main = React.createClass({
 
                 <h1>Tukipalvelu</h1>
 
-                {this.renderTicketForm()}
+                {routes.ticketList.match && <TicketList />}
 
+                {this.renderTicketForm()}
 
             </div>
         );

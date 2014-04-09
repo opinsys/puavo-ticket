@@ -125,7 +125,7 @@ Route.Mixin = {
 
 Route.navigate = function(url) {
     history.pushState({}, "", Route.mountPoint + url);
-    console.log("navigate!");
+    console.log("navigate!", url);
     updateRoutes();
 };
 
