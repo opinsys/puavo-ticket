@@ -1,34 +1,65 @@
+"use strict";
 var Backbone = require("backbone");
 var Promise = require("bluebird");
 
 
-function promiseWrap(name, orig) {
+/**
+ * Decorate method execution with `<eventName>:start` and `<eventName>:end`
+ * events and wrap output to a bluebird promise. During promise resolution the
+ * promise is available in `this[eventName]`.
+ *
+ *
+ * @method promiseWrap
+ * @static
+ * @private
+ * @param {String} eventName
+ * @param {Function} method
+ */
+function promiseWrap(eventName, method) {
     return function() {
         var self = this;
-        self.trigger(name + ":start");
+        self.trigger(eventName + ":start");
 
-        self[name] = Promise.delay(1000) // simulate slow network
+        self[eventName] = Promise.delay(1000) // simulate slow network
         .then(function() {
-            return Promise.cast(orig.apply(self, arguments));
+            return Promise.cast(method.apply(self, arguments));
         })
         .then(function() {
-            self[name] = null;
-            self.trigger(name + ":end");
+            self[eventName] = null;
+            self.trigger(eventName + ":end");
         });
 
-        return self[name];
+        return self[eventName];
     };
 }
 
+
+
+/**
+ * Base class for client models
+ *
+ * http://backbonejs.org/#Model
+ *
+ * @namespace models.client
+ * @class Base
+ * @extends Backbone.Model
+ * @see http://backbonejs.org/#Model
+ */
 var Base = Backbone.Model.extend({
 
     fetch: promiseWrap("fetching", Backbone.Model.prototype.fetch),
 
     save: promiseWrap("saving", Backbone.Model.prototype.save),
 
+    /**
+     * Is the model saving or fetching data
+     *
+     * @method isOperating
+     */
     isOperating: function() {
         return !!(this.saving || this.fetching);
     }
+
 
 });
 

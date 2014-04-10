@@ -10,23 +10,27 @@
     "browserify": "~3.39.0",
     "watchify": "~0.6.3",
     "uglify-js": "~2.4.13",
-    "express": "~3.5.1",
+    "express": "~4.0.0",
     "browserify-middleware": "~2.5.0",
-    "routes": "https://registry.npmjs.org/routes/-/routes-0.2.0.tgz",
     "lodash": "~2.4.1",
     "xtend": "~2.2.0",
-    "sequelize": "~1.7.0",
     "sqlite3": "~2.2.0",
     "bookshelf": "~0.6.8",
     "knex": "~0.5.13",
     "mocha": "~1.18.2",
-    "chai": "~1.9.1",
-    "chai-as-promised": "~4.1.1",
-    "supertest": "~0.10.0",
-    "superagent": "~0.17.0",
     "backbone.cocktail": "~0.5.7",
     "jquery": "~2.1.0",
     "backbone": "~1.1.2",
-    "bluebird": "~1.2.1"
+    "bluebird": "~1.2.1",
+    "body-parser": "~1.0.1",
+    "serve-static": "~1.0.4",
+    "routes": "~0.3.0"
+  },
+  "devDependencies": {
+    "jshint": "~2.5.0",
+    "jsxhint": "~0.4.4",
+    "yuidocjs": "~0.3.49",
+    "supertest": "~0.10.0",
+    "superagent": "~0.17.0"
   }
 }

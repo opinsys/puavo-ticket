@@ -67,11 +67,20 @@ var TicketList = React.createClass({
 });
 
 
+/**
+ * Root React component. The app starts here
+ *
+ * @namespace components
+ * @class Main
+ * @uses utils.ListenToMixin
+ */
 var Main = React.createClass({
 
     mixins: [Route.Mixin, ListenToMixin],
 
-
+    /**
+     * @method renderTicketForm
+     */
     renderTicketForm: function() {
         if (routes.newTicket.match || routes.existingTicket.match) {
             return <TicketForm />;
@@ -93,6 +102,5 @@ var Main = React.createClass({
     }
 
 });
-
 
 React.renderComponent(<Main />, document.getElementById("app"));

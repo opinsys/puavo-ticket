@@ -1,13 +1,10 @@
 /** @jsx React.DOM */
+"use strict";
+
 var React = require("react/addons");
-var TicketModel = require("../TicketModel");
 var MetadataButtons = require("./MetadataButtons");
 
 var TicketUpdates = React.createClass({
-
-    propTypes: {
-        ticketModel: TicketModel.Type.isRequired
-    },
 
     handleAddTextUpdate: function(e) {
         var el = this.refs.updateText.getDOMNode();

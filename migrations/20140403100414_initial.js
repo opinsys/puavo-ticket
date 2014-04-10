@@ -21,7 +21,8 @@ exports.up = function(knex, Promise) {
         knex.schema.createTable("visibilities", function(table) {
             table.increments("id");
             table.string("comment");
-            table.string("entity");
+            table.integer("entity");
+            table.string("entity_type");
             table.dateTime("created");
             table.dateTime("updated");
             table.integer("ticket");

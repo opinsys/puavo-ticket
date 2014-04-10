@@ -1,9 +1,17 @@
-
+"use strict";
 var Bookshelf = require("bookshelf");
 var Comment = require("./Comment");
 var Visibility = require("./Visibility");
 var _ = require("lodash");
 
+
+/**
+ * Server Ticket model
+ *
+ * @namespace models.server
+ * @extends Bookshelf.Model
+ * @class Ticket
+ */
 var Ticket = Bookshelf.DB.Model.extend({
     tableName: "tickets",
 
@@ -14,6 +22,13 @@ var Ticket = Bookshelf.DB.Model.extend({
         };
     },
 
+    /**
+     *
+     * @method comments
+     * @return {bluebird.Promise}
+     *     resolves to Backbone.Collection of models.server.Comment wrapped in
+     *     a `Promise`.
+     */
     comments: function() {
         return this.hasMany(Comment, "ticket");
     },
@@ -23,16 +38,22 @@ var Ticket = Bookshelf.DB.Model.extend({
     },
 
     addVisibility: function(visibility) {
-
         return Visibility.forge(_.extend({}, visibility, {
             ticket: this.get("id"),
         })).save();
     },
 
+    /**
+     * Add comment to the ticket
+     *
+     * @method addComment
+     * @param {Object} comment Plain object with models.server.Comment fields
+     * @return {bluebird.Promise}
+     */
     addComment: function(comment) {
-        return Comment.forge(_.extend({}, comment, {
-            ticket: this.get("id"),
-        })).save();
+        comment = _.clone(comment);
+        comment.ticket = this.get("id");
+        return Comment.forge(comment).save();
     }
 
 });
