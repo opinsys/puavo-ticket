@@ -1,3 +1,4 @@
+"use strict";
 var initDb = require("../db");
 var Bookshelf = require("bookshelf");
 var Promise = require("bluebird");

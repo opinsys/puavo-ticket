@@ -1,4 +1,5 @@
 /** @jsx React.DOM */
+"use strict";
 var React = require("react/addons");
 
 var routes = require("./routes");

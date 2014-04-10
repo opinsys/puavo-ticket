@@ -1,3 +1,4 @@
+"use strict";
 
 require("./db");
 var browserify = require("browserify-middleware");

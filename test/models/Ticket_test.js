@@ -1,5 +1,4 @@
-/*global it, describe, before */
-
+"use strict";
 var Promise = require("bluebird");
 
 var setupTestDatabase = require("../setupTestDatabase");

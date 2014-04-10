@@ -1,5 +1,4 @@
-/*global it, describe, before */
-
+"use strict";
 var setupTestDatabase = require("../setupTestDatabase");
 
 var assert = require("assert");

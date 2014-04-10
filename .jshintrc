@@ -1,0 +1,13 @@
+{
+    "undef":  true,
+    "unused": "vars",
+    "node": true,
+    "browser": true,
+    "strict": true,
+    "newcap": false,
+    "globals": {
+        "it": true,
+        "describe": true,
+        "before": true
+    }
+}

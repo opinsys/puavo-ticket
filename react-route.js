@@ -1,4 +1,5 @@
 /** @jsx React.DOM */
+"use strict";
 var React = require("react");
 var createRoutes = require("routes");
 var xtend = require("xtend");
