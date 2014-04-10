@@ -4,11 +4,14 @@ require("./db");
 var browserify = require("browserify-middleware");
 var express = require("express");
 var Ticket = require("./models/server/Ticket");
+var serveStatic = require("serve-static");
+var bodyParser = require("body-parser");
 
 var app = express();
-app.use(express.bodyParser());
 
-app.use(express.static(__dirname));
+app.use(bodyParser());
+app.use(serveStatic(__dirname));
+app.use("/doc", serveStatic(__dirname + "/doc"));
 
 app.get("/bundle.js", browserify("./client.js", {
     transform: ["reactify"]
