@@ -50,7 +50,7 @@ test-browsers-watch: browserify-test
 	$(KARMA) start
 
 test-server:
-	mocha -C test/models/*_test.js test/api/*_test.js
+	mocha --no-colors --reporter spec test/models/*_test.js test/api/*_test.js
 
 .PHONY: test
 test: jshint test-server test-browsers
