@@ -4,11 +4,8 @@ var Base = require("./Base");
 /**
  * Client ticket model
  *
- * Extends from Backbone.Model  http://backbonejs.org/#Model
- *
  * @namespace models.client
  * @class Ticket
- * @extends Backbone.Model
  * @extends models.client.Base
  * @uses models.TicketMixin
  */

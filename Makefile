@@ -24,7 +24,7 @@ doc-watch:
 
 .PHONY: test
 test: jshint
-	mocha -C test/*/*_test.js
+	mocha -C test/models/*_test.js test/api/*_test.js
 
 js_files=$(shell git ls-files "*.js")
 jshint: $(js_files)

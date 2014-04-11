@@ -17,9 +17,7 @@ var LinkTicket = routes.LinkTicket;
 
 var ListenToMixin = require("./ListenToMixin");
 
-var $ = require("jquery");
-var Backbone = require("backbone");
-Backbone.$ = $;
+require("./client_setup");
 
 var TicketList = React.createClass({
 

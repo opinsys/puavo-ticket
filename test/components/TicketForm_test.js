@@ -1,0 +1,57 @@
+/** @jsx React.DOM */
+"use strict";
+
+var sinon = window.sinon;
+var Route = require("../../react-route");
+
+var React = require("react/addons");
+var assert = require("assert");
+
+var TicketForm = require("../../components/TicketForm");
+
+var currentLocation = window.location.toString();
+
+describe("TicketForm", function() {
+
+    beforeEach(function() {
+        this.server = sinon.fakeServer.create();
+        this.server.autoRespond = true;
+    });
+
+    afterEach(function() {
+        this.server.restore();
+        Route.navigate(currentLocation);
+        // history.back();
+    });
+
+    it("displays empty form on /", function() {
+        Route.navigate("/");
+        var form = React.addons.TestUtils.renderIntoDocument(<TicketForm />);
+        assert.equal(form.refs.title.getDOMNode().value, "");
+        assert.equal(form.refs.description.getDOMNode().value, "");
+    });
+
+    it("loads a ticket on /tickets/1", function(done) {
+        this.server.respondWith("GET", "/api/tickets/1", [
+            200,
+            {  "Content-Type": "application/json" },
+            JSON.stringify({
+                title: "foo",
+                description: "bar"
+            })
+        ]);
+
+        Route.navigate("/ticket/1");
+
+        var form = React.addons.TestUtils.renderIntoDocument(<TicketForm />);
+
+        form.state.ticketModel.fetching
+        .then(function() {
+            assert.equal(form.refs.title.getDOMNode().value, "foo");
+            assert.equal(form.refs.description.getDOMNode().value, "bar");
+            done();
+        })
+        .catch(done);
+    });
+
+});

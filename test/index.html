@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Mocha tests</title>
+        <link rel="stylesheet" href="/mocha/mocha.css" />
+    </head>
+<body>
+ <div id="mocha"></div>
+  <div id="scratch"></div>
+  <!-- sinon has some issues when loaded from npm with browserify -->
+  <script charset="utf-8" src="/sinon/sinon.js"></script>
+
+  <!-- load mocha as global -->
+  <script charset="utf-8" src="/mocha/mocha.js"></script>
+  <script charset="utf-8" >
+      mocha.setup("bdd");
+  </script>
+  <script charset="utf-8" src="/test/components/bundle.js"></script>
+  <script charset="utf-8">
+    mocha.checkLeaks();
+    var runner = mocha.run();
+    runner.on("fail", function(test, err) {
+        console.error("TEST FAILED:", test.title, err)
+        if (err) console.error(err.message, err.stack);
+    });
+  </script>
+</body>
+</html>

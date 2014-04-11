@@ -13,12 +13,16 @@ app.use(bodyParser());
 app.use(serveStatic(__dirname));
 app.use("/doc", serveStatic(__dirname + "/doc"));
 
+if (process.env.NODE_ENV !== "production") {
+    app.use(require("./test/server"));
+}
+
 app.get("/bundle.js", browserify("./client.js", {
     transform: ["reactify"]
 }));
 
-
 app.get("/api/tickets", function(req, res, next) {
+    console.log("GET", req.url);
     Ticket.collection().fetch()
     .then(function(coll) {
         res.json(coll.toJSON());
@@ -27,6 +31,7 @@ app.get("/api/tickets", function(req, res, next) {
 });
 
 app.get("/api/tickets/:id", function(req, res, next) {
+    console.log("GET", req.url);
     Ticket.forge({ id: req.params.id }).fetch()
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });

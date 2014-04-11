@@ -20,13 +20,22 @@ function promiseWrap(eventName, method) {
         var self = this;
         self.trigger(eventName + ":start");
 
-        self[eventName] = Promise.delay(1000) // simulate slow network
+        self[eventName] = Promise.delay(10) // simulate slow network
         .then(function() {
             return Promise.cast(method.apply(self, arguments));
         })
         .then(function() {
             self[eventName] = null;
             self.trigger(eventName + ":end");
+        })
+        .catch(function(err) {
+            // jQuery returns an xhr object as the error object. Convert it to proper error object
+            if (err && err.responseText !== undefined) {
+                var xhr = err;
+                err = new Error("Bad request " + xhr.status + ": " + xhr.responseText);
+                err.xhr = xhr;
+            }
+            throw err;
         });
 
         return self[eventName];
