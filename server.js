@@ -1,6 +1,6 @@
 "use strict";
 
-var DB = require("./db");
+require("./db");
 var browserify = require("browserify-middleware");
 var express = require("express");
 var Ticket = require("./models/server/Ticket");
