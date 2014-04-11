@@ -10,7 +10,6 @@
   <div id="scratch"></div>
   <!-- sinon has some issues when loaded from npm with browserify -->
   <script charset="utf-8" src="test/vendor/sinon.js"></script>
-  <script charset="utf-8" src="test/vendor/mocha-yeti-adaptor.js"></script>
 
   <!-- load mocha as global -->
   <script charset="utf-8" src="node_modules/mocha/mocha.js"></script>
@@ -21,7 +20,6 @@
   <script charset="utf-8">
     mocha.checkLeaks();
     var runner = mocha.run();
-    BUNYIP.hookup(runner);
     runner.on("fail", function(test, err) {
         console.error("TEST FAILED:", test.title, err)
         if (err) console.error(err.message, err.stack);
