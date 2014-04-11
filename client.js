@@ -18,6 +18,14 @@ var LinkTicket = routes.LinkTicket;
 
 require("./client_setup");
 
+/**
+ * List existing tickes
+ *
+ * @namespace components
+ * @class TicketList
+ * @extends React.ReactComponent
+ * @uses components.EventMixin
+ */
 var TicketList = React.createClass({
 
     mixins: [EventMixin],

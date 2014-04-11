@@ -12,6 +12,15 @@ var LinkNewTicket = routes.LinkNewTicket;
 var LinkTicketList = routes.LinkTicketList;
 var EventMixin = require("../EventMixin");
 
+
+/**
+ * Edit form for a ticket
+ *
+ * @namespace components
+ * @class TicketForm
+ * @extends React.ReactComponent
+ * @uses components.EventMixin
+ */
 var TicketForm = React.createClass({
 
     mixins: [EventMixin],
@@ -44,6 +53,12 @@ var TicketForm = React.createClass({
         return this.state.ticketModel.isOperating();
     },
 
+    /**
+     * Fetch model from the rest api if viewing existing ticket otherwise just
+     * clear the model for new tickets
+     *
+     * @method setupModel
+     */
     setupModel: function() {
         if (routes.existingTicket.match) {
             this.state.ticketModel.set({ id: routes.existingTicket.match.params.id });
@@ -56,6 +71,9 @@ var TicketForm = React.createClass({
         }
     },
 
+    /**
+     * @method handleSave
+     */
     handleSave: function() {
         var self = this;
         this.state.ticketModel.save().then(function(foo) {
@@ -76,6 +94,9 @@ var TicketForm = React.createClass({
         });
     },
 
+    /**
+     * @method renderSimilarTickets
+     */
     renderSimilarTickets: function() {
         if (routes.newTicket.match) {
             return <SimilarTickets ticketModel={this.state.ticketModel} />;

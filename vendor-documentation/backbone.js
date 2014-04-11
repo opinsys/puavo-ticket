@@ -5,6 +5,7 @@
  *
  * @namespace Backbone
  * @class Model
+ * @uses Backbone.Events
  */
 
 /**
@@ -14,5 +15,14 @@
  *
  * @namespace Backbone
  * @class Collection
+ * @uses Backbone.Events
  */
 
+/**
+ * Backbone Events
+ *
+ * http://backbonejs.org/#Events
+ *
+ * @namespace Backbone
+ * @class Events
+ */
