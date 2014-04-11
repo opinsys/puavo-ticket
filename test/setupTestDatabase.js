@@ -1,23 +1,11 @@
 "use strict";
-var initDb = require("../db");
-var Bookshelf = require("bookshelf");
-var Promise = require("bluebird");
-var fs = Promise.promisifyAll(require("fs"));
-
+var DB = require("../db");
 var config = require("../config");
 
 function setupTestDatabase() {
-    // Remove existing database file
-    return fs.unlinkAsync(config.database.connection.filename)
-        .catch(function() {
-            console.log("no db file");
-        })
+    return DB.knex.migrate.rollback(config)
         .then(function() {
-            return Bookshelf.DB.knex.migrate.latest(config);
-        })
-        .then(function() {
-            console.log("migrate ok");
-            initDb();
+            return DB.knex.migrate.latest(config);
         });
 }
 
