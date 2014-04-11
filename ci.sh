@@ -2,6 +2,10 @@
 
 set -eux
 
+set
+
+env
+
 sudo apt-get update
 sudo apt-get install nodejs-bundle build-essential git-core xvfb firefox chromium-browser -y --force-yes
 
