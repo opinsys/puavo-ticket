@@ -73,6 +73,7 @@ var TicketList = React.createClass({
  *
  * @namespace components
  * @class Main
+ * @extends react.ReactComponent
  * @uses utils.ListenToMixin
  */
 var Main = React.createClass({

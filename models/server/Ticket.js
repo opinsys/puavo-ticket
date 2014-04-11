@@ -33,14 +33,29 @@ var Ticket = Bookshelf.DB.Model.extend({
         return this.hasMany(Comment, "ticket");
     },
 
+
+    /**
+     *
+     * @method visibilities
+     * @return {bluebird.Promise}
+     *     resolves to Backbone.Collection of models.server.Visibility wrapped
+     *     in a `Promise`.
+     */
     visibilities: function() {
         return this.hasMany(Visibility, "ticket");
     },
 
+    /**
+     * Add visibility to the ticket
+     *
+     * @method addVisibility
+     * @param {Object} visibility Plain object with models.server.Visibility fields
+     * @return {bluebird.Promise}
+     */
     addVisibility: function(visibility) {
-        return Visibility.forge(_.extend({}, visibility, {
-            ticket: this.get("id"),
-        })).save();
+        visibility = _.clone(visibility);
+        visibility.ticket = this.get("id");
+        return Visibility.forge(visibility).save();
     },
 
     /**
@@ -58,6 +73,16 @@ var Ticket = Bookshelf.DB.Model.extend({
 
 });
 
+/**
+ * Fetch tickets by give visibilities.
+ *
+ * @method fetchByVisibility
+ * @param {Array} visibilities Array of visibility strings. Strings are in the
+ * form of `organisation|school|user:<entity id>`.
+ *
+ *     Example: "school:2"
+ * @return {bluebird.Promise} Backbone.Collection of models.server.Ticket
+ */
 Ticket.fetchByVisibility = function(visibilities) {
     return Ticket
     .collection()
