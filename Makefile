@@ -18,6 +18,7 @@ migrate:
 doc:
 	yuidoc \
 		--themedir yuidoc-theme \
+		--exclude test,node_modules,doc \
 		--outdir doc/ .
 
 doc-watch:
