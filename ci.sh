@@ -6,6 +6,9 @@ set
 
 env
 
+## fix home for now
+export HOME=/home/ci
+
 sudo apt-get update
 sudo apt-get install nodejs-bundle build-essential git-core xvfb firefox chromium-browser -y --force-yes
 
