@@ -4,28 +4,33 @@ var React = require("react/addons");
 
 var Lightbox = require("./Lightbox");
 var SimilarTickets = require("./SimilarTickets");
-var ListenToMixin = require("../ListenToMixin");
 
 var Ticket = require("../models/client/Ticket");
 var routes = require("./routes");
 var LinkTicket = routes.LinkTicket;
 var LinkNewTicket = routes.LinkNewTicket;
 var LinkTicketList = routes.LinkTicketList;
+var EventMixin = require("../EventMixin");
 
 var TicketForm = React.createClass({
 
-    mixins: [ListenToMixin],
+    mixins: [EventMixin],
 
     getInitialState: function() {
-        return {};
+        return {
+            ticketModel: new Ticket()
+        };
     },
 
     componentWillMount: function() {
-        this.fetchTicket();
+        console.log("setup model from mount");
+        this.setupModel();
+        this.reactTo(this.state.ticketModel);
     },
 
     componentWillReceiveProps: function() {
-        this.fetchTicket();
+        console.log("setup model from props");
+        this.setupModel();
     },
 
     handleChange: function() {
@@ -39,28 +44,17 @@ var TicketForm = React.createClass({
         return this.state.ticketModel.isOperating();
     },
 
-    fetchTicket: function() {
-        var model = this.state.ticketModel;
-
-        if (!model || routes.newTicket.match) {
-            model = new Ticket();
-
-            var self = this;
-            this.stopListening();
-
-            this.listenTo(model, "all", function(e) {
-                self.forceUpdate();
-            });
-
-            this.setState({ ticketModel: model });
+    setupModel: function() {
+        if (routes.existingTicket.match) {
+            this.state.ticketModel.set({ id: routes.existingTicket.match.params.id });
+            this.state.ticketModel.fetch();
         }
 
-        if (routes.existingTicket.match) {
-            model.set({ id: routes.existingTicket.match.params.id });
-            model.fetch();
+        if (routes.newTicket.match) {
+            this.state.ticketModel.clear();
+            this.state.ticketModel.set(this.state.ticketModel.defaults());
         }
     },
-
 
     handleSave: function() {
         var self = this;
@@ -89,7 +83,7 @@ var TicketForm = React.createClass({
     },
 
     render: function() {
-
+        console.log("render TickerForm");
         return (
             <div>
 
@@ -124,7 +118,6 @@ var TicketForm = React.createClass({
                         disabled={this.isOperating()}
                         onClick={this.handleSave} >Tallenna</button>
                 </div>
-
 
 
             </div>

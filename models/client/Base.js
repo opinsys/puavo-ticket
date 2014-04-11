@@ -2,7 +2,6 @@
 var Backbone = require("backbone");
 var Promise = require("bluebird");
 
-
 /**
  * Decorate method execution with `<eventName>:start` and `<eventName>:end`
  * events and wrap output to a bluebird promise. During promise resolution the
@@ -29,7 +28,8 @@ function promiseWrap(eventName, method) {
             self.trigger(eventName + ":end");
         })
         .catch(function(err) {
-            // jQuery returns an xhr object as the error object. Convert it to proper error object
+            // jQuery returns an xhr object as the error object. Convert it to
+            // a proper error object
             if (err && err.responseText !== undefined) {
                 var xhr = err;
                 err = new Error("Bad request " + xhr.status + ": " + xhr.responseText);
@@ -68,7 +68,6 @@ var Base = Backbone.Model.extend({
     isOperating: function() {
         return !!(this.saving || this.fetching);
     }
-
 
 });
 

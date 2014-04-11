@@ -10,18 +10,17 @@ var TicketForm = require("./components/TicketForm");
 // var TicketModel = require("./TicketModel");
 
 var Ticket = require("./models/client/Ticket");
+var EventMixin = require("./EventMixin");
 
 var routes = require("./components/routes");
 var LinkNewTicket = routes.LinkNewTicket;
 var LinkTicket = routes.LinkTicket;
 
-var ListenToMixin = require("./ListenToMixin");
-
 require("./client_setup");
 
 var TicketList = React.createClass({
 
-    mixins: [ListenToMixin],
+    mixins: [EventMixin],
 
     getInitialState: function() {
         return {
@@ -29,21 +28,13 @@ var TicketList = React.createClass({
         };
     },
 
-    componentDidMount: function() {
-        var self = this;
-
-        this.listenTo(
-            this.state.ticketCollection, "all", function(e) {
-                console.log("collection update", e, !!self.state.ticketCollection.fetching);
-                self.forceUpdate();
-        });
-
+    componentWillMount: function() {
+        this.reactTo(this.state.ticketCollection);
         this.state.ticketCollection.fetch();
-
     },
 
     render: function() {
-        console.log("render list", Date.now(), !! this.state.ticketCollection.fetching);
+        console.log("render TicketList");
         return (
             <div>
                 <h2>Päivittyneet tukipyynnöt</h2>
@@ -76,7 +67,7 @@ var TicketList = React.createClass({
  */
 var Main = React.createClass({
 
-    mixins: [Route.Mixin, ListenToMixin],
+    mixins: [Route.Mixin],
 
     /**
      * @method renderTicketForm
@@ -88,6 +79,7 @@ var Main = React.createClass({
     },
 
     render: function() {
+        console.log("render Main");
         return (
             <div className="main">
 

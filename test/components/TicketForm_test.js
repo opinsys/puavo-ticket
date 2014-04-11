@@ -21,7 +21,6 @@ describe("TicketForm", function() {
     afterEach(function() {
         this.server.restore();
         Route.navigate(currentLocation);
-        // history.back();
     });
 
     it("displays empty form on /", function() {
