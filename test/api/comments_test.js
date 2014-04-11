@@ -14,13 +14,13 @@ describe("/api/tickets/:id/comments", function() {
 
     before(function() {
         return setupTestDatabase()
-	.then(function() {
-	    ticket = Ticket.forge({
-		title: "Test ticket",
-		description: "Test ticket with comments"
-	    });
-            return ticket.save()
-	});
+        .then(function() {
+            ticket = Ticket.forge({
+                title: "Test ticket",
+                description: "Test ticket with comments"
+            });
+            return ticket.save();
+        });
     });
 
 
