@@ -29,7 +29,7 @@ js_files=$(shell git ls-files "*.js" | grep -v test/vendor)
 jshint: $(js_files)
 	$(JSHINT) --config .jshintrc $(JSHINTFLAGS) $?
 
-browserify-test:
+browserify-test: jshint
 	browserify -d -t reactify test/components/index.js -o test/components/bundle.js
 
 browserify-test-watch:
@@ -50,7 +50,7 @@ test-browsers-watch: browserify-test
 	@echo
 	$(KARMA) start
 
-test-server:
+test-server: jshint
 	mocha --no-colors --reporter spec test/models/*_test.js test/api/*_test.js
 
 .PHONY: test
