@@ -26,7 +26,7 @@ doc-watch:
 test: jshint
 	mocha -C test/models/*_test.js test/api/*_test.js
 
-js_files=$(shell git ls-files "*.js")
+js_files=$(shell git ls-files "*.js" | grep -v test/vendor)
 jshint: $(js_files)
 	$(JSHINT) --config .jshintrc $(JSHINTFLAGS) $?
 
