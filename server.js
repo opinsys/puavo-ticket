@@ -73,7 +73,7 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
         .save()
         .then(function(comment) {
             res.json(comment.toJSON());
-        })
+        });
     })
     .catch(next);
 });
