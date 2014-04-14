@@ -23,3 +23,5 @@ sudo npm set registry http://registry.npmjs.org/
 
 make
 make test
+
+tools/bin/publish-docs
