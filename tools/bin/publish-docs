@@ -9,6 +9,11 @@ git log -1 > doc/version
 
 cd doc
 
+if [ "$(git config user.email)" = ""]; then
+    git config --global user.email "dev@opinsys.fi"
+    git config --global user.name "Opinsys developers"
+fi
+
 git init .
 git add .
 git commit -m "commit docs"
