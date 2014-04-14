@@ -1,5 +1,7 @@
 /** @jsx React.DOM */
 "use strict";
+var Promise = require("bluebird");
+Promise.longStackTraces();
 var React = require("react/addons");
 var Route = require("./react-route");
 Route.root = "/foo";
