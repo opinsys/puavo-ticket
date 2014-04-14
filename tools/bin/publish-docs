@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eux
+
+rm doc/.git -rf
+
+make doc
+
+git log -1 > doc/version
+
+cd doc
+
+git init .
+git add .
+git commit -m "commit docs"
+git push -f git@github.com:opinsys/puavo-ticket.git master:gh-pages
