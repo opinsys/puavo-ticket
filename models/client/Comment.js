@@ -17,7 +17,7 @@ function commentUrl(ticketId) {
 var Comment = Base.extend({
 
     url: function() {
-        return commentUrl(this.collection.opts.id);
+        return commentUrl(this.collection.ticketId);
     }
 
 }, {
@@ -33,37 +33,38 @@ var Comment = Base.extend({
      * @return {models.client.Comment.Collection}
      */
     collection: function(opts) {
-        return new Comment.Collection(null, opts);
+        return new Collection(null, opts);
     },
 
+
+});
+
+/**
+ *
+ * Client-side collection if ticket comments
+ *
+ * @namespace models.client.Comment
+ * @class Collection
+ * @extends models.client.Base.Collection
+ */
+var Collection = Base.Collection.extend({
+
     /**
-     *
-     * Client-side collection if ticket comments
-     *
-     * @namespace models.client.Comment
-     * @class Collection
-     * @extends models.client.Base.Collection
+     * @property model
+     * @type {models.client.Comment}
      */
-    Collection: Base.Collection.extend({
+    model: Comment,
 
-        /**
-         * @property model
-         * @type {models.client.Comment}
-         */
-        model: Comment,
+    initialize: function(models, opts) {
+        if (opts && opts.ticketId) this.ticketId = opts.ticketId;
+    },
 
-        initialize: function(models, opts) {
-            if (opts && opts.ticketId) this.ticketId = opts.ticketId;
-        },
-
-        url: function() {
-            if (!this.ticketId) {
-                throw new Error("Cannot fetch comments without ticketId!");
-            }
-            return commentUrl(this.ticketId);
+    url: function() {
+        if (!this.ticketId) {
+            throw new Error("Cannot fetch comments without ticketId!");
         }
-
-    })
+        return commentUrl(this.ticketId);
+    }
 
 });
 

@@ -73,29 +73,28 @@ var Ticket = Base.extend({
      * @return {models.client.Ticket.Collection}
      */
     collection: function() {
-        return new Ticket.Collection();
+        return new Collection();
     },
-
-    /**
-     *
-     * Client-side collection if tickets
-     *
-     * @namespace models.client.Ticket
-     * @class Collection
-     * @extends models.client.Base.Collection
-     */
-    Collection: Base.Collection.extend({
-        url: "/api/tickets",
-
-        /**
-         * @property model
-         * @type {models.client.Ticket}
-         */
-        model: Ticket
-    })
 
 });
 
+/**
+ *
+ * Client-side collection if tickets
+ *
+ * @namespace models.client.Ticket
+ * @class Collection
+ * @extends models.client.Base.Collection
+ */
+var Collection = Base.Collection.extend({
+    url: "/api/tickets",
+
+    /**
+     * @property model
+     * @type {models.client.Ticket}
+     */
+    model: Ticket
+});
 
 module.exports = Ticket;
 

@@ -161,7 +161,7 @@ var TicketForm = React.createClass({
                             return <li>{comment.get("comment")} {saving}</li>;
                         })}
                     </ul>
-                    <textarea ref="comment" ></textarea>
+                    <input ref="comment" type="text" />
                     <button onClick={this.saveComment}>Lähetä</button>
                 </div>
                 }

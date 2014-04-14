@@ -8,6 +8,7 @@ var React = require("react/addons");
 var assert = require("assert");
 
 var TicketForm = require("../../components/TicketForm");
+var routes = require("../../components/routes");
 
 var currentLocation = window.location.toString();
 
@@ -47,7 +48,7 @@ describe("TicketForm", function() {
             JSON.stringify([])
         ]);
 
-        Route.navigate("/ticket/1");
+        routes.LinkTicket.navigate({ id: 1 });
 
         var form = React.addons.TestUtils.renderIntoDocument(<TicketForm />);
 
