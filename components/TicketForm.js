@@ -148,19 +148,23 @@ var TicketForm = React.createClass({
                         onClick={this.handleSave} >Tallenna</button>
                 </div>
 
-                <ul>
-                    {this.state.ticketModel.comments().map(function(comment) {
-                        var saving;
-                        if (comment.saving) {
-                            saving = "saving...";
-                        }
 
-                        return <li>{comment.get("comment")} {saving}</li>;
-                    })}
-                </ul>
+                {routes.existingTicket.match &&
+                <div>
+                    <ul>
+                        {this.state.ticketModel.comments().map(function(comment) {
+                            var saving;
+                            if (comment.saving) {
+                                saving = "saving...";
+                            }
 
-                <textarea ref="comment" ></textarea>
-                <button onClick={this.saveComment}>Lähetä</button>
+                            return <li>{comment.get("comment")} {saving}</li>;
+                        })}
+                    </ul>
+                    <textarea ref="comment" ></textarea>
+                    <button onClick={this.saveComment}>Lähetä</button>
+                </div>
+                }
 
 
             </div>

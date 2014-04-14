@@ -26,6 +26,7 @@ describe("TicketForm", function() {
     it("displays empty form on /", function() {
         Route.navigate("/");
         var form = React.addons.TestUtils.renderIntoDocument(<TicketForm />);
+        assert(!form.refs.comment, "new ticket form must not have comments input");
         assert.equal(form.refs.title.getDOMNode().value, "");
         assert.equal(form.refs.description.getDOMNode().value, "");
     });
@@ -40,6 +41,12 @@ describe("TicketForm", function() {
             })
         ]);
 
+        this.server.respondWith("GET", "/api/tickets/1/comments", [
+            200,
+            {  "Content-Type": "application/json" },
+            JSON.stringify([])
+        ]);
+
         Route.navigate("/ticket/1");
 
         var form = React.addons.TestUtils.renderIntoDocument(<TicketForm />);
@@ -48,6 +55,7 @@ describe("TicketForm", function() {
         .then(function() {
             assert.equal(form.refs.title.getDOMNode().value, "foo");
             assert.equal(form.refs.description.getDOMNode().value, "bar");
+            assert(form.refs.comment, "has comments input");
             done();
         })
         .catch(done);

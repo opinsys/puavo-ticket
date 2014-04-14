@@ -21,6 +21,14 @@ var Ticket = Base.extend({
         };
     },
 
+    initialize: function() {
+        this.on("change:id", this._setTicketIdForComments.bind(this));
+    },
+
+    _setTicketIdForComments: function() {
+        this.comments().ticketId = this.get("id");
+    },
+
     /**
      * Return comments for the Ticket. Calls are cached. Ie. multiple calls to
      * this method will return the same collection instance.
@@ -29,15 +37,13 @@ var Ticket = Base.extend({
      * @return {models.client.Comment.Collection} Collection of comments wrapped in a Promise
      */
     comments: function(){
-        if (!this.get("id")) {
-            throw new Error("Cannot get comments for unsaved ticket!");
-        }
         if (this._comments) return this._comments;
-        this._comments = Comment.collection({ id: this.get("id") });
+        this._comments = Comment.collection();
         var self = this;
         this._comments.on("all", function(eventName) {
             self.trigger.apply(self, arguments);
         }, this);
+        this._setTicketIdForComments();
         return this._comments;
     },
 
@@ -53,7 +59,7 @@ var Ticket = Base.extend({
             this._comments = null;
         }
         this.clear();
-        this.set(_.result(this.defaults));
+        this.set(_.result(this, "defaults"));
     },
 
 }, {

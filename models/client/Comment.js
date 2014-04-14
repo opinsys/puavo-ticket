@@ -53,11 +53,14 @@ var Comment = Base.extend({
         model: Comment,
 
         initialize: function(models, opts) {
-            this.opts = opts;
+            if (opts && opts.ticketId) this.ticketId = opts.ticketId;
         },
 
         url: function() {
-            return commentUrl(this.opts.id);
+            if (!this.ticketId) {
+                throw new Error("Cannot fetch comments without ticketId!");
+            }
+            return commentUrl(this.ticketId);
         }
 
     })
