@@ -78,6 +78,16 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
     .catch(next);
 });
 
+app.get("/api/tickets/:id/comments", function(req, res, next) {
+    // TODO: limit with req.params.id!
+    Comment.collection()
+    .fetch()
+    .then(function(collection) {
+        res.json(collection.toJSON());
+    })
+    .catch(next);
+});
+
 
 app.get("/*", function(req, res) {
     res.sendfile(__dirname + "/views/index.html");
