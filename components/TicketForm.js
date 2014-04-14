@@ -34,7 +34,6 @@ var TicketForm = React.createClass({
     componentWillMount: function() {
         console.log("setup model from mount");
         this.setupModel();
-        this.reactTo(this.state.ticketModel);
     },
 
     componentWillReceiveProps: function() {
@@ -47,6 +46,13 @@ var TicketForm = React.createClass({
             description: this.refs.description.getDOMNode().value,
             title: this.refs.title.getDOMNode().value,
         });
+    },
+
+    saveComment: function() {
+        var c = this.state.ticketModel.comments().add({
+            comment: this.refs.comment.getDOMNode().value
+        });
+        c.save();
     },
 
     isOperating: function() {
@@ -63,12 +69,14 @@ var TicketForm = React.createClass({
         if (routes.existingTicket.match) {
             this.state.ticketModel.set({ id: routes.existingTicket.match.params.id });
             this.state.ticketModel.fetch();
+            this.state.ticketModel.comments().fetch();
         }
 
         if (routes.newTicket.match) {
-            this.state.ticketModel.clear();
-            this.state.ticketModel.set(this.state.ticketModel.defaults());
+            this.state.ticketModel.reset();
         }
+
+        this.reactTo(this.state.ticketModel);
     },
 
     /**
@@ -104,7 +112,7 @@ var TicketForm = React.createClass({
     },
 
     render: function() {
-        console.log("render TickerForm");
+        console.log("render TickerForm", this.state.ticketModel.comments().size());
         return (
             <div>
 
@@ -139,6 +147,20 @@ var TicketForm = React.createClass({
                         disabled={this.isOperating()}
                         onClick={this.handleSave} >Tallenna</button>
                 </div>
+
+                <ul>
+                    {this.state.ticketModel.comments().map(function(comment) {
+                        var saving;
+                        if (comment.saving) {
+                            saving = "saving...";
+                        }
+
+                        return <li>{comment.get("comment")} {saving}</li>;
+                    })}
+                </ul>
+
+                <textarea ref="comment" ></textarea>
+                <button onClick={this.saveComment}>Lähetä</button>
 
 
             </div>

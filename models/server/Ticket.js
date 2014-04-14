@@ -25,9 +25,7 @@ var Ticket = Bookshelf.DB.Model.extend({
     /**
      *
      * @method comments
-     * @return {bluebird.Promise}
-     *     resolves to Backbone.Collection of models.server.Comment wrapped in
-     *     a `Promise`.
+     * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket models
      */
     comments: function() {
         return this.hasMany(Comment, "ticket");

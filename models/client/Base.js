@@ -71,6 +71,15 @@ var Base = Backbone.Model.extend({
 
 });
 
+/**
+ * Base class for client model collections
+ *
+ * http://backbonejs.org/#Collection
+ *
+ * @namespace models.client.Base
+ * @class Collection
+ * @extends Backbone.Collection
+ */
 Base.Collection = Backbone.Collection.extend({
     fetch: promiseWrap("fetching", Backbone.Collection.prototype.fetch),
 });
