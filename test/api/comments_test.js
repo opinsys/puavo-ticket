@@ -28,19 +28,20 @@ describe("/api/tickets/:id/comments", function() {
                     title: "Test ticket",
                     description: "Test ticket with comments"
                 });
-                ticket.save();
-
+                return ticket.save();
+            })
+            .then(function() {
                 otherTicket = Ticket.forge({
                     title: "Other test ticket",
                     description: "Other test tickets"
                 });
-                otherTicket.save();
-
+                return otherTicket.save();
+            })
+            .then(function() {
                 commentForOtherTicket = Comment.forge({
                     ticket: otherTicket.id,
                     comment: "Comment for other ticket"
                 });
-
                 return commentForOtherTicket.save();
             });
     });
