@@ -118,8 +118,8 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
  * @apiSuccess {Object[]} . List of comments
  */
 app.get("/api/tickets/:id/comments", function(req, res, next) {
-    // TODO: limit with req.params.id!
     Comment.collection()
+    .query('where', 'ticket', '=', req.params.id)
     .fetch()
     .then(function(collection) {
         res.json(collection.toJSON());

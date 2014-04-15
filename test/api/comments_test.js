@@ -5,12 +5,15 @@ var assert = require("assert");
 var app = require("../../server");
 
 var Ticket = require("../../models/server/Ticket");
+var Comment = require("../../models/server/Comment");
 
 var request = require("supertest");
 
 describe("/api/tickets/:id/comments", function() {
 
     var ticket = null;
+    var otherTicket = null;
+    var commentForOtherTicket = null;
 
     before(function() {
         return setupTestDatabase()
@@ -19,7 +22,20 @@ describe("/api/tickets/:id/comments", function() {
                 title: "Test ticket",
                 description: "Test ticket with comments"
             });
-            return ticket.save();
+            ticket.save();
+
+            otherTicket = Ticket.forge({
+                title: "Other test ticket",
+                description: "Other test tickets"
+            });
+            otherTicket.save();
+
+            commentForOtherTicket = Comment.forge({
+                ticket: otherTicket.id,
+                comment: "Comment for other ticket"
+            });
+
+            return commentForOtherTicket.save();
         });
     });
 
