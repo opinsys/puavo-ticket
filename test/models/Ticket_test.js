@@ -1,7 +1,7 @@
 "use strict";
 var Promise = require("bluebird");
 
-var setupTestDatabase = require("../setupTestDatabase");
+var helpers = require("../helpers");
 
 var Ticket = require("../../models/server/Ticket");
 var assert = require("assert");
@@ -10,7 +10,7 @@ var assert = require("assert");
 describe("Ticket model", function() {
 
     before(function() {
-        return setupTestDatabase();
+        return helpers.setupTestDatabase();
     });
 
     it("Instance can be created", function() {

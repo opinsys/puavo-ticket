@@ -10,6 +10,7 @@
         "describe": true,
         "before": true,
         "beforeEach": true,
-        "afterEach": true
+        "afterEach": true,
+        "after": true
     }
 }

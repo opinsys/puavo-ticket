@@ -1,13 +1,11 @@
 "use strict";
-var setupTestDatabase = require("../setupTestDatabase");
+var helpers = require("../helpers");
 
 var assert = require("assert");
-var app = require("../../server");
 
 var Ticket = require("../../models/server/Ticket");
 var Comment = require("../../models/server/Comment");
 
-var request = require("supertest");
 
 describe("/api/tickets/:id/comments", function() {
 
@@ -16,7 +14,15 @@ describe("/api/tickets/:id/comments", function() {
     var commentForOtherTicket = null;
 
     before(function() {
-        return setupTestDatabase()
+        var self = this;
+
+        return helpers.setupTestDatabase()
+        .then(function() {
+            return helpers.loginAsUser(helpers.user.teacher);
+        })
+        .then(function(agent) {
+            self.agent = agent;
+        })
         .then(function() {
             ticket = Ticket.forge({
                 title: "Test ticket",
@@ -39,9 +45,13 @@ describe("/api/tickets/:id/comments", function() {
         });
     });
 
+    after(function() {
+        return this.agent.logout();
+    });
+
 
     it("can create new comment to ticket", function(done) {
-        request(app)
+        this.agent
         .post("/api/tickets/" + ticket.get("id") + "/comments")
         .send({
             comment: "test comment for ticket",
@@ -60,7 +70,7 @@ describe("/api/tickets/:id/comments", function() {
     });
 
     it("can get the comments by ticket", function(done) {
-        request(app)
+        this.agent
         .get("/api/tickets/" + ticket.get("id") + "/comments")
         .expect(200)
         .end(function(err, res) {

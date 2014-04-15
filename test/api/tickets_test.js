@@ -1,19 +1,27 @@
 "use strict";
-var setupTestDatabase = require("../setupTestDatabase");
-
 var assert = require("assert");
-var app = require("../../server");
-
-var request = require("supertest");
+var helpers = require("../helpers");
 
 describe("/api/tickets", function() {
 
     before(function() {
-        return setupTestDatabase();
+        var self = this;
+
+        return helpers.setupTestDatabase()
+            .then(function() {
+                return helpers.loginAsUser(helpers.user.teacher);
+            })
+            .then(function(agent) {
+                self.agent = agent;
+            });
+    });
+
+    after(function() {
+        return this.agent.logout();
     });
 
     it("can create a ticket using POST", function(done) {
-        request(app)
+        this.agent
         .post("/api/tickets")
         .send({
             title: "Computer does not work",
@@ -33,7 +41,7 @@ describe("/api/tickets", function() {
     });
 
     it("can get the ticket using GET", function(done) {
-        request(app)
+        this.agent
         .get("/api/tickets")
         .expect(200)
         .end(function(err, res) {
@@ -48,7 +56,7 @@ describe("/api/tickets", function() {
     });
 
     it("can get single ticket using GET", function(done) {
-        request(app)
+        this.agent
         .get("/api/tickets/1")
         .expect(200)
         .end(function(err, res) {
@@ -62,7 +70,7 @@ describe("/api/tickets", function() {
     });
 
     it("can update ticket using PUT", function(done) {
-        request(app)
+        this.agent
         .put("/api/tickets/1")
         .send({
             title: "updated ticket",
@@ -85,7 +93,7 @@ describe("/api/tickets", function() {
     });
 
     it("can get updated ticket using GET", function(done) {
-        request(app)
+        this.agent
         .get("/api/tickets/1")
         .expect(200)
         .end(function(err, res) {

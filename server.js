@@ -60,7 +60,13 @@ app.get("/bundle.js", browserify("./client.js", {
 }));
 
 
+app.post("/logout", function(req, res) {
+    req.session = null;
+    res.redirect("/");
+});
+
 app.use(require("./resources/tickets"));
+
 
 app.get("/*", function(req, res) {
     res.render("index.ejs", {

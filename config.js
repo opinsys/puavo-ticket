@@ -12,4 +12,10 @@ var config = {
     tableName: 'migrations'
 };
 
-module.exports = _.extend(config, require("./_config"));
+config = _.extend(config, require("./_config"));
+
+if (process.env.NODE_ENV === "test") {
+    config.puavoSharedSercret = "secret";
+}
+
+module.exports = config;
