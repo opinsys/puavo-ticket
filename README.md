@@ -56,7 +56,7 @@ Use
   - `make doc` to build the documentation
   - `make doc-publish` to publish it on <http://opinsys.github.io/puavo-ticket/>
   - `make doc-watch` to continuously build the documentation
-    - The documentation is also available within the application in <http://localhost:3000/test.html>
+    - The documentation is also available within the application in <http://localhost:3000/doc>
 
 ## Testing
 
