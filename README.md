@@ -13,9 +13,11 @@ Create `_config.json` with
 }
 ```
 
-where `xxxxx` is the sso secret of puavo
+where `xxxxx` is the sso secret of puavo.
 
-start the server with `node server.js`
+Run database migrations with `make migrate`.
+
+Start the server with `node server.js`.
 
 ## Development Documentation
 
