@@ -42,9 +42,6 @@ app.use(jwtsso({
 app.use(serveStatic(__dirname + "/public"));
 app.use("/doc", serveStatic(__dirname + "/doc"));
 
-if (process.env.NODE_ENV !== "production") {
-    app.use(require("./test/server"));
-}
 
 app.use(function(req, res, next) {
     if (!req.session.jwt) {
