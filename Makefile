@@ -17,9 +17,10 @@ migrate:
 .PHONY: doc
 doc-js:
 	mkdir -p doc
+	rm -f test/components/bundle.js
 	yuidoc \
 		--themedir yuidoc-theme \
-		--exclude test,node_modules,doc \
+		--exclude test/vendor,node_modules,doc,resources \
 		--outdir doc/ .
 
 doc-rest:

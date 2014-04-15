@@ -11,14 +11,15 @@ var config = require("../config");
 var app = require("../server");
 
 /**
- * Create a statefull supertest request object (aka agent) which is logged into
+ * Create a stateful supertest request object (aka agent) which is logged into
  * the puavo-ticket test server. It can access the puavo-ticket rest apis using
  * the permissions it has.
  *
  * See <https://github.com/visionmedia/supertest>
  *
  * @namespace test.helpers
- * @method loginAsUser
+ * @class loginAsUser
+ * @constructor
  * @param {Object} userData
  * @return {Bluebird.Promise} supertest agent instance wrapped in a promise
  */
