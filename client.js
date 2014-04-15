@@ -28,7 +28,7 @@ var Main = React.createClass({
      */
     renderTicketForm: function() {
         if (routes.newTicket.match || routes.existingTicket.match) {
-            return <TicketForm />;
+            return <TicketForm user={window.USER} />;
         }
     },
 
