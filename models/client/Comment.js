@@ -29,7 +29,7 @@ var Comment = Base.extend({
      * @method collection
      * @static
      * @param {Object} options
-     * @param {String} option.ticketId Id of the ticket which owns the comments
+     * @param {String} options.ticketId Id of the ticket which owns the comments
      * @return {models.client.Comment.Collection}
      */
     collection: function(opts) {
