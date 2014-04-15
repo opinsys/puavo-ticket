@@ -9,7 +9,7 @@ git log -1 > doc/version
 
 cd doc
 
-if [ "$(git config user.email)" = ""]; then
+if [ "$(git config user.email)" = "" ]; then
     git config user.email "dev@opinsys.fi"
     git config user.name "Opinsys developers"
 fi
