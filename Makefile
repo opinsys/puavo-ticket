@@ -31,6 +31,9 @@ doc: doc-js doc-rest
 doc-watch:
 	watch make doc
 
+doc-publish:
+	tools/bin/publish-docs
+
 
 js_files=$(shell git ls-files "*.js" | grep -v test/vendor)
 jshint: $(js_files)
