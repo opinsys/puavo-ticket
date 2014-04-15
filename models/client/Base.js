@@ -70,8 +70,9 @@ var Base = Backbone.Model.extend({
      * Available only when the operation is ongoing.
      *
      * @property fetching
-     * @type Bluebird.Promise|undefined
+     * @type Bluebird.Promise|null
      */
+    fetching: null,
 
     /**
      * Save module to server
@@ -87,8 +88,9 @@ var Base = Backbone.Model.extend({
      * only when the operation is ongoing.
      *
      * @property saving
-     * @type Bluebird.Promise|undefined
+     * @type Bluebird.Promise|null
      */
+    saving: null,
 
     /**
      * Is the model saving or fetching data
@@ -126,8 +128,9 @@ Base.Collection = Backbone.Collection.extend({
      * Base.Collection#fetch(). Available only when the operation is ongoing.
      *
      * @property fetching
-     * @type Bluebird.Promise|undefined
+     * @type Bluebird.Promise|null
      */
+    fetching: null
 });
 
 module.exports = Base;
