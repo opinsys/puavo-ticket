@@ -69,7 +69,9 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
     .fetch()
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
-        Comment.forge({ comment: req.body.comment })
+        Comment.forge({
+            comment: req.body.comment,
+            ticket: req.params.id })
         .save()
         .then(function(comment) {
             res.json(comment.toJSON());
