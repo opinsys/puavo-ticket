@@ -90,6 +90,8 @@ var Collection = Base.Collection.extend({
     url: "/api/tickets",
 
     /**
+     * http://backbonejs.org/#Collection-model
+     *
      * @property model
      * @type {models.client.Ticket}
      */

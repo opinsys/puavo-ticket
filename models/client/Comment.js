@@ -50,6 +50,8 @@ var Comment = Base.extend({
 var Collection = Base.Collection.extend({
 
     /**
+     * http://backbonejs.org/#Collection-model
+     *
      * @property model
      * @type {models.client.Comment}
      */
