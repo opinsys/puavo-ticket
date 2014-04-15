@@ -17,16 +17,16 @@ describe("Ticket model", function() {
         var title = "Computer does not work :(";
 
         return Ticket.forge({
-            title: title,
-            description: "It just doesn't"
-        })
-        .save()
-        .then(function(ticket) {
-            return Ticket.forge({ id: ticket.get("id") }).fetch();
-        })
-        .then(function(ticket) {
-             assert.equal(title, ticket.get("title"));
-        });
+                title: title,
+                description: "It just doesn't"
+            })
+            .save()
+            .then(function(ticket) {
+                return Ticket.forge({ id: ticket.get("id") }).fetch();
+            })
+            .then(function(ticket) {
+                 assert.equal(title, ticket.get("title"));
+            });
 
     });
 
@@ -38,11 +38,11 @@ describe("Ticket model", function() {
         .save()
         .then(function(ticket) {
             return ticket.addComment({
-                comment: "foo"
-            })
-            .then(function() {
-                return ticket.get("id");
-            });
+                    comment: "foo"
+                })
+                .then(function() {
+                    return ticket.get("id");
+                });
         });
 
         return ticketId.then(function(id) {
@@ -101,14 +101,14 @@ describe("Ticket model", function() {
                 { title: "foo2", description: "bar" }
             ].map(function(data) {
                 return Ticket
-                .forge(data)
-                .save()
-                .then(function(ticket) {
-                    return ticket.addVisibility({
-                        entity: "bad",
-                        comment: "for the other ticket"
+                    .forge(data)
+                    .save()
+                    .then(function(ticket) {
+                        return ticket.addVisibility({
+                            entity: "bad",
+                            comment: "for the other ticket"
+                        });
                     });
-                });
             });
 
             return Promise.all(otherTickets)

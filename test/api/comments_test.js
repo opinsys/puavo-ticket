@@ -17,32 +17,32 @@ describe("/api/tickets/:id/comments", function() {
         var self = this;
 
         return helpers.setupTestDatabase()
-        .then(function() {
-            return helpers.loginAsUser(helpers.user.teacher);
-        })
-        .then(function(agent) {
-            self.agent = agent;
-        })
-        .then(function() {
-            ticket = Ticket.forge({
-                title: "Test ticket",
-                description: "Test ticket with comments"
-            });
-            ticket.save();
+            .then(function() {
+                return helpers.loginAsUser(helpers.user.teacher);
+            })
+            .then(function(agent) {
+                self.agent = agent;
+            })
+            .then(function() {
+                ticket = Ticket.forge({
+                    title: "Test ticket",
+                    description: "Test ticket with comments"
+                });
+                ticket.save();
 
-            otherTicket = Ticket.forge({
-                title: "Other test ticket",
-                description: "Other test tickets"
-            });
-            otherTicket.save();
+                otherTicket = Ticket.forge({
+                    title: "Other test ticket",
+                    description: "Other test tickets"
+                });
+                otherTicket.save();
 
-            commentForOtherTicket = Comment.forge({
-                ticket: otherTicket.id,
-                comment: "Comment for other ticket"
-            });
+                commentForOtherTicket = Comment.forge({
+                    ticket: otherTicket.id,
+                    comment: "Comment for other ticket"
+                });
 
-            return commentForOtherTicket.save();
-        });
+                return commentForOtherTicket.save();
+            });
     });
 
     after(function() {

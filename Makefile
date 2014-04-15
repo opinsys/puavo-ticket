@@ -66,5 +66,9 @@ test-server: jshint
 .PHONY: test
 test: jshint test-server test-browsers
 
+serve-tests:
+	@echo Open http://localhost:1234/test.html
+	serve -p 1234 .
+
 clean:
 	rm -rf doc node_modules
