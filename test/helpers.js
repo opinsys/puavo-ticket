@@ -80,7 +80,20 @@ function clearTestDatabase() {
 module.exports = {
     loginAsUser: loginAsUser,
     clearTestDatabase: clearTestDatabase,
+
+    /**
+     * Various Opinsys SSO user JWT tokens
+     *
+     * @property user
+     * @type Object
+     */
     user: {
+        /**
+         * User with teacher permissions in `testing.opinsys.fi` organisation
+         *
+         * @property user.teacher
+         * @type {Object}
+         */
         teacher: {
             "id": "9324",
             "username": "olli.opettaja",
