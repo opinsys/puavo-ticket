@@ -15,11 +15,18 @@ migrate:
 	knex migrate:latest
 
 .PHONY: doc
-doc:
+doc-js:
+	mkdir -p doc
 	yuidoc \
 		--themedir yuidoc-theme \
 		--exclude test,node_modules,doc \
 		--outdir doc/ .
+
+doc-rest:
+	mkdir -p doc/rest
+	apidoc -i resources/ -o doc/rest
+	
+doc: doc-js doc-rest
 
 doc-watch:
 	watch make doc

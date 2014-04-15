@@ -24,7 +24,8 @@
     "bluebird": "~1.2.1",
     "body-parser": "~1.0.1",
     "serve-static": "~1.0.4",
-    "routes": "~0.3.0"
+    "routes": "~0.3.0",
+    "apidoc": "~0.4.2"
   },
   "devDependencies": {
     "jshint": "~2.5.0",
