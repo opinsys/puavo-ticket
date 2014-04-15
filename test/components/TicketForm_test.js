@@ -32,7 +32,7 @@ describe("TicketForm", function() {
         assert.equal(form.refs.description.getDOMNode().value, "");
     });
 
-    it("loads a ticket on /tickets/1", function(done) {
+    it("loads a ticket on /tickets/1", function() {
         this.server.respondWith("GET", "/api/tickets/1", [
             200,
             {  "Content-Type": "application/json" },
@@ -52,14 +52,13 @@ describe("TicketForm", function() {
 
         var form = React.addons.TestUtils.renderIntoDocument(<TicketForm />);
 
-        form.state.ticketModel.fetching
+        return form.state.ticketModel.fetching
         .then(function() {
             assert.equal(form.refs.title.getDOMNode().value, "foo");
             assert.equal(form.refs.description.getDOMNode().value, "bar");
             assert(form.refs.comment, "has comments input");
-            done();
-        })
-        .catch(done);
+        });
+
     });
 
 });
