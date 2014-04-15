@@ -42,9 +42,6 @@ jshint: $(js_files)
 browserify-test: jshint
 	browserify -d -t reactify test/components/index.js -o test/components/bundle.js
 
-browserify-test-watch:
-	watchify -v -d -t reactify test/components/index.js -o test/components/bundle.js
-
 export CHROME_BIN := chromium-browser
 test-chrome: browserify-test
 	$(KARMA) start --single-run --browsers Chrome
@@ -67,8 +64,7 @@ test-server: jshint
 test: jshint test-server test-browsers
 
 serve-tests:
-	@echo Open http://localhost:1234/test.html
-	serve -p 1234 .
+	node test/server.js
 
 clean:
 	rm -rf doc node_modules

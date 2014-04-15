@@ -1,33 +1,34 @@
 "use strict";
-var fs = require("fs");
+var path = require("path");
+var projectDir = path.resolve(__dirname, "..");
 
 var express = require("express");
+var serveStatic = require("serve-static");
+var spawn = require("child_process").spawn;
 var browserify = require("browserify-middleware");
 var app = express();
 
-app.get("/test/components/bundle.js", browserify(__dirname + "/components/index.js", {
+app.get("/test/components/bundle.js", browserify(projectDir + "/test/components/index.js", {
     transform: ["reactify"]
 }));
 
-app.get("/test", function(req, res) {
-    res.sendfile(__dirname + "/index.html");
+app.get("/", function(req, res) {
+    res.sendfile(projectDir + "/test/index.html");
 });
 
-app.get("/sinon/sinon.js", function(req, res) {
-    res.sendfile(__dirname + "/vendor/sinon.js");
-});
-
-// res.sendfile does not allow sending file from node_modules. Workaround with
-// raw fs api.
-app.get("/mocha/mocha.css", function(req, res) {
-    res.set("Content-Type", "text/css");
-    fs.createReadStream(__dirname + "/../node_modules/mocha/mocha.css").pipe(res);
-});
-
-app.get("/mocha/mocha.js", function(req, res) {
-    res.set("Content-Type", "application/javascript");
-    fs.createReadStream(__dirname + "/../node_modules/mocha/mocha.js").pipe(res);
-});
-
+app.use(serveStatic(projectDir));
 
 module.exports = app;
+
+if (require.main === module) {
+    var server = app.listen(process.env.PORT || 1234, function() {
+        var url = "http://localhost:" + server.address().port;
+        console.log("Listening on ", url);
+
+        if (process.env.DISPLAY) {
+            console.log("Display detected. Opening browser");
+            spawn("xdg-open", [url]);
+        }
+
+    });
+}

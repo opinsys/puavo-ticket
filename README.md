@@ -67,6 +67,5 @@ Use
     - You must have Firefox and Chromium installed
   - `make test` to run all tests
   - `make serve-tests` to manually run the client-side tests from <http://localhost:1234/test.html>
-  - `make browserify-test` to build the client-side test bundle
-  - `make browserify-test-watch` to continuously build the client-side test bundle
+    - This will open a browser for you using `xdg-open` if you have a X server running
 
