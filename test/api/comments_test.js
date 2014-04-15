@@ -16,7 +16,7 @@ describe("/api/tickets/:id/comments", function() {
     before(function() {
         var self = this;
 
-        return helpers.setupTestDatabase()
+        return helpers.clearTestDatabase()
             .then(function() {
                 return helpers.loginAsUser(helpers.user.teacher);
             })

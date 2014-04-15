@@ -1,5 +1,14 @@
 "use strict";
+/**
+ * Various test helpers for the server-side puavo-ticket tests. This should be
+ * the first module loaded in each *_test.js file because it setups the proper
+ * environment.
+ *
+ * @namespace test
+ * @class helpers
+ */
 
+// Ensure testing env
 process.env.NODE_ENV = "test";
 
 var Promise = require("bluebird");
@@ -17,9 +26,8 @@ var app = require("../server");
  *
  * See <https://github.com/visionmedia/supertest>
  *
- * @namespace test.helpers
- * @class loginAsUser
- * @constructor
+ * @method loginAsUser
+ * @static
  * @param {Object} userData
  * @return {Bluebird.Promise} supertest agent instance wrapped in a promise
  */
@@ -58,12 +66,11 @@ function loginAsUser(userData){
 /**
  * Ensure empty database for testing
  *
- * @namespace test.helpers
- * @class setupTestDatabase
- * @constructor
+ * @method clearTestDatabase
+ * @static
  * @return {Bluebird.Promise}
  */
-function setupTestDatabase() {
+function clearTestDatabase() {
     return DB.knex.migrate.rollback(config)
         .then(function() {
             return DB.knex.migrate.latest(config);
@@ -72,7 +79,7 @@ function setupTestDatabase() {
 
 module.exports = {
     loginAsUser: loginAsUser,
-    setupTestDatabase: setupTestDatabase,
+    clearTestDatabase: clearTestDatabase,
     user: {
         teacher: {
             "id": "9324",

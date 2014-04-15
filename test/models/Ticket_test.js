@@ -10,7 +10,7 @@ var assert = require("assert");
 describe("Ticket model", function() {
 
     before(function() {
-        return helpers.setupTestDatabase();
+        return helpers.clearTestDatabase();
     });
 
     it("Instance can be created", function() {
