@@ -67,6 +67,6 @@ Use
   - `make test-browsers` to run all client-side tests
     - You must have Firefox and Chromium installed
   - `make test` to run all tests
-  - `make serve-tests` to manually run the client-side tests from <http://localhost:1234/test.html>
+  - `make serve-tests` to manually run the client-side tests from <http://localhost:1234/>
     - This will open a browser for you using `xdg-open` if you have a X server running
 
