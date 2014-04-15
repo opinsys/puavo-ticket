@@ -1,7 +1,7 @@
 
 # puavo-ticket
 
-## Hacking
+## Running
 
 Install node.js and run `make`
 
@@ -17,7 +17,7 @@ where `xxxxx` is the sso secret of puavo
 
 start the server with `node server.js`
 
-## Documentation
+## Development Documentation
 
 Internal
 
@@ -37,14 +37,36 @@ Relevant external libraries
     - And those only! No Router or views
   - [Bookshelf.js](http://bookshelfjs.org/) as the server-side database ORM
   - [Knex.js](http://knexjs.org/) The query builder of bookshelf
-  - [YUIDoc Syntax Reference](http://yui.github.io/yuidoc/syntax/)
-    - Used to build the puavo-ticket Javascript API documentation
-  - [apiDoc](http://apidocjs.com/)
-    - Used to build the puavo-ticket REST API documentation
 
 For testing
 
   - [Mocha](http://visionmedia.github.io/mocha/)
   - [supertest](https://github.com/visionmedia/supertest) for api testing
   - [React Test Utilities](http://facebook.github.io/react/docs/test-utils.html)
+
+Documenting
+
+  - [YUIDoc Syntax Reference](http://yui.github.io/yuidoc/syntax/)
+    - Used to build the puavo-ticket Javascript API documentation
+  - [apiDoc](http://apidocjs.com/)
+    - Used to build the puavo-ticket REST API documentation
+
+Use
+
+  - `make doc` to build the documentation
+  - `make doc-publish` to publish it on <http://opinsys.github.io/puavo-ticket/>
+  - `make doc-watch` to continuously build the documentation
+    - The documentation is also available within the application in <http://localhost:3000/test.html>
+
+## Testing
+
+Use
+
+  - `make test-server` to run all server-side tests
+  - `make test-browsers` to run all client-side tests
+    - You must have Firefox and Chromium installed
+  - `make test` to run all tests
+  - `make serve-tests` to manually run the client-side tests from <http://localhost:1234/test.html>
+  - `make browserify-test` to build the client-side test bundle
+  - `make browserify-test-watch` to continuously build the client-side test bundle
 
