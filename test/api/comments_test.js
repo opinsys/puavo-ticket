@@ -43,5 +43,21 @@ describe("/api/tickets/:id/comments", function() {
 
     });
 
+    it("can get the comments by ticket", function(done) {
+        request(app)
+        .get("/api/tickets/" + ticket.get("id") + "/comments")
+        .expect(200)
+        .end(function(err, res) {
+            if (err) {
+                return done(err);
+            }
+
+            assert.equal(1, res.body.length);
+            assert.equal("test comment for ticket", res.body[0].comment);
+            done();
+        });
+
+    });
+
 
 });
