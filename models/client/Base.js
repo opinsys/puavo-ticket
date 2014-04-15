@@ -56,9 +56,39 @@ function promiseWrap(eventName, method) {
  */
 var Base = Backbone.Model.extend({
 
+    /**
+     * Fetch model state from the server
+     * http://backbonejs.org/#Model-fetch
+     *
+     * @method fetch
+     * @return {Bluebird.Promise}
+     */
     fetch: promiseWrap("fetching", Backbone.Model.prototype.fetch),
 
+    /**
+     * Promise of the fetching operation instantiated by Base#fetch().
+     * Available only when the operation is ongoing.
+     *
+     * @property fetching
+     * @type Bluebird.Promise|undefined
+     */
+
+    /**
+     * Save module to server
+     * http://backbonejs.org/#Model-save
+     *
+     * @method save
+     * @return {Bluebird.Promise}
+     */
     save: promiseWrap("saving", Backbone.Model.prototype.save),
+
+    /**
+     * Promise of the saving operation instantiated by Base#save().  Available
+     * only when the operation is ongoing.
+     *
+     * @property saving
+     * @type Bluebird.Promise|undefined
+     */
 
     /**
      * Is the model saving or fetching data
@@ -81,7 +111,23 @@ var Base = Backbone.Model.extend({
  * @extends Backbone.Collection
  */
 Base.Collection = Backbone.Collection.extend({
+
+    /**
+     * Fetch models from the server
+     * http://backbonejs.org/#Collection-fetch
+     *
+     * @method fetch
+     * @return {Bluebird.Promise}
+     */
     fetch: promiseWrap("fetching", Backbone.Collection.prototype.fetch),
+
+    /**
+     * Promise of the fetching operation instantiated by
+     * Base.Collection#fetch(). Available only when the operation is ongoing.
+     *
+     * @property fetching
+     * @type Bluebird.Promise|undefined
+     */
 });
 
 module.exports = Base;
