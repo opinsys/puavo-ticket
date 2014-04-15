@@ -22,15 +22,6 @@ app.get("/bundle.js", browserify("./client.js", {
 }));
 
 
-app.get("/api/tickets/:id", function(req, res, next) {
-    console.log("GET", req.url);
-    Ticket.forge({ id: req.params.id }).fetch()
-    .then(function(ticket) {
-        if (!ticket) return res.json(404, { error: "no such ticket" });
-        res.json(ticket.toJSON());
-    })
-    .catch(next);
-});
 
 if (process.env.NODE_ENV !== "production") {
     app.use(require("./test/server"));
