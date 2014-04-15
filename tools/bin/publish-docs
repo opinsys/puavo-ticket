@@ -10,8 +10,8 @@ git log -1 > doc/version
 cd doc
 
 if [ "$(git config user.email)" = "" ]; then
-    git config user.email "dev@opinsys.fi"
-    git config user.name "Opinsys developers"
+    git config --global user.email "dev@opinsys.fi"
+    git config --global user.name "Opinsys developers"
 fi
 
 git init .
