@@ -59,7 +59,8 @@ function loginAsUser(userData){
  * Ensure empty database for testing
  *
  * @namespace test.helpers
- * @method setupTestDatabase
+ * @class setupTestDatabase
+ * @constructor
  * @return {Bluebird.Promise}
  */
 function setupTestDatabase() {
