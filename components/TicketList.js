@@ -37,7 +37,7 @@ var TicketList = React.createClass({
             <div>
                 <h2>Päivittyneet tukipyynnöt</h2>
                 {this.state.ticketCollection.fetching && <p>Ladataan...</p>}
-                <ul>
+                <ul ref="list">
                     {this.state.ticketCollection.map(function(ticket) {
                         return (
                             <li key={ticket.get("id")}>
