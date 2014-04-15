@@ -35,7 +35,7 @@ var Ticket = Bookshelf.DB.Model.extend({
     /**
      *
      * @method visibilities
-     * @return {bluebird.Promise}
+     * @return {Bluebird.Promise}
      *     resolves to Backbone.Collection of models.server.Visibility wrapped
      *     in a `Promise`.
      */
@@ -48,7 +48,7 @@ var Ticket = Bookshelf.DB.Model.extend({
      *
      * @method addVisibility
      * @param {Object} visibility Plain object with models.server.Visibility fields
-     * @return {bluebird.Promise}
+     * @return {Bluebird.Promise}
      */
     addVisibility: function(visibility) {
         visibility = _.clone(visibility);
@@ -61,7 +61,7 @@ var Ticket = Bookshelf.DB.Model.extend({
      *
      * @method addComment
      * @param {Object} comment Plain object with models.server.Comment fields
-     * @return {bluebird.Promise}
+     * @return {Bluebird.Promise}
      */
     addComment: function(comment) {
         comment = _.clone(comment);
@@ -79,7 +79,7 @@ var Ticket = Bookshelf.DB.Model.extend({
  * form of `organisation|school|user:<entity id>`.
  *
  *     Example: "school:2"
- * @return {bluebird.Promise} Backbone.Collection of models.server.Ticket
+ * @return {Bluebird.Promise} Backbone.Collection of models.server.Ticket
  */
 Ticket.fetchByVisibility = function(visibilities) {
     return Ticket

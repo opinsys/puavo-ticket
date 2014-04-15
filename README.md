@@ -33,9 +33,9 @@ Relevant external libraries
   - React - client-side views
       - [API](http://facebook.github.io/react/docs/component-api.html)
       - [Lifecycle](http://facebook.github.io/react/docs/component-specs.html)
-  - [Backbone.js](http://backbonejs.org/)
-    - We'll only use the Models and Collections!
-  - [Bookshelf.js](http://bookshelfjs.org/) as the database ORM
+  - [Backbone.js](http://backbonejs.org/) as the client-side models
+    - And those only! No Router or views
+  - [Bookshelf.js](http://bookshelfjs.org/) as the server-side database ORM
   - [Knex.js](http://knexjs.org/) The query builder of bookshelf
   - [YUIDoc Syntax Reference](http://yui.github.io/yuidoc/syntax/)
     - Used to build the puavo-ticket Javascript API documentation

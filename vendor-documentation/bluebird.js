@@ -3,6 +3,6 @@
  *
  * https://github.com/petkaantonov/bluebird/blob/master/API.md
  *
- * @namespace bluebird
+ * @namespace Bluebird
  * @class Promise
  */
