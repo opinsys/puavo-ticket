@@ -62,6 +62,7 @@ Use
 
 Use
 
+  - `make jshint` to run jshint for all project \*.js files
   - `make test-server` to run all server-side tests
   - `make test-browsers` to run all client-side tests
     - You must have Firefox and Chromium installed
