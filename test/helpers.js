@@ -66,6 +66,12 @@ function loginAsUser(userData){
     });
 }
 
+/**
+ * Create two test tickets
+ *
+ * @method insertTestTickets
+ * @return {Object}
+ */
 function insertTestTickets() {
     var ticket = Ticket.forge({
         title: "Test ticket",
