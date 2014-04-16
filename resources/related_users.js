@@ -37,4 +37,21 @@ app.post("/api/tickets/:id/related_users", function(req, res, next) {
     .catch(next);
 });
 
+/**
+ * @api {get} /api/tickets/:id/related_users Get related users for a ticket
+ * @apiName GetRelatedUsers
+ * @apiGroup related_users
+ *
+ * @apiSuccess {Object[]} . List of related users
+ */
+app.get("/api/tickets/:id/related_users", function(req, res, next) {
+    RelatedUser.collection()
+    .query('where', 'ticket', '=', req.params.id)
+    .fetch()
+    .then(function(collection) {
+        res.json(collection.toJSON());
+    })
+    .catch(next);
+});
+
 module.exports = app;

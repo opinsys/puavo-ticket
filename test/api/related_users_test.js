@@ -65,4 +65,19 @@ describe("/api/tickets/:id/related_users", function() {
 
 
     });
+
+    it("can get the related users by ticket", function(done) {
+        this.agent
+        .get("/api/tickets/" + ticket.get("id") + "/related_users")
+        .expect(200)
+        .end(function(err, res) {
+            if (err) {
+                return done(err);
+            }
+
+            assert.equal(1, res.body.length);
+            assert.equal("testuser", res.body[0].username);
+            done();
+        });
+    });
 });
