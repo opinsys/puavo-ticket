@@ -75,6 +75,10 @@ module.exports = app;
 
 if (require.main === module) {
     var server = app.listen(3000, function() {
-        console.log('Listening on port %d', server.address().port);
+        console.log("Javascript API docs http://opinsys.github.io/puavo-ticket/");
+        console.log("REST API docs http://opinsys.github.io/puavo-ticket/rest");
+
+        var addr = server.address();
+        console.log('Listening on  http://%s:%d', addr.address, addr.port);
     });
 }
