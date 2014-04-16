@@ -12,12 +12,12 @@ var config = {
 if (process.env.NODE_ENV === "test") {
     config.puavoSharedSercret = "secret";
     config.database.connection = {
-        filename: ".puavo-ticket.db"
+        filename: ".test.db"
     };
 } else {
     config = _.extend(config, require("./_config"));
     config.database.connection = {
-        filename: ".test.db"
+        filename: ".puavo-ticket.db"
     };
 }
 
