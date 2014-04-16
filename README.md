@@ -32,7 +32,7 @@ Relevant external libraries
   - [express](http://expressjs.com/4x/api.html) as the server-side framework
   - [Bluebird Promises API](https://github.com/petkaantonov/bluebird/blob/master/API.md)
   - [Lo-Dash](http://lodash.com/) various Javascript utilities
-  - [React](facebook.github.io/react/) for client-side views
+  - [React](http://facebook.github.io/react/) for client-side views
       - [API](http://facebook.github.io/react/docs/component-api.html)
       - [Lifecycle](http://facebook.github.io/react/docs/component-specs.html)
   - [Backbone.js](http://backbonejs.org/) as the client-side models
