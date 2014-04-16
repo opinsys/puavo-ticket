@@ -3,7 +3,6 @@ var helpers = require("../helpers");
 
 var assert = require("assert");
 
-var Ticket = require("../../models/server/Ticket");
 var Comment = require("../../models/server/Comment");
 
 
@@ -18,24 +17,16 @@ describe("/api/tickets/:id/comments", function() {
 
         return helpers.clearTestDatabase()
             .then(function() {
+                return helpers.insertTestTickets();
+            })
+            .then(function(tickets) {
+                ticket = tickets.ticket;
+                otherTicket = tickets.otherTicket;
+
                 return helpers.loginAsUser(helpers.user.teacher);
             })
             .then(function(agent) {
                 self.agent = agent;
-            })
-            .then(function() {
-                ticket = Ticket.forge({
-                    title: "Test ticket",
-                    description: "Test ticket with comments"
-                });
-                return ticket.save();
-            })
-            .then(function() {
-                otherTicket = Ticket.forge({
-                    title: "Other test ticket",
-                    description: "Other test tickets"
-                });
-                return otherTicket.save();
             })
             .then(function() {
                 commentForOtherTicket = Comment.forge({

@@ -19,6 +19,9 @@ var DB = require("../db");
 var config = require("../config");
 var app = require("../server");
 
+var Ticket = require("../models/server/Ticket");
+
+
 /**
  * Create a stateful supertest request object (aka agent) which is logged into
  * the puavo-ticket test server. It can access the puavo-ticket rest apis using
@@ -63,6 +66,25 @@ function loginAsUser(userData){
     });
 }
 
+function insertTestTickets() {
+    var ticket = Ticket.forge({
+        title: "Test ticket",
+        description: "Test ticket with comments"
+    });
+
+    return ticket.save()
+        .then(function() {
+            var otherTicket = Ticket.forge({
+                title: "Other test ticket",
+                description: "Other test tickets"
+            });
+            return otherTicket.save();
+        })
+        .then(function(otherTicket) {
+            return { ticket: ticket, otherTicket: otherTicket };
+        });
+}
+
 /**
  * Ensure empty database for testing
  *
@@ -80,6 +102,7 @@ function clearTestDatabase() {
 module.exports = {
     loginAsUser: loginAsUser,
     clearTestDatabase: clearTestDatabase,
+    insertTestTickets: insertTestTickets,
 
     /**
      * Various Opinsys SSO user JWT tokens
