@@ -63,6 +63,7 @@ app.post("/logout", function(req, res) {
 });
 
 app.use(require("./resources/tickets"));
+app.use(require("./resources/related_users"));
 
 
 app.get("/*", function(req, res) {
