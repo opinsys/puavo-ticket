@@ -72,3 +72,8 @@ Use
   - `make serve-tests` to manually run the client-side tests from <http://localhost:1234/>
     - This will open a browser for you using `xdg-open` if you have a X server running
 
+## Git hooks
+
+Use `make install-git-hooks` to enable git pre-commit hooks. This will prevent
+you from commiting invalid Javascript code. It will run jshint for staged
+javascript files before commiting them.

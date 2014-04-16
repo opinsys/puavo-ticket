@@ -38,7 +38,7 @@ doc-publish:
 
 js_files=$(shell git ls-files "*.js" | grep -v test/vendor)
 jshint: $(js_files)
-	$(JSHINT) --config .jshintrc $(JSHINTFLAGS) $?
+	$(JSHINT) --config .jshintrc $?
 
 browserify-test: jshint
 	browserify -d -t reactify test/components/index.js -o test/components/bundle.js
@@ -69,3 +69,7 @@ serve-tests:
 
 clean:
 	rm -rf doc node_modules
+
+install-git-hooks:
+	cp tools/pre-commit.hook .git/hooks/pre-commit
+	chmod +x .git/hooks/pre-commit

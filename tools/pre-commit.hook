@@ -1,0 +1,12 @@
+#!/bin/sh
+
+
+export PATH="node_modules/.bin:$PATH"
+
+staged_js_files=$(git diff --name-only --cached | grep -E '\.js$')
+
+set -eu
+
+if [ "$staged_js_files" != "" ]; then
+    jsxhint --config .jshintrc $staged_js_files
+fi
