@@ -1,4 +1,3 @@
-
 export PATH := node_modules/.bin:$(PATH)
 export PATH := tools/bin:$(PATH)
 
@@ -10,7 +9,7 @@ all: npm doc install-git-hooks
 	@echo
 	@echo All OK!
 	@echo
-	@echo Protip: Add node tools to PATH:
+	@echo Protip: Add local node module scripts to PATH
 	@echo
 	@echo '    export PATH="$(CURDIR)/node_modules/.bin:$$PATH"'
 	@echo
