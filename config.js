@@ -10,7 +10,7 @@ var config = {
 };
 
 if (process.env.NODE_ENV === "test") {
-    config.puavoSharedSercret = "secret";
+    config.puavoSharedSecret = "secret";
     config.database.connection = {
         filename: ".test.db"
     };
