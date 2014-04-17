@@ -11,9 +11,15 @@
 // Ensure testing env
 process.env.NODE_ENV = "test";
 
+
+
+
 var assert = require("assert");
 var Promise = require("bluebird");
 Promise.longStackTraces();
+
+
+require("../utils/superagentPromise");
 var request = require("supertest");
 var jwt = require("jwt-simple");
 

@@ -3,9 +3,7 @@ var helpers = require("../helpers");
 
 var assert = require("assert");
 
-
 describe("/api/tickets/:id/related_users", function() {
-
 
     var ticket = null;
     var otherTicket = null;
@@ -33,35 +31,29 @@ describe("/api/tickets/:id/related_users", function() {
     });
 
 
-    it("can add related user to ticket", function(done) {
-        this.agent
-        .post("/api/tickets/" + ticket.get("id") + "/related_users")
-        .send({
-            user_id: 1,
-            username: "testuser"
-        })
-        .end(function(err, res) {
-            if (err) return done(err);
-
-            assert.equal(res.status, 200);
-            assert.equal(res.body.username, "testuser");
-            assert.equal(res.body.ticket, ticket.get("id"));
-            done();
-        });
-
-
+    it("can add related user to ticket", function() {
+        return this.agent
+            .post("/api/tickets/" + ticket.get("id") + "/related_users")
+            .send({
+                user_id: 1,
+                username: "testuser"
+            })
+            .promise()
+            .then(function(res) {
+                assert.equal(res.status, 200);
+                assert.equal(res.body.username, "testuser");
+                assert.equal(res.body.ticket, ticket.get("id"));
+            });
     });
 
-    it("can get the related users by ticket", function(done) {
-        this.agent
-        .get("/api/tickets/" + ticket.get("id") + "/related_users")
-        .end(function(err, res) {
-            if (err) return done(err);
-
-            assert.equal(res.status, 200);
-            assert.equal(2, res.body.length);
-            assert.equal("testuser", res.body[1].username);
-            done();
-        });
+    it("can get the related users by ticket", function() {
+        return this.agent
+            .get("/api/tickets/" + ticket.get("id") + "/related_users")
+            .promise()
+            .then(function(res) {
+                assert.equal(res.status, 200);
+                assert.equal(2, res.body.length);
+                assert.equal("testuser", res.body[1].username);
+            });
     });
 });

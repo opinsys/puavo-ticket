@@ -32,38 +32,29 @@ describe("/api/tickets/:id/comments", function() {
     });
 
 
-    it("can create new comment to ticket", function(done) {
-        this.agent
-        .post("/api/tickets/" + ticket.get("id") + "/comments")
-        .send({
-            comment: "add more test comment for ticket"
-        })
-        .end(function(err, res) {
-            if (err) {
-                return done(err);
-            }
-            assert.equal(res.status, 200);
-            assert.equal(res.body.comment, "add more test comment for ticket");
-            assert.equal(res.body.ticket, ticket.get("id"));
-            done();
-        });
-
+    it("can create new comment to ticket", function() {
+        return this.agent
+            .post("/api/tickets/" + ticket.get("id") + "/comments")
+            .send({
+                comment: "add more test comment for ticket"
+            })
+            .promise()
+            .then(function(res) {
+                assert.equal(res.status, 200);
+                assert.equal(res.body.comment, "add more test comment for ticket");
+                assert.equal(res.body.ticket, ticket.get("id"));
+            });
     });
 
-    it("can get the comments by ticket", function(done) {
-        this.agent
-        .get("/api/tickets/" + ticket.get("id") + "/comments")
-        .end(function(err, res) {
-            if (err) {
-                return done(err);
-            }
-
-            assert.equal(res.status, 200);
-            assert.equal(3, res.body.length);
-            assert.equal("add more test comment for ticket", res.body[2].comment);
-            done();
-        });
-
+    it("can get the comments by ticket", function() {
+        return this.agent
+            .get("/api/tickets/" + ticket.get("id") + "/comments")
+            .promise()
+            .then(function(res) {
+                assert.equal(res.status, 200);
+                assert.equal(3, res.body.length);
+                assert.equal("add more test comment for ticket", res.body[2].comment);
+            });
     });
 
 
