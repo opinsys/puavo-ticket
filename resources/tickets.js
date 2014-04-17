@@ -130,7 +130,6 @@ app.get("/api/tickets/:id/comments", function(req, res, next) {
 
 app.get("/api/tickets/:id/updates", function(req, res, next) {
     var comments = null;
-    var relatedUsers = null;
     Comment.collection()
     .query('where', 'ticket', '=', req.params.id)
     .fetch()
@@ -139,13 +138,9 @@ app.get("/api/tickets/:id/updates", function(req, res, next) {
 
         return RelatedUser.collection()
         .query('where', 'ticket', '=', req.params.id)
-        .fetch()
-        .then(function(collection) {
-            relatedUsers = collection;
-            return relatedUsers;
-        });
+        .fetch();
     })
-    .then(function() {
+    .then(function(relatedUsers) {
         var updates = comments.toArray().concat(relatedUsers.toArray());
 
         updates.sort(function(a,b) {
