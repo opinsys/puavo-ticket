@@ -28,7 +28,7 @@ Cool new ticketing system with deep puavo integration.
   - All project tests
 - `test/server.js`
   - node.js entry point for UI component test server
-  - Used to run and debug compnent tests in actual browsers
+  - Used to run and debug component tests in actual browsers
 - `test/components/`
   - The [Mocha][] UI component tests
 - `test/helpers.js`
@@ -39,6 +39,8 @@ Cool new ticketing system with deep puavo integration.
   - [Mocha][] tests for the client-side models
 - `tools/`
   - Internal project tools. Such as git-hooks, inotify watcher helpers etc.
+- `vendor-documentation/`
+  - Just links to external libraries. Used by YUIDoc
 
 ## Installation for development
 
@@ -82,7 +84,7 @@ Better yet you should integrate real time JSHint validation to your editor.
 
 You will also want a JSX support if you edit anything under `components/`. When
 editing them `jsxhint` wrapper for JSHint must be used. It's installed in
-`node_modules/.bin/`.
+`node_modules/.bin/`. `jsxhint` can be used for the plain js files too.
 
 See <http://facebook.github.io/react/docs/tooling-integration.html#syntax-highlighting-amp-linting>
 
@@ -104,7 +106,8 @@ Use
   - `make test-browsers` to run all client-side tests
     - You must have Firefox and Chromium installed
   - `make test` to run all tests
-  - `make serve-tests` to manually run the client-side tests from <http://localhost:1234/>
+  - `make serve-tests` to manually run the client-side tests from
+    <http://localhost:1234/> for debugging
     - This will open a browser for you using `xdg-open` if you have a X server running
 
 ## Debug browser Javascript
@@ -122,6 +125,8 @@ the debug command:
 This will break on the first line. Use enter `c` to continue. See [node.js
 debbugger documentation](http://nodejs.org/api/debugger.html) for more
 information.
+
+## Debug server tests
 
 Server-side tests can be debugged similarly using the `mocha` command:
 
