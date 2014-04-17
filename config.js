@@ -16,9 +16,13 @@ if (process.env.NODE_ENV === "test") {
     };
 } else {
     config = _.extend(config, require("./_config"));
+    if (!config.puavoSharedSecret) {
+        throw new Error('"puavoSharedSecret" is missing from _config.json');
+    }
     config.database.connection = {
         filename: ".puavo-ticket.db"
     };
 }
+
 
 module.exports = config;

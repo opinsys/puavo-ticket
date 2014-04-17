@@ -27,7 +27,7 @@ app.use(jwtsso({
     authEndpoint: "https://api.opinsys.fi/v3/sso",
 
     // Shared secret string with the above service
-    sharedSecret: config.puavoSharedSercret,
+    sharedSecret: config.puavoSharedSecret,
 
     // Public mountpoint for this app
     mountPoint: "http://puavo-ticket-dev:3000",
