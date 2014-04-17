@@ -38,7 +38,7 @@ doc-publish:
 
 js_files=$(shell git ls-files "*.js" | grep -v test/vendor)
 jshint: $(js_files)
-	$(JSHINT) --config .jshintrc $?
+	$(JSHINT) $?
 
 browserify-test: jshint
 	browserify -d -t reactify test/components/index.js -o test/components/bundle.js
