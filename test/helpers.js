@@ -80,6 +80,7 @@ function loginAsUser(userData){
  * Create two test tickets
  *
  * @method insertTestTickets
+ * @static
  * @return {Object}
  */
 function insertTestTickets() {
