@@ -40,12 +40,10 @@ describe("/api/tickets/:id/related_users", function() {
             user_id: 1,
             username: "testuser"
         })
-        .expect(200)
         .end(function(err, res) {
-            if (err) {
-                return done(err);
-            }
+            if (err) return done(err);
 
+            assert.equal(res.status, 200);
             assert.equal(res.body.username, "testuser");
             assert.equal(res.body.ticket, ticket.get("id"));
             done();
@@ -57,12 +55,10 @@ describe("/api/tickets/:id/related_users", function() {
     it("can get the related users by ticket", function(done) {
         this.agent
         .get("/api/tickets/" + ticket.get("id") + "/related_users")
-        .expect(200)
         .end(function(err, res) {
-            if (err) {
-                return done(err);
-            }
+            if (err) return done(err);
 
+            assert.equal(res.status, 200);
             assert.equal(2, res.body.length);
             assert.equal("testuser", res.body[1].username);
             done();

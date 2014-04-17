@@ -27,12 +27,12 @@ describe("/api/tickets", function() {
             title: "Computer does not work",
             description: "It just doesnt"
         })
-        .expect(200)
         .end(function(err, res) {
             if (err) {
                 return done(err);
             }
 
+            assert.equal(res.status, 200);
             assert.equal(res.body.title, "Computer does not work");
             assert(res.body.id, "has id");
             done();
@@ -43,11 +43,11 @@ describe("/api/tickets", function() {
     it("can get the ticket using GET", function(done) {
         this.agent
         .get("/api/tickets")
-        .expect(200)
         .end(function(err, res) {
             if (err) {
                 return done(err);
             }
+            assert.equal(res.status, 200);
             assert.equal(1, res.body.length);
             assert.equal(1, res.body[0].id);
             assert.equal("Computer does not work", res.body[0].title);
@@ -58,11 +58,10 @@ describe("/api/tickets", function() {
     it("can get single ticket using GET", function(done) {
         this.agent
         .get("/api/tickets/1")
-        .expect(200)
         .end(function(err, res) {
-            if (err) {
-                return done(err);
-            }
+            if (err) return done(err);
+
+            assert.equal(res.status, 200);
             assert.equal(1, res.body.id);
             assert.equal("Computer does not work", res.body.title);
             done();
@@ -76,12 +75,10 @@ describe("/api/tickets", function() {
             title: "updated ticket",
             description: "It just doesnt"
         })
-        .expect(200)
         .end(function(err, res) {
-            if (err) {
-                return done(err);
-            }
+            if (err) return done(err);
 
+            assert.equal(res.status, 200);
             assert.equal(
                 res.body.title,
                 "updated ticket",
@@ -95,11 +92,10 @@ describe("/api/tickets", function() {
     it("can get updated ticket using GET", function(done) {
         this.agent
         .get("/api/tickets/1")
-        .expect(200)
         .end(function(err, res) {
-            if (err) {
-                return done(err);
-            }
+            if (err) return done(err);
+
+            assert.equal(res.status, 200);
             assert.equal(1, res.body.id);
             assert.equal("updated ticket", res.body.title);
             done();
@@ -116,12 +112,10 @@ describe("/api/tickets", function() {
 
             this.agent
                 .get("/api/tickets/2/updates")
-                .expect(200)
                 .end(function(err, res) {
-                    if (err) {
-                        return done(err);
-                    }
+                    if (err) return done(err);
 
+                    assert.equal(res.status, 200);
                     assert.equal(3, res.body.length);
                     assert.equal("First comment to test ticket", res.body[0].comment);
                     assert.equal("testuser1", res.body[1].username);

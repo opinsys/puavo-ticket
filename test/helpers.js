@@ -11,6 +11,7 @@
 // Ensure testing env
 process.env.NODE_ENV = "test";
 
+var assert = require("assert");
 var Promise = require("bluebird");
 var request = require("supertest");
 var jwt = require("jwt-simple");
@@ -47,10 +48,10 @@ function loginAsUser(userData){
         return new Promise(function(resolve, reject){
             agent
             .post("/logout")
-            .expect("Location", "/")
-            .expect(302)
-            .end(function(err, body) {
+            .end(function(err, res) {
                 if (err) return reject(err);
+                assert.equal(res.headers.location, "/");
+                assert.equal(res.status, 302);
                 return resolve(agent);
             });
         });
@@ -59,10 +60,10 @@ function loginAsUser(userData){
     return new Promise(function(resolve, reject){
         agent
         .get("/?jwt=" + jwtToken)
-        .expect("Location", "/")
-        .expect(302)
-        .end(function(err, body) {
+        .end(function(err, res) {
             if (err) return reject(err);
+            assert.equal(res.headers.location, "/");
+            assert.equal(res.status, 302);
             return resolve(agent);
         });
     });

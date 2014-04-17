@@ -38,12 +38,11 @@ describe("/api/tickets/:id/comments", function() {
         .send({
             comment: "add more test comment for ticket"
         })
-        .expect(200)
         .end(function(err, res) {
             if (err) {
                 return done(err);
             }
-
+            assert.equal(res.status, 200);
             assert.equal(res.body.comment, "add more test comment for ticket");
             assert.equal(res.body.ticket, ticket.get("id"));
             done();
@@ -54,12 +53,12 @@ describe("/api/tickets/:id/comments", function() {
     it("can get the comments by ticket", function(done) {
         this.agent
         .get("/api/tickets/" + ticket.get("id") + "/comments")
-        .expect(200)
         .end(function(err, res) {
             if (err) {
                 return done(err);
             }
 
+            assert.equal(res.status, 200);
             assert.equal(3, res.body.length);
             assert.equal("add more test comment for ticket", res.body[2].comment);
             done();
