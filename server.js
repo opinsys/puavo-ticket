@@ -10,6 +10,7 @@ var jwtsso = require("jwtsso");
 var cookieParser = require("cookie-parser");
 var session = require("express-session");
 
+var User = require("./models/User");
 
 var app = express();
 
@@ -48,6 +49,7 @@ app.use(function(req, res, next) {
         console.log("Not auth!");
         return res.requestJwt();
     }
+    req.user = new User(req.session.jwt);
     next();
 });
 
