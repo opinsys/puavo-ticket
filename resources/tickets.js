@@ -159,7 +159,6 @@ app.get("/api/tickets/:id/updates", function(req, res, next) {
             return 0;
 
         });
-        console.log(JSON.stringify(updates));
         res.json(updates);
     })
     .catch(next);
