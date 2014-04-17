@@ -1,3 +1,7 @@
+# puavo-ticket
+
+Cool new ticketing system with deep puavo integration.
+
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
 - [puavo-ticket](#user-content-puavo-ticket)
@@ -14,9 +18,7 @@
 	- [puavo-ticket API documentation](#user-content-puavo-ticket-api-documentation)
 		- [External documentation](#user-content-external-documentation)
 
-# puavo-ticket
 
-Cool new ticketing system with deep puavo integration.
 
 # Development Documentation
 
