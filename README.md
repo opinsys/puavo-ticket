@@ -1,4 +1,3 @@
-
 # puavo-ticket
 
 ## Running
@@ -26,8 +25,9 @@ Internal
   - [puavo-ticket Javascript API](http://opinsys.github.io/puavo-ticket/)
   - [puavo-ticket REST API](http://opinsys.github.io/puavo-ticket/rest/)
 
-Relevant external libraries
+Others
 
+  - [Javascript reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference)
   - [node.js](http://nodejs.org/api/)
   - [express](http://expressjs.com/4x/api.html) as the server-side framework
   - [Bluebird Promises API](https://github.com/petkaantonov/bluebird/blob/master/API.md)
