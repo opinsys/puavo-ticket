@@ -7,6 +7,13 @@ JSHINT=jsxhint
 KARMA=node_modules/karma/bin/karma
 
 all: npm doc
+	@echo
+	@echo All OK!
+	@echo
+	@echo Protip: Add node tools to PATH:
+	@echo
+	@echo '    export PATH="$(CURDIR)/node_modules/.bin:$$PATH"'
+	@echo
 
 npm:
 	npm install

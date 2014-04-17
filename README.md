@@ -92,7 +92,7 @@ See <http://facebook.github.io/react/docs/tooling-integration.html#syntax-highli
 
 You might want to put locally installed node.js tools to your path
 
-    export PATH="$(pwd)/node_modules/.bin"
+    export PATH="$(pwd)/node_modules/.bin:$PATH"
 
 This will give you direct access and tab completion to `mocha`, `jsxhint` and
 other tools.
