@@ -128,6 +128,13 @@ app.get("/api/tickets/:id/comments", function(req, res, next) {
     .catch(next);
 });
 
+/**
+ * @api {get} /api/tickets/:id/updates Get all updates for a ticket
+ * @apiName GetUpdates
+ * @apiGroup updates
+ *
+ * @apiSuccess {Object[]} . List of updates
+ */
 app.get("/api/tickets/:id/updates", function(req, res, next) {
     var comments = null;
     Comment.collection()
