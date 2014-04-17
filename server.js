@@ -12,6 +12,19 @@ var session = require("express-session");
 
 var User = require("./models/User");
 
+/**
+ * http://expressjs.com/4x/api.html#req.params
+ *
+ * @namespace server
+ * @class Request
+ */
+
+/**
+ * http://expressjs.com/4x/api.html#res.status
+ *
+ * @namespace server
+ * @class Response
+ */
 var app = express();
 
 var config = require("./config");
@@ -44,6 +57,13 @@ app.use(serveStatic(__dirname + "/public"));
 app.use("/doc", serveStatic(__dirname + "/doc"));
 
 
+
+/**
+ * An instance of  models.User when user has an authenticated session
+ *
+ * @for server.Request
+ * @property {models.User} user
+ */
 app.use(function(req, res, next) {
     if (!req.session.jwt) {
         console.log("Not auth!");
