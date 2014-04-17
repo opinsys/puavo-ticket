@@ -106,4 +106,28 @@ describe("/api/tickets", function() {
         });
     });
 
+    describe("/api/tickets/:id/updates", function() {
+
+        before(function() {
+            return helpers.insertTestTickets();
+        });
+
+        it("can get list of ticket updates", function(done) {
+
+            this.agent
+                .get("/api/tickets/2/updates")
+                .expect(200)
+                .end(function(err, res) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(3, res.body.length);
+                    assert.equal("First comment to test ticket", res.body[0].comment);
+                    assert.equal("testuser1", res.body[1].username);
+                    assert.equal("Second comment to test ticket", res.body[2].comment);
+                    done();
+                });
+        });
+    });
 });

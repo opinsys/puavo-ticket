@@ -7,6 +7,7 @@ var express = require("express");
 
 var Ticket = require("../models/server/Ticket");
 var Comment = require("../models/server/Comment");
+var RelatedUser = require("../models/server/RelatedUser");
 
 var app = express();
 
@@ -123,6 +124,43 @@ app.get("/api/tickets/:id/comments", function(req, res, next) {
     .fetch()
     .then(function(collection) {
         res.json(collection.toJSON());
+    })
+    .catch(next);
+});
+
+app.get("/api/tickets/:id/updates", function(req, res, next) {
+    var comments = null;
+    var relatedUsers = null;
+    Comment.collection()
+    .query('where', 'ticket', '=', req.params.id)
+    .fetch()
+    .then(function(collection) {
+        comments = collection;
+
+        return RelatedUser.collection()
+        .query('where', 'ticket', '=', req.params.id)
+        .fetch()
+        .then(function(collection) {
+            relatedUsers = collection;
+            return relatedUsers;
+        });
+    })
+    .then(function() {
+        var updates = comments.toArray().concat(relatedUsers.toArray());
+
+        updates.sort(function(a,b) {
+            if ( a.get("updated") > b.get("updated") ) {
+                return 1;
+            }
+            if ( a.get("updated") < b.get("updated") ) {
+                return -1;
+            }
+
+            return 0;
+
+        });
+        console.log(JSON.stringify(updates));
+        res.json(updates);
     })
     .catch(next);
 });
