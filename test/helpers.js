@@ -20,6 +20,8 @@ var config = require("../config");
 var app = require("../server");
 
 var Ticket = require("../models/server/Ticket");
+var Comment = require("../models/server/Comment");
+var RelatedUser = require("../models/server/RelatedUser");
 
 
 /**
@@ -75,16 +77,61 @@ function loginAsUser(userData){
 function insertTestTickets() {
     var ticket = Ticket.forge({
         title: "Test ticket",
-        description: "Test ticket with comments"
+        description: "Test ticket with comments, related users etc."
     });
 
     return ticket.save()
+        .then(function(ticket) {
+            Comment.forge({
+                ticket: ticket.id,
+                updated: 1397727280408,
+                comment: "First comment to test ticket"
+            })
+            .save();
+            return ticket;
+        })
+        .then(function(ticket) {
+            RelatedUser.forge({
+                ticket: ticket.id,
+                user_id: 1,
+                updated: 1397727280409,
+                username: "testuser1"
+            })
+            .save();
+            return ticket;
+        })
+        .then(function(ticket) {
+            Comment.forge({
+                ticket: ticket.id,
+                updated: 1397727280410,
+                comment: "Second comment to test ticket"
+            })
+            .save();
+            return ticket;
+        })
         .then(function() {
             var otherTicket = Ticket.forge({
                 title: "Other test ticket",
                 description: "Other test tickets"
             });
             return otherTicket.save();
+        })
+        .then(function(otherTicket) {
+            Comment.forge({
+                ticket: otherTicket.id,
+                comment: "First comment to the other ticket"
+            })
+            .save();
+            return otherTicket;
+        })
+        .then(function(otherTicket) {
+            RelatedUser.forge({
+                ticket: otherTicket.id,
+                user_id: 2,
+                username: "testuser2"
+            })
+            .save();
+            return otherTicket;
         })
         .then(function(otherTicket) {
             return { ticket: ticket, otherTicket: otherTicket };

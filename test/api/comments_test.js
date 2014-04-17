@@ -3,14 +3,11 @@ var helpers = require("../helpers");
 
 var assert = require("assert");
 
-var Comment = require("../../models/server/Comment");
-
 
 describe("/api/tickets/:id/comments", function() {
 
     var ticket = null;
     var otherTicket = null;
-    var commentForOtherTicket = null;
 
     before(function() {
         var self = this;
@@ -27,13 +24,6 @@ describe("/api/tickets/:id/comments", function() {
             })
             .then(function(agent) {
                 self.agent = agent;
-            })
-            .then(function() {
-                commentForOtherTicket = Comment.forge({
-                    ticket: otherTicket.id,
-                    comment: "Comment for other ticket"
-                });
-                return commentForOtherTicket.save();
             });
     });
 
@@ -46,7 +36,7 @@ describe("/api/tickets/:id/comments", function() {
         this.agent
         .post("/api/tickets/" + ticket.get("id") + "/comments")
         .send({
-            comment: "test comment for ticket",
+            comment: "add more test comment for ticket"
         })
         .expect(200)
         .end(function(err, res) {
@@ -54,7 +44,7 @@ describe("/api/tickets/:id/comments", function() {
                 return done(err);
             }
 
-            assert.equal(res.body.comment, "test comment for ticket");
+            assert.equal(res.body.comment, "add more test comment for ticket");
             assert.equal(res.body.ticket, ticket.get("id"));
             done();
         });
@@ -70,8 +60,8 @@ describe("/api/tickets/:id/comments", function() {
                 return done(err);
             }
 
-            assert.equal(1, res.body.length);
-            assert.equal("test comment for ticket", res.body[0].comment);
+            assert.equal(3, res.body.length);
+            assert.equal("add more test comment for ticket", res.body[2].comment);
             done();
         });
 

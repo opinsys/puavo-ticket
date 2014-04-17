@@ -3,16 +3,12 @@ var helpers = require("../helpers");
 
 var assert = require("assert");
 
-var Ticket = require("../../models/server/Ticket");
-var RelatedUser = require("../../models/server/RelatedUser");
-
 
 describe("/api/tickets/:id/related_users", function() {
 
 
     var ticket = null;
     var otherTicket = null;
-    var relatedUserForOtherTicket = null;
 
     before(function() {
         var self = this;
@@ -29,14 +25,6 @@ describe("/api/tickets/:id/related_users", function() {
             })
             .then(function(agent) {
                 self.agent = agent;
-            })
-            .then(function() {
-                relatedUserForOtherTicket = RelatedUser.forge({
-                    ticket: otherTicket.id,
-                    user_id: 2,
-                    username: "testuser2"
-                });
-                return relatedUserForOtherTicket.save();
             });
     });
 
@@ -75,8 +63,8 @@ describe("/api/tickets/:id/related_users", function() {
                 return done(err);
             }
 
-            assert.equal(1, res.body.length);
-            assert.equal("testuser", res.body[0].username);
+            assert.equal(2, res.body.length);
+            assert.equal("testuser", res.body[1].username);
             done();
         });
     });
