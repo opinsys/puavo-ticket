@@ -2,7 +2,7 @@
 
 
 /**
- * @namespace components
+ * @namespace utils
  * @class EventMixin
  */
 var EventMixin = {

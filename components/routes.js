@@ -1,5 +1,5 @@
 
-var Route = require("../react-route");
+var Route = require("../utils/react-route");
 
 
 module.exports = {

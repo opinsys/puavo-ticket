@@ -3,7 +3,7 @@
 
 var sinon = window.sinon;
 var $ = require("jquery");
-var Route = require("../../react-route");
+var Route = require("../../utils/react-route");
 
 var React = require("react/addons");
 var assert = require("assert");

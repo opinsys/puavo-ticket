@@ -10,7 +10,7 @@ var routes = require("./routes");
 var LinkTicket = routes.LinkTicket;
 var LinkNewTicket = routes.LinkNewTicket;
 var LinkTicketList = routes.LinkTicketList;
-var EventMixin = require("../EventMixin");
+var EventMixin = require("../utils/EventMixin");
 
 
 /**
@@ -19,7 +19,7 @@ var EventMixin = require("../EventMixin");
  * @namespace components
  * @class TicketForm
  * @extends React.ReactComponent
- * @uses components.EventMixin
+ * @uses utils.EventMixin
  */
 var TicketForm = React.createClass({
 

@@ -3,7 +3,7 @@
 var React = require("react");
 var routes = require("./routes");
 var Ticket = require("../models/client/Ticket");
-var EventMixin = require("../EventMixin");
+var EventMixin = require("../utils/EventMixin");
 var LinkNewTicket = routes.LinkNewTicket;
 var LinkTicket = routes.LinkTicket;
 
@@ -14,7 +14,7 @@ var LinkTicket = routes.LinkTicket;
  * @namespace components
  * @class TicketList
  * @extends React.ReactComponent
- * @uses components.EventMixin
+ * @uses utils.EventMixin
  */
 var TicketList = React.createClass({
 

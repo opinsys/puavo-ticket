@@ -3,7 +3,7 @@
 require("./client_setup");
 
 var React = require("react/addons");
-var Route = require("./react-route");
+var Route = require("./utils/react-route");
 
 var TicketForm = require("./components/TicketForm");
 var TicketList = require("./components/TicketList");
@@ -17,7 +17,7 @@ var routes = require("./components/routes");
  * @namespace components
  * @class Main
  * @extends react.ReactComponent
- * @uses utils.ListenToMixin
+ * @uses utils.Route.Mixin
  */
 var Main = React.createClass({
 
