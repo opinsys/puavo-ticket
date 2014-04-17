@@ -112,7 +112,7 @@ Use
 
 ## Debug browser Javascript
 
-For any browser code you can just add an `debugger;` statement and the browser
+For any browser code you can just add a `debugger;` statement and the browser
 break on it when devtools are open.
 
 ## Debug server Javascript
