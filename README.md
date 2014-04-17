@@ -15,15 +15,15 @@ Cool new ticketing system with deep puavo integration.
   - UI components build with [React][]
   - These use the [React JSX preprocessor](http://facebook.github.io/react/docs/jsx-in-depth.html)
 - `models/server/`
-  - Server-side [Bookshelfjs][] models
+  - Server-side [Bookshelf][] models
 - `models/client/`
-  - Client-side [Backbonejs][] models
+  - Client-side [Backbone][] models
 - `models/*Mixin.js`
   - Shared model mixins for both client and server models
 - `utils/`
   - Various helper utilities. May be used in the server and/or the client
 - `resources`
-  - [Expressjs][] REST API routes
+  - [Express][] REST API routes
 - `test`
   - All project tests
 - `test/server.js`
@@ -137,7 +137,8 @@ If you like GUIs the server can be debugged with
 
 ## puavo-ticket API documentation
 
-The Javascript API documentation is generated with [YUIDoc][] is available in
+The Javascript API documentation is generated with [YUIDoc][] and is available
+in
 
 <http://opinsys.github.io/puavo-ticket/>
 
@@ -163,9 +164,9 @@ from the puavo-ticket server.
   - [React](http://facebook.github.io/react/) for client-side views
       - [API](http://facebook.github.io/react/docs/component-api.html)
       - [Lifecycle](http://facebook.github.io/react/docs/component-specs.html)
-  - [Backbone.js](http://backbonejs.org/) as the client-side models
+  - [Backbone][] as the client-side models
     - And those only! No Router or views
-  - [Bookshelf.js](http://bookshelfjs.org/) as the server-side database ORM
+  - [Bookshelf][] as the server-side database ORM
   - [Knex.js](http://knexjs.org/) The query builder of bookshelf
 
 For testing
@@ -174,25 +175,11 @@ For testing
   - [supertest](https://github.com/visionmedia/supertest) for api testing
   - [React Test Utilities](http://facebook.github.io/react/docs/test-utils.html)
 
-Documenting
-
-  - [YUIDoc Syntax Reference](http://yui.github.io/yuidoc/syntax/)
-    - Used to build the puavo-ticket Javascript API documentation
-  - [apiDoc](http://apidocjs.com/)
-    - Used to build the puavo-ticket REST API documentation
-
-Use
-
-  - `make doc` to build the documentation
-  - `make doc-publish` to publish it on <http://opinsys.github.io/puavo-ticket/>
-  - `make doc-watch` to continuously build the documentation
-    - The documentation is also available within the application in <http://localhost:3000/doc>
-
 
 [React]: http://facebook.github.io/react/
-[Bookshelfjs]: http://bookshelfjs.org/
-[Backbonejs]: http://backbonejs.org/
-[Expressjs]: http://expressjs.com/
+[Bookshelf]: http://bookshelfjs.org/
+[Backbone]: http://backbonejs.org/
+[Express]: http://expressjs.com/
 [apiDoc]: http://apidocjs.com/
 [Mocha]: http://visionmedia.github.io/mocha/
 [Browserify]: http://browserify.org/
