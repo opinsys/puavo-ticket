@@ -17,6 +17,12 @@ var Backbone = require("backbone");
  */
 var User = Backbone.Model.extend({
 
+    /**
+     * Get visibility strings for the user
+     *
+     * @method getVisibilities
+     * @return {Array} Array of visibility strings. Eg organisation:testing.opinsys.fi
+     */
     getVisibilities: function() {
         var visibilities = [
             "user:" + this.get("id"),
