@@ -6,7 +6,7 @@ export PATH := tools/bin:$(PATH)
 JSHINT=jsxhint
 KARMA=node_modules/karma/bin/karma
 
-all: npm doc
+all: npm doc install-git-hooks
 	@echo
 	@echo All OK!
 	@echo
@@ -80,3 +80,6 @@ clean:
 install-git-hooks:
 	cp tools/pre-commit.hook .git/hooks/pre-commit
 	chmod +x .git/hooks/pre-commit
+	@echo
+	@echo Installed a git pre-commit hook to .git/hooks/pre-commit
+	@echo
