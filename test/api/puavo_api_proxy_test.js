@@ -26,6 +26,8 @@ describe("api.opinsys.fi proxy", function() {
     it("GET /api/puavo/v3/devices", function() {
          nock("https://testing.opinsys.fi")
         .get("/v3/devices")
+        // XXX: https://github.com/pgte/nock/issues/163
+        // .matchHeader("Authorization", /.*/)
         .reply(200, [
             {
                 username: "foo"

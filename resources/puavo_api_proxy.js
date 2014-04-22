@@ -3,6 +3,7 @@ var url = require("url");
 var express = require("express");
 var request = require("request");
 var promisePipe = require("promisepipe");
+var _ = require("lodash");
 
 var config;
 
@@ -46,10 +47,15 @@ app.use(function(req, res, next) {
     promisePipe(
         request({
             method: "GET",
-            headers: req.headers,
+            headers: _.extend({}, req.headers, {
+                host: req.user.get("organisation_domain")
+            }),
             url: puavoUrl,
             pool: {},
-            form: req.body
+            form: req.body,
+            auth: config.puavo,
+            // XXX: How use our cert auth?
+            strictSSL: false
         }),
         res
     ).catch(next);

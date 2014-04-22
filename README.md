@@ -73,10 +73,15 @@ Create `_config.json` with
 ```json
 {
     "puavoSharedSecret": "xxxxx"
+    "puavo": {
+        "user": "admin",
+        "pass": "xxxxx"
+    }
 }
 ```
 
-where `xxxxx` is the sso secret of puavo.
+where `xxxxx` is the sso secret of puavo and `puavo` is an authentication object
+for puavo api [requests](https://github.com/mikeal/request#http-authentication).
 
 Run database migrations
 
