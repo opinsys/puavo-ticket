@@ -1,7 +1,5 @@
 "use strict";
 
-var Backbone = require("backbone");
-
 /**
  * UserSession model for Opinsys user JWT tokens.
  *
@@ -15,7 +13,7 @@ var Backbone = require("backbone");
  * @namespace models
  * @class UserSession
  */
-var UserSession = Backbone.Model.extend({
+var UserMixin = {
 
     /**
      * Get visibility strings for the user
@@ -36,8 +34,8 @@ var UserSession = Backbone.Model.extend({
         return visibilities;
     }
 
-});
+};
 
 
 
-module.exports = UserSession;
+module.exports = UserMixin;

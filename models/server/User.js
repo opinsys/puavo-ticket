@@ -2,13 +2,15 @@
 
 require("../../db");
 var Bookshelf = require("bookshelf");
+var Cocktail = require("backbone.cocktail");
+var UserMixin = require("../UserMixin");
 
 /**
  * Server User model
  *
  * @namespace models.server
  * @extends Bookshelf.Model
- * class User
+ * @class User
  */
 var User = Bookshelf.DB.Model.extend({
 
@@ -22,4 +24,5 @@ var User = Bookshelf.DB.Model.extend({
     }
 });
 
+Cocktail.mixin(User, UserMixin);
 module.exports = User;
