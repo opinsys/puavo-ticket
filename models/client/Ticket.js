@@ -1,7 +1,7 @@
 "use strict";
 var Base = require("./Base");
 var _ = require("lodash");
-var Comment = require("./Comment");
+var UpdatesCollection = require("./UpdatesCollection");
 
 /**
  * Client ticket model
@@ -22,41 +22,41 @@ var Ticket = Base.extend({
     },
 
     initialize: function() {
-        this.on("change:id", this._setTicketIdForComments.bind(this));
+        this.on("change:id", this._setTicketIdForUpdates.bind(this));
     },
 
-    _setTicketIdForComments: function() {
-        this.comments().ticketId = this.get("id");
+    _setTicketIdForUpdates: function() {
+        this.updates().ticketId = this.get("id");
     },
 
     /**
-     * Return comments for the Ticket. Calls are cached. Ie. multiple calls to
+     * Return updates for the Ticket. Calls are cached. Ie. multiple calls to
      * this method will return the same collection instance.
      *
-     * @method comments
-     * @return {models.client.Comment.Collection} Collection of comments wrapped in a Promise
+     * @method updates
+     * @return {models.client.UpdatesCollection} Collection of comments wrapped in a Promise
      */
-    comments: function(){
-        if (this._comments) return this._comments;
-        this._comments = Comment.collection();
+    updates: function(){
+        if (this._updates) return this._updates;
+        this._updates = new UpdatesCollection();
         var self = this;
-        this._comments.on("all", function(eventName) {
+        this._updates.on("all", function(eventName) {
             self.trigger.apply(self, arguments);
         }, this);
-        this._setTicketIdForComments();
-        return this._comments;
+        this._setTicketIdForUpdates();
+        return this._updates;
     },
 
     /**
      * Resets the model attributes back to defaults.  Comment collection cache
-     * is also cleard.
+     * is also cleared.
      *
      * @method reset
      */
     reset: function() {
-        if (this._comments) {
-            this._comments.off(null, null, this);
-            this._comments = null;
+        if (this._updates) {
+            this._updates.off(null, null, this);
+            this._updates = null;
         }
         this.clear();
         this.set(_.result(this, "defaults"));

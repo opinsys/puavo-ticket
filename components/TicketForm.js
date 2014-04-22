@@ -11,6 +11,7 @@ var LinkTicket = routes.LinkTicket;
 var LinkNewTicket = routes.LinkNewTicket;
 var LinkTicketList = routes.LinkTicketList;
 var EventMixin = require("../utils/EventMixin");
+var Comment = require("../models/client/Comment");
 
 
 /**
@@ -49,10 +50,14 @@ var TicketForm = React.createClass({
     },
 
     saveComment: function() {
-        var c = this.state.ticketModel.comments().add({
+        var comment = new Comment({
             comment: this.refs.comment.getDOMNode().value
         });
-        c.save();
+
+        this.state.ticketModel.updates().add(comment);
+
+        return comment.save();
+
     },
 
     isOperating: function() {
@@ -69,7 +74,7 @@ var TicketForm = React.createClass({
         if (routes.existingTicket.match) {
             this.state.ticketModel.set({ id: routes.existingTicket.match.params.id });
             this.state.ticketModel.fetch();
-            this.state.ticketModel.comments().fetch();
+            this.state.ticketModel.updates().fetch();
         }
 
         if (routes.newTicket.match) {
@@ -112,7 +117,7 @@ var TicketForm = React.createClass({
     },
 
     render: function() {
-        console.log("render TickerForm", this.state.ticketModel.comments().size());
+        console.log("render TickerForm: updates: ", this.state.ticketModel.updates().size());
         return (
             <div>
 
@@ -152,7 +157,7 @@ var TicketForm = React.createClass({
                 {routes.existingTicket.match &&
                 <div>
                     <ul>
-                        {this.state.ticketModel.comments().map(function(comment) {
+                        {this.state.ticketModel.updates().map(function(comment) {
                             var saving;
                             if (comment.saving) {
                                 saving = "saving...";
