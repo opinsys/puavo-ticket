@@ -56,8 +56,11 @@ var TicketForm = React.createClass({
 
         this.state.ticketModel.updates().add(comment);
 
-        return comment.save();
-
+        var self = this;
+        return comment.save()
+            .then(function() {
+                self.refs.comment.getDOMNode().value = "";
+            });
     },
 
     isOperating: function() {
