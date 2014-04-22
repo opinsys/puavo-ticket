@@ -1,8 +1,8 @@
 "use strict";
 
-var helpers = require("../helpers");
+var helpers = require("../../helpers");
 
-var RelatedUser = require("../../models/server/RelatedUser");
+var RelatedUser = require("../../../models/server/RelatedUser");
 var assert = require("assert");
 
 describe("RelatedUser model", function() {

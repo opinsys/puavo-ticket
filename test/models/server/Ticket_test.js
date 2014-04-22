@@ -1,9 +1,9 @@
 "use strict";
 var Promise = require("bluebird");
 
-var helpers = require("../helpers");
+var helpers = require("../../helpers");
 
-var Ticket = require("../../models/server/Ticket");
+var Ticket = require("../../../models/server/Ticket");
 var assert = require("assert");
 
 
