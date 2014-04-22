@@ -54,7 +54,7 @@ app.use(function(req, res, next) {
             pool: {},
             form: req.body,
             auth: config.puavo,
-            // XXX: How use our cert auth?
+            // XXX: How to use our cert auth?
             strictSSL: false
         }),
         res
