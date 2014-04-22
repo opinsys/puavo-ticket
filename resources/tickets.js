@@ -9,7 +9,7 @@ var Ticket = require("../models/server/Ticket");
 var Comment = require("../models/server/Comment");
 var RelatedUser = require("../models/server/RelatedUser");
 
-var app = express();
+var app = express.Router();
 
 
 /**

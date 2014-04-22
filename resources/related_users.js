@@ -8,7 +8,7 @@ var express = require("express");
 var Ticket = require("../models/server/Ticket");
 var RelatedUser = require("../models/server/RelatedUser");
 
-var app = express();
+var app = express.Router();
 
 
 /**
