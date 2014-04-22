@@ -3,7 +3,7 @@
 var Backbone = require("backbone");
 
 /**
- * User model for Opinsys user JWT tokens.
+ * UserSession model for Opinsys user JWT tokens.
  *
  * There is no database presentation of this model. This must instantiated with
  * with JWT token data.
@@ -13,9 +13,9 @@ var Backbone = require("backbone");
  * This model can be used on both server and the client.
  *
  * @namespace models
- * @class User
+ * @class UserSession
  */
-var User = Backbone.Model.extend({
+var UserSession = Backbone.Model.extend({
 
     /**
      * Get visibility strings for the user
@@ -40,4 +40,4 @@ var User = Backbone.Model.extend({
 
 
 
-module.exports = User;
+module.exports = UserSession;

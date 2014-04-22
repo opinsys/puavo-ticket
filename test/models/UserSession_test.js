@@ -2,12 +2,12 @@
 var assert = require("assert");
 var helpers = require("../helpers");
 
-var User = require("../../models/User");
+var UserSession = require("../../models/UserSession");
 
-describe("User", function() {
+describe("UserSession", function() {
 
     before(function() {
-        this.user = new User(helpers.user.teacher);
+        this.user = new UserSession(helpers.user.teacher);
     });
 
     it("has user visibility", function() {

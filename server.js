@@ -10,7 +10,7 @@ var jwtsso = require("jwtsso");
 var cookieParser = require("cookie-parser");
 var session = require("express-session");
 
-var User = require("./models/User");
+var UserSession = require("./models/UserSession");
 
 /**
  * http://expressjs.com/4x/api.html#req.params
@@ -69,7 +69,7 @@ app.use(function(req, res, next) {
         console.log("Not auth!");
         return res.requestJwt();
     }
-    req.user = new User(req.session.jwt);
+    req.user = new UserSession(req.session.jwt);
     next();
 });
 
