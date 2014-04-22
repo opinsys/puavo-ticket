@@ -86,6 +86,7 @@ app.post("/logout", function(req, res) {
 
 app.use(require("./resources/tickets"));
 app.use(require("./resources/related_users"));
+app.use("/api/puavo", require("./resources/puavo_api_proxy")(config));
 
 
 app.get("/*", function(req, res) {
