@@ -32,7 +32,7 @@ doc-js:
 doc-rest:
 	mkdir -p doc/rest
 	apidoc -i resources/ -o doc/rest
-	
+
 doc: doc-js doc-rest
 
 doc-watch:
