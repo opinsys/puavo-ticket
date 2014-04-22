@@ -6,6 +6,7 @@ exports.up = function(knex, Promise) {
             table.increments("id");
             table.string("title");
             table.string("description");
+            table.integer("user");
             table.dateTime("created");
             table.dateTime("updated");
         }),
