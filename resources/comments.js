@@ -25,7 +25,8 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
         Comment.forge({
             comment: req.body.comment,
-            ticket: req.params.id
+            ticket: req.params.id,
+            user: req.user.id
         })
         .save()
         .then(function(comment) {
