@@ -12,12 +12,12 @@ describe("User model", function() {
 
     it("Instance ca be created", function() {
         return User.forge({
-            user_id: 1,
-            username: "testuser",
-            email: "joe.bloggs@testdomain.com",
-            first_name: "Joe",
-            last_name: "Bloggs",
-            organisation_domain: "test.testdomain.com"
+                user_id: 1,
+                username: "testuser",
+                email: "joe.bloggs@testdomain.com",
+                first_name: "Joe",
+                last_name: "Bloggs",
+                organisation_domain: "test.testdomain.com"
             })
             .save()
             .then(function(user) {
