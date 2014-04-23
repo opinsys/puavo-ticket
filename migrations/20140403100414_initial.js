@@ -59,6 +59,17 @@ exports.up = function(knex, Promise) {
             table.integer("ticket");
             table.dateTime("created");
             table.dateTime("updated");
+        }),
+
+        knex.schema.createTable("attachments", function(table) {
+            table.increments("id");
+            table.binary("data");
+            table.string("data_type");
+            table.string("filename");
+            table.integer("user");
+            table.integer("ticket");
+            table.dateTime("created");
+            table.dateTime("updated");
         })
 
     ]);
@@ -71,6 +82,7 @@ exports.down = function(knex, Promise) {
         knex.schema.dropTable("visibilities"),
         knex.schema.dropTable("users"),
         knex.schema.dropTable("related_users"),
-        knex.schema.dropTable("devices")
+        knex.schema.dropTable("devices"),
+        knex.schema.dropTable("attachments")
     ]);
 };
