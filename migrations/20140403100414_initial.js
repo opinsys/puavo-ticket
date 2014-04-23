@@ -44,7 +44,7 @@ exports.up = function(knex, Promise) {
 
         knex.schema.createTable("related_users", function(table) {
             table.increments("id");
-            table.string("user_id");
+            table.integer("user_id");
             table.string("username");
             table.integer("user");
             table.dateTime("created");
