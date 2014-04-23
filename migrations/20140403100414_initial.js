@@ -50,6 +50,15 @@ exports.up = function(knex, Promise) {
             table.dateTime("created");
             table.dateTime("updated");
             table.integer("ticket");
+        }),
+
+        knex.schema.createTable("devices", function(table) {
+            table.increments("id");
+            table.string("hostname");
+            table.integer("user");
+            table.integer("ticket");
+            table.dateTime("created");
+            table.dateTime("updated");
         })
 
     ]);
