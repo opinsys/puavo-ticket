@@ -70,6 +70,7 @@ exports.down = function(knex, Promise) {
         knex.schema.dropTable("comments"),
         knex.schema.dropTable("visibilities"),
         knex.schema.dropTable("users"),
-        knex.schema.dropTable("related_users")
+        knex.schema.dropTable("related_users"),
+        knex.schema.dropTable("devices")
     ]);
 };
