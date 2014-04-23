@@ -92,47 +92,6 @@ app.put("/api/tickets/:id", function(req, res, next) {
 
 
 /**
- * @api {post} /api/tickets/:id/comments Add comment to a ticket
- * @apiName CreateComment
- * @apiGroup comments
- *
- * @apiParam {String} comment
- */
-app.post("/api/tickets/:id/comments", function(req, res, next) {
-    Ticket.forge({ id: req.params.id })
-    .fetch()
-    .then(function(ticket) {
-        if (!ticket) return res.json(404, { error: "no such ticket" });
-        Comment.forge({
-            comment: req.body.comment,
-            ticket: req.params.id
-        })
-        .save()
-        .then(function(comment) {
-            res.json(comment.toJSON());
-        });
-    })
-    .catch(next);
-});
-
-/**
- * @api {get} /api/tickets/:id/comments Get comments for a ticket
- * @apiName GetComments
- * @apiGroup comments
- *
- * @apiSuccess {Object[]} . List of comments
- */
-app.get("/api/tickets/:id/comments", function(req, res, next) {
-    Comment.collection()
-    .query('where', 'ticket', '=', req.params.id)
-    .fetch()
-    .then(function(collection) {
-        res.json(collection.toJSON());
-    })
-    .catch(next);
-});
-
-/**
  * @api {get} /api/tickets/:id/updates Get all updates for a ticket
  * @apiName GetUpdates
  * @apiGroup updates
