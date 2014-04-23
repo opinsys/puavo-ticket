@@ -46,6 +46,7 @@ exports.up = function(knex, Promise) {
             table.increments("id");
             table.string("user_id");
             table.string("username");
+            table.integer("user");
             table.dateTime("created");
             table.dateTime("updated");
             table.integer("ticket");

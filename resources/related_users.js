@@ -27,7 +27,8 @@ app.post("/api/tickets/:id/related_users", function(req, res, next) {
         RelatedUser.forge({
             user_id: req.body.user_id,
             username: req.body.username,
-            ticket: req.params.id
+            ticket: req.params.id,
+            user: req.user.id
         })
         .save()
         .then(function(related_user) {
