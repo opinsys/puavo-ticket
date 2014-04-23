@@ -2,6 +2,13 @@
 "use strict";
 var React = require("react");
 
+/**
+ * Render React component in a modal lightbox
+ *
+ * @namespace components
+ * @class Lightbox
+ * @extends React.ReactComponent
+ */
 var Lightbox = React.createClass({
     render: function() {
         return (
@@ -17,10 +24,31 @@ var Lightbox = React.createClass({
     }
 });
 
+/**
+ * Currently visible rendered component
+ *
+ * @static
+ * @private
+ * @property currentComponent
+ * @type React.ReactComponent|null
+ */
 Lightbox.currentComponent = null;
 
+/**
+ * Container where the lightbox root is rendered to
+ *
+ * @static
+ * @private
+ * @property container
+ * @type DOMElement
+ */
 Lightbox.container = document.getElementById("lightbox-container");
 
+/**
+ * @static
+ * @method displayComponent
+ * @param component {React.ReactComponent}
+ */
 Lightbox.displayComponent = function (component) {
     if (Lightbox.currentComponent) Lightbox.removeCurrentComponent();
     Lightbox.currentComponent = component;
@@ -31,6 +59,12 @@ Lightbox.displayComponent = function (component) {
     document.body.scrollTop = document.documentElement.scrollTop = 0;
 };
 
+/**
+ * Remove current component from the view
+ *
+ * @static
+ * @method removeCurrentComponent
+ */
 Lightbox.removeCurrentComponent = function() {
     if (!Lightbox.currentComponent) return;
     React.unmountComponentAtNode(Lightbox.container);
