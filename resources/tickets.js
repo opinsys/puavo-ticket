@@ -55,7 +55,11 @@ app.get("/api/tickets/:id", function(req, res, next) {
  * @apiParam {String} description
  */
 app.post("/api/tickets", function(req, res, next) {
-    Ticket.forge(req.body)
+    Ticket.forge({
+        title: req.body.title,
+        description: req.body.description,
+        user: req.user.id
+    })
     .save()
     .then(function(ticket) {
         res.json(ticket.toJSON());

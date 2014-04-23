@@ -35,6 +35,30 @@ app.use(session({
     secret: "keyboard cat",
 }));
 
+var createOrUpdateUser = function(token, done) {
+    User.collection()
+        .query('where', 'user_id', '=', token.id)
+        .fetchOne()
+        .then(function(user) {
+            if (!user) {
+                return User.forge({
+                    user_id: token.id,
+                    username: token.username,
+                    first_name: token.first_name,
+                    last_name: token.last_name,
+                    email: token.email,
+                    organisation_domain: token.organisation_domain
+                    }).save();
+            }
+            else {
+                // FIXME: Update user data
+            }
+        })
+        .then(function(user) {
+            done();
+        });
+};
+
 app.use(jwtsso({
 
     // Service endpoint that issues the jwt tokens
@@ -48,7 +72,9 @@ app.use(jwtsso({
 
     // Set max age in seconds for the tokens
     // Defaults to 60 seconds
-    maxAge: 120
+    maxAge: 120,
+
+    hook: createOrUpdateUser
 
 }));
 
@@ -69,8 +95,19 @@ app.use(function(req, res, next) {
         console.log("Not auth!");
         return res.requestJwt();
     }
-    req.user = new User(req.session.jwt);
-    next();
+
+    User.collection()
+        .query('where', 'user_id', '=', req.session.jwt.id)
+        .fetchOne()
+        .then(function(user) {
+            if (!user) return next();
+
+            req.user = user;
+        })
+        .then(function() {
+            next();
+        })
+        .catch(next);
 });
 
 
