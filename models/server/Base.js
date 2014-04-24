@@ -14,10 +14,9 @@ var Base = Bookshelf.DB.Model.extend({
 
     virtuals: {
         /**
-         * Virtual database field. Use .get("unique_id") to access it.
+         * Unique id between tables.
          *
-         * This string id is unique between all tables. We need this to be able
-         * to put models of diffent type to a single Backbone collection
+         * Virtual database field. Use .get("unique_id") to access it.
          *
          * @property unique_id
          * @type String

@@ -57,6 +57,21 @@ function promiseWrap(eventName, method) {
 var Base = Backbone.Model.extend({
 
     /**
+     *
+     * Use unique_id from {{#crossLink "models.server.Base"}}{{/crossLink}} as
+     * the model id.
+     *
+     * We need this to be able to put models of diffent type to a single
+     * Backbone collection
+     *
+     * http://backbonejs.org/#Model-idAttribute
+     *
+     * @property idAttribute
+     * @type String
+     */
+    idAttribute: "unique_id",
+
+    /**
      * Fetch model state from the server
      * http://backbonejs.org/#Model-fetch
      *
