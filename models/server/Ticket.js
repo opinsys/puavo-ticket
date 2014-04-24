@@ -7,6 +7,7 @@ var Comment = require("./Comment");
 var Device = require("./Device");
 var RelatedUser = require("./RelatedUser");
 var Visibility = require("./Visibility");
+var Attachment = require("./Attachment");
 
 
 /**
@@ -118,6 +119,9 @@ var Ticket = Bookshelf.DB.Model.extend({
 
     },
 
+    attachments: function() {
+        return this.hasMany(Attachment, "ticket");
+    }
 });
 
 /**

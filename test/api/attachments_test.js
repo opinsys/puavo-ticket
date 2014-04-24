@@ -2,6 +2,7 @@
 var helpers = require("../helpers");
 
 var assert = require("assert");
+var crypto = require('crypto');
 
 
 describe("/api/tickets/:id/attachments", function() {
@@ -43,4 +44,18 @@ describe("/api/tickets/:id/attachments", function() {
                 assert.deepEqual(res.body, {ok: true});
             });
     });
+
+    it("can fetch attachments", function() {
+        return ticket.attachments().fetch()
+            .then(function(attachments) {
+                assert.equal(attachments.first().get("filename"), "test.jpg");
+                assert.equal(attachments.first().get("data_type"), "image/jpeg");
+                assert.equal('7d6f499f5ee89eb34535aa291c69b4ed05ebcffb',
+                             crypto
+                             .createHash('sha1')
+                             .update(attachments.first().get("data"), 'utf8')
+                             .digest('hex'));
+            });
+    });
+
 });
