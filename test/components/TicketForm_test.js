@@ -42,7 +42,7 @@ describe("TicketForm", function() {
             })
         ]);
 
-        this.server.respondWith("GET", "/api/tickets/1/comments", [
+        this.server.respondWith("GET", "/api/tickets/1/updates", [
             200,
             {  "Content-Type": "application/json" },
             JSON.stringify([])
