@@ -1,8 +1,12 @@
 "use strict";
 var Bookshelf = require("bookshelf");
-var Comment = require("./Comment");
-var Visibility = require("./Visibility");
 var _ = require("lodash");
+var Promise = require("bluebird");
+
+var Comment = require("./Comment");
+var Device = require("./Device");
+var RelatedUser = require("./RelatedUser");
+var Visibility = require("./Visibility");
 
 
 /**
@@ -67,7 +71,52 @@ var Ticket = Bookshelf.DB.Model.extend({
         comment = _.clone(comment);
         comment.ticket = this.get("id");
         return Comment.forge(comment).save();
-    }
+    },
+
+
+    /**
+     * Get all updates related to this ticket
+     *
+     * @method fetchUpdates
+     * @return {Bluebird.Promise} Array of Comment|Device|RelatedUser models
+     * wrapped in a promise
+     */
+    fetchUpdates: function() {
+        var id = this.get("id");
+
+        var updatePromises = [
+            Comment,
+            RelatedUser,
+            Device
+        ].map(function(klass) {
+            return klass.collection()
+                .query("where", "ticket", "=", id)
+                .fetch();
+        });
+
+        return Promise.all(updatePromises)
+        .then(function(updates) {
+
+            updates = _.flatten(updates.map(function(coll) {
+                return coll.toArray();
+            }));
+
+            updates.sort(function(a,b) {
+                if ( a.get("updated") > b.get("updated") ) {
+                    return 1;
+                }
+                if ( a.get("updated") < b.get("updated") ) {
+                    return -1;
+                }
+
+                return 0;
+
+            });
+
+            return updates;
+        });
+
+    },
 
 });
 

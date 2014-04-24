@@ -46,4 +46,21 @@ describe("/api/tickets/:id/devices", function() {
                 assert.equal(res.body.user, 1);
             });
     });
+
+    it("is listed on /api/tickets/:id/updates", function() {
+        return this.agent
+            .get("/api/tickets/" + ticket.get("id") + "/updates")
+            .promise()
+            .then(function(res) {
+                assert.equal(res.status, 200);
+                var deviceEntry = res.body.filter(function(update) {
+                    return update.hostname === "fatclient-01";
+                });
+                assert.equal(
+                    deviceEntry.length, 1,
+                    "cannot find the device from updates resource"
+                );
+            });
+    });
+
 });

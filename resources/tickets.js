@@ -6,8 +6,6 @@
 var express = require("express");
 
 var Ticket = require("../models/server/Ticket");
-var Comment = require("../models/server/Comment");
-var RelatedUser = require("../models/server/RelatedUser");
 
 var app = express.Router();
 
@@ -97,31 +95,12 @@ app.put("/api/tickets/:id", function(req, res, next) {
  * @apiSuccess {Object[]} . List of updates
  */
 app.get("/api/tickets/:id/updates", function(req, res, next) {
-    var comments = null;
-    Comment.collection()
-    .query('where', 'ticket', '=', req.params.id)
+    Ticket.forge({ id: req.params.id })
     .fetch()
-    .then(function(collection) {
-        comments = collection;
-
-        return RelatedUser.collection()
-        .query('where', 'ticket', '=', req.params.id)
-        .fetch();
+    .then(function(ticket) {
+        return ticket.fetchUpdates();
     })
-    .then(function(relatedUsers) {
-        var updates = comments.toArray().concat(relatedUsers.toArray());
-
-        updates.sort(function(a,b) {
-            if ( a.get("updated") > b.get("updated") ) {
-                return 1;
-            }
-            if ( a.get("updated") < b.get("updated") ) {
-                return -1;
-            }
-
-            return 0;
-
-        });
+    .then(function(updates) {
         res.json(updates);
     })
     .catch(next);
