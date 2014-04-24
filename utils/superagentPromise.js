@@ -22,8 +22,11 @@ Request.prototype.promise = function() {
     var self = this;
     return new Promise(function(resolve, reject){
         Request.prototype.end.call(self, function(err, res) {
-            if (err) reject(err);
-            else resolve(res);
+            if (err) return reject(err);
+            if (res.status === 500) {
+                return reject(new Error(res.text));
+            }
+            resolve(res);
         });
     });
 };
