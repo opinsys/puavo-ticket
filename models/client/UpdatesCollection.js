@@ -4,9 +4,6 @@ var Comment = require("./Comment");
 var Device = require("./Device");
 
 
-function updateUrl(ticketId) {
-    return "/api/tickets/" + ticketId + "/updates";
-}
 
 /**
  *
@@ -35,7 +32,7 @@ var UpdatesCollection = Base.Collection.extend({
         if (!this.ticketId) {
             throw new Error("Cannot fetch comments without ticketId!");
         }
-        return updateUrl(this.ticketId);
+        return "/api/tickets/" + this.ticketId + "/updates";
     }
 
 });

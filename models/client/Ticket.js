@@ -12,7 +12,13 @@ var UpdatesCollection = require("./UpdatesCollection");
  * @uses models.TicketMixin
  */
 var Ticket = Base.extend({
-    urlRoot: "/api/tickets",
+
+    url: function() {
+        if (this.get("id")) {
+            return "/api/tickets/" + this.get("id");
+        }
+        return "/api/tickets";
+    },
 
     defaults: function() {
         return {
@@ -87,7 +93,10 @@ var Ticket = Base.extend({
  * @extends models.client.Base.Collection
  */
 var Collection = Base.Collection.extend({
-    url: "/api/tickets",
+
+    url: function() {
+        return "/api/tickets";
+    },
 
     /**
      * http://backbonejs.org/#Collection-model
