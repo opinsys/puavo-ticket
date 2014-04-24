@@ -1,16 +1,16 @@
 "use strict";
 
 require("../../db");
-var Bookshelf = require("bookshelf");
+var Base = require("./Base");
 
 /**
  * RelatedUser for {{#crossLink "models.server.Ticket"}}{{/crossLink}}
  *
  * @namespace models.server
- * @extends Bookshelf.Model
+ * @extends models.server.Base
  * class RelatedUser
  */
-var RelatedUsers = Bookshelf.DB.Model.extend({
+var RelatedUsers = Base.extend({
 
     tableName: "related_users",
 

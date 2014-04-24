@@ -1,16 +1,17 @@
 "use strict";
 
 require("../../db");
-var Bookshelf = require("bookshelf");
+
+var Base = require("./Base");
 
 /**
  * Devices for {{#crossLink "models.server.Ticket"}}{{/crossLink}}
  *
  * @namespace models.server
- * @extends Bookshelf.Model
+ * @extends models.server.Base
  * @class Device
  */
-var Device = Bookshelf.DB.Model.extend({
+var Device = Base.extend({
 
   tableName: "devices",
 

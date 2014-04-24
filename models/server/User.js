@@ -1,7 +1,7 @@
 "use strict";
 
 require("../../db");
-var Bookshelf = require("bookshelf");
+var Base = require("./Base");
 var Cocktail = require("backbone.cocktail");
 var UserMixin = require("../UserMixin");
 
@@ -9,10 +9,10 @@ var UserMixin = require("../UserMixin");
  * Server User model
  *
  * @namespace models.server
- * @extends Bookshelf.Model
+ * @extends models.server.Base
  * @class User
  */
-var User = Bookshelf.DB.Model.extend({
+var User = Base.extend({
 
     tableName: "users",
 
