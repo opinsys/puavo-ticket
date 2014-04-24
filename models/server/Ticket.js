@@ -119,6 +119,12 @@ var Ticket = Bookshelf.DB.Model.extend({
 
     },
 
+    /**
+     * Get all attachments to this ticket
+     *
+     * @method attachments
+     * @return {Bookshelf.Collection} Bookshelf.Collection of Attachment models
+     */
     attachments: function() {
         return this.hasMany(Attachment, "ticket");
     }
