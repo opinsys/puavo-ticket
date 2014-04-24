@@ -167,13 +167,25 @@ var TicketForm = React.createClass({
                 {routes.existingTicket.match &&
                 <div>
                     <ul>
-                        {this.state.ticketModel.updates().map(function(comment) {
-                            var saving;
-                            if (comment.saving) {
-                                saving = "saving...";
+                        {this.state.ticketModel.updates().map(function(update) {
+                            var out;
+
+                            if (update.get("type") === "devices") {
+                                out = "Laite " + update.get("hostname");
+                            }
+                            else {
+                                out = update.get("comment");
                             }
 
-                            return <li>{comment.get("comment")} {saving}</li>;
+                            if (update.get("user")) {
+                                out += ". Lähetti " + update.get("user");
+                            }
+
+                            if (update.saving) {
+                                out  += " (saving...)";
+                            }
+
+                            return <li>{out}</li>;
                         })}
                     </ul>
                     <input ref="comment" type="text" />

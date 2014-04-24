@@ -1,6 +1,8 @@
 "use strict";
 var Base = require("./Base");
 var Comment = require("./Comment");
+var Device = require("./Device");
+
 
 function updateUrl(ticketId) {
     return "/api/tickets/" + ticketId + "/updates";
@@ -22,6 +24,10 @@ var UpdatesCollection = Base.Collection.extend({
     },
 
     model: function(attrs, options) {
+        if (attrs.hostname) {
+            return new Device(attrs, options);
+        }
+
         return new Comment(attrs, options);
     },
 
