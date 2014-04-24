@@ -12,15 +12,14 @@ var Base = require("./Base");
  */
 var Attachment = Base.extend({
 
-  tableName: "attachments",
+    tableName: "attachments",
 
-  defaults: function() {
-      return {
-          created: new Date(),
-          updated: new Date()
-      };
-  }
-
+    defaults: function() {
+        return {
+            created: new Date(),
+            updated: new Date()
+        };
+    }
 });
 
 module.exports = Attachment;
