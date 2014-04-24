@@ -34,7 +34,8 @@
     "supertest": "~0.10.0",
     "request": "~2.34.0",
     "promisepipe": "~1.0.1",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "multiparty": "~3.2.4"
   },
   "devDependencies": {
     "jshint": "~2.5.0",
