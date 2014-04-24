@@ -13,6 +13,7 @@ var Bookshelf = require("bookshelf");
 var Base = Bookshelf.DB.Model.extend({
 
     virtuals: {
+
         /**
          * Unique id between tables.
          *
@@ -21,9 +22,13 @@ var Base = Bookshelf.DB.Model.extend({
          * @property unique_id
          * @type String
          */
-        unique_id: function() {
-            if (!this.id) return;
-            return this.get("type") + ":" + this.id;
+        unique_id: {
+            get: function() {
+                if (!this.id) return;
+                return this.get("type") + ":" + this.id;
+            },
+            // no actual database presentation
+            set: function() { },
         },
 
         /**
@@ -34,9 +39,14 @@ var Base = Bookshelf.DB.Model.extend({
          * @property type
          * @type String
          */
-        type: function() {
-            return this.constructor.prototype.tableName;
+        type: {
+            get: function() {
+                return this.constructor.prototype.tableName;
+            },
+            // no actual database presentation
+            set: function() { }
         }
+
     }
 });
 
