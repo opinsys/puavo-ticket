@@ -29,6 +29,7 @@ var app = express();
 
 var config = require("./config");
 
+app.use(require("./utils/responseLogger")());
 app.use(bodyParser());
 app.use(cookieParser());
 app.use(session({

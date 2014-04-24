@@ -20,7 +20,6 @@ var app = express.Router();
  * @apiSuccess {Object[]} . List of tickets
  */
 app.get("/api/tickets", function(req, res, next) {
-    console.log("GET", req.url, new Date());
     Ticket.collection().fetch()
     .then(function(coll) {
         res.json(coll.toJSON());
@@ -37,7 +36,6 @@ app.get("/api/tickets", function(req, res, next) {
  * @apiSuccess {String} description Description of the ticket
  */
 app.get("/api/tickets/:id", function(req, res, next) {
-    console.log("GET", req.url, new Date());
     Ticket.forge({ id: req.params.id }).fetch()
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
