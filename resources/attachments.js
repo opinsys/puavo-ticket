@@ -18,7 +18,7 @@ var app = express.Router();
  * @apiName CreateAttachment
  * @apiGroup attachments
  *
- * @apiParam {Binary} file
+ * @apiParam {Binary} attachment
  */
 app.post("/api/tickets/:id/attachments", function(req, res, next) {
     var filePromise = fs.readFileAsync(req.files.attachment[0].path);
