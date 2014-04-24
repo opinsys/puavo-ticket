@@ -1,8 +1,8 @@
 "use strict";
-var Bookshelf = require("bookshelf");
 var _ = require("lodash");
 var Promise = require("bluebird");
 
+var Base = require("./Base");
 var Comment = require("./Comment");
 var Device = require("./Device");
 var RelatedUser = require("./RelatedUser");
@@ -14,10 +14,10 @@ var Attachment = require("./Attachment");
  * Server Ticket model
  *
  * @namespace models.server
- * @extends Bookshelf.Model
+ * @extends models.server.Base
  * @class Ticket
  */
-var Ticket = Bookshelf.DB.Model.extend({
+var Ticket = Base.extend({
     tableName: "tickets",
 
     defaults: function() {
