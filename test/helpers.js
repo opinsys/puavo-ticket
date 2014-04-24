@@ -90,57 +90,57 @@ function insertTestTickets() {
     });
 
     return ticket.save()
-        .then(function(ticket) {
-            Comment.forge({
+        .then(function() {
+            return Comment.forge({
                 ticket: ticket.id,
                 updated: 1397727280408,
                 comment: "First comment to test ticket"
             })
             .save();
-            return ticket;
         })
-        .then(function(ticket) {
-            RelatedUser.forge({
+        .then(function() {
+            return RelatedUser.forge({
                 ticket: ticket.id,
                 user_id: 1,
                 updated: 1397727280409,
                 username: "testuser1"
             })
             .save();
-            return ticket;
         })
-        .then(function(ticket) {
-            Comment.forge({
+        .then(function() {
+            return Comment.forge({
                 ticket: ticket.id,
                 updated: 1397727280410,
                 comment: "Second comment to test ticket"
             })
             .save();
-            return ticket;
         })
         .then(function() {
-            var otherTicket = Ticket.forge({
+            return Ticket.forge({
                 title: "Other test ticket",
                 description: "Other test tickets"
-            });
-            return otherTicket.save();
+            }).save();
         })
         .then(function(otherTicket) {
-            Comment.forge({
+            return Comment.forge({
                 ticket: otherTicket.id,
                 comment: "First comment to the other ticket"
             })
-            .save();
-            return otherTicket;
+            .save()
+            .then(function() {
+                return otherTicket;
+            });
         })
         .then(function(otherTicket) {
-            RelatedUser.forge({
+            return RelatedUser.forge({
                 ticket: otherTicket.id,
                 user_id: 2,
                 username: "testuser2"
             })
-            .save();
-            return otherTicket;
+            .save()
+            .then(function() {
+                return otherTicket;
+            });
         })
         .then(function(otherTicket) {
             return { ticket: ticket, otherTicket: otherTicket };
