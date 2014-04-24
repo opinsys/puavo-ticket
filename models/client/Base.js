@@ -23,9 +23,10 @@ function promiseWrap(eventName, method) {
         .then(function() {
             return Promise.cast(method.apply(self, arguments));
         })
-        .then(function() {
+        .then(function(res) {
             self[eventName] = null;
             self.trigger(eventName + ":end");
+            return res;
         })
         .catch(function(err) {
             // jQuery returns an xhr object as the error object. Convert it to
