@@ -4,6 +4,7 @@ var React = require("react/addons");
 
 var Lightbox = require("./Lightbox");
 var SimilarTickets = require("./SimilarTickets");
+var AddDevice = require("./AddDevice");
 
 var Ticket = require("../models/client/Ticket");
 var routes = require("./routes");
@@ -119,6 +120,12 @@ var TicketForm = React.createClass({
         }
     },
 
+    handleAddDevice: function(e) {
+        Lightbox.displayComponent(
+            <AddDevice ticketModel={this.state.ticketModel} />
+        );
+    },
+
     render: function() {
         console.log("render TickerForm: updates: ", this.state.ticketModel.updates().size());
         return (
@@ -171,6 +178,7 @@ var TicketForm = React.createClass({
                     </ul>
                     <input ref="comment" type="text" />
                     <button onClick={this.saveComment}>Lähetä</button>
+                    <button onClick={this.handleAddDevice} >Add device</button>
                 </div>
                 }
 
