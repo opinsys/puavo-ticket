@@ -93,13 +93,17 @@ describe("/api/tickets", function() {
     describe("/api/tickets/:id/updates", function() {
 
         before(function() {
-            return helpers.insertTestTickets();
+            var self = this;
+            return helpers.insertTestTickets()
+                .then(function(tickets) {
+                    self.tickets = tickets;
+                });
         });
 
         it("can get list of ticket updates", function() {
 
             return this.agent
-                .get("/api/tickets/2/updates")
+                .get("/api/tickets/" + this.tickets.ticket.id + "/updates")
                 .promise()
                 .then(function(res) {
                     assert.equal(res.status, 200);
