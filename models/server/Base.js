@@ -22,8 +22,21 @@ var Base = Bookshelf.DB.Model.extend({
          * @type String
          */
         unique_id: function() {
-            return this.constructor.prototype.tableName + ":" + this.id;
+            if (!this.id) return;
+            return this.get("type") + ":" + this.id;
         },
+
+        /**
+         * The database table name
+         *
+         * Virtual database field. Use .get("type") to access it.
+         *
+         * @property type
+         * @type String
+         */
+        type: function() {
+            return this.constructor.prototype.tableName;
+        }
     }
 });
 
