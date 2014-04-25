@@ -65,7 +65,11 @@ var createOrUpdateUser = function(token, done) {
                     }).save();
             }
             else {
-                // FIXME: Update user data
+                user.set("email", token.email);
+                user.set("username", token.username);
+                user.set("first_name", token.first_name);
+                user.set("last_name", token.last_name);
+                return user.save();
             }
         })
         .then(function(user) {
