@@ -8,6 +8,7 @@ var Device = require("./Device");
 var RelatedUser = require("./RelatedUser");
 var Visibility = require("./Visibility");
 var Attachment = require("./Attachment");
+var Follower = require("./Follower");
 
 
 /**
@@ -127,7 +128,21 @@ var Ticket = Base.extend({
      */
     attachments: function() {
         return this.hasMany(Attachment, "ticket");
+    },
+
+    /**
+     * Add follower to the ticket
+     *
+     * @method addFollower
+     * @param {Object} comment Plain object with models.server.Follower fields
+     * @return {Bluebird.Promise}
+     */
+    addFollower: function(follower) {
+        follower = _.clone(follower);
+        follower.ticket = this.get("id");
+        return Follower.forge(follower).save();
     }
+
 });
 
 /**

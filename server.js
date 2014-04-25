@@ -144,6 +144,7 @@ app.use(require("./resources/related_users"));
 app.use(require("./resources/comments"));
 app.use(require("./resources/devices"));
 app.use(require("./resources/attachments"));
+app.use(require("./resources/followers"));
 
 app.use("/api/puavo", require("./resources/puavo_api_proxy")(config));
 
