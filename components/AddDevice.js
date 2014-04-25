@@ -1,13 +1,13 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
-var Backbone = require("backbone");
 
 var Device = require("../models/client/Device");
 var Lightbox = require("./Lightbox");
 var EventMixin = require("../utils/EventMixin");
+var Base = require("../models/client/Base");
 
-var DeviceCollection = Backbone.Collection.extend({
+var DeviceCollection = Base.Collection.extend({
 
     url: function() {
         return "/api/puavo/v3/devices";
@@ -52,7 +52,8 @@ var AddDevice = React.createClass({
                         return <option>{d.get("hostname")}</option>;
                     })}
                 </select>
-                {this.state.deviceCollection.size() === 0 && "Loading..."}
+                {this.state.deviceCollection.fetching && "Loading..."}
+                {this.state.deviceCollection.getError() && "AJAX FAIL :("}
                 <button onClick={this.handleAdd}>Add</button>
             </div>
         );
