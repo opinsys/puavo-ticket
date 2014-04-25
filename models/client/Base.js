@@ -1,6 +1,11 @@
+/**
+ * @namespace models.client
+ */
 "use strict";
 var Backbone = require("backbone");
 var Promise = require("bluebird");
+var Cocktail = require("backbone.cocktail");
+
 
 /**
  * Decorate method execution with `<eventName>:start` and `<eventName>:end`
@@ -11,6 +16,7 @@ var Promise = require("bluebird");
  * @method promiseWrap
  * @static
  * @private
+ * @for models.client.Base
  * @param {String} eventName
  * @param {Function} method
  */
@@ -36,6 +42,14 @@ function promiseWrap(eventName, method) {
                 err = new Error("Bad request " + xhr.status + ": " + xhr.responseText);
                 err.xhr = xhr;
             }
+
+            // Emit event after this catch clause has been executed. This
+            // ensures that the promise is actually rejected when a render
+            // occurs
+            process.nextTick(function(err) {
+                self.trigger(eventName + ":error", err);
+            });
+
             throw err;
         });
 
@@ -44,15 +58,14 @@ function promiseWrap(eventName, method) {
 }
 
 
-
 /**
  * Base class for client models
  *
  * http://backbonejs.org/#Model
  *
- * @namespace models.client
  * @class Base
  * @extends Backbone.Model
+ * @uses models.client.PromiseWrapMixin
  * @see http://backbonejs.org/#Model
  */
 var Base = Backbone.Model.extend({
@@ -108,14 +121,6 @@ var Base = Backbone.Model.extend({
      */
     saving: null,
 
-    /**
-     * Is the model saving or fetching data
-     *
-     * @method isOperating
-     */
-    isOperating: function() {
-        return !!(this.saving || this.fetching);
-    }
 
 });
 
@@ -124,9 +129,9 @@ var Base = Backbone.Model.extend({
  *
  * http://backbonejs.org/#Collection
  *
- * @namespace models.client.Base
- * @class Collection
+ * @class Base.Collection
  * @extends Backbone.Collection
+ * @uses models.client.PromiseWrapMixin
  */
 Base.Collection = Backbone.Collection.extend({
 
@@ -149,4 +154,39 @@ Base.Collection = Backbone.Collection.extend({
     fetching: null
 });
 
+
+/**
+ * @class PromiseWrapMixin
+ */
+var PromiseWrapMixin = {
+
+    /**
+     * Return true when the model is fetching or saving data
+     *
+     * @method isOperating
+     * @return {Boolean}
+     */
+    isOperating: function() {
+        return !!(this.saving || this.fetching);
+    },
+
+    /**
+     *
+     * Returns an error object if .fetch() or .save() has been failed.
+     *
+     * @method getError
+     * @return {Error|Undefined}
+     */
+    getError: function() {
+        var promise = this.saving || this.fetching;
+        if (promise && promise.isRejected()) {
+            return promise.reason();
+        }
+    }
+
+};
+
+
+Cocktail.mixin(Base, PromiseWrapMixin);
+Cocktail.mixin(Base.Collection, PromiseWrapMixin);
 module.exports = Base;
