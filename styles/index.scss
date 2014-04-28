@@ -1,0 +1,19 @@
+
+
+.foo {
+    .bar {
+        color: red;
+    }
+}
+
+
+
+li {
+    a {
+        color: red !important;
+    }
+    a {
+        color: yellow !important;
+    }
+}
+

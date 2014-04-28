@@ -85,6 +85,11 @@ app.use(jwtsso({
 }));
 
 
+app.use(require("./utils/middleware/createSassMiddleware")({
+    url: "/styles/index.css",
+    file: __dirname + "/styles/index.scss"
+}));
+app.use("/styles", serveStatic(__dirname + "/styles"));
 app.use(serveStatic(__dirname + "/public"));
 app.use("/doc", serveStatic(__dirname + "/doc"));
 
