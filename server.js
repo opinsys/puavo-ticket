@@ -9,7 +9,6 @@ var bodyParser = require("body-parser");
 var jwtsso = require("jwtsso");
 var cookieParser = require("cookie-parser");
 var session = require("express-session");
-var multiparty = require('multiparty');
 
 var User = require("./models/server/User");
 
@@ -32,21 +31,10 @@ var config = require("./config");
 
 app.use(require("./utils/responseLogger")());
 app.use(bodyParser());
-app.use(function(req, res, next){
-    if(req.method === 'POST' && req.headers['content-type'] && req.headers['content-type'].indexOf("multipart/form-data") !== -1){
-        var form = new multiparty.Form();
-        form.parse(req, function(err, fields, files){
-            req.files = files;
-            next();
-        });
-
-    }
-    else next();
-
-});
+app.use(require("./utils/middleware/createMultipartMiddleware")());
 app.use(cookieParser());
 app.use(session({
-    secret: "keyboard cat",
+    secret: "keyboard cat", // XXX
 }));
 
 var createOrUpdateUser = function(token, done) {
