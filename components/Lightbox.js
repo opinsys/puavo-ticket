@@ -13,7 +13,7 @@ var Lightbox = React.createClass({
     render: function() {
         return (
             <div>
-                <div className="lightbox-bg"></div>
+                <div onClick={Lightbox.removeCurrentComponent} className="lightbox-bg"></div>
                 <div className="lightbox">
                     <div className="lightbox-wrap">
                         {this.props.children}
