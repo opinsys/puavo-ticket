@@ -128,7 +128,7 @@ app.get("/bundle.js", browserify("./client.js", {
 
 
 app.post("/logout", function(req, res) {
-    req.session = null;
+    req.session.destroy();
     res.redirect("/");
 });
 
