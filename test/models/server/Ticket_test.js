@@ -112,16 +112,16 @@ describe("Ticket model", function() {
             });
 
             return Promise.all(otherTickets)
-            .then(function() {
-                return withVisibility;
-            })
-            .then(function() {
-                return Ticket.fetchByVisibility(["school:1"]);
-            })
-            .then(function(coll) {
-                assert.equal(1, coll.size());
-                assert.equal("With visibility", coll.first().get("title"));
-            });
+                .then(function() {
+                    return withVisibility;
+                })
+                .then(function() {
+                    return Ticket.fetchByVisibility(["school:1"]);
+                })
+                .then(function(coll) {
+                    assert.equal(1, coll.size());
+                    assert.equal("With visibility", coll.first().get("title"));
+                });
 
         });
 
