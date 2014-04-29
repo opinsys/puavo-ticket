@@ -37,35 +37,6 @@ app.use(session({
     secret: "keyboard cat", // XXX
 }));
 
-var createOrUpdateUser = function(token, done) {
-    User.collection()
-        .query('where', 'user_id', '=', token.id)
-        .fetchOne()
-        .then(function(user) {
-            if (!user) {
-                return User.forge({
-                    user_id: token.id,
-                    username: token.username,
-                    first_name: token.first_name,
-                    last_name: token.last_name,
-                    email: token.email,
-                    organisation_domain: token.organisation_domain
-                    }).save();
-            }
-            else {
-                user.set("email", token.email);
-                user.set("username", token.username);
-                user.set("first_name", token.first_name);
-                user.set("last_name", token.last_name);
-                return user.save();
-            }
-        })
-        .then(function(user) {
-            done();
-        })
-        .catch(done);
-};
-
 app.use(jwtsso({
 
     // Service endpoint that issues the jwt tokens
@@ -81,7 +52,13 @@ app.use(jwtsso({
     // Defaults to 60 seconds
     maxAge: 120,
 
-    hook: createOrUpdateUser
+    hook: function(token, done) {
+        User.ensureUserFromJWTToken(token)
+        .then(function() {
+            done();
+        })
+        .catch(done);
+    }
 
 }));
 
