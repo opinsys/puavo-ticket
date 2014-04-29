@@ -1,4 +1,5 @@
 "use strict";
+var _ = require("lodash");
 var assert = require("assert");
 var helpers = require("../helpers");
 
@@ -23,12 +24,13 @@ describe("Authentication", function() {
     });
 
     it("can get user updated information after authentication", function() {
-        helpers.user.teacher.username = "change.olli.opettaja";
-        helpers.user.teacher.email = "change.olli.opettaja@testing.opinsys.fi";
-        helpers.user.teacher.first_name = "changeOlli";
-        helpers.user.teacher.last_name = "changeOpettaja";
+        var updatedUser = _.clone(helpers.user.teacher);
+        updatedUser.username = "change.olli.opettaja";
+        updatedUser.email = "change.olli.opettaja@testing.opinsys.fi";
+        updatedUser.first_name = "changeOlli";
+        updatedUser.last_name = "changeOpettaja";
 
-        return helpers.loginAsUser(helpers.user.teacher)
+        return helpers.loginAsUser(updatedUser)
             .then(function() {
                 return User.forge({ id: 1 }).fetch()
                     .then(function(user) {
