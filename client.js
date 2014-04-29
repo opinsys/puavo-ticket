@@ -5,10 +5,29 @@ require("./client_setup");
 var React = require("react/addons");
 var Route = require("./utils/react-route");
 
+var User = require("./models/client/User");
+
 var TicketForm = require("./components/TicketForm");
 var TicketList = require("./components/TicketList");
 
 var routes = require("./components/routes");
+
+
+/**
+ * Logout
+ *
+ * @namespace components
+ * @class Logout
+ */
+var Logout = React.createClass({
+    render: function() {
+        return (
+            <form className="logout" method="post" action="/logout">
+                <input className="button" type="submit" value="Kirjaudu Ulos" />
+            </form>
+        );
+    }
+});
 
 
 /**
@@ -32,17 +51,40 @@ var Main = React.createClass({
         }
     },
 
+    getInitialState: function() {
+        return {
+            user: new User(window.USER)
+        };
+    },
+
+    componentDidMount: function() {
+        this.reactTo(this.state.user);
+    },
+
     render: function() {
-        console.log("render Main");
         return (
-            <div className="main">
+            <div>
+                <div className="topmenu">
+                    <button onClick={routes.LinkNewTicket.navigate} className="button" >Uusi</button>
+                    <button onClick={routes.LinkTicketList.navigate} className="button" >Tukipyynnöt</button>
 
-                <h1>Tukipalvelu</h1>
+                    <div className="user">
+                        <div className="user-link">
+                            {this.state.user.get("first_name")} {this.state.user.get("last_name")}
+                        </div>
+                        <Logout />
+                    </div>
+                </div>
 
-                {routes.ticketList.match && <TicketList />}
+                <div className="main">
 
-                {this.renderTicketForm()}
+                    <h1>Tukipalvelu</h1>
 
+                    {routes.ticketList.match && <TicketList />}
+
+                    {this.renderTicketForm()}
+
+                </div>
             </div>
         );
     }
