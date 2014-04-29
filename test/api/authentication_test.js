@@ -15,11 +15,11 @@ describe("Authentication", function() {
                 return helpers.loginAsUser(helpers.user.teacher);
             })
             .then(function() {
-                return User.forge({ id: 1 }).fetch()
-                    .then(function(user) {
-                        assert.equal(user.get("username"), "olli.opettaja");
-                        assert.equal(user.get("email"), "olli.opettaja@testing.opinsys.fi");
-                    });
+                return User.forge({ id: 1 }).fetch();
+            })
+            .then(function(user) {
+                assert.equal(user.get("username"), "olli.opettaja");
+                assert.equal(user.get("email"), "olli.opettaja@testing.opinsys.fi");
             });
     });
 
@@ -32,13 +32,13 @@ describe("Authentication", function() {
 
         return helpers.loginAsUser(updatedUser)
             .then(function() {
-                return User.forge({ id: 1 }).fetch()
-                    .then(function(user) {
-                        assert.equal(user.get("username"), "change.olli.opettaja");
-                        assert.equal(user.get("email"), "change.olli.opettaja@testing.opinsys.fi");
-                        assert.equal(user.get("first_name"), "changeOlli");
-                        assert.equal(user.get("last_name"), "changeOpettaja");
-                    });
+                return User.forge({ id: 1 }).fetch();
+            })
+            .then(function(user) {
+                assert.equal(user.get("username"), "change.olli.opettaja");
+                assert.equal(user.get("email"), "change.olli.opettaja@testing.opinsys.fi");
+                assert.equal(user.get("first_name"), "changeOlli");
+                assert.equal(user.get("last_name"), "changeOpettaja");
             });
     });
 });
