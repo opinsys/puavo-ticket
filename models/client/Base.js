@@ -57,6 +57,37 @@ function promiseWrap(eventName, method) {
     };
 }
 
+/**
+ * @class PromiseWrapMixin
+ */
+var PromiseWrapMixin = {
+
+    /**
+     * Return true when the model is fetching or saving data
+     *
+     * @method isOperating
+     * @return {Boolean}
+     */
+    isOperating: function() {
+        return !!(this.saving || this.fetching);
+    },
+
+    /**
+     *
+     * Returns an error object if .fetch() or .save() has been failed.
+     *
+     * @method getError
+     * @return {Error|Undefined}
+     */
+    getError: function() {
+        var promise = this.saving || this.fetching;
+        if (promise && promise.isRejected()) {
+            return promise.reason();
+        }
+    }
+
+};
+
 
 /**
  * Base class for client models
@@ -155,36 +186,6 @@ Base.Collection = Backbone.Collection.extend({
 });
 
 
-/**
- * @class PromiseWrapMixin
- */
-var PromiseWrapMixin = {
-
-    /**
-     * Return true when the model is fetching or saving data
-     *
-     * @method isOperating
-     * @return {Boolean}
-     */
-    isOperating: function() {
-        return !!(this.saving || this.fetching);
-    },
-
-    /**
-     *
-     * Returns an error object if .fetch() or .save() has been failed.
-     *
-     * @method getError
-     * @return {Error|Undefined}
-     */
-    getError: function() {
-        var promise = this.saving || this.fetching;
-        if (promise && promise.isRejected()) {
-            return promise.reason();
-        }
-    }
-
-};
 
 
 Cocktail.mixin(Base, PromiseWrapMixin);
