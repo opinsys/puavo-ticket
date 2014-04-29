@@ -54,9 +54,7 @@ app.use(jwtsso({
 
     hook: function(token, done) {
         User.ensureUserFromJWTToken(token)
-        .then(function() {
-            done();
-        })
+        .then(done.bind(this, null))
         .catch(done);
     }
 
