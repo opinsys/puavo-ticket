@@ -10,6 +10,7 @@ var UserMixin = require("../UserMixin");
  *
  * @namespace models.server
  * @extends models.server.Base
+ * @uses models.UserMixin
  * @class User
  */
 var User = Base.extend({

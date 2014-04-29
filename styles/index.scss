@@ -1,19 +1,146 @@
 
+body, html {
+    padding: 0;
+    margin: 0;
+}
+a:visited {
+  color: blue;
+}
+blockquote {
+  color: gray;
+  font-style: italic;
+}
 
-.foo {
-    .bar {
-        color: red;
+
+
+table td {
+  min-width: 200px;
+  text-overflow: none;
+}
+
+.main {
+  max-width: 30em;
+  /* border: 1px solid black; */
+  margin: 0 auto;
+}
+
+.topmenu {
+    padding: 1em;
+    background-color: #f59545;
+    background-image: linear-gradient(top, #fab32e 0%, #f59545 100%);
+    border-bottom: 1px solid black;
+    box-shadow: 2px 4px 6px rgba(68,68,68,0.8);
+    .user {
+        float: right;
+    }
+    .user-link {
+        float: left;
+    }
+}
+
+.ticket-form {
+    textarea {
+      height: 20em;
+    }
+
+    .button, input, textarea {
+      box-sizing: border-box;
+      display: block;
+      width: 100%;
+      border: 1px solid gray;
+    }
+
+    textarea, input[type=text], button {
+      padding: 10px;
+    }
+
+    table * {
+      text-align: left;
+      vertical-align: top;
+      font-size: 9pt;
+    }
+    table button {
+      display: inline;
+      padding: 1px;
+      width: auto;
+    }
+}
+
+.similar-tickets * {
+  font-size: 9pt;
+}
+
+
+
+.button {
+    background-color: #ffb94b;
+    background-image: -webkit-linear-gradient(top, #ffb94b, #f17931);
+    border: solid 1px #d69e31;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
+    color: #8f5a0a;
+    cursor: pointer;
+    font-size:1em;
+    height: 50px;
+    padding: 0;
+    padding-right: 1em;
+    padding-left: 1em;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    &:hover {
+        background-color: #fddb6f;
+        background-image: -webkit-linear-gradient(top, #ffb94b, #fddb6f);
     }
 }
 
 
 
-li {
-    a {
-        color: red !important;
-    }
-    a {
-        color: yellow !important;
-    }
+.lightbox-bg {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: black;
+  opacity: 0.3;
 }
 
+.lightbox {
+    // background-color: red;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    top: 1em;
+    bottom: 1em;
+    left: 1em;
+    right: 1em;
+    z-index: 1001;
+
+    background-color: #f0eee1;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(240, 238, 225)), to(rgb(230, 228, 215)));
+    background-image: -webkit-linear-gradient(top, rgb(240, 238, 225), rgb(230, 228, 215));
+    background-image: -moz-linear-gradient(top, rgb(240, 238, 225), rgb(230, 228, 215));
+    background-image: -ms-linear-gradient(top, rgb(240, 238, 225), rgb(230, 228, 215));
+    background-image: -o-linear-gradient(top, rgb(240, 238, 225), rgb(230, 228, 215));
+    background-image: linear-gradient(top, rgb(240, 238, 225), rgb(230, 228, 215));
+    background-clip:padding-box;
+    border: 5px solid #ed7113;
+    border: 5px solid rgba(237,113,19,0.5);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow:
+      2px -2px 2px rgba(0, 0, 0, 0.5), -2px 2px 2px rgba(0,0,0,0.5), inset 0 5px 100px rgba(65, 120, 107, 0.2);
+    -moz-box-shadow:
+      2px -2px 2px rgba(0, 0, 0, 0.5), -2px 2px 2px rgba(0,0,0,0.5), inset 0 5px 100px rgba(65, 120, 107, 0.2);
+    box-shadow:
+      2px -2px 2px rgba(0, 0, 0, 0.5), -2px 2px 2px rgba(0,0,0,0.5), inset 0 5px 100px rgba(65, 120, 107, 0.2);
+    margin: 1em auto;
+    max-width: 800px;
+    padding: 2%;
+    text-align: center;
+}

@@ -9,7 +9,7 @@ module.exports = {
 
     LinkTicket: Route.createLink("/tickets/:id"),
     LinkNewTicket: Route.createLink("/new"),
-    LinkTicketList: Route.createLink("/")
+    LinkTicketList: Route.createLink("/"),
 };
 
 

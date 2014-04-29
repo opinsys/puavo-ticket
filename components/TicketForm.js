@@ -9,8 +9,6 @@ var AddDevice = require("./AddDevice");
 var Ticket = require("../models/client/Ticket");
 var routes = require("./routes");
 var LinkTicket = routes.LinkTicket;
-var LinkNewTicket = routes.LinkNewTicket;
-var LinkTicketList = routes.LinkTicketList;
 var EventMixin = require("../utils/EventMixin");
 var Comment = require("../models/client/Comment");
 
@@ -129,13 +127,7 @@ var TicketForm = React.createClass({
     render: function() {
         console.log("render TickerForm: updates: ", this.state.ticketModel.updates().size());
         return (
-            <div>
-
-                {routes.existingTicket.match &&
-                    <LinkNewTicket>Uusi tukipyyntö</LinkNewTicket>}
-
-                <LinkTicketList>Näytä muut</LinkTicketList>
-
+            <div className="ticket-form">
 
                 {this.isOperating() && <p>Ladataan...</p>}
 
@@ -159,6 +151,7 @@ var TicketForm = React.createClass({
 
                 <div className="button-wrap">
                     <button
+                        className="button"
                         disabled={this.isOperating()}
                         onClick={this.handleSave} >Tallenna</button>
                 </div>
