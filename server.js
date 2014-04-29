@@ -62,7 +62,8 @@ var createOrUpdateUser = function(token, done) {
         })
         .then(function(user) {
             done();
-        });
+        })
+        .catch(done);
 };
 
 app.use(jwtsso({
