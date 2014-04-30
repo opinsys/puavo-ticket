@@ -24,7 +24,7 @@ describe("Authentication", function() {
     });
 
     it("can get user updated information after authentication", function() {
-        var updatedUser = _.deepClone(helpers.user.teacher);
+        var updatedUser = _.cloneDeep(helpers.user.teacher);
         updatedUser.username = "change.olli.opettaja";
         updatedUser.email = "change.olli.opettaja@testing.opinsys.fi";
         updatedUser.first_name = "changeOlli";
