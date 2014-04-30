@@ -74,7 +74,7 @@ exports.up = function(knex, Promise) {
 
         knex.schema.createTable("followers", function(table) {
             table.increments("id");
-            table.integer("user");
+            table.integer("user").notNullable();
             table.integer("ticket");
             table.dateTime("created");
             table.dateTime("updated");
