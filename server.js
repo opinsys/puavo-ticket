@@ -88,7 +88,6 @@ app.use(function(req, res, next) {
         .fetchOne()
         .then(function(user) {
             if (!user) return next();
-
             req.user = user;
         })
         .then(function() {
@@ -120,7 +119,7 @@ app.use("/api/puavo", require("./resources/puavo_api_proxy")(config));
 
 app.get("/*", function(req, res) {
     res.render("index.ejs", {
-        user: req.session.jwt
+        user: req.user.toJSON()
     });
 });
 

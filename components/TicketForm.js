@@ -170,8 +170,9 @@ var TicketForm = React.createClass({
                                 out = update.get("comment");
                             }
 
-                            if (update.get("user")) {
-                                out += ". Lähetti " + update.get("user");
+                            var user = update.get("createdBy");
+                            if (user) {
+                                out += ". Lähetti " + user.username;
                             }
 
                             if (update.saving) {

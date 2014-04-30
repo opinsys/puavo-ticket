@@ -9,6 +9,7 @@ var User = require("./models/client/User");
 
 var TicketForm = require("./components/TicketForm");
 var TicketList = require("./components/TicketList");
+var EventMixin = require("./utils/EventMixin");
 
 var routes = require("./components/routes");
 
@@ -40,14 +41,14 @@ var Logout = React.createClass({
  */
 var Main = React.createClass({
 
-    mixins: [Route.Mixin],
+    mixins: [Route.Mixin, EventMixin],
 
     /**
      * @method renderTicketForm
      */
     renderTicketForm: function() {
         if (routes.newTicket.match || routes.existingTicket.match) {
-            return <TicketForm user={window.USER} />;
+            return <TicketForm user={this.state.user} />;
         }
     },
 
