@@ -17,7 +17,7 @@ exports.up = function(knex, Promise) {
             table.integer("user").notNullable();
             table.dateTime("created");
             table.dateTime("updated");
-            table.integer("ticket");
+            table.integer("ticket").notNullable();
         }),
 
         knex.schema.createTable("visibilities", function(table) {
@@ -27,7 +27,7 @@ exports.up = function(knex, Promise) {
             table.string("entity_type");
             table.dateTime("created");
             table.dateTime("updated");
-            table.integer("ticket");
+            table.integer("ticket").notNullable();
         }),
 
         knex.schema.createTable("users", function(table) {
@@ -49,14 +49,14 @@ exports.up = function(knex, Promise) {
             table.integer("user");
             table.dateTime("created");
             table.dateTime("updated");
-            table.integer("ticket");
+            table.integer("ticket").notNullable();
         }),
 
         knex.schema.createTable("devices", function(table) {
             table.increments("id");
             table.string("hostname").notNullable();
             table.integer("user").notNullable();
-            table.integer("ticket");
+            table.integer("ticket").notNullable();
             table.dateTime("created");
             table.dateTime("updated");
         }),
@@ -67,7 +67,7 @@ exports.up = function(knex, Promise) {
             table.string("data_type");
             table.string("filename");
             table.integer("user").notNullable();
-            table.integer("ticket");
+            table.integer("ticket").notNullable();
             table.dateTime("created");
             table.dateTime("updated");
         }),

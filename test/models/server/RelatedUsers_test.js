@@ -13,6 +13,7 @@ describe("RelatedUser model", function() {
 
     it("Instance can be created", function() {
         return RelatedUser.forge({
+            ticket: 1,
             user_id: 1,
             username: "testuser"
             })
