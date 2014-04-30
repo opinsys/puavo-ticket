@@ -13,8 +13,8 @@ exports.up = function(knex, Promise) {
 
         knex.schema.createTable("comments", function(table) {
             table.increments("id");
-            table.string("comment");
-            table.integer("user");
+            table.string("comment").notNullable();
+            table.integer("user").notNullable();
             table.dateTime("created");
             table.dateTime("updated");
             table.integer("ticket");

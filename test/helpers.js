@@ -93,6 +93,7 @@ function insertTestTickets() {
     return ticket.save()
         .then(function() {
             return Comment.forge({
+                user: 1,
                 ticket: ticket.id,
                 updated: 1397727280408,
                 comment: "First comment to test ticket"
@@ -110,6 +111,7 @@ function insertTestTickets() {
         })
         .then(function() {
             return Comment.forge({
+                user: 1,
                 ticket: ticket.id,
                 updated: 1397727280410,
                 comment: "Second comment to test ticket"
@@ -125,6 +127,7 @@ function insertTestTickets() {
         })
         .then(function(otherTicket) {
             return Comment.forge({
+                user: 1,
                 ticket: otherTicket.id,
                 comment: "First comment to the other ticket"
             })
