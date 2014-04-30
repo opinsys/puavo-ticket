@@ -37,7 +37,7 @@ exports.up = function(knex, Promise) {
             table.string("first_name");
             table.string("last_name");
             table.string("email");
-            table.string("organisation_domain");
+            table.string("organisation_domain").notNullable();
             table.dateTime("created");
             table.dateTime("updated");
         }),
