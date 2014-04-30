@@ -76,14 +76,15 @@ var Main = React.createClass({
                     </div>
                 </div>
 
-                <div className="main">
+                <div className="main-wrap">
+                    <div className="main">
 
-                    <h1>Tukipalvelu</h1>
+                        <h1>Tukipalvelu</h1>
 
-                    {routes.ticketList.match && <TicketList />}
+                        {routes.ticketList.match && <TicketList />}
 
-                    {this.renderTicketForm()}
-
+                        {this.renderTicketForm()}
+                    </div>
                 </div>
             </div>
         );

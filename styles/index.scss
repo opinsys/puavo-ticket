@@ -2,10 +2,13 @@
 body, html {
     padding: 0;
     margin: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
 }
+
 a:visited {
   color: blue;
 }
+
 blockquote {
   color: gray;
   font-style: italic;
@@ -18,10 +21,27 @@ table td {
   text-overflow: none;
 }
 
+.main-wrap {
+    background: none repeat scroll 0 0 #e3e3d9;
+    border: 5px solid #3e3e2d;
+    -webkit-border-radius: 10px 10px 0 0;
+    border-radius: 10px;
+    -webkit-box-shadow: 0 15px 15px rgba(68,68,68,0.7);
+    box-shadow: 0 15px 15px rgba(68,68,68,0.7);
+
+    max-width: 40em;
+    margin: 0 auto;
+    margin-top: 0.5em;
+}
+
 .main {
-  max-width: 30em;
-  /* border: 1px solid black; */
-  margin: 0 auto;
+    margin: 1em;
+    border: 1px solid black;
+    -webkit-border-radius: 10px 10px 0 0;
+    border-radius: 10px 10px 0 0;
+    -webkit-box-shadow: 0 15px 15px rgba(68,68,68,0.7);
+    background-color: white;
+    padding: 1em;
 }
 
 .topmenu {
