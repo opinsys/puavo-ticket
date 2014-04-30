@@ -85,6 +85,7 @@ function loginAsUser(userData){
  */
 function insertTestTickets() {
     var ticket = Ticket.forge({
+        user: 1,
         title: "Test ticket",
         description: "Test ticket with comments, related users etc."
     });
@@ -117,6 +118,7 @@ function insertTestTickets() {
         })
         .then(function() {
             return Ticket.forge({
+                user: 1,
                 title: "Other test ticket",
                 description: "Other test tickets"
             }).save();

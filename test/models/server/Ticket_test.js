@@ -18,7 +18,8 @@ describe("Ticket model", function() {
 
         return Ticket.forge({
                 title: title,
-                description: "It just doesn't"
+                description: "It just doesn't",
+                user: 1
             })
             .save()
             .then(function(ticket) {
@@ -33,12 +34,14 @@ describe("Ticket model", function() {
     it("can have comments", function() {
         var ticketId = Ticket.forge({
             title: "computer does not work",
-            description: "It just doesn't"
+            description: "It just doesn't",
+            user: 1
         })
         .save()
         .then(function(ticket) {
             return ticket.addComment({
-                    comment: "foo"
+                    comment: "foo",
+                    user: 1
                 })
                 .then(function() {
                     return ticket.get("id");
@@ -85,7 +88,8 @@ describe("Ticket model", function() {
         it("foo", function() {
             var withVisibility = Ticket.forge({
                 title: "With visibility",
-                description: "desc"
+                description: "desc",
+                user: 1
             })
             .save()
             .then(function(ticket) {
@@ -96,9 +100,9 @@ describe("Ticket model", function() {
             });
 
             var otherTickets = [
-                { title: "foo1", description: "bar" },
-                { title: "foo2", description: "bar" },
-                { title: "foo2", description: "bar" }
+                { title: "foo1", description: "bar", user: 1 },
+                { title: "foo2", description: "bar", user: 1 },
+                { title: "foo2", description: "bar", user: 1 }
             ].map(function(data) {
                 return Ticket
                     .forge(data)
