@@ -1,6 +1,8 @@
 "use strict";
 
 require("../../db");
+
+var User = require("./User");
 var Base = require("./Base");
 
 /**
@@ -19,6 +21,10 @@ var Comment = Base.extend({
           created: new Date(),
           updated: new Date()
       };
+  },
+
+  createdBy: function() {
+      return this.belongsTo(User, "user");
   }
 
 });

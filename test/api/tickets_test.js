@@ -109,6 +109,10 @@ describe("/api/tickets", function() {
                     assert.equal(res.status, 200);
                     assert.equal(3, res.body.length);
                     assert.equal("First comment to test ticket", res.body[0].comment);
+
+                    assert(res.body[0].createdBy, "created by is set");
+                    assert.equal("olli.opettaja", res.body[0].createdBy.username);
+
                     assert.equal("testuser1", res.body[1].username);
                     assert.equal("Second comment to test ticket", res.body[2].comment);
                 });

@@ -87,7 +87,6 @@ var Ticket = Base.extend({
         var id = this.get("id");
 
         var updatePromises = [
-            Comment,
             RelatedUser,
             Device
         ].map(function(klass) {
@@ -95,6 +94,12 @@ var Ticket = Base.extend({
                 .query("where", "ticket", "=", id)
                 .fetch();
         });
+
+        updatePromises.push(
+            Comment.collection()
+            .query("where", "ticket", "=", id)
+            .fetch({ withRelated: "createdBy" })
+        );
 
         return Promise.all(updatePromises)
         .then(function(updates) {
