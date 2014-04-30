@@ -63,10 +63,10 @@ exports.up = function(knex, Promise) {
 
         knex.schema.createTable("attachments", function(table) {
             table.increments("id");
-            table.binary("data");
+            table.binary("data").notNullable();
             table.string("data_type");
             table.string("filename");
-            table.integer("user");
+            table.integer("user").notNullable();
             table.integer("ticket");
             table.dateTime("created");
             table.dateTime("updated");
