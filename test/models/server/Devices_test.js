@@ -13,6 +13,7 @@ describe("Device model", function() {
 
     it("Instance can be created", function() {
         return Device.forge({
+                user: 1,
                 hostname: "fatclient-01"
             })
             .save()
