@@ -2,6 +2,7 @@
 
 require("../../db");
 var Base = require("./Base");
+var User = require("./User");
 
 /**
  * RelatedUser for {{#crossLink "models.server.Ticket"}}{{/crossLink}}
@@ -19,6 +20,10 @@ var RelatedUsers = Base.extend({
             created: new Date(),
             updated: new Date()
         };
+    },
+
+    createdBy: function() {
+        return this.belongsTo(User, "user");
     }
 });
 

@@ -28,6 +28,7 @@ describe("Comment model", function() {
         return Ticket.forge({
                 title: "Computer does not work",
                 description: "It just doesn't",
+                user: self.user.get("id")
             })
             .save()
             .then(function(ticket) {

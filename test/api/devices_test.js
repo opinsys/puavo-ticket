@@ -56,10 +56,19 @@ describe("/api/tickets/:id/devices", function() {
                 var deviceEntry = res.body.filter(function(update) {
                     return update.hostname === "fatclient-01";
                 });
+
                 assert.equal(
                     deviceEntry.length, 1,
                     "cannot find the device from updates resource"
                 );
+
+                assert(
+                    deviceEntry[0].createdBy,
+                    "device has createdBy property"
+                );
+
+                assert.equal("olli.opettaja", deviceEntry[0].createdBy.username);
+
             });
     });
 
