@@ -97,26 +97,26 @@ var Ticket = Base.extend({
         });
 
         return Promise.all(updatePromises)
-        .then(function(updates) {
+            .then(function(updates) {
 
-            updates = _.flatten(updates.map(function(coll) {
-                return coll.toArray();
-            }));
+                updates = _.flatten(updates.map(function(coll) {
+                    return coll.toArray();
+                }));
 
-            updates.sort(function(a,b) {
-                if ( a.get("updated") > b.get("updated") ) {
-                    return 1;
-                }
-                if ( a.get("updated") < b.get("updated") ) {
-                    return -1;
-                }
+                updates.sort(function(a,b) {
+                    if ( a.get("updated") > b.get("updated") ) {
+                        return 1;
+                    }
+                    if ( a.get("updated") < b.get("updated") ) {
+                        return -1;
+                    }
 
-                return 0;
+                    return 0;
 
+                });
+
+                return updates;
             });
-
-            return updates;
-        });
 
     },
 
