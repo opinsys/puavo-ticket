@@ -3,7 +3,6 @@ var helpers = require("../../helpers");
 
 // var Comment = require("../../../models/server/Comment");
 var Ticket = require("../../../models/server/Ticket");
-var User = require("../../../models/server/User");
 var assert = require("assert");
 
 describe("Comment model", function() {
@@ -16,7 +15,8 @@ describe("Comment model", function() {
             })
             .then(function(agent) {
                 self.agent = agent;
-                return User.forge({ id: 1 }).fetch();
+
+                return helpers.fetchTestUser();
             })
             .then(function(user) {
                 self.user = user;

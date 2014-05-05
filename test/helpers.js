@@ -29,6 +29,8 @@ var app = require("../server");
 var Ticket = require("../models/server/Ticket");
 var Comment = require("../models/server/Comment");
 var RelatedUser = require("../models/server/RelatedUser");
+var User = require("../models/server/User");
+
 
 
 /**
@@ -174,10 +176,25 @@ function clearTestDatabase() {
     }));
 }
 
+/**
+ * Fetch test user
+ *
+ *
+ * @method fetchTestUser
+ * @static
+ * @return {Object}
+ */
+function fetchTestUser() {
+    return User.collection()
+        .query('where', 'user_id', '=', module.exports.user.teacher.id)
+        .fetchOne();
+}
+
 module.exports = {
     loginAsUser: loginAsUser,
     clearTestDatabase: clearTestDatabase,
     insertTestTickets: insertTestTickets,
+    fetchTestUser: fetchTestUser,
 
     /**
      * Various Opinsys SSO user JWT tokens
