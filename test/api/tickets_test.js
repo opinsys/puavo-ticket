@@ -13,6 +13,11 @@ describe("/api/tickets", function() {
             })
             .then(function(agent) {
                 self.agent = agent;
+
+                return helpers.fetchTestUser();
+            })
+            .then(function(user) {
+                self.user = user;
             });
     });
 
@@ -21,6 +26,7 @@ describe("/api/tickets", function() {
     });
 
     it("can create a ticket using POST", function() {
+        var self = this;
         return this.agent
             .post("/api/tickets")
             .send({
@@ -31,38 +37,43 @@ describe("/api/tickets", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.title, "Computer does not work");
-                assert.equal(res.body.user, 1);
+                assert.equal(res.body.user, self.user.get("id"));
                 assert(res.body.id, "has id");
+                self.ticket = res.body;
             });
 
     });
 
     it("can get the ticket using GET", function() {
+        var self = this;
         return this.agent
             .get("/api/tickets")
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(1, res.body.length);
-                assert.equal(1, res.body[0].id);
+                assert.equal(self.ticket.id, res.body[0].id);
                 assert.equal("Computer does not work", res.body[0].title);
+                assert.equal(self.ticket.id, res.body[0].id);
             });
     });
 
     it("can get single ticket using GET", function() {
+        var self = this;
         return this.agent
-            .get("/api/tickets/1")
+            .get("/api/tickets/" + self.ticket.id)
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.equal(1, res.body.id);
+                assert.equal(self.ticket.id, res.body.id);
                 assert.equal("Computer does not work", res.body.title);
             });
     });
 
     it("can update ticket using PUT", function() {
+        var self = this;
         return this.agent
-            .put("/api/tickets/1")
+            .put("/api/tickets/" + self.ticket.id)
             .send({
                 title: "updated ticket",
                 description: "It just doesnt"
@@ -80,12 +91,13 @@ describe("/api/tickets", function() {
     });
 
     it("can get updated ticket using GET", function() {
+        var self = this;
         return this.agent
-            .get("/api/tickets/1")
+            .get("/api/tickets/" + self.ticket.id)
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.equal(1, res.body.id);
+                assert.equal(self.ticket.id, res.body.id);
                 assert.equal("updated ticket", res.body.title);
             });
     });
@@ -94,7 +106,7 @@ describe("/api/tickets", function() {
 
         before(function() {
             var self = this;
-            return helpers.insertTestTickets()
+            return helpers.insertTestTickets(self.user)
                 .then(function(tickets) {
                     self.tickets = tickets;
                 });
