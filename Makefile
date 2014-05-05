@@ -20,6 +20,11 @@ npm:
 migrate:
 	knex migrate:latest
 
+create-test-db:
+	echo "\nCreate test database and user to PostgreSQL server (use postgres user)\n"
+	su -c "createdb -E UNICODE puavo-ticket-test" postgres
+	su -c "createuser -P puavo-ticket-test" postgres
+
 .PHONY: doc
 doc-js:
 	mkdir -p doc
