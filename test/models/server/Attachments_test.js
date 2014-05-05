@@ -9,16 +9,39 @@ var crypto = require('crypto');
 
 describe("Attachment model", function() {
 
+    var ticket = null;
+    var otherTicket = null;
+
     before(function() {
-        return helpers.clearTestDatabase();
+        var self = this;
+        return helpers.clearTestDatabase()
+            .then(function() {
+                return helpers.loginAsUser(helpers.user.teacher);
+            })
+            .then(function(agent) {
+                self.agent = agent;
+
+                return helpers.fetchTestUser();
+            })
+            .then(function(user) {
+                self.user = user;
+
+                return helpers.insertTestTickets(user);
+            })
+            .then(function(tickets) {
+                ticket = tickets.ticket;
+                otherTicket = tickets.otherTicket;
+            });
     });
 
     it("Instance can be created", function() {
+        var self = this;
+
         var fileData = fs.readFileSync(__dirname + "/../../test.jpg");
 
         return Attachment.forge({
-                ticket: 1,
-                user: 1,
+                ticket: ticket.id,
+                user: self.user.id,
                 filename: "test.jpg",
                 data: fileData
             })

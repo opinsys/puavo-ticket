@@ -65,8 +65,14 @@ exports.up = function(knex, Promise) {
             table.binary("data").notNullable();
             table.string("data_type");
             table.string("filename");
-            table.integer("user").notNullable();
-            table.integer("ticket").notNullable();
+            table.integer("user")
+                .notNullable()
+                .references("id")
+                .inTable('users');
+            table.integer("ticket")
+                .notNullable()
+                .references("id")
+                .inTable('tickets');
             table.dateTime("created");
             table.dateTime("updated");
         }),

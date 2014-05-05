@@ -162,14 +162,15 @@ function insertTestTickets(user) {
  */
 function clearTestDatabase() {
     var tables = [
-        'tickets',
         'comments',
         'visibilities',
-        'users',
         'related_users',
         'devices',
         'attachments',
-        'followers' ];
+        'followers',
+        'tickets',
+        'users'
+ ];
 
     return Promise.all(tables.map(function(table) {
         return DB.knex(table).del();
