@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === "test") {
         host     : '127.0.0.1',
         user     : 'puavo-ticket',
         password : 'test',
-        database : 'puavo-ticket'
+        database : 'puavo-ticket-test'
     };
 } else {
     config = _.extend(config, require("./_config"));
