@@ -24,7 +24,6 @@ var request = require("supertest");
 var jwt = require("jwt-simple");
 
 var DB = require("../db");
-var config = require("../config");
 var app = require("../server");
 
 var Ticket = require("../models/server/Ticket");
@@ -160,10 +159,19 @@ function insertTestTickets() {
  * @return {Bluebird.Promise}
  */
 function clearTestDatabase() {
-    return DB.knex.migrate.rollback(config)
-        .then(function() {
-            return DB.knex.migrate.latest(config);
-        });
+    var tables = [
+        'tickets',
+        'comments',
+        'visibilities',
+        'users',
+        'related_users',
+        'devices',
+        'attachments',
+        'followers' ];
+
+    return Promise.all(tables.map(function(table) {
+        return DB.knex(table).del();
+    }));
 }
 
 module.exports = {

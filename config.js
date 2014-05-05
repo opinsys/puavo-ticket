@@ -3,7 +3,7 @@ var _ = require("lodash");
 var config = {
     database: {
         debug: false,
-        client: "sqlite3"
+        client: "pg"
     },
     directory: "./migrations",
     tableName: 'migrations'
@@ -12,7 +12,10 @@ var config = {
 if (process.env.NODE_ENV === "test") {
     config.puavoSharedSecret = "secret";
     config.database.connection = {
-        filename: ".test.db"
+        host     : '127.0.0.1',
+        user     : 'puavo-ticket',
+        password : 'test',
+        database : 'puavo-ticket'
     };
 } else {
     config = _.extend(config, require("./_config"));
