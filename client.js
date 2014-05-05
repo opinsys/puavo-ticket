@@ -12,20 +12,31 @@ var TicketList = require("./components/TicketList");
 var EventMixin = require("./utils/EventMixin");
 
 var routes = require("./components/routes");
+var LinkLogout = routes.LinkLogout;
 
 
 /**
- * Logout
+ * User information and logout
  *
  * @namespace components
- * @class Logout
+ * @class UserInformation
  */
-var Logout = React.createClass({
+var UserInformation = React.createClass({
     render: function() {
         return (
-            <form className="logout" method="post" action="/logout">
-                <input className="button" type="submit" value="Kirjaudu Ulos" />
-            </form>
+            <div className="user">
+                <ul>
+                    <li>
+                        {this.props.user.get("first_name")} {this.props.user.get("last_name")}
+                    </li>
+                    <li>
+                        <img src={this.props.user.getProfileImage()} />
+                    </li>
+                    <li>
+                        <LinkLogout pushState={false}>Kirjaudu ulos</LinkLogout>
+                    </li>
+                </ul>
+            </div>
         );
     }
 });
@@ -66,15 +77,10 @@ var Main = React.createClass({
         return (
             <div>
                 <div className="topmenu">
-                    <button onClick={routes.LinkNewTicket.navigate} className="button" >Uusi</button>
-                    <button onClick={routes.LinkTicketList.navigate} className="button" >Tukipyynnöt</button>
+                    <button onClick={routes.LinkNewTicket.navigate} className="top-button" >Uusi</button>
+                    <button onClick={routes.LinkTicketList.navigate} className="top-button" >Tukipyynnöt</button>
 
-                    <div className="user">
-                        <div className="user-link">
-                            {this.state.user.get("first_name")} {this.state.user.get("last_name")}
-                        </div>
-                        <Logout />
-                    </div>
+                    <UserInformation user={this.state.user} />
                 </div>
 
                 <div className="main-wrap">

@@ -10,6 +10,7 @@ module.exports = {
     LinkTicket: Route.createLink("/tickets/:id"),
     LinkNewTicket: Route.createLink("/new"),
     LinkTicketList: Route.createLink("/"),
+    LinkLogout: Route.createLink("/logout")
 };
 
 

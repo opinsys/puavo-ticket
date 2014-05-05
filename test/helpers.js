@@ -54,7 +54,7 @@ function loginAsUser(userData){
     agent.logout = function() {
         return new Promise(function(resolve, reject){
             agent
-            .post("/logout")
+            .get("/logout")
             .end(function(err, res) {
                 if (err) return reject(err);
                 assert.equal(res.headers.location, "/");

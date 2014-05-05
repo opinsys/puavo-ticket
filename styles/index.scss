@@ -45,16 +45,25 @@ table td {
 }
 
 .topmenu {
-    padding: 1em;
+    padding: 1.2em;
     background-color: #f59545;
-    background-image: linear-gradient(top, #fab32e 0%, #f59545 100%);
+    background-image: -webkit-linear-gradient(top, #fab32e 0%, #f59545 100%);
     border-bottom: 1px solid black;
     box-shadow: 2px 4px 6px rgba(68,68,68,0.8);
-    .user {
-        float: right;
+}
+
+.user {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 9pt;
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
     }
-    .user-link {
-        float: left;
+    img {
+        height: 40px;
     }
 }
 
@@ -91,6 +100,10 @@ table td {
 }
 
 
+.button, .top-button {
+    cursor: pointer;
+}
+
 
 .button {
     background-color: #ffb94b;
@@ -112,6 +125,19 @@ table td {
         background-color: #fddb6f;
         background-image: -webkit-linear-gradient(top, #ffb94b, #fddb6f);
     }
+}
+
+.top-button {
+    background-color: #f5f5f5;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #f5f5f5), color-stop(1, #dcdcdc));
+    background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #dcdcdc 100%);
+    background-repeat: repeat-x;
+    border: 1px solid #ccc;
+    border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+    border-radius: 3px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.05);
+    color: #333;
+    padding: 10px;
 }
 
 

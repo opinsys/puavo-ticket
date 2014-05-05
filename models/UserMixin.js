@@ -32,7 +32,15 @@ var UserMixin = {
         }));
 
         return visibilities;
-    }
+    },
+
+    /**
+     * @method getProfileImage
+     * @return {String} url to the profile image
+     */
+    getProfileImage: function() {
+         return "/api/puavo/v3/users/" + this.get("username") + "/profile.jpg";
+    },
 
 };
 

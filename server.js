@@ -102,7 +102,7 @@ app.get("/bundle.js", browserify("./client.js", {
 }));
 
 
-app.post("/logout", function(req, res) {
+app.get("/logout", function(req, res) {
     req.session.destroy();
     res.redirect("/");
 });
