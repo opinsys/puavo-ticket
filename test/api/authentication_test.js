@@ -3,8 +3,6 @@ var _ = require("lodash");
 var assert = require("assert");
 var helpers = require("../helpers");
 
-var User = require("../../models/server/User");
-
 describe("Authentication", function() {
 
 
@@ -15,7 +13,7 @@ describe("Authentication", function() {
                 return helpers.loginAsUser(helpers.user.teacher);
             })
             .then(function() {
-                return User.forge({ id: 1 }).fetch();
+                return helpers.fetchTestUser();
             })
             .then(function(user) {
                 assert.equal(user.get("username"), "olli.opettaja");
@@ -32,7 +30,7 @@ describe("Authentication", function() {
 
         return helpers.loginAsUser(updatedUser)
             .then(function() {
-                return User.forge({ id: 1 }).fetch();
+                return helpers.fetchTestUser();
             })
             .then(function(user) {
                 assert.equal(user.get("username"), "change.olli.opettaja");

@@ -15,16 +15,21 @@ describe("/api/tickets/:id/attachments", function() {
 
         return helpers.clearTestDatabase()
             .then(function() {
-                return helpers.insertTestTickets();
-            })
-            .then(function(tickets) {
-                ticket = tickets.ticket;
-                otherTicket = tickets.otherTicket;
-
                 return helpers.loginAsUser(helpers.user.teacher);
             })
             .then(function(agent) {
                 self.agent = agent;
+
+                return helpers.fetchTestUser();
+            })
+            .then(function(user) {
+                self.user = user;
+
+                return helpers.insertTestTickets(user);
+            })
+            .then(function(tickets) {
+                ticket = tickets.ticket;
+                otherTicket = tickets.otherTicket;
             });
     });
 
