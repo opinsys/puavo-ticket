@@ -186,57 +186,59 @@ function clearTestDatabase() {
  */
 function fetchTestUser() {
     return User.collection()
-        .query('where', 'user_id', '=', module.exports.user.teacher.id)
+        .query('where', 'user_id', '=', testUser.teacher.id)
         .fetchOne();
 }
+
+/**
+ * Various Opinsys SSO user JWT tokens
+ *
+ * @property user
+ * @type Object
+ */
+var testUser = {
+    /**
+     * User with teacher permissions in `testing.opinsys.fi` organisation
+     *
+     * @property user.teacher
+     * @type {Object}
+     */
+    teacher: {
+        "id": "9324",
+        "username": "olli.opettaja",
+        "first_name": "Olli",
+        "last_name": "Opettaja",
+        "email": "olli.opettaja@testing.opinsys.fi",
+        "organisation_name": "Testing",
+        "organisation_domain": "testing.opinsys.fi",
+        "primary_school_id": "329",
+        "schools": [
+            {
+                "id": "234",
+                "dn": "puavoId=1384,ou=Groups,dc=edu,dc=testing,dc=fi",
+                "name": "Jyskä",
+                "abbreviation": "osjys",
+                "roles": [
+                    "teacher"
+                ],
+                "groups": [
+                    {
+                        "id": "79470",
+                        "dn": "puavoId=79470,ou=Groups,dc=edu,dc=testing,dc=fi",
+                        "name": "Opettajat",
+                        "abbreviation": "osjys-opettajat"
+                    }
+                ]
+            }
+        ]
+    }
+};
 
 module.exports = {
     loginAsUser: loginAsUser,
     clearTestDatabase: clearTestDatabase,
     insertTestTickets: insertTestTickets,
     fetchTestUser: fetchTestUser,
+    user: testUser
 
-    /**
-     * Various Opinsys SSO user JWT tokens
-     *
-     * @property user
-     * @type Object
-     */
-    user: {
-        /**
-         * User with teacher permissions in `testing.opinsys.fi` organisation
-         *
-         * @property user.teacher
-         * @type {Object}
-         */
-        teacher: {
-            "id": "9324",
-            "username": "olli.opettaja",
-            "first_name": "Olli",
-            "last_name": "Opettaja",
-            "email": "olli.opettaja@testing.opinsys.fi",
-            "organisation_name": "Testing",
-            "organisation_domain": "testing.opinsys.fi",
-            "primary_school_id": "329",
-            "schools": [
-                {
-                    "id": "234",
-                    "dn": "puavoId=1384,ou=Groups,dc=edu,dc=testing,dc=fi",
-                    "name": "Jyskä",
-                    "abbreviation": "osjys",
-                    "roles": [
-                        "teacher"
-                    ],
-                    "groups": [
-                        {
-                            "id": "79470",
-                            "dn": "puavoId=79470,ou=Groups,dc=edu,dc=testing,dc=fi",
-                            "name": "Opettajat",
-                            "abbreviation": "osjys-opettajat"
-                        }
-                    ]
-                }
-            ]
-        }
-    }
 };
