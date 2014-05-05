@@ -4,6 +4,7 @@
  */
 
 var express = require("express");
+var Promise = require("bluebird");
 
 var Ticket = require("../models/server/Ticket");
 
@@ -18,7 +19,7 @@ var app = express.Router();
  * @apiSuccess {Object[]} . List of tickets
  */
 app.get("/api/tickets", function(req, res, next) {
-    Ticket.collection().fetch()
+    Ticket.fetchByVisibility(req.user.getVisibilities())
     .then(function(coll) {
         res.json(coll.toJSON());
     })
@@ -34,6 +35,7 @@ app.get("/api/tickets", function(req, res, next) {
  * @apiSuccess {String} description Description of the ticket
  */
 app.get("/api/tickets/:id", function(req, res, next) {
+    // TODO: assert visibilities!
     Ticket.forge({ id: req.params.id }).fetch()
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
@@ -57,6 +59,16 @@ app.post("/api/tickets", function(req, res, next) {
         user: req.user.id
     })
     .save()
+    .then(function(ticket) {
+        return Promise.all(req.user.getVisibilities().map(function(vis) {
+                return ticket.addVisibility({
+                    entity: vis
+                });
+            }))
+            .then(function() {
+                return ticket;
+            });
+    })
     .then(function(ticket) {
         res.json(ticket.toJSON());
     })

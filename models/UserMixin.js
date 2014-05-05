@@ -27,9 +27,10 @@ var UserMixin = {
             "organisation:" + this.get("organisation_domain")
         ];
 
-        visibilities = visibilities.concat(this.get("schools").map(function(school) {
-            return "school:" + school.id;
-        }));
+        // XXX: restore after schools has been added to the db
+        // visibilities = visibilities.concat(this.get("schools").map(function(school) {
+        //     return "school:" + school.id;
+        // }));
 
         return visibilities;
     },
