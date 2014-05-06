@@ -2,10 +2,7 @@
   sudo: yes
   tasks:
       - name: Install ansible dependencies
-        action: apt pkg={{item}} state=present
-        with_items:
-          - python-apt
-          - python-psycopg2
+        command: apt-get install -y python-apt python-psycopg2
 
       - name: Add archive.opinsys.fi
         apt_repository: repo='deb http://archive.opinsys.fi/git-trusty trusty main restricted universe multiverse' state=present update_cache=yes
