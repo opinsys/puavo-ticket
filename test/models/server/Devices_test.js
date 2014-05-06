@@ -8,13 +8,33 @@ var assert = require("assert");
 describe("Device model", function() {
 
     before(function() {
-        return helpers.clearTestDatabase();
+        var self = this;
+        return helpers.clearTestDatabase()
+            .then(function() {
+                return helpers.loginAsUser(helpers.user.teacher);
+            })
+            .then(function(agent) {
+                self.agent = agent;
+
+                return helpers.fetchTestUser();
+            })
+            .then(function(user) {
+                self.user = user;
+
+                return helpers.insertTestTickets(user);
+            })
+            .then(function(tickets) {
+                self.ticket = tickets.ticket;
+                self.otherTicket = tickets.otherTicket;
+            });
     });
 
     it("Instance can be created", function() {
+        var self = this;
+
         return Device.forge({
-                ticket: 1,
-                user: 1,
+                ticket: self.ticket.id,
+                user: self.user.id,
                 hostname: "fatclient-01"
             })
             .save()
