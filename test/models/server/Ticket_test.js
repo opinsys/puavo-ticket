@@ -99,7 +99,7 @@ describe("Ticket model", function() {
 
     describe("visibilities", function() {
 
-        it("foo", function() {
+        it("can be set for tickets", function() {
             var self = this;
             var withVisibility = Ticket.forge({
                 title: "With visibility",
@@ -125,14 +125,15 @@ describe("Ticket model", function() {
                     .then(function(ticket) {
                         return ticket.addVisibility({
                             entity: "bad",
-                            comment: "for the other ticket"
+                            comment: "for the other ticket",
+                            user_id: self.user.id
                         });
                     });
             });
 
-            return Promise.all(otherTickets)
+            return withVisibility
                 .then(function() {
-                    return withVisibility;
+                    return Promise.all(otherTickets);
                 })
                 .then(function() {
                     return Ticket.fetchByVisibility(["school:1"]);
