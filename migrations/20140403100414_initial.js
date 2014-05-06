@@ -20,7 +20,7 @@ function addTicketRelation(table) {
 exports.up = function(knex, Promise) {
     return knex.schema.createTable("users", function(table) {
         table.increments("id");
-        table.integer("external_id").notNullable();
+        table.string("external_id").notNullable().unique();
         table.string("username");
         table.string("first_name");
         table.string("last_name");
