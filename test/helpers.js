@@ -239,7 +239,44 @@ var testUser = {
                 ]
             }
         ]
+    },
+
+    /**
+     * Another user with teacher permissions in `testing.opinsys.fi` organisation
+     *
+     * @property user.teacher2
+     * @type {Object}
+     */
+    teacher2: {
+        "id": "400",
+        "username": "matti.meikalainen",
+        "first_name": "Matti",
+        "last_name": "Meikäläinen",
+        "email": "matti.meikalainen@testing.opinsys.fi",
+        "organisation_name": "Testing",
+        "organisation_domain": "testing.opinsys.fi",
+        "primary_school_id": "329",
+        "schools": [
+            {
+                "id": "234",
+                "dn": "puavoId=1384,ou=Groups,dc=edu,dc=testing,dc=fi",
+                "name": "Jyskä",
+                "abbreviation": "osjys",
+                "roles": [
+                    "teacher"
+                ],
+                "groups": [
+                    {
+                        "id": "79470",
+                        "dn": "puavoId=79470,ou=Groups,dc=edu,dc=testing,dc=fi",
+                        "name": "Opettajat",
+                        "abbreviation": "osjys-opettajat"
+                    }
+                ]
+            }
+        ]
     }
+
 };
 
 module.exports = {

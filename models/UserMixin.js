@@ -15,6 +15,23 @@
  */
 var UserMixin = {
 
+
+    /**
+     * @method getPersonalVisibility
+     * @return {String}
+     */
+    getPersonalVisibility: function(){
+        return "user:" + this.get("id");
+    },
+
+    /**
+     * @method getOrganisationVisibility
+     * @return {String}
+     */
+    getOrganisationVisibility: function(){
+        return "organisation:" + this.get("organisation_domain");
+    },
+
     /**
      * Get visibility strings for the user
      *
@@ -23,8 +40,8 @@ var UserMixin = {
      */
     getVisibilities: function() {
         var visibilities = [
-            "user:" + this.get("id"),
-            "organisation:" + this.get("organisation_domain")
+            this.getPersonalVisibility(),
+            this.getOrganisationVisibility(),
         ];
 
         // XXX: restore after schools has been added to the db

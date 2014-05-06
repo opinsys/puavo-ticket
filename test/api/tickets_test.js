@@ -58,6 +58,41 @@ describe("/api/tickets", function() {
             });
     });
 
+    it("other users cannot see the ticket", function() {
+        return helpers.loginAsUser(helpers.user.teacher2)
+            .then(function(agent) {
+                return agent.get("/api/tickets").promise();
+            })
+            .then(function(res) {
+                assert.equal(res.status, 200);
+                assert.equal(0, res.body.length);
+            });
+    });
+
+    it("user in the same organisation can see the ticket if ticket has the organisation visibility", function() {
+        return this.agent
+            .post("/api/tickets/" + this.ticket.id + "/visibilities")
+            .send({
+                visibilities: [ "organisation:" + helpers.user.teacher2.organisation_domain ]
+            })
+            .promise()
+            .then(function(res) {
+                assert.equal(res.status, 200);
+                assert.equal(res.body[0].entity, "organisation:testing.opinsys.fi");
+            })
+            .then(function() {
+                return helpers.loginAsUser(helpers.user.teacher2);
+            })
+            .then(function(agent) {
+                return agent.get("/api/tickets").promise();
+            })
+            .then(function(res) {
+                assert.equal(res.status, 200);
+                assert.equal(1, res.body.length);
+                assert.equal("Computer does not work", res.body[0].title);
+            });
+    });
+
     it("can get single ticket using GET", function() {
         var self = this;
         return this.agent

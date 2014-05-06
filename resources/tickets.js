@@ -4,7 +4,6 @@
  */
 
 var express = require("express");
-var Promise = require("bluebird");
 
 var Ticket = require("../models/server/Ticket");
 
@@ -60,11 +59,9 @@ app.post("/api/tickets", function(req, res, next) {
     })
     .save()
     .then(function(ticket) {
-        return Promise.all(req.user.getVisibilities().map(function(vis) {
-                return ticket.addVisibility({
-                    entity: vis
-                });
-            }))
+        return ticket.addVisibility({
+                entity: req.user.getPersonalVisibility()
+            })
             .then(function() {
                 return ticket;
             });
