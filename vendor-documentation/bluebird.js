@@ -5,4 +5,5 @@
  *
  * @namespace Bluebird
  * @class Promise
+ * @constructor
  */
