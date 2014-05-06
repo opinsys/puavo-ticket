@@ -25,5 +25,7 @@ export DISPLAY=:99
 # Workaround by using sudo.
 sudo npm set registry http://registry.npmjs.org/
 
+export NODE_ENV=test
 make
+make migrate
 make test
