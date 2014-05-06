@@ -1,5 +1,16 @@
 "use strict";
 
+/**
+ * Add owner relation
+ */
+function addOwnerRelation(table) {
+    return table.integer("user_id")
+        .notNullable()
+        .references("id")
+        .inTable("users");
+}
+
+
 exports.up = function(knex, Promise) {
     return knex.schema.createTable("users", function(table) {
         table.increments("id");
@@ -15,13 +26,10 @@ exports.up = function(knex, Promise) {
     })
     .then(function() {
         return knex.schema.createTable("tickets", function(table) {
+            addOwnerRelation(table);
             table.increments("id");
             table.string("title");
             table.string("description");
-            table.integer("user_id")
-                .notNullable()
-                .references("id")
-                .inTable('users');
             table.dateTime("created");
             table.dateTime("updated");
         });
@@ -29,18 +37,16 @@ exports.up = function(knex, Promise) {
     .then(function() {
         return Promise.all([
             knex.schema.createTable("comments", function(table) {
+                addOwnerRelation(table);
                 table.increments("id");
                 table.string("comment").notNullable();
-                table.integer("user_id")
-                    .notNullable()
-                    .references("id")
-                    .inTable('users');
                 table.dateTime("created");
                 table.dateTime("updated");
                 table.integer("ticket_id").notNullable();
             }),
 
             knex.schema.createTable("visibilities", function(table) {
+                addOwnerRelation(table);
                 table.increments("id");
                 table.string("comment");
                 table.string("entity");
@@ -50,38 +56,30 @@ exports.up = function(knex, Promise) {
             }),
 
             knex.schema.createTable("related_users", function(table) {
+                addOwnerRelation(table);
                 table.increments("id");
                 table.integer("external_id");
                 table.string("username");
-                table.integer("user_id")
-                    .references("id")
-                    .inTable('users');
                 table.dateTime("created");
                 table.dateTime("updated");
                 table.integer("ticket_id").notNullable();
             }),
 
             knex.schema.createTable("devices", function(table) {
+                addOwnerRelation(table);
                 table.increments("id");
                 table.string("hostname").notNullable();
-                table.integer("user_id")
-                    .notNullable()
-                    .references("id")
-                    .inTable('users');
                 table.integer("ticket_id").notNullable();
                 table.dateTime("created");
                 table.dateTime("updated");
             }),
 
             knex.schema.createTable("attachments", function(table) {
+                addOwnerRelation(table);
                 table.increments("id");
                 table.binary("data").notNullable();
                 table.string("data_type");
                 table.string("filename");
-                table.integer("user_id")
-                    .notNullable()
-                    .references("id")
-                    .inTable('users');
                 table.integer("ticket_id")
                     .notNullable()
                     .references("id")
@@ -91,11 +89,8 @@ exports.up = function(knex, Promise) {
             }),
 
             knex.schema.createTable("followers", function(table) {
+                addOwnerRelation(table);
                 table.increments("id");
-                table.integer("user_id")
-                    .notNullable()
-                    .references("id")
-                    .inTable('users');
                 table.integer("ticket_id");
                 table.dateTime("created");
                 table.dateTime("updated");
