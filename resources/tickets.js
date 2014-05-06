@@ -56,7 +56,7 @@ app.post("/api/tickets", function(req, res, next) {
     Ticket.forge({
         title: req.body.title,
         description: req.body.description,
-        user: req.user.id
+        user_id: req.user.id
     })
     .save()
     .then(function(ticket) {

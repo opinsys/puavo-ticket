@@ -28,7 +28,7 @@ app.post("/api/tickets/:id/related_users", function(req, res, next) {
             external_id: req.body.external_id,
             username: req.body.username,
             ticket: req.params.id,
-            user: req.user.id
+            user_id: req.user.id
         })
         .save()
         .then(function(related_user) {

@@ -34,7 +34,7 @@ describe("Device model", function() {
 
         return Device.forge({
                 ticket: self.ticket.id,
-                user: self.user.id,
+                user_id: self.user.id,
                 hostname: "fatclient-01"
             })
             .save()

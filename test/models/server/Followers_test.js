@@ -34,14 +34,14 @@ describe("Follower model", function() {
 
         return Follower.forge({
                 ticket: self.ticket.id,
-                user: self.user.id
+                user_id: self.user.id
             })
             .save()
             .then(function(follower) {
                 return Follower.forge({ id: follower.get("id") }).fetch();
             })
             .then(function(follower) {
-                assert.equal(self.user.id, follower.get("user"));
+                assert.equal(self.user.id, follower.get("user_id"));
                 assert.equal(self.ticket.id, follower.get("ticket"));
             });
 

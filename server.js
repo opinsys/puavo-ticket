@@ -84,7 +84,7 @@ app.use(function(req, res, next) {
     }
 
     User.collection()
-        .query('where', 'user_id', '=', req.session.jwt.id)
+        .query('where', 'external_id', '=', req.session.jwt.id)
         .fetchOne()
         .then(function(user) {
             if (!user) return next();

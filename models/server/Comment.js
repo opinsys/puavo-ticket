@@ -24,7 +24,7 @@ var Comment = Base.extend({
   },
 
   createdBy: function() {
-      return this.belongsTo(User, "user");
+      return this.belongsTo(User, "user_id");
   }
 
 });

@@ -26,7 +26,7 @@ app.post("/api/tickets/:id/devices", function(req, res, next) {
         Device.forge({
             hostname: req.body.hostname,
             ticket: req.params.id,
-            user: req.user.id
+            user_id: req.user.id
         })
         .save()
         .then(function(device) {
