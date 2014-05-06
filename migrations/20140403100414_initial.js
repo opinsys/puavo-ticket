@@ -36,7 +36,7 @@ exports.up = function(knex, Promise) {
                     .inTable('users');
                 table.dateTime("created");
                 table.dateTime("updated");
-                table.integer("ticket").notNullable();
+                table.integer("ticket_id").notNullable();
             }),
 
             knex.schema.createTable("visibilities", function(table) {
@@ -45,7 +45,7 @@ exports.up = function(knex, Promise) {
                 table.string("entity");
                 table.dateTime("created");
                 table.dateTime("updated");
-                table.integer("ticket").notNullable();
+                table.integer("ticket_id").notNullable();
             }),
 
             knex.schema.createTable("related_users", function(table) {
@@ -57,7 +57,7 @@ exports.up = function(knex, Promise) {
                     .inTable('users');
                 table.dateTime("created");
                 table.dateTime("updated");
-                table.integer("ticket").notNullable();
+                table.integer("ticket_id").notNullable();
             }),
 
             knex.schema.createTable("devices", function(table) {
@@ -67,7 +67,7 @@ exports.up = function(knex, Promise) {
                     .notNullable()
                     .references("id")
                     .inTable('users');
-                table.integer("ticket").notNullable();
+                table.integer("ticket_id").notNullable();
                 table.dateTime("created");
                 table.dateTime("updated");
             }),
@@ -81,7 +81,7 @@ exports.up = function(knex, Promise) {
                     .notNullable()
                     .references("id")
                     .inTable('users');
-                table.integer("ticket")
+                table.integer("ticket_id")
                     .notNullable()
                     .references("id")
                     .inTable('tickets');
@@ -95,7 +95,7 @@ exports.up = function(knex, Promise) {
                     .notNullable()
                     .references("id")
                     .inTable('users');
-                table.integer("ticket");
+                table.integer("ticket_id");
                 table.dateTime("created");
                 table.dateTime("updated");
             })

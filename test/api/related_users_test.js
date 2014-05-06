@@ -48,7 +48,7 @@ describe("/api/tickets/:id/related_users", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.username, "testuser");
-                assert.equal(res.body.ticket, ticket.get("id"));
+                assert.equal(res.body.ticket_id, ticket.get("id"));
                 assert.equal(res.body.user_id, self.user.id);
             });
     });

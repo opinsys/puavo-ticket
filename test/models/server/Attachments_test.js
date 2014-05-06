@@ -37,7 +37,7 @@ describe("Attachment model", function() {
         var fileData = fs.readFileSync(__dirname + "/../../test.jpg");
 
         return Attachment.forge({
-                ticket: self.ticket.id,
+                ticket_id: self.ticket.id,
                 user_id: self.user.id,
                 filename: "test.jpg",
                 data: fileData

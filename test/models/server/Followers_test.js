@@ -33,7 +33,7 @@ describe("Follower model", function() {
         var self = this;
 
         return Follower.forge({
-                ticket: self.ticket.id,
+                ticket_id: self.ticket.id,
                 user_id: self.user.id
             })
             .save()
@@ -42,7 +42,7 @@ describe("Follower model", function() {
             })
             .then(function(follower) {
                 assert.equal(self.user.id, follower.get("user_id"));
-                assert.equal(self.ticket.id, follower.get("ticket"));
+                assert.equal(self.ticket.id, follower.get("ticket_id"));
             });
 
 

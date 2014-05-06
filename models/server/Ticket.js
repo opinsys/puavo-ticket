@@ -34,7 +34,7 @@ var Ticket = Base.extend({
      * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket models
      */
     comments: function() {
-        return this.hasMany(Comment, "ticket");
+        return this.hasMany(Comment, "ticket_id");
     },
 
 
@@ -46,7 +46,7 @@ var Ticket = Base.extend({
      *     in a `Promise`.
      */
     visibilities: function() {
-        return this.hasMany(Visibility, "ticket");
+        return this.hasMany(Visibility, "ticket_id");
     },
 
     /**
@@ -58,7 +58,7 @@ var Ticket = Base.extend({
      */
     addVisibility: function(visibility) {
         visibility = _.clone(visibility);
-        visibility.ticket = this.get("id");
+        visibility.ticket_id = this.get("id");
         return Visibility.forge(visibility).save();
     },
 
@@ -71,7 +71,7 @@ var Ticket = Base.extend({
      */
     addComment: function(comment) {
         comment = _.clone(comment);
-        comment.ticket = this.get("id");
+        comment.ticket_id = this.get("id");
         return Comment.forge(comment).save();
     },
 
@@ -92,7 +92,7 @@ var Ticket = Base.extend({
             Device
         ].map(function(klass) {
             return klass.collection()
-                .query("where", "ticket", "=", id)
+                .query("where", "ticket_id", "=", id)
                 .fetch({ withRelated: "createdBy" });
         });
 
@@ -127,7 +127,7 @@ var Ticket = Base.extend({
      * @return {Bookshelf.Collection} Bookshelf.Collection of Attachment models
      */
     attachments: function() {
-        return this.hasMany(Attachment, "ticket");
+        return this.hasMany(Attachment, "ticket_id");
     },
 
     /**
@@ -139,7 +139,7 @@ var Ticket = Base.extend({
      */
     addFollower: function(follower) {
         follower = _.clone(follower);
-        follower.ticket = this.get("id");
+        follower.ticket_id = this.get("id");
         return Follower.forge(follower).save();
     }
 
@@ -160,7 +160,7 @@ Ticket.fetchByVisibility = function(visibilities) {
         .collection()
         .query(function(queryBuilder) {
             queryBuilder
-            .join("visibilities", "tickets.id", "=", "visibilities.ticket")
+            .join("visibilities", "tickets.id", "=", "visibilities.ticket_id")
             .whereIn("visibilities.entity", visibilities);
         })
         .fetch();

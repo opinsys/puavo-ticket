@@ -25,7 +25,7 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
         Comment.forge({
             comment: req.body.comment,
-            ticket: req.params.id,
+            ticket_id: req.params.id,
             user_id: req.user.id
         })
         .save()
@@ -45,7 +45,7 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
  */
 app.get("/api/tickets/:id/comments", function(req, res, next) {
     Comment.collection()
-    .query('where', 'ticket', '=', req.params.id)
+    .query('where', 'ticket_id', '=', req.params.id)
     .fetch()
     .then(function(collection) {
         res.json(collection.toJSON());

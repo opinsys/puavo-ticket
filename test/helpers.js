@@ -95,7 +95,7 @@ function insertTestTickets(user) {
         .then(function() {
             return Comment.forge({
                 user_id: user.get("id"),
-                ticket: ticket.id,
+                ticket_id: ticket.id,
                 updated: new Date(),
                 comment: "First comment to test ticket"
             })
@@ -103,7 +103,7 @@ function insertTestTickets(user) {
         })
         .then(function() {
             return RelatedUser.forge({
-                ticket: ticket.id,
+                ticket_id: ticket.id,
                 external_id: 1,
                 updated: new Date(),
                 username: "testuser1"
@@ -113,7 +113,7 @@ function insertTestTickets(user) {
         .then(function() {
             return Comment.forge({
                 user_id: user.get("id"),
-                ticket: ticket.id,
+                ticket_id: ticket.id,
                 updated: new Date(),
                 comment: "Second comment to test ticket"
             })
@@ -129,7 +129,7 @@ function insertTestTickets(user) {
         .then(function(otherTicket) {
             return Comment.forge({
                 user_id: user.get("id"),
-                ticket: otherTicket.id,
+                ticket_id: otherTicket.id,
                 comment: "First comment to the other ticket"
             })
             .save()
@@ -139,7 +139,7 @@ function insertTestTickets(user) {
         })
         .then(function(otherTicket) {
             return RelatedUser.forge({
-                ticket: otherTicket.id,
+                ticket_id: otherTicket.id,
                 external_id: 2,
                 username: "testuser2"
             })

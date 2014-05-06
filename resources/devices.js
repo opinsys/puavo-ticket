@@ -25,7 +25,7 @@ app.post("/api/tickets/:id/devices", function(req, res, next) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
         Device.forge({
             hostname: req.body.hostname,
-            ticket: req.params.id,
+            ticket_id: req.params.id,
             user_id: req.user.id
         })
         .save()

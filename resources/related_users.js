@@ -27,7 +27,7 @@ app.post("/api/tickets/:id/related_users", function(req, res, next) {
         RelatedUser.forge({
             external_id: req.body.external_id,
             username: req.body.username,
-            ticket: req.params.id,
+            ticket_id: req.params.id,
             user_id: req.user.id
         })
         .save()
@@ -47,7 +47,7 @@ app.post("/api/tickets/:id/related_users", function(req, res, next) {
  */
 app.get("/api/tickets/:id/related_users", function(req, res, next) {
     RelatedUser.collection()
-    .query('where', 'ticket', '=', req.params.id)
+    .query('where', 'ticket_id', '=', req.params.id)
     .fetch()
     .then(function(collection) {
         res.json(collection.toJSON());

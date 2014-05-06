@@ -8,12 +8,31 @@ var assert = require("assert");
 describe("RelatedUser model", function() {
 
     before(function() {
-        return helpers.clearTestDatabase();
+        var self = this;
+        return helpers.clearTestDatabase()
+            .then(function() {
+                return helpers.loginAsUser(helpers.user.teacher);
+            })
+            .then(function(agent) {
+                self.agent = agent;
+
+                return helpers.fetchTestUser();
+            })
+            .then(function(user) {
+                self.user = user;
+
+                return helpers.insertTestTickets(user);
+            })
+            .then(function(tickets) {
+                self.ticket = tickets.ticket;
+                self.otherTicket = tickets.otherTicket;
+            });
     });
 
     it("Instance can be created", function() {
+        var self = this;
         return RelatedUser.forge({
-            ticket: 1,
+            ticket_id: self.ticket.id,
             external_id: 1,
             username: "testuser"
             })
