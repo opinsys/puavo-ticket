@@ -10,6 +10,12 @@ function addOwnerRelation(table) {
         .inTable("users");
 }
 
+function addTicketRelation(table) {
+    return table.integer("ticket_id")
+        .notNullable()
+        .references("id")
+        .inTable("tickets");
+}
 
 exports.up = function(knex, Promise) {
     return knex.schema.createTable("users", function(table) {
@@ -24,7 +30,7 @@ exports.up = function(knex, Promise) {
         table.dateTime("created");
         table.dateTime("updated");
     })
-    .then(function() {
+    .then(function createTicketsTable() {
         return knex.schema.createTable("tickets", function(table) {
             addOwnerRelation(table);
             table.increments("id");
@@ -34,64 +40,61 @@ exports.up = function(knex, Promise) {
             table.dateTime("updated");
         });
     })
-    .then(function() {
+    .then(function createTicketRelationTables() {
         return Promise.all([
             knex.schema.createTable("comments", function(table) {
                 addOwnerRelation(table);
+                addTicketRelation(table);
                 table.increments("id");
                 table.string("comment").notNullable();
                 table.dateTime("created");
                 table.dateTime("updated");
-                table.integer("ticket_id").notNullable();
             }),
 
             knex.schema.createTable("visibilities", function(table) {
                 addOwnerRelation(table);
+                addTicketRelation(table);
                 table.increments("id");
                 table.string("comment");
                 table.string("entity");
                 table.dateTime("created");
                 table.dateTime("updated");
-                table.integer("ticket_id").notNullable();
             }),
 
             knex.schema.createTable("related_users", function(table) {
                 addOwnerRelation(table);
+                addTicketRelation(table);
                 table.increments("id");
                 table.integer("external_id");
                 table.string("username");
                 table.dateTime("created");
                 table.dateTime("updated");
-                table.integer("ticket_id").notNullable();
             }),
 
             knex.schema.createTable("devices", function(table) {
                 addOwnerRelation(table);
+                addTicketRelation(table);
                 table.increments("id");
                 table.string("hostname").notNullable();
-                table.integer("ticket_id").notNullable();
                 table.dateTime("created");
                 table.dateTime("updated");
             }),
 
             knex.schema.createTable("attachments", function(table) {
                 addOwnerRelation(table);
+                addTicketRelation(table);
                 table.increments("id");
                 table.binary("data").notNullable();
                 table.string("data_type");
                 table.string("filename");
-                table.integer("ticket_id")
-                    .notNullable()
-                    .references("id")
-                    .inTable('tickets');
                 table.dateTime("created");
                 table.dateTime("updated");
             }),
 
             knex.schema.createTable("followers", function(table) {
                 addOwnerRelation(table);
+                addTicketRelation(table);
                 table.increments("id");
-                table.integer("ticket_id");
                 table.dateTime("created");
                 table.dateTime("updated");
             })

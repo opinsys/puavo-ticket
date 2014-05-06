@@ -106,6 +106,7 @@ function insertTestTickets(user) {
         })
         .then(function addRelatedUser() {
             return RelatedUser.forge({
+                user_id: user.get("id"),
                 ticket_id: ticket.id,
                 external_id: 1,
                 updated: new Date(),
@@ -142,6 +143,7 @@ function insertTestTickets(user) {
         })
         .then(function addRelatedUserToAnotherTicket(otherTicket) {
             return RelatedUser.forge({
+                user_id: user.get("id"),
                 ticket_id: otherTicket.id,
                 external_id: 2,
                 username: "testuser2"
