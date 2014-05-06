@@ -41,7 +41,7 @@ describe("/api/tickets/:id/related_users", function() {
         return this.agent
             .post("/api/tickets/" + ticket.get("id") + "/related_users")
             .send({
-                user_id: 1,
+                external_id: 1,
                 username: "testuser"
             })
             .promise()

@@ -36,12 +36,12 @@ var User = Base.extend({
      */
     ensureUserFromJWTToken: function(token) {
         return User.collection()
-            .query('where', 'user_id', '=', token.id)
+            .query('where', 'external_id', '=', token.id)
             .fetchOne()
             .then(function(user) {
                 if (!user) {
                     return User.forge({
-                        user_id: token.id,
+                        external_id: token.id,
                         username: token.username,
                         first_name: token.first_name,
                         last_name: token.last_name,

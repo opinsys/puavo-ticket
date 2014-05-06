@@ -5,7 +5,7 @@ exports.up = function(knex, Promise) {
 
         knex.schema.createTable("users", function(table) {
             table.increments("id");
-            table.integer("user_id").notNullable();
+            table.integer("external_id").notNullable();
             table.string("username");
             table.string("first_name");
             table.string("last_name");
@@ -50,7 +50,7 @@ exports.up = function(knex, Promise) {
 
         knex.schema.createTable("related_users", function(table) {
             table.increments("id");
-            table.integer("user_id");
+            table.integer("external_id");
             table.string("username");
             table.integer("user")
                 .references("id")

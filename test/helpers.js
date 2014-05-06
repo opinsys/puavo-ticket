@@ -104,7 +104,7 @@ function insertTestTickets(user) {
         .then(function() {
             return RelatedUser.forge({
                 ticket: ticket.id,
-                user_id: 1,
+                external_id: 1,
                 updated: new Date(),
                 username: "testuser1"
             })
@@ -140,7 +140,7 @@ function insertTestTickets(user) {
         .then(function(otherTicket) {
             return RelatedUser.forge({
                 ticket: otherTicket.id,
-                user_id: 2,
+                external_id: 2,
                 username: "testuser2"
             })
             .save()
@@ -187,7 +187,7 @@ function clearTestDatabase() {
  */
 function fetchTestUser() {
     return User.collection()
-        .query('where', 'user_id', '=', testUser.teacher.id)
+        .query('where', 'external_id', '=', testUser.teacher.id)
         .fetchOne();
 }
 
