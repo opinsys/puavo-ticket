@@ -174,10 +174,10 @@ function clearTestDatabase() {
         return DB.knex(table).del();
     }))
     .then(function() {
-         DB.knex("tickets").del();
+        return DB.knex("tickets").del();
     })
     .then(function() {
-         DB.knex("users").del();
+        return DB.knex("users").del();
     });
 }
 
