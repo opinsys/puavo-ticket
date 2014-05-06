@@ -9,9 +9,6 @@ var crypto = require('crypto');
 
 describe("Attachment model", function() {
 
-    var ticket = null;
-    var otherTicket = null;
-
     before(function() {
         var self = this;
         return helpers.clearTestDatabase()
@@ -29,8 +26,8 @@ describe("Attachment model", function() {
                 return helpers.insertTestTickets(user);
             })
             .then(function(tickets) {
-                ticket = tickets.ticket;
-                otherTicket = tickets.otherTicket;
+                self.ticket = tickets.ticket;
+                self.otherTicket = tickets.otherTicket;
             });
     });
 
@@ -40,7 +37,7 @@ describe("Attachment model", function() {
         var fileData = fs.readFileSync(__dirname + "/../../test.jpg");
 
         return Attachment.forge({
-                ticket: ticket.id,
+                ticket: self.ticket.id,
                 user: self.user.id,
                 filename: "test.jpg",
                 data: fileData

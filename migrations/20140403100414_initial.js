@@ -6,7 +6,10 @@ exports.up = function(knex, Promise) {
             table.increments("id");
             table.string("title");
             table.string("description");
-            table.integer("user").notNullable();
+            table.integer("user")
+                .notNullable()
+                .references("id")
+                .inTable('users');
             table.dateTime("created");
             table.dateTime("updated");
         }),
@@ -14,7 +17,10 @@ exports.up = function(knex, Promise) {
         knex.schema.createTable("comments", function(table) {
             table.increments("id");
             table.string("comment").notNullable();
-            table.integer("user").notNullable();
+            table.integer("user")
+                .notNullable()
+                .references("id")
+                .inTable('users');
             table.dateTime("created");
             table.dateTime("updated");
             table.integer("ticket").notNullable();
@@ -45,7 +51,9 @@ exports.up = function(knex, Promise) {
             table.increments("id");
             table.integer("user_id");
             table.string("username");
-            table.integer("user");
+            table.integer("user")
+                .references("id")
+                .inTable('users');
             table.dateTime("created");
             table.dateTime("updated");
             table.integer("ticket").notNullable();
@@ -54,7 +62,10 @@ exports.up = function(knex, Promise) {
         knex.schema.createTable("devices", function(table) {
             table.increments("id");
             table.string("hostname").notNullable();
-            table.integer("user").notNullable();
+            table.integer("user")
+                .notNullable()
+                .references("id")
+                .inTable('users');
             table.integer("ticket").notNullable();
             table.dateTime("created");
             table.dateTime("updated");
@@ -79,7 +90,10 @@ exports.up = function(knex, Promise) {
 
         knex.schema.createTable("followers", function(table) {
             table.increments("id");
-            table.integer("user").notNullable();
+            table.integer("user")
+                .notNullable()
+                .references("id")
+                .inTable('users');
             table.integer("ticket");
             table.dateTime("created");
             table.dateTime("updated");
