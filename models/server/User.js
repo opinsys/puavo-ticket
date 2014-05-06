@@ -46,7 +46,8 @@ var User = Base.extend({
                         first_name: token.first_name,
                         last_name: token.last_name,
                         email: token.email,
-                        organisation_domain: token.organisation_domain
+                        organisation_domain: token.organisation_domain,
+                        external_data: token
                         }).save();
                 }
                 else {
@@ -54,6 +55,7 @@ var User = Base.extend({
                     user.set("username", token.username);
                     user.set("first_name", token.first_name);
                     user.set("last_name", token.last_name);
+                    user.set("external_data", token);
                     return user.save();
                 }
             });

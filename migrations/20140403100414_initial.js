@@ -9,6 +9,7 @@ exports.up = function(knex, Promise) {
         table.string("last_name");
         table.string("email");
         table.string("organisation_domain").notNullable();
+        table.json("external_data");
         table.dateTime("created");
         table.dateTime("updated");
     })
