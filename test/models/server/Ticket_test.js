@@ -10,16 +10,29 @@ var assert = require("assert");
 describe("Ticket model", function() {
 
     before(function() {
-        return helpers.clearTestDatabase();
+        var self = this;
+        return helpers.clearTestDatabase()
+            .then(function() {
+                return helpers.loginAsUser(helpers.user.teacher);
+            })
+            .then(function(agent) {
+                self.agent = agent;
+
+                return helpers.fetchTestUser();
+            })
+            .then(function(user) {
+                self.user = user;
+            });
     });
 
     it("Instance can be created", function() {
+        var self = this;
         var title = "Computer does not work :(";
 
         return Ticket.forge({
                 title: title,
                 description: "It just doesn't",
-                user: 1
+                user: self.user.id
             })
             .save()
             .then(function(ticket) {
@@ -32,16 +45,17 @@ describe("Ticket model", function() {
     });
 
     it("can have comments", function() {
+        var self = this;
         var ticketId = Ticket.forge({
             title: "computer does not work",
             description: "It just doesn't",
-            user: 1
+            user: self.user.id
         })
         .save()
         .then(function(ticket) {
             return ticket.addComment({
                     comment: "foo",
-                    user: 1
+                    user: self.user.id
                 })
                 .then(function() {
                     return ticket.get("id");
@@ -86,10 +100,11 @@ describe("Ticket model", function() {
     describe("visibilities", function() {
 
         it("foo", function() {
+            var self = this;
             var withVisibility = Ticket.forge({
                 title: "With visibility",
                 description: "desc",
-                user: 1
+                user: self.user.id
             })
             .save()
             .then(function(ticket) {
@@ -100,9 +115,9 @@ describe("Ticket model", function() {
             });
 
             var otherTickets = [
-                { title: "foo1", description: "bar", user: 1 },
-                { title: "foo2", description: "bar", user: 1 },
-                { title: "foo2", description: "bar", user: 1 }
+                { title: "foo1", description: "bar", user: self.user.id },
+                { title: "foo2", description: "bar", user: self.user.id },
+                { title: "foo2", description: "bar", user: self.user.id }
             ].map(function(data) {
                 return Ticket
                     .forge(data)
