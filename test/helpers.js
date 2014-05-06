@@ -95,7 +95,7 @@ function insertTestTickets(user) {
     });
 
     return ticket.save()
-        .then(function() {
+        .then(function addComment() {
             return Comment.forge({
                 user_id: user.get("id"),
                 ticket_id: ticket.id,
@@ -104,7 +104,7 @@ function insertTestTickets(user) {
             })
             .save();
         })
-        .then(function() {
+        .then(function addRelatedUser() {
             return RelatedUser.forge({
                 ticket_id: ticket.id,
                 external_id: 1,
@@ -113,7 +113,7 @@ function insertTestTickets(user) {
             })
             .save();
         })
-        .then(function() {
+        .then(function addAnotherComment() {
             return Comment.forge({
                 user_id: user.get("id"),
                 ticket_id: ticket.id,
@@ -122,14 +122,14 @@ function insertTestTickets(user) {
             })
             .save();
         })
-        .then(function() {
+        .then(function addAnotherTicket() {
             return Ticket.forge({
                 user_id: user.get("id"),
                 title: "Other test ticket",
                 description: "Other test tickets"
             }).save();
         })
-        .then(function(otherTicket) {
+        .then(function addCommentToAnotherTicket(otherTicket) {
             return Comment.forge({
                 user_id: user.get("id"),
                 ticket_id: otherTicket.id,
@@ -140,7 +140,7 @@ function insertTestTickets(user) {
                 return otherTicket;
             });
         })
-        .then(function(otherTicket) {
+        .then(function addRelatedUserToAnotherTicket(otherTicket) {
             return RelatedUser.forge({
                 ticket_id: otherTicket.id,
                 external_id: 2,
@@ -151,7 +151,7 @@ function insertTestTickets(user) {
                 return otherTicket;
             });
         })
-        .then(function(otherTicket) {
+        .then(function returnTicketsObject(otherTicket) {
             return { ticket: ticket, otherTicket: otherTicket };
         });
 }
