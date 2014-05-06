@@ -2,6 +2,19 @@
 
 exports.up = function(knex, Promise) {
     return Promise.all([
+
+        knex.schema.createTable("users", function(table) {
+            table.increments("id");
+            table.integer("user_id").notNullable();
+            table.string("username");
+            table.string("first_name");
+            table.string("last_name");
+            table.string("email");
+            table.string("organisation_domain").notNullable();
+            table.dateTime("created");
+            table.dateTime("updated");
+        }),
+
         knex.schema.createTable("tickets", function(table) {
             table.increments("id");
             table.string("title");
@@ -33,18 +46,6 @@ exports.up = function(knex, Promise) {
             table.dateTime("created");
             table.dateTime("updated");
             table.integer("ticket").notNullable();
-        }),
-
-        knex.schema.createTable("users", function(table) {
-            table.increments("id");
-            table.integer("user_id").notNullable();
-            table.string("username");
-            table.string("first_name");
-            table.string("last_name");
-            table.string("email");
-            table.string("organisation_domain").notNullable();
-            table.dateTime("created");
-            table.dateTime("updated");
         }),
 
         knex.schema.createTable("related_users", function(table) {
