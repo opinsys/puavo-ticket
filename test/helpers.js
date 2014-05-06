@@ -70,8 +70,11 @@ function loginAsUser(userData){
         .get("/?jwt=" + jwtToken)
         .end(function(err, res) {
             if (err) return reject(err);
-            assert.equal(res.headers.location, "/");
-            assert.equal(res.status, 302);
+            assert.equal(res.status, 302, "should get redirect after login");
+            assert.equal(
+                res.headers.location, "/",
+                "should have been redirected to front-page after login"
+            );
             return resolve(agent);
         });
     });
