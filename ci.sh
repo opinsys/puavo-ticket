@@ -9,8 +9,12 @@ env
 ## fix home for now
 export HOME=/home/ci
 
+
+sudo apt-get install software-properties-common
+sudo apt-add-repository ppa:rquillo/ansible --yes
 sudo apt-get update
-sudo apt-get install nodejs-bundle build-essential git-core xvfb firefox chromium-browser -y --force-yes
+sudo apt-get install ansible
+ansible-playbook development-env.yml
 
 Xvfb :99 -screen 0 1920x1080x24 &> /cirun/xvfb.log &
 export DISPLAY=:99
