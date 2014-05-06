@@ -167,14 +167,18 @@ function clearTestDatabase() {
         'related_users',
         'devices',
         'attachments',
-        'followers',
-        'tickets',
-        'users'
+        'followers'
  ];
 
     return Promise.all(tables.map(function(table) {
         return DB.knex(table).del();
-    }));
+    }))
+    .then(function() {
+         DB.knex("tickets").del();
+    })
+    .then(function() {
+         DB.knex("users").del();
+    });
 }
 
 /**
