@@ -13,8 +13,8 @@ if (process.env.NODE_ENV === "test") {
     config.puavoSharedSecret = "secret";
     config.database.connection = {
         host     : '127.0.0.1',
-        user     : 'puavo-ticket',
-        password : 'test',
+        user     : 'puavo',
+        password : 'password',
         database : 'puavo-ticket-test'
     };
 } else {
