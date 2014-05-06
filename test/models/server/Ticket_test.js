@@ -110,7 +110,7 @@ describe("Ticket model", function() {
             .then(function(ticket) {
                 return ticket.addVisibility({
                     entity: "school:1",
-                    comment: "This ticket affect whole school"
+                    comment: "This ticket affects whole school"
                 });
             });
 
