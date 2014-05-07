@@ -84,16 +84,16 @@ app.use(function(req, res, next) {
     }
 
     User.collection()
-        .query('where', 'external_id', '=', req.session.jwt.id)
-        .fetchOne()
-        .then(function(user) {
-            if (!user) return next();
-            req.user = user;
-        })
-        .then(function() {
-            next();
-        })
-        .catch(next);
+    .query("where", "external_id", "=", req.session.jwt.id)
+    .fetchOne()
+    .then(function(user) {
+        if (!user) return next();
+        req.user = user;
+    })
+    .then(function() {
+        next();
+    })
+    .catch(next);
 });
 
 
