@@ -72,7 +72,7 @@ Create `_config.json` with
 
 ```json
 {
-    "puavoSharedSecret": "xxxxx"
+    "puavoSharedSecret": "xxxxx",
     "puavo": {
         "user": "admin",
         "pass": "xxxxx"
