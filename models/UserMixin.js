@@ -58,7 +58,7 @@ var UserMixin = {
      * @return {String} url to the profile image
      */
     getProfileImage: function() {
-         return "/api/puavo/v3/users/" + this.get("username") + "/profile.jpg";
+         return "/api/puavo/v3/users/" + this.get("external_data").username + "/profile.jpg";
     },
 
 };

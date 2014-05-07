@@ -27,7 +27,7 @@ var UserInformation = React.createClass({
             <div className="user">
                 <ul>
                     <li>
-                        {this.props.user.get("first_name")} {this.props.user.get("last_name")}
+                        {this.props.user.get("external_data").first_name} {this.props.user.get("external_data").last_name}
                     </li>
                     <li>
                         <img src={this.props.user.getProfileImage()} />
