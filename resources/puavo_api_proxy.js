@@ -36,7 +36,7 @@ app.use(function(req, res, next) {
 
     var puavoUrl = url.format({
         protocol: "https",
-        host: req.user.get("organisation_domain"),
+        host: req.user.get("external_data").organisation_domain,
         headers: req.headers,
         pathname: u.pathname,
         search: u.search
@@ -48,7 +48,7 @@ app.use(function(req, res, next) {
         request({
             method: "GET",
             headers: _.extend({}, req.headers, {
-                host: req.user.get("organisation_domain")
+                host: req.user.get("external_data").organisation_domain
             }),
             url: puavoUrl,
             pool: {},

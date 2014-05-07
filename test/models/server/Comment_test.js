@@ -45,7 +45,7 @@ describe("Comment model", function() {
             })
             .then(function(comments) {
                 var commentCreator = comments.first().related("createdBy");
-                assert.equal("Olli", commentCreator.get("first_name"));
+                assert.equal("Olli", commentCreator.get("external_data").first_name);
             });
     });
 

@@ -11,24 +11,28 @@ describe("User model", function() {
     });
 
     it("Instance ca be created", function() {
+	var testUser = {
+            username: "testuser",
+            email: "joe.bloggs@testdomain.com",
+            first_name: "Joe",
+            last_name: "Bloggs",
+            organisation_domain: "test.testdomain.com"
+	};
+
         return User.forge({
                 external_id: 1,
-                username: "testuser",
-                email: "joe.bloggs@testdomain.com",
-                first_name: "Joe",
-                last_name: "Bloggs",
-                organisation_domain: "test.testdomain.com"
+                external_data: testUser
             })
             .save()
             .then(function(user) {
                 return User.forge({ id: user.get("id") }).fetch();
             })
             .then(function(user) {
-                assert.equal("testuser", user.get("username"));
-                assert.equal("joe.bloggs@testdomain.com", user.get("email"));
-                assert.equal("Joe", user.get("first_name"));
-                assert.equal("Bloggs", user.get("last_name"));
-                assert.equal("test.testdomain.com", user.get("organisation_domain"));
+                assert.equal("testuser", user.get("external_data").username);
+                assert.equal("joe.bloggs@testdomain.com", user.get("external_data").email);
+                assert.equal("Joe", user.get("external_data").first_name);
+                assert.equal("Bloggs", user.get("external_data").last_name);
+                assert.equal("test.testdomain.com", user.get("external_data").organisation_domain);
             });
 
     });
