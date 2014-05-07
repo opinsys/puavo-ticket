@@ -10,14 +10,14 @@ describe("User model", function() {
         return helpers.clearTestDatabase();
     });
 
-    it("Instance ca be created", function() {
-	var testUser = {
+    it("Instance can be created", function() {
+        var testUser = {
             username: "testuser",
             email: "joe.bloggs@testdomain.com",
             first_name: "Joe",
             last_name: "Bloggs",
             organisation_domain: "test.testdomain.com"
-	};
+        };
 
         return User.forge({
                 external_id: 1,
@@ -40,14 +40,16 @@ describe("User model", function() {
 
 describe("UserMixin", function() {
     before(function() {
-        this.user = new User({ external_id: helpers.user.teacher.id,
-			       external_data: helpers.user.teacher });
+        this.user = new User({
+            external_id: helpers.user.teacher.id,
+            external_data: helpers.user.teacher
+        });
     });
 
     it("has user visibility", function() {
-	//
-	// Use now external_id but should be use id from users table
-	//
+        //
+        // Use now external_id but should be use id from users table
+        //
         //assert(this.user.getVisibilities().indexOf("user:9324") !== -1);
     });
 
