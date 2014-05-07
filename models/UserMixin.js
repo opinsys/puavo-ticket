@@ -29,7 +29,7 @@ var UserMixin = {
      * @return {String}
      */
     getOrganisationVisibility: function(){
-        return "organisation:" + this.get("organisation_domain");
+        return "organisation:" + this.get("external_data").organisation_domain;
     },
 
     /**
