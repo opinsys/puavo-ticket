@@ -162,6 +162,10 @@ describe("Tag model", function() {
 
                 assert(prevStatus, "previous status is present");
                 assert(prevStatus.get("deleted_at"), "previous is soft deleted");
+
+                var otherTag = updates.findWhere({ tag: "othertag" });
+                assert(otherTag, "othertag is available");
+                assert(!otherTag.get("deleted_at"), "othertag is not soft deleted");
             });
     });
 
