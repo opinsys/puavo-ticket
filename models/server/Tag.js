@@ -47,14 +47,14 @@ var Tag = Base.extend({
   },
 
   initialize: function() {
-      this.on("creating", function(model) {
+      this.on("creating", function(tagModel) {
             return Tag.collection()
                 .query(function(qb) {
                     qb
                     .whereNull("deleted_at")
                     .andWhere({
-                        tag: model.get("tag"),
-                        ticket_id: model.get("ticket_id")
+                        tag: tagModel.get("tag"),
+                        ticket_id: tagModel.get("ticket_id")
                     });
                 })
                 .fetch()
@@ -64,8 +64,8 @@ var Tag = Base.extend({
                     }
                 })
                 .then(function() {
-                    if (model.isStatusTag()) {
-                        return Tag.softDeleteStatusTags(model.get("ticket_id"));
+                    if (tagModel.isStatusTag()) {
+                        return Tag.softDeleteStatusTagsFor(tagModel.get("ticket_id"));
                     }
                 });
       });
@@ -82,12 +82,12 @@ var Tag = Base.extend({
      * Soft delete status tags for the given ticket
      *
      * @static
-     * @method softDeleteStatusTags
+     * @method softDeleteStatusTagsFor
      * @param {models.server.Ticket|Number} ticket Model object or table id
      * @return {Bluebird.Promise}
      */
-    softDeleteStatusTags: function(ticket){
-        return Tag.fetchStatusTags(ticket)
+    softDeleteStatusTagsFor: function(ticket){
+        return Tag.statusTagsFor(ticket).fetch()
             .then(function(coll) {
                 return coll.invokeThen("softDelete");
             });
@@ -97,10 +97,10 @@ var Tag = Base.extend({
      * Fetch all status tags for the given ticket
      *
      * @static
-     * @method fetchStatusTags
+     * @method statusTagsFor
      * @param {models.server.Ticket|Number} ticket Model object or table id
      */
-    fetchStatusTags: function(ticket){
+    statusTagsFor: function(ticket){
         var ticketId = Base.toId(ticket);
         return Tag.collection()
             .query(function(qb) {
@@ -108,8 +108,7 @@ var Tag = Base.extend({
                 .whereNull("deleted_at")
                 .andWhere({ ticket_id: ticketId })
                 .andWhere("tag", "LIKE", "status:%");
-            })
-            .fetch();
+            });
     }
 });
 

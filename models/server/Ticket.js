@@ -109,7 +109,7 @@ var Ticket = Base.extend({
      * Get all updates related to this ticket
      *
      * @method fetchUpdates
-     * @return {Bluebird.Promise} Array of Comment|Device|RelatedUser models
+     * @return {Bluebird.Promise} Bookshelf Collection of Comment|Device|RelatedUser models
      * wrapped in a promise
      */
     fetchUpdates: function() {
