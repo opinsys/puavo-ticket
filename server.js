@@ -70,7 +70,6 @@ app.use(serveStatic(__dirname + "/public"));
 app.use("/doc", serveStatic(__dirname + "/doc"));
 
 
-
 /**
  * An instance of  models.User when user has an authenticated session
  *
