@@ -71,6 +71,21 @@ var Base = Bookshelf.DB.Model.extend({
         return this.forge({ id: id }).fetch();
     },
 
+    /**
+     * Return id for the model or just return the id if the id itself is
+     * passed.
+     *
+     * @static
+     * @method toId
+     * @param {Backbone.Model|Bookshelf.Model} model
+     * @return {Number}
+     */
+    toId: function(model) {
+        if (typeof model.get === "function") return model.get("id");
+        return model;
+
+    }
+
 
 });
 
