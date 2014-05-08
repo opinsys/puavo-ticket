@@ -48,6 +48,20 @@ var Base = Bookshelf.DB.Model.extend({
         }
 
     }
+}, {
+
+    /**
+     * Shortcut for fetching models by id
+     *
+     * @method fetchById
+     * @static
+     * @return {models.server.Base} subclass of models.server.Base
+     */
+    fetchById: function(id) {
+        return this.forge({ id: id }).fetch();
+    },
+
+
 });
 
 module.exports = Base;
