@@ -28,10 +28,13 @@ var Tag = Base.extend({
   initialize: function() {
       this.on("creating", function(model) {
             return Tag.collection()
-                .query("where", "tag", "=", model.get("tag"))
-                .query("where", "ticket_id", "=", model.get("ticket_id"))
                 .query(function(qb) {
-                    qb.whereNull("deleted_at");
+                    qb
+                    .whereNull("deleted_at")
+                    .andWhere({
+                        tag: model.get("tag"),
+                        ticket_id: model.get("ticket_id")
+                    });
                 })
                 .fetch()
                 .then(function(collection) {

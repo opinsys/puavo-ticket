@@ -34,17 +34,17 @@ describe("Tag model", function() {
 
     it("can be added for a ticket", function() {
         var self = this;
+        var ticket;
 
         return Ticket.fetchById(this.ticketId)
-            .then(function(ticket) {
-                return Promise.all(["footag", "othertag"].map(function(tag) {
-                        return ticket.addTag(tag, self.user);
-                    }))
+            .then(function(_ticket) {
+                ticket = _ticket;
+                return ticket.addTag("footag", self.user)
                     .then(function() {
-                        return ticket;
+                        return ticket.addTag("othertag", self.user);
                     });
             })
-            .then(function(ticket) {
+            .then(function() {
                 return ticket.fetchUpdates();
             })
             .then(function(updates) {
