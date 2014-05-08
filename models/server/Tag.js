@@ -46,18 +46,28 @@ var Tag = Base.extend({
       return this.get("tag").replace("^status:");
   },
 
+    /**
+    * Return Collection for clones of this tag
+    *
+    * @method clones
+    * @return {Bookshelf.Collection}
+    */
+    clones: function(){
+        var self = this;
+        return Tag.collection()
+            .query(function(qb) {
+                qb
+                .whereNull("deleted_at")
+                .andWhere({
+                    tag: self.get("tag"),
+                    ticket_id: self.get("ticket_id")
+                });
+            });
+    },
+
   initialize: function() {
       this.on("creating", function(tagModel) {
-            return Tag.collection()
-                .query(function(qb) {
-                    qb
-                    .whereNull("deleted_at")
-                    .andWhere({
-                        tag: tagModel.get("tag"),
-                        ticket_id: tagModel.get("ticket_id")
-                    });
-                })
-                .fetch()
+            return tagModel.clones().fetch()
                 .then(function(collection) {
                     if (collection.size() > 0) {
                         throw new Error("tag already exists");
