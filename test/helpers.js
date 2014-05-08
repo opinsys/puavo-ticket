@@ -172,7 +172,8 @@ function clearTestDatabase() {
         'related_users',
         'devices',
         'attachments',
-        'followers'
+        'followers',
+        'tags'
  ];
 
     return Promise.all(tables.map(function(table) {

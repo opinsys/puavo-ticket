@@ -100,6 +100,16 @@ exports.up = function(knex, Promise) {
                 table.dateTime("created");
                 table.dateTime("updated");
                 table.dateTime("deleted_at");
+            }),
+
+            knex.schema.createTable("tags", function(table) {
+                addOwnerRelation(table);
+                addTicketRelation(table);
+                table.string("tag");
+                table.increments("id");
+                table.dateTime("created");
+                table.dateTime("updated");
+                table.dateTime("deleted_at");
             })
         ]);
     });

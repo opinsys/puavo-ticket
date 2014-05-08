@@ -4,6 +4,7 @@ var Promise = require("bluebird");
 
 var Base = require("./Base");
 var Comment = require("./Comment");
+var Tag = require("./Tag");
 var Device = require("./Device");
 var RelatedUser = require("./RelatedUser");
 var Visibility = require("./Visibility");
@@ -75,6 +76,22 @@ var Ticket = Base.extend({
         return Comment.forge(comment).save();
     },
 
+    /**
+     * Add Tag to the ticket
+     *
+     * @method addTag
+     * @param {String} tag
+     * @param {models.server.User} user Creator of the tag
+     * @return {Bluebird.Promise}
+     */
+    addTag: function(tag, user) {
+        return Tag.forge({
+            tag: tag,
+            creator_user_id: user.get("id"),
+            ticket_id: this.get("id")
+        }).save();
+    },
+
 
     /**
      * Get all updates related to this ticket
@@ -89,7 +106,8 @@ var Ticket = Base.extend({
         var updatePromises = [
             RelatedUser,
             Comment,
-            Device
+            Device,
+            Tag
         ].map(function(klass) {
             return klass.collection()
                 .query("where", "ticket_id", "=", id)
