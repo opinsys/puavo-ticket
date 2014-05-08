@@ -99,7 +99,7 @@ describe("Tag model", function() {
     });
 
 
-    it("tag can be readded when the previous one is soft deleted", function() {
+    it("can be readded when the previous one is soft deleted", function() {
         var self = this;
         var ticket;
         return Ticket.fetchById(this.ticketId)
@@ -121,5 +121,49 @@ describe("Tag model", function() {
             });
 
     });
+
+    it("can be added as ticket status", function() {
+        var self = this;
+        var ticket;
+        return Ticket.fetchById(this.ticketId)
+            .then(function(_ticket) {
+                ticket = _ticket;
+                return ticket.setStatus("inprogress", self.user);
+            })
+            .then(function() {
+                return ticket.fetchUpdates();
+            })
+            .then(function(updates) {
+                assert(
+                    updates.findWhere({ tag: "status:inprogress" }),
+                    "has 'status:inprogress' tag"
+                );
+            });
+    });
+
+    it("removes previous status tag when adding new status", function() {
+        var self = this;
+        var ticket;
+        return Ticket.fetchById(this.ticketId)
+            .then(function(_ticket) {
+                ticket = _ticket;
+                return ticket.setStatus("done", self.user);
+            })
+            .then(function() {
+                return ticket.fetchUpdates();
+            })
+            .then(function(updates) {
+                assert(
+                    updates.findWhere({ tag: "status:done" }),
+                    "has 'status:done' tag"
+                );
+
+                var prevStatus = updates.findWhere({ tag: "status:inprogress" });
+
+                assert(prevStatus, "previous status is present");
+                assert(prevStatus.get("deleted_at"), "previous is soft deleted");
+            });
+    });
+
 
 });

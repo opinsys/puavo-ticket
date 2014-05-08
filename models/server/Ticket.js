@@ -95,6 +95,17 @@ var Ticket = Base.extend({
 
 
     /**
+     * Set status of the ticket
+     *
+     * @method setStatus
+     * @param {String} status
+     * @param {models.server.User} user Creator of the status
+     */
+    setStatus: function(status, user){
+        return this.addTag("status:" + status, user);
+    },
+
+    /**
      * Get all updates related to this ticket
      *
      * @method fetchUpdates
