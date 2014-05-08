@@ -89,7 +89,7 @@ function loginAsUser(userData){
  */
 function insertTestTickets(user) {
     var ticket = Ticket.forge({
-        user_id: user.get("id"),
+        creator_user_id: user.get("id"),
         title: "Test ticket",
         description: "Test ticket with comments, related users etc."
     });
@@ -97,7 +97,7 @@ function insertTestTickets(user) {
     return ticket.save()
         .then(function addComment() {
             return Comment.forge({
-                user_id: user.get("id"),
+                creator_user_id: user.get("id"),
                 ticket_id: ticket.id,
                 updated: new Date(),
                 comment: "First comment to test ticket"
@@ -106,7 +106,7 @@ function insertTestTickets(user) {
         })
         .then(function addRelatedUser() {
             return RelatedUser.forge({
-                user_id: user.get("id"),
+                creator_user_id: user.get("id"),
                 ticket_id: ticket.id,
                 external_id: 1,
                 updated: new Date(),
@@ -116,7 +116,7 @@ function insertTestTickets(user) {
         })
         .then(function addAnotherComment() {
             return Comment.forge({
-                user_id: user.get("id"),
+                creator_user_id: user.get("id"),
                 ticket_id: ticket.id,
                 updated: new Date(),
                 comment: "Second comment to test ticket"
@@ -125,14 +125,14 @@ function insertTestTickets(user) {
         })
         .then(function addAnotherTicket() {
             return Ticket.forge({
-                user_id: user.get("id"),
+                creator_user_id: user.get("id"),
                 title: "Other test ticket",
                 description: "Other test tickets"
             }).save();
         })
         .then(function addCommentToAnotherTicket(otherTicket) {
             return Comment.forge({
-                user_id: user.get("id"),
+                creator_user_id: user.get("id"),
                 ticket_id: otherTicket.id,
                 comment: "First comment to the other ticket"
             })
@@ -143,7 +143,7 @@ function insertTestTickets(user) {
         })
         .then(function addRelatedUserToAnotherTicket(otherTicket) {
             return RelatedUser.forge({
-                user_id: user.get("id"),
+                creator_user_id: user.get("id"),
                 ticket_id: otherTicket.id,
                 external_id: 2,
                 username: "testuser2"

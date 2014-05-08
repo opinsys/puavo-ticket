@@ -32,7 +32,7 @@ describe("RelatedUser model", function() {
     it("Instance can be created", function() {
         var self = this;
         return RelatedUser.forge({
-                user_id: self.user.get("id"),
+                creator_user_id: self.user.get("id"),
                 ticket_id: self.ticket.id,
                 external_id: 1,
                 username: "testuser"

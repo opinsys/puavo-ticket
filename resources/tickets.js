@@ -55,13 +55,13 @@ app.post("/api/tickets", function(req, res, next) {
     Ticket.forge({
         title: req.body.title,
         description: req.body.description,
-        user_id: req.user.id
+        creator_user_id: req.user.id
     })
     .save()
     .then(function(ticket) {
         return ticket.addVisibility({
                 entity: req.user.getPersonalVisibility(),
-                user_id: req.user.get("id")
+                creator_user_id: req.user.get("id")
             })
             .then(function() {
                 return ticket;

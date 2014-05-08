@@ -46,7 +46,7 @@ describe("/api/tickets/:id/followers", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.ticket_id, ticket.get("id"));
-                assert.equal(res.body.user_id, self.user.id);
+                assert.equal(res.body.creator_user_id, self.user.id);
             });
     });
 

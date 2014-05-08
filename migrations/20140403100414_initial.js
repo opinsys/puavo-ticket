@@ -4,7 +4,7 @@
  * Add owner relation
  */
 function addOwnerRelation(table) {
-    return table.integer("user_id")
+    return table.integer("creator_user_id")
         .notNullable()
         .references("id")
         .inTable("users");

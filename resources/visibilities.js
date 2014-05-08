@@ -23,7 +23,7 @@ app.post("/api/tickets/:id/visibilities", function(req, res, next) {
         return Promise.all(req.body.visibilities.map(function(visibility) {
             return ticket.addVisibility({
                 entity: visibility,
-                user_id: req.user.get("id")
+                creator_user_id: req.user.get("id")
             });
         }));
     })

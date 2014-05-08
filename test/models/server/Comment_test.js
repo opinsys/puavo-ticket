@@ -28,14 +28,14 @@ describe("Comment model", function() {
         return Ticket.forge({
                 title: "Computer does not work",
                 description: "It just doesn't",
-                user_id: self.user.get("id")
+                creator_user_id: self.user.get("id")
             })
             .save()
             .then(function(ticket) {
                 self.ticket = ticket;
                 return ticket.addComment({
                         comment: "foo",
-                        user_id: self.user.get("id")
+                        creator_user_id: self.user.get("id")
                     });
             })
             .then(function() {
