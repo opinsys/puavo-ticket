@@ -141,7 +141,7 @@ describe("Tag model", function() {
             });
     });
 
-    it("removes previous status tag when adding new status", function() {
+    it("soft deletes previous status tag when adding new status", function() {
         var self = this;
         var ticket;
         return Ticket.byId(this.ticketId).fetch()
