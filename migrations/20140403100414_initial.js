@@ -71,6 +71,7 @@ exports.up = function(knex, Promise) {
                 addTicketRelation(table);
                 table.increments("id");
                 table.string("hostname").notNullable();
+                table.string("external_id");
                 table.dateTime("created");
                 table.dateTime("updated");
             }),
