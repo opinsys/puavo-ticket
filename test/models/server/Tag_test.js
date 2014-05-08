@@ -22,10 +22,10 @@ describe("Tag model", function() {
                 self.user = user;
 
                 return Ticket.forge({
-                    creator_user_id: self.user.get("id"),
-                    title: "Tag test ticket",
-                    description: "This ticket has some tags"
-                }).save();
+                        creator_user_id: self.user.get("id"),
+                        title: "Tag test ticket",
+                        description: "This ticket has some tags"
+                    }).save();
             })
             .then(function(ticket) {
                 self.ticketId = ticket.get("id");
@@ -37,7 +37,9 @@ describe("Tag model", function() {
 
         return Ticket.fetchById(this.ticketId)
             .then(function(ticket) {
-                return ticket.addTag("footag", self.user)
+                return Promise.all(["footag", "othertag"].map(function(tag) {
+                        return ticket.addTag(tag, self.user);
+                    }))
                     .then(function() {
                         return ticket;
                     });
@@ -82,6 +84,20 @@ describe("Tag model", function() {
                 assert(catchExecuted, "catch was not executed");
             });
     });
+
+    it("other tickets can have the same tag", function() {
+        var self = this;
+        return Ticket.forge({
+                creator_user_id: self.user.get("id"),
+                title: "Other tag test ticket",
+                description: "This ticket also has some tags"
+            })
+            .save()
+            .then(function(ticket) {
+                return ticket.addTag("footag", self.user);
+            });
+    });
+
 
     it("tag can be readded when the previous one is soft deleted", function() {
         var self = this;

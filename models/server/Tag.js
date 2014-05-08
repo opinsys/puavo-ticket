@@ -29,6 +29,7 @@ var Tag = Base.extend({
       this.on("creating", function(model) {
             return Tag.collection()
                 .query("where", "tag", "=", model.get("tag"))
+                .query("where", "ticket_id", "=", model.get("ticket_id"))
                 .query(function(qb) {
                     qb.whereNull("deleted_at");
                 })
