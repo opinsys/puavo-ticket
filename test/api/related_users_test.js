@@ -39,17 +39,32 @@ describe("/api/tickets/:id/related_users", function() {
     it("can add related user to ticket", function() {
         var self = this;
         return this.agent
+            .nick("https://testing.opinsys.fi")
+            .get("/v3/users/joe.bloggs")
+            .reply(200, {
+                email: "joe.bloggs@test.com",
+                first_name: "Joe",
+                last_name: "Bloggs",
+                username: "joe.bloggs",
+                id: "1432"
+            })
+            .promise()
             .post("/api/tickets/" + ticket.get("id") + "/related_users")
             .send({
-                external_id: 1,
-                username: "testuser"
+                external_id: "1432"
             })
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.equal(res.body.username, "testuser");
+                //assert.equal(res.body.username, "testuser");
                 assert.equal(res.body.ticket_id, ticket.get("id"));
                 assert.equal(res.body.creator_user_id, self.user.id);
+            })
+            .then(function() {
+                return User.forge({ external_id: 400 }).fetch();
+            })
+            .then(function(related_user) {
+                assert.equal(related_user.get("username"), "matti.meikalainen");
             });
     });
 

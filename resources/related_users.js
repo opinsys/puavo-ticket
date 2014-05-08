@@ -24,6 +24,22 @@ app.post("/api/tickets/:id/related_users", function(req, res, next) {
     .fetch()
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
+    })
+    .then(function() {
+        return User.forge({ external_id: req.params.external_id }).fetch()
+    })
+    .then(function(user) {
+        if (!user) {
+            var options = {
+                hostname: 'www.google.com',
+                port: 80,
+                path: '/upload',
+                method: 'POST'
+            };
+        }
+            return User.forge({ external_id: req.params.external_id }).fetch()
+    })
+    .then(function(user) {
         RelatedUser.forge({
             external_id: req.body.external_id,
             username: req.body.username,

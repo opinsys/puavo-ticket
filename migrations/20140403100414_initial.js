@@ -60,8 +60,7 @@ exports.up = function(knex, Promise) {
                 addOwnerRelation(table);
                 addTicketRelation(table);
                 table.increments("id");
-                table.integer("external_id");
-                table.string("username");
+                table.integer("user_id");
                 table.dateTime("created");
                 table.dateTime("updated");
             }),
