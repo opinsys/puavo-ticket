@@ -47,6 +47,16 @@ var Base = Bookshelf.DB.Model.extend({
             set: function() { }
         }
 
+    },
+
+    /**
+     * Set timestamp to deleted_at
+     *
+     * @method softDelete
+     */
+    softDelete: function(){
+        this.set("deleted_at", new Date());
+        return this.save();
     }
 }, {
 

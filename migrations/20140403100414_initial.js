@@ -33,6 +33,7 @@ exports.up = function(knex, Promise) {
             table.string("description");
             table.dateTime("created");
             table.dateTime("updated");
+            table.dateTime("deleted_at");
         });
     })
     .then(function createTicketRelationTables() {
@@ -44,6 +45,7 @@ exports.up = function(knex, Promise) {
                 table.string("comment").notNullable();
                 table.dateTime("created");
                 table.dateTime("updated");
+                table.dateTime("deleted_at");
             }),
 
             knex.schema.createTable("visibilities", function(table) {
@@ -54,6 +56,7 @@ exports.up = function(knex, Promise) {
                 table.string("entity");
                 table.dateTime("created");
                 table.dateTime("updated");
+                table.dateTime("deleted_at");
             }),
 
             knex.schema.createTable("related_users", function(table) {
@@ -64,6 +67,7 @@ exports.up = function(knex, Promise) {
                 table.string("username");
                 table.dateTime("created");
                 table.dateTime("updated");
+                table.dateTime("deleted_at");
             }),
 
             knex.schema.createTable("devices", function(table) {
@@ -74,6 +78,7 @@ exports.up = function(knex, Promise) {
                 table.string("external_id");
                 table.dateTime("created");
                 table.dateTime("updated");
+                table.dateTime("deleted_at");
             }),
 
             knex.schema.createTable("attachments", function(table) {
@@ -85,6 +90,7 @@ exports.up = function(knex, Promise) {
                 table.string("filename");
                 table.dateTime("created");
                 table.dateTime("updated");
+                table.dateTime("deleted_at");
             }),
 
             knex.schema.createTable("followers", function(table) {
@@ -93,6 +99,7 @@ exports.up = function(knex, Promise) {
                 table.increments("id");
                 table.dateTime("created");
                 table.dateTime("updated");
+                table.dateTime("deleted_at");
             })
         ]);
     });
