@@ -36,7 +36,7 @@ describe("Tag model", function() {
         var self = this;
         var ticket;
 
-        return Ticket.fetchById(this.ticketId)
+        return Ticket.byId(this.ticketId).fetch()
             .then(function(_ticket) {
                 ticket = _ticket;
                 return ticket.addTag("footag", self.user)
@@ -72,7 +72,7 @@ describe("Tag model", function() {
         var self = this;
         var catchExecuted = false;
 
-        return Ticket.fetchById(this.ticketId)
+        return Ticket.byId(this.ticketId).fetch()
             .then(function(ticket) {
                 return ticket.addTag("footag", self.user);
             })
@@ -102,7 +102,7 @@ describe("Tag model", function() {
     it("can be readded when the previous one is soft deleted", function() {
         var self = this;
         var ticket;
-        return Ticket.fetchById(this.ticketId)
+        return Ticket.byId(this.ticketId).fetch()
             .then(function(_ticket) {
                 ticket = _ticket;
                 return _ticket.fetchUpdates();
@@ -125,7 +125,7 @@ describe("Tag model", function() {
     it("can be added as ticket status", function() {
         var self = this;
         var ticket;
-        return Ticket.fetchById(this.ticketId)
+        return Ticket.byId(this.ticketId).fetch()
             .then(function(_ticket) {
                 ticket = _ticket;
                 return ticket.setStatus("inprogress", self.user);
@@ -144,7 +144,7 @@ describe("Tag model", function() {
     it("removes previous status tag when adding new status", function() {
         var self = this;
         var ticket;
-        return Ticket.fetchById(this.ticketId)
+        return Ticket.byId(this.ticketId).fetch()
             .then(function(_ticket) {
                 ticket = _ticket;
                 return ticket.setStatus("done", self.user);

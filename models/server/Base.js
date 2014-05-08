@@ -61,14 +61,14 @@ var Base = Bookshelf.DB.Model.extend({
 }, {
 
     /**
-     * Shortcut for fetching models by id
+     * Shortcut for getting models by id
      *
      * @static
-     * @method fetchById
+     * @method byId
      * @return {models.server.Base} subclass of models.server.Base
      */
-    fetchById: function(id) {
-        return this.forge({ id: id }).fetch();
+    byId: function(id) {
+        return this.forge({ id: id });
     },
 
     /**
