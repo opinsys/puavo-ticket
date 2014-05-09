@@ -13,14 +13,14 @@ var Base = require("./Base");
  */
 var Follower = Base.extend({
 
-  tableName: "followers",
+    tableName: "followers",
 
-  defaults: function() {
-      return {
-          created_at: new Date(),
-          updated_at: new Date()
-      };
-  }
+    defaults: function() {
+        return {
+            created_at: new Date(),
+            updated_at: new Date()
+        };
+    }
 
 });
 
