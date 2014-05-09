@@ -85,13 +85,26 @@ var Base = Bookshelf.DB.Model.extend({
      *
      * @static
      * @method toId
-     * @param {Backbone.Model|Bookshelf.Model} model
+     * @param {Backbone.Model|Bookshelf.Model|mixed} model
      * @return {Number}
      */
     toId: function(model) {
-        if (typeof model.get === "function") return model.get("id");
-        return model;
+        return this.toAttr(model, "id");
+    },
 
+    /**
+     * Get attribute using get() if model is Model instance or just return the
+     * value
+     *
+     * @static
+     * @method toAttr
+     * @param {Backbone.Model|Bookshelf.Model|mixed} model
+     * @param {String} attr Attribute to get from the model
+     * @return {mixed}
+     */
+    toAttr: function(model, attr) {
+        if (typeof model.get === "function") return model.get(attr);
+        return model;
     }
 
 
