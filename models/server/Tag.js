@@ -66,7 +66,7 @@ var Tag = Base.extend({
     },
 
     initialize: function() {
-      this.on("creating", function(tagModel) {
+        this.on("creating", function(tagModel) {
             return tagModel.clones().fetch()
                 .then(function(collection) {
                     if (collection.size() > 0) {
@@ -81,11 +81,11 @@ var Tag = Base.extend({
                         );
                     }
                 });
-      });
+        });
     },
 
     createdBy: function() {
-      return this.belongsTo(User, "created_by");
+        return this.belongsTo(User, "created_by");
     }
 
 
