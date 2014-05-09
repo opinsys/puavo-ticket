@@ -25,8 +25,8 @@ var Ticket = Base.extend({
 
     defaults: function() {
         return {
-            created: new Date(),
-            updated: new Date()
+            created_at: new Date(),
+            updated_at: new Date()
         };
     },
 
@@ -134,10 +134,10 @@ var Ticket = Base.extend({
                 }));
 
                 updates.sort(function(a,b) {
-                    if ( a.get("updated") > b.get("updated") ) {
+                    if ( a.get("updated_at") > b.get("updated_at") ) {
                         return 1;
                     }
-                    if ( a.get("updated") < b.get("updated") ) {
+                    if ( a.get("updated_at") < b.get("updated_at") ) {
                         return -1;
                     }
 

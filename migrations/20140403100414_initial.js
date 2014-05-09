@@ -1,14 +1,20 @@
 "use strict";
 
-/**
- * Add owner relation
- */
-function addOwnerRelation(table) {
-    return table.integer("created_by")
+function addLifecycleColumns(table) {
+    table.integer("created_by")
         .notNullable()
         .references("id")
         .inTable("users");
+
+    table.integer("deleted_by")
+        .references("id")
+        .inTable("users");
+
+    table.dateTime("created_at");
+    table.dateTime("updated_at");
+    table.dateTime("deleted_at");
 }
+
 
 function addTicketRelation(table) {
     return table.integer("ticket_id")
@@ -22,95 +28,78 @@ exports.up = function(knex, Promise) {
         table.increments("id");
         table.string("external_id").notNullable().unique();
         table.json("external_data");
-        table.dateTime("created");
-        table.dateTime("updated");
+        table.dateTime("created_at");
+        table.dateTime("updated_at");
     })
     .then(function createTicketsTable() {
         return knex.schema.createTable("tickets", function(table) {
-            addOwnerRelation(table);
+            addLifecycleColumns(table);
             table.increments("id");
             table.string("title");
             table.string("description");
-            table.dateTime("created");
-            table.dateTime("updated");
-            table.dateTime("deleted_at");
         });
     })
     .then(function createTicketRelationTables() {
         return Promise.all([
             knex.schema.createTable("comments", function(table) {
-                addOwnerRelation(table);
+                addLifecycleColumns(table);
                 addTicketRelation(table);
+
                 table.increments("id");
                 table.string("comment").notNullable();
-                table.dateTime("created");
-                table.dateTime("updated");
-                table.dateTime("deleted_at");
             }),
 
             knex.schema.createTable("visibilities", function(table) {
-                addOwnerRelation(table);
+                addLifecycleColumns(table);
                 addTicketRelation(table);
+
                 table.increments("id");
                 table.string("comment");
                 table.string("entity");
-                table.dateTime("created");
-                table.dateTime("updated");
-                table.dateTime("deleted_at");
             }),
 
             knex.schema.createTable("related_users", function(table) {
-                addOwnerRelation(table);
+                addLifecycleColumns(table);
                 addTicketRelation(table);
+
                 table.increments("id");
                 table.integer("external_id");
                 table.string("username");
-                table.dateTime("created");
-                table.dateTime("updated");
-                table.dateTime("deleted_at");
             }),
 
             knex.schema.createTable("devices", function(table) {
-                addOwnerRelation(table);
+                addLifecycleColumns(table);
                 addTicketRelation(table);
+
                 table.increments("id");
                 table.string("hostname").notNullable();
                 table.string("external_id");
-                table.dateTime("created");
-                table.dateTime("updated");
-                table.dateTime("deleted_at");
             }),
 
             knex.schema.createTable("attachments", function(table) {
-                addOwnerRelation(table);
+                addLifecycleColumns(table);
                 addTicketRelation(table);
+
                 table.increments("id");
                 table.binary("data").notNullable();
                 table.string("data_type");
                 table.string("filename");
-                table.dateTime("created");
-                table.dateTime("updated");
-                table.dateTime("deleted_at");
             }),
 
             knex.schema.createTable("followers", function(table) {
-                addOwnerRelation(table);
+                addLifecycleColumns(table);
                 addTicketRelation(table);
+
+                // TODO: add user relation
                 table.increments("id");
-                table.dateTime("created");
-                table.dateTime("updated");
-                table.dateTime("deleted_at");
             }),
 
             knex.schema.createTable("tags", function(table) {
-                addOwnerRelation(table);
+                addLifecycleColumns(table);
                 addTicketRelation(table);
+
                 table.string("tag");
                 table.increments("id");
-                table.dateTime("created");
-                table.dateTime("updated");
-                table.dateTime("deleted_at");
-                addDeletedBy(table);
             })
         ]);
     });
