@@ -75,7 +75,10 @@ var Tag = Base.extend({
                 })
                 .then(function() {
                     if (tagModel.isStatusTag()) {
-                        return Tag.softDeleteStatusTagsFor(tagModel.get("ticket_id"));
+                        return Tag.softDeleteStatusTagsFor(
+                            tagModel.get("ticket_id"),
+                            tagModel.get("created_by")
+                        );
                     }
                 });
       });
@@ -94,12 +97,13 @@ var Tag = Base.extend({
      * @static
      * @method softDeleteStatusTagsFor
      * @param {models.server.Ticket|Number} ticket Model object or table id
+     * @param {models.server.User|Number} byUser The user who deleted the tags
      * @return {Bluebird.Promise}
      */
-    softDeleteStatusTagsFor: function(ticket){
+    softDeleteStatusTagsFor: function(ticket, byUser){
         return Tag.statusTagsFor(ticket).fetch()
             .then(function(coll) {
-                return coll.invokeThen("softDelete");
+                return coll.invokeThen("softDelete", byUser);
             });
     },
 

@@ -112,7 +112,7 @@ describe("Tag model", function() {
                     updates.forEach(function(update) {
                         if (update.get("type") !== "tags") return;
                         if (update.get("tag") !== "footag") return;
-                        resolve(update.softDelete());
+                        resolve(update.softDelete(self.user));
                     });
                 });
             })
@@ -162,6 +162,11 @@ describe("Tag model", function() {
 
                 assert(prevStatus, "previous status is present");
                 assert(prevStatus.get("deleted_at"), "previous is soft deleted");
+                assert(prevStatus.get("deleted_by"), "deleted_by id is set");
+                assert.equal(
+                    prevStatus.get("deleted_by"),
+                    self.user.get("id")
+                );
 
                 var otherTag = updates.findWhere({ tag: "othertag" });
                 assert(otherTag, "othertag is available");

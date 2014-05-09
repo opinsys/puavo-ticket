@@ -53,9 +53,17 @@ var Base = Bookshelf.DB.Model.extend({
      * Set timestamp to deleted_at
      *
      * @method softDelete
+     * @param {models.server.User|Number} byUser The user who deleted the model
+     * @return {Bluebird.Promise}
      */
-    softDelete: function(){
-        this.set("deleted_at", new Date());
+    softDelete: function(byUser){
+        if (!byUser) {
+            throw new Error("softDelete requires a byUser argument");
+        }
+        this.set({
+            deleted_by: Base.toId(byUser),
+            deleted_at: new Date()
+        });
         return this.save();
     }
 }, {
