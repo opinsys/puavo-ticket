@@ -276,6 +276,7 @@ var Ticket = Base.extend({
 /**
  * Fetch tickets by give visibilities.
  *
+ * @static
  * @method fetchByVisibility
  * @param {Array} visibilities Array of visibility strings. Strings are in the
  * form of `organisation|school|user:<entity id>`.
