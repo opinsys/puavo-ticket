@@ -22,10 +22,10 @@ app.post("/api/tickets/:id/devices", function(req, res, next) {
     .fetch()
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
-        ticket.addDevice(req.body.hostname, req.user)
-        .then(function(device) {
-            res.json(device.toJSON());
-        });
+        return ticket.addDevice(req.body.hostname, req.user);
+    })
+    .then(function(device) {
+        res.json(device.toJSON());
     })
     .catch(next);
 });
