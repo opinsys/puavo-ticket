@@ -29,7 +29,7 @@ describe("Follower model", function() {
             });
     });
 
-    it("Instance can be created", function() {
+    it("can be instantiated", function() {
         var self = this;
 
         return Follower.forge({
