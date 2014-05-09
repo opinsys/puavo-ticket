@@ -88,7 +88,7 @@ var Ticket = Base.extend({
     addTag: function(tag, user) {
         return Tag.forge({
             tag: tag,
-            creator_user_id: Base.toId(user),
+            created_by: Base.toId(user),
             ticket_id: this.get("id")
         }).save();
     },

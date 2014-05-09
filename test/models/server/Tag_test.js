@@ -22,7 +22,7 @@ describe("Tag model", function() {
                 self.user = user;
 
                 return Ticket.forge({
-                        creator_user_id: self.user.get("id"),
+                        created_by: self.user.get("id"),
                         title: "Tag test ticket",
                         description: "This ticket has some tags"
                     }).save();
@@ -61,7 +61,7 @@ describe("Tag model", function() {
                 var tag = tags[0];
                 assert.equal(
                     self.user.get("id"),
-                    tag.get("creator_user_id"),
+                    tag.get("created_by"),
                     "has correct creator"
                 );
 
@@ -88,7 +88,7 @@ describe("Tag model", function() {
     it("other tickets can have the same tag", function() {
         var self = this;
         return Ticket.forge({
-                creator_user_id: self.user.get("id"),
+                created_by: self.user.get("id"),
                 title: "Other tag test ticket",
                 description: "This ticket also has some tags"
             })

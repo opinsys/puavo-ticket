@@ -26,7 +26,7 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
         Comment.forge({
             comment: req.body.comment,
             ticket_id: req.params.id,
-            creator_user_id: req.user.id
+            created_by: req.user.id
         })
         .save()
         .then(function(comment) {

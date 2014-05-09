@@ -21,7 +21,7 @@ app.post("/api/tickets/:id/followers", function(req, res, next) {
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
         return ticket.addFollower({
-                creator_user_id: req.user.id
+                created_by: req.user.id
             })
             .then(function(follower) {
                 res.json(follower.toJSON());

@@ -32,7 +32,7 @@ describe("Ticket model", function() {
         return Ticket.forge({
                 title: title,
                 description: "It just doesn't",
-                creator_user_id: self.user.id
+                created_by: self.user.id
             })
             .save()
             .then(function(ticket) {
@@ -49,13 +49,13 @@ describe("Ticket model", function() {
         var ticketId = Ticket.forge({
             title: "computer does not work",
             description: "It just doesn't",
-            creator_user_id: self.user.id
+            created_by: self.user.id
         })
         .save()
         .then(function(ticket) {
             return ticket.addComment({
                     comment: "foo",
-                    creator_user_id: self.user.id
+                    created_by: self.user.id
                 })
                 .then(function() {
                     return ticket.get("id");
@@ -104,21 +104,21 @@ describe("Ticket model", function() {
             var withVisibility = Ticket.forge({
                 title: "With visibility",
                 description: "desc",
-                creator_user_id: self.user.id
+                created_by: self.user.id
             })
             .save()
             .then(function(ticket) {
                 return ticket.addVisibility({
                     entity: "school:1",
                     comment: "This ticket affects whole school",
-                    creator_user_id: self.user.id
+                    created_by: self.user.id
                 });
             });
 
             var otherTickets = [
-                { title: "foo1", description: "bar", creator_user_id: self.user.id },
-                { title: "foo2", description: "bar", creator_user_id: self.user.id },
-                { title: "foo2", description: "bar", creator_user_id: self.user.id }
+                { title: "foo1", description: "bar", created_by: self.user.id },
+                { title: "foo2", description: "bar", created_by: self.user.id },
+                { title: "foo2", description: "bar", created_by: self.user.id }
             ].map(function(data) {
                 return Ticket
                     .forge(data)
@@ -127,7 +127,7 @@ describe("Ticket model", function() {
                         return ticket.addVisibility({
                             entity: "bad",
                             comment: "for the other ticket",
-                            creator_user_id: self.user.id
+                            created_by: self.user.id
                         });
                     });
             });

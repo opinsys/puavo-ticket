@@ -37,7 +37,7 @@ describe("/api/tickets", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.title, "Computer does not work");
-                assert.equal(res.body.creator_user_id, self.user.get("id"));
+                assert.equal(res.body.created_by, self.user.get("id"));
                 assert(res.body.id, "has id");
                 self.ticket = res.body;
             });

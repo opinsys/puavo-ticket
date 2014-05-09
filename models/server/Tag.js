@@ -82,7 +82,7 @@ var Tag = Base.extend({
     },
 
     createdBy: function() {
-      return this.belongsTo(User, "creator_user_id");
+      return this.belongsTo(User, "created_by");
     }
 
 
