@@ -16,35 +16,35 @@ var User = require("./User");
  */
 var Tag = Base.extend({
 
-  tableName: "tags",
+    tableName: "tags",
 
-  defaults: function() {
+    defaults: function() {
       return {
           created: new Date(),
           updated: new Date()
       };
-  },
+    },
 
-  /**
-   * Returns true if the tag is a status tag
-   *
-   * @method isStatusTag
-   * @return {Boolean}
-   */
-  isStatusTag: function() {
+    /**
+    * Returns true if the tag is a status tag
+    *
+    * @method isStatusTag
+    * @return {Boolean}
+    */
+    isStatusTag: function() {
       return this.get("tag").indexOf("status:") === 0;
-  },
+    },
 
-  /**
-   * Get status part of the tag if the tag is status tag
-   *
-   * @method getStatus
-   * @return {String}
-   */
-  getStatus: function() {
+    /**
+    * Get status part of the tag if the tag is status tag
+    *
+    * @method getStatus
+    * @return {String}
+    */
+    getStatus: function() {
       if (!this.isStatusTag()) throw new Error("not a status tag");
       return this.get("tag").replace("^status:");
-  },
+    },
 
     /**
     * Return Collection for clones of this tag
@@ -65,7 +65,7 @@ var Tag = Base.extend({
             });
     },
 
-  initialize: function() {
+    initialize: function() {
       this.on("creating", function(tagModel) {
             return tagModel.clones().fetch()
                 .then(function(collection) {
@@ -79,11 +79,11 @@ var Tag = Base.extend({
                     }
                 });
       });
-  },
+    },
 
-  createdBy: function() {
+    createdBy: function() {
       return this.belongsTo(User, "creator_user_id");
-  }
+    }
 
 
 }, {
