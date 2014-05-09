@@ -67,6 +67,17 @@ exports.up = function(knex, Promise) {
                 table.string("username");
             }),
 
+            knex.schema.createTable("handlers", function(table) {
+                addLifecycleColumns(table);
+                addTicketRelation(table);
+
+                table.increments("id");
+                table.integer("handler")
+                    .notNullable()
+                    .references("id")
+                    .inTable("users");
+            }),
+
             knex.schema.createTable("devices", function(table) {
                 addLifecycleColumns(table);
                 addTicketRelation(table);
@@ -114,7 +125,8 @@ exports.down = function(knex, Promise) {
         knex.schema.dropTableIfExists("devices"),
         knex.schema.dropTableIfExists("attachments"),
         knex.schema.dropTableIfExists("followers"),
-        knex.schema.dropTableIfExists("tags")
+        knex.schema.dropTableIfExists("tags"),
+        knex.schema.dropTableIfExists("handlers")
     ])
     .then(function() {
         return knex.schema.dropTableIfExists("tickets");

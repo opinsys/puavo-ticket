@@ -11,6 +11,7 @@ var RelatedUser = require("./RelatedUser");
 var Visibility = require("./Visibility");
 var Attachment = require("./Attachment");
 var Follower = require("./Follower");
+var Handler = require("./Handler");
 
 
 /**
@@ -126,6 +127,10 @@ var Ticket = Base.extend({
                 .fetch({ withRelated: "createdBy" });
         });
 
+        updatePromises.push(this.handlers().fetch({
+            withRelated: ["createdBy", "handler"]
+        }));
+
         return Promise.all(updatePromises)
             .then(function(updates) {
 
@@ -171,7 +176,33 @@ var Ticket = Base.extend({
         follower = _.clone(follower);
         follower.ticket_id = this.get("id");
         return Follower.forge(follower).save();
-    }
+    },
+
+    /**
+     * Add handler to a ticket
+     *
+     * @method addHandler
+     * @param {models.server.User|Number} handler Use model or id of handler
+     * @param {models.server.User|Number} addedBy Use model or id of user who adds the handler
+     * @return {Bluebird.Promise}
+     */
+    addHandler: function(handler, addedBy) {
+        return Handler.forge({
+                ticket_id: this.get("id"),
+                created_by: Base.toId(addedBy),
+                handler: Base.toId(handler)
+            })
+            .save();
+    },
+
+    /**
+     *
+     * @method handlers
+     * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket handlers
+     */
+    handlers: function() {
+        return this.hasMany(Handler, "ticket_id");
+    },
 
 });
 
