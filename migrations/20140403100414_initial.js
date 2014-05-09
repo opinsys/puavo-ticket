@@ -110,20 +110,27 @@ exports.up = function(knex, Promise) {
                 table.dateTime("created");
                 table.dateTime("updated");
                 table.dateTime("deleted_at");
+                addDeletedBy(table);
             })
         ]);
     });
 };
 
 exports.down = function(knex, Promise) {
+
     return Promise.all([
-        knex.schema.dropTable("tickets"),
-        knex.schema.dropTable("comments"),
-        knex.schema.dropTable("visibilities"),
-        knex.schema.dropTable("users"),
-        knex.schema.dropTable("related_users"),
-        knex.schema.dropTable("devices"),
-        knex.schema.dropTable("attachments"),
-        knex.schema.dropTable("followers")
-    ]);
+        knex.schema.dropTableIfExists("comments"),
+        knex.schema.dropTableIfExists("visibilities"),
+        knex.schema.dropTableIfExists("related_users"),
+        knex.schema.dropTableIfExists("devices"),
+        knex.schema.dropTableIfExists("attachments"),
+        knex.schema.dropTableIfExists("followers"),
+        knex.schema.dropTableIfExists("tags")
+    ])
+    .then(function() {
+        return knex.schema.dropTableIfExists("tickets");
+    })
+    .then(function() {
+        return knex.schema.dropTableIfExists("users");
+    });
 };
