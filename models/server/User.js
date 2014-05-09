@@ -41,8 +41,8 @@ var User = Base.extend({
             .then(function(user) {
                 if (!user) {
                     return User.forge({
-                        external_id: token.id,
-                        external_data: token
+                            external_id: token.id,
+                            external_data: token
                         }).save();
                 }
                 else {
