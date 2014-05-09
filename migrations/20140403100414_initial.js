@@ -63,8 +63,10 @@ exports.up = function(knex, Promise) {
                 addTicketRelation(table);
 
                 table.increments("id");
-                table.integer("external_id");
-                table.string("username");
+                table.integer("user")
+                    .notNullable()
+                    .references("id")
+                    .inTable("users");
             }),
 
             knex.schema.createTable("handlers", function(table) {

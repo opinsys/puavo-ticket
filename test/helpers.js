@@ -28,7 +28,6 @@ var app = require("../server");
 
 var Ticket = require("../models/server/Ticket");
 var Comment = require("../models/server/Comment");
-var RelatedUser = require("../models/server/RelatedUser");
 var User = require("../models/server/User");
 
 
@@ -104,16 +103,6 @@ function insertTestTickets(user) {
             })
             .save();
         })
-        .then(function addRelatedUser() {
-            return RelatedUser.forge({
-                created_by: user.get("id"),
-                ticket_id: ticket.id,
-                external_id: 1,
-                updated_at: new Date(),
-                username: "testuser1"
-            })
-            .save();
-        })
         .then(function addAnotherComment() {
             return Comment.forge({
                 created_by: user.get("id"),
@@ -135,18 +124,6 @@ function insertTestTickets(user) {
                 created_by: user.get("id"),
                 ticket_id: otherTicket.id,
                 comment: "First comment to the other ticket"
-            })
-            .save()
-            .then(function() {
-                return otherTicket;
-            });
-        })
-        .then(function addRelatedUserToAnotherTicket(otherTicket) {
-            return RelatedUser.forge({
-                created_by: user.get("id"),
-                ticket_id: otherTicket.id,
-                external_id: 2,
-                username: "testuser2"
             })
             .save()
             .then(function() {

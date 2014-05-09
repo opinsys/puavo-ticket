@@ -17,23 +17,17 @@ var app = express.Router();
  * @apiGroup related_users
  *
  * @apiParam {String} username
- * @apiParam {Integer} external_id
+ * @apiParam {Integer} id
  */
 app.post("/api/tickets/:id/related_users", function(req, res, next) {
     Ticket.forge({ id: req.params.id })
     .fetch()
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
-        RelatedUser.forge({
-            external_id: req.body.external_id,
-            username: req.body.username,
-            ticket_id: req.params.id,
-            created_by: req.user.id
-        })
-        .save()
-        .then(function(related_user) {
-            res.json(related_user.toJSON());
-        });
+        return ticket.addRelatedUser(req.body.id, req.user);
+    })
+    .then(function(user) {
+        res.json(user.toJSON());
     })
     .catch(next);
 });

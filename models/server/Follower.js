@@ -13,7 +13,7 @@ var Base = require("./Base");
  */
 var Follower = Base.extend({
 
-    tableName: "followers",
+	tableName: "followers",
 
     defaults: function() {
         return {
@@ -23,5 +23,6 @@ var Follower = Base.extend({
     }
 
 });
+
 
 module.exports = Follower;

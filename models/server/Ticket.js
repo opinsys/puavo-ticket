@@ -6,12 +6,12 @@ var Bookshelf = require("bookshelf");
 var Base = require("./Base");
 var Comment = require("./Comment");
 var Tag = require("./Tag");
-var Device = require("./Device");
 var RelatedUser = require("./RelatedUser");
 var Visibility = require("./Visibility");
 var Attachment = require("./Attachment");
 var Follower = require("./Follower");
 var Handler = require("./Handler");
+var Device = require("./Device");
 
 
 /**
@@ -34,7 +34,7 @@ var Ticket = Base.extend({
     /**
      *
      * @method comments
-     * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket models
+     * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket comment models
      */
     comments: function() {
         return this.hasMany(Comment, "ticket_id");
@@ -94,6 +94,17 @@ var Ticket = Base.extend({
         }).save();
     },
 
+    /**
+     * Get all tags for this ticket
+     *
+     * @method tags
+     * @return {Bookshelf.Collection} Bookshelf.Collection of tag models
+     * @method tags
+     */
+    tags: function(){
+        return this.hasMany(Tag, "ticket_id");
+    },
+
 
     /**
      * Set status of the ticket
@@ -106,54 +117,6 @@ var Ticket = Base.extend({
         return this.addTag("status:" + status, user);
     },
 
-    /**
-     * Get all updates related to this ticket
-     *
-     * @method fetchUpdates
-     * @return {Bluebird.Promise} Bookshelf Collection of Comment|Device|RelatedUser models
-     * wrapped in a promise
-     */
-    fetchUpdates: function() {
-        var id = this.get("id");
-
-        var updatePromises = [
-            RelatedUser,
-            Comment,
-            Device,
-            Tag
-        ].map(function(klass) {
-            return klass.collection()
-                .query("where", "ticket_id", "=", id)
-                .fetch({ withRelated: "createdBy" });
-        });
-
-        updatePromises.push(this.handlers().fetch({
-            withRelated: ["createdBy", "handler"]
-        }));
-
-        return Promise.all(updatePromises)
-            .then(function(updates) {
-
-                updates = _.flatten(updates.map(function(coll) {
-                    return coll.toArray();
-                }));
-
-                updates.sort(function(a,b) {
-                    if ( a.get("updated_at") > b.get("updated_at") ) {
-                        return 1;
-                    }
-                    if ( a.get("updated_at") < b.get("updated_at") ) {
-                        return -1;
-                    }
-
-                    return 0;
-
-                });
-
-                return new Bookshelf.DB.Collection(updates);
-            });
-
-    },
 
     /**
      * Get all attachments to this ticket
@@ -182,8 +145,8 @@ var Ticket = Base.extend({
      * Add handler to a ticket
      *
      * @method addHandler
-     * @param {models.server.User|Number} handler Use model or id of handler
-     * @param {models.server.User|Number} addedBy Use model or id of user who adds the handler
+     * @param {models.server.User|Number} handler User model or id of handler
+     * @param {models.server.User|Number} addedBy User model or id of user who adds the handler
      * @return {Bluebird.Promise}
      */
     addHandler: function(handler, addedBy) {
@@ -202,6 +165,110 @@ var Ticket = Base.extend({
      */
     handlers: function() {
         return this.hasMany(Handler, "ticket_id");
+    },
+
+    /**
+     * Add device relation
+     *
+     * @method addDevice
+     * @param {models.server.Device|Number} device Device model or external id of the device
+     * @param {models.server.User|Number} addedBy User model or id of user who adds the device
+     *
+     */
+    addDevice: function(device, addedBy){
+        return Device.forge({
+                ticket_id: this.get("id"),
+                created_by: Base.toId(addedBy),
+                hostname: Base.toAttr(device, "hostname")
+            })
+            .save();
+    },
+
+    /**
+     *
+     * @method devices
+     * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket devices
+     */
+    devices: function() {
+        return this.hasMany(Device, "ticket_id");
+    },
+
+    /**
+     * Add related user to the ticket
+     *
+     * @method addRelatedUser
+     * @return {models.server.RelatedUser}
+     */
+    addRelatedUser: function(user, addedBy){
+        return RelatedUser.forge({
+            ticket_id: this.get("id"),
+            created_by: Base.toId(addedBy),
+            user: Base.toId(user)
+        }).save();
+    },
+
+    /**
+     *
+     * @method relatedUsers
+     * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket related users
+     */
+    relatedUsers: function() {
+        return this.hasMany(RelatedUser, "ticket_id");
+    },
+
+    /**
+     * Get all updates related to this ticket
+     *
+     * @method fetchUpdates
+     * @return {Bluebird.Promise} Bookshelf Collection of Comment|Device|RelatedUser models
+     * wrapped in a promise
+     */
+    fetchUpdates: function() {
+        var self = this;
+
+        var updatePromises = [
+            "comments",
+            "devices",
+            "tags",
+        ].map(function(method) {
+            return self[method]().fetch({
+                withRelated: "createdBy"
+            });
+        });
+
+        updatePromises.push(this.handlers().fetch({
+            withRelated: ["createdBy", "handler"]
+        }));
+
+        updatePromises.push(this.relatedUsers().fetch({
+            withRelated: ["createdBy", "user"]
+        }));
+
+        return Promise.all(updatePromises)
+            .then(function(updates) {
+
+                updates = _.flatten(updates.map(function(coll) {
+                    // Convert to array so the resulting array of arrays can be
+                    // flattened to a flat array
+                    return coll.toArray();
+                }));
+
+                updates.sort(function(a,b) {
+                    if ( a.get("updated_at") > b.get("updated_at") ) {
+                        return 1;
+                    }
+                    if ( a.get("updated_at") < b.get("updated_at") ) {
+                        return -1;
+                    }
+
+                    return 0;
+
+                });
+
+                // convert back to Bookshelf Collection
+                return new Bookshelf.DB.Collection(updates);
+            });
+
     },
 
 });

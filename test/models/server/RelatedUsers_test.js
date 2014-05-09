@@ -2,7 +2,6 @@
 
 var helpers = require("../../helpers");
 
-var RelatedUser = require("../../../models/server/RelatedUser");
 var assert = require("assert");
 
 describe("RelatedUser model", function() {
@@ -31,18 +30,12 @@ describe("RelatedUser model", function() {
 
     it("Instance can be created", function() {
         var self = this;
-        return RelatedUser.forge({
-                created_by: self.user.get("id"),
-                ticket_id: self.ticket.id,
-                external_id: 1,
-                username: "testuser"
-            })
-            .save()
+        return self.ticket.addRelatedUser(self.user, self.user)
             .then(function(user) {
-                return RelatedUser.forge({ id: user.get("id") }).fetch();
+                return self.ticket.relatedUsers().fetch();
             })
-            .then(function(user) {
-                assert.equal("testuser", user.get("username"));
+            .then(function(relatedUsers) {
+                assert.equal(self.user.get("id"), relatedUsers.toJSON()[0].user);
             });
 
 

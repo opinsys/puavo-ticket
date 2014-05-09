@@ -22,9 +22,14 @@ var RelatedUsers = Base.extend({
         };
     },
 
-    createdBy: function() {
+    user: function() {
         return this.belongsTo(User, "user");
+    },
+
+    createdBy: function() {
+        return this.belongsTo(User, "created_by");
     }
+
 });
 
 module.exports = RelatedUsers;

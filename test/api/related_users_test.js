@@ -1,12 +1,10 @@
 "use strict";
-var helpers = require("../helpers");
 
 var assert = require("assert");
 
-describe("/api/tickets/:id/related_users", function() {
+var helpers = require("../helpers");
 
-    var ticket = null;
-    var otherTicket = null;
+describe("/api/tickets/:id/related_users", function() {
 
     before(function() {
         var self = this;
@@ -26,8 +24,7 @@ describe("/api/tickets/:id/related_users", function() {
                 return helpers.insertTestTickets(user);
             })
             .then(function(tickets) {
-                ticket = tickets.ticket;
-                otherTicket = tickets.otherTicket;
+                self.ticket = tickets.ticket;
             });
     });
 
@@ -35,32 +32,35 @@ describe("/api/tickets/:id/related_users", function() {
         return this.agent.logout();
     });
 
-
-    it("can add related user to ticket", function() {
+    it("can add related user to a ticket", function() {
         var self = this;
+
         return this.agent
-            .post("/api/tickets/" + ticket.get("id") + "/related_users")
-            .send({
-                external_id: 1,
-                username: "testuser"
-            })
+            .post("/api/tickets/" + self.ticket.get("id") + "/related_users")
+            .send({ id: self.user.id })
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200);
-                assert.equal(res.body.username, "testuser");
-                assert.equal(res.body.ticket_id, ticket.get("id"));
-                assert.equal(res.body.created_by, self.user.id);
+                assert.equal(200, res.status);
+                assert.equal(self.user.get("id"), res.body.user);
             });
     });
 
-    it("can get the related users by ticket", function() {
+    it("related user is visible in the updates api", function() {
+        var self = this;
+
         return this.agent
-            .get("/api/tickets/" + ticket.get("id") + "/related_users")
+            .get("/api/tickets/" + self.ticket.get("id") + "/updates")
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200);
-                assert.equal(2, res.body.length);
-                assert.equal("testuser", res.body[1].username);
+                assert.equal(200, res.status);
+
+                var relatedUsers = res.body.filter(function(update) {
+                    return update.type === "related_users";
+                });
+
+                assert.equal(1, relatedUsers.length);
+                assert.equal("olli.opettaja", relatedUsers[0].user.external_data.username);
             });
     });
+
 });

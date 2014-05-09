@@ -6,7 +6,6 @@
 var express = require("express");
 
 var Ticket = require("../models/server/Ticket");
-var Device = require("../models/server/Device");
 
 var app = express.Router();
 
@@ -23,12 +22,7 @@ app.post("/api/tickets/:id/devices", function(req, res, next) {
     .fetch()
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
-        Device.forge({
-            hostname: req.body.hostname,
-            ticket_id: req.params.id,
-            created_by: req.user.id
-        })
-        .save()
+        ticket.addDevice(req.body.hostname, req.user)
         .then(function(device) {
             res.json(device.toJSON());
         });
