@@ -68,12 +68,12 @@ var Tag = Base.extend({
     initialize: function() {
         this.on("creating", function(tagModel) {
             return tagModel.clones().fetch()
-                .then(function(collection) {
+                .then(function validateTagUniqueness(collection) {
                     if (collection.size() > 0) {
                         throw new Error("tag already exists");
                     }
                 })
-                .then(function() {
+                .then(function deletePreviousStatustags() {
                     if (tagModel.isStatusTag()) {
                         return Tag.softDeleteStatusTagsFor(
                             tagModel.get("ticket_id"),
