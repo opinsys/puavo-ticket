@@ -94,7 +94,17 @@ describe("Tag model", function() {
             })
             .save()
             .then(function(ticket) {
-                return ticket.addTag("footag", self.user);
+                return ticket.addTag("footag", self.user)
+                    .then(function() {
+                        return ticket.tags().fetch();
+                    });
+            })
+            .then(function(tags) {
+                var tagSrings = tags.map(function(m) {
+                    return m.get("tag");
+                });
+
+                assert(tagSrings.indexOf("footag") !== -1);
             });
     });
 
