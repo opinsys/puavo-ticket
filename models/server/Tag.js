@@ -8,7 +8,10 @@ var Base = require("./Base");
 var User = require("./User");
 
 /**
- * Ticket tags. Also used as for the ticket status
+ * Ticket tags.
+ *
+ * Tags with a `status:` are handled as a special status tags.
+ * Only one tag with the prefix can be active at once.
  *
  * @namespace models.server
  * @extends models.server.Base
