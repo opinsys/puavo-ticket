@@ -134,10 +134,14 @@ describe("Tag model", function() {
                 return ticket.fetchUpdates();
             })
             .then(function(updates) {
-                assert(
-                    updates.findWhere({ tag: "status:inprogress" }),
-                    "has 'status:inprogress' tag"
+                var status = updates.findWhere({ tag: "status:inprogress" });
+                assert(status, "has 'status:inprogress' tag");
+                assert.equal(
+                    status.getStatus(),
+                    "inprogress",
+                    "can get the plain status using #getStatus()"
                 );
+
             });
     });
 

@@ -46,7 +46,7 @@ var Tag = Base.extend({
     */
     getStatus: function() {
       if (!this.isStatusTag()) throw new Error("not a status tag");
-      return this.get("tag").replace("^status:");
+      return this.get("tag").replace(/^status:/, "");
     },
 
     /**
