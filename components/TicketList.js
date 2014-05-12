@@ -42,7 +42,7 @@ var TicketList = React.createClass({
                         return (
                             <li key={ticket.get("id")}>
                                 <LinkTicket id={ticket.get("id")}>
-                                {ticket.get("title")}
+                                {ticket.get("title")} ({ticket.get("status")})
                                 </LinkTicket>
                             </li>
                         );
