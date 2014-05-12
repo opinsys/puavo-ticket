@@ -31,6 +31,25 @@ var EventMixin = {
         delete this._emitters;
     },
 
+    /**
+     * Create instance of a emitter which is bound to this component
+     *
+     * Pretty much same as:
+     *
+     *     var emitter = new Klass();
+     *     this.reactTo(emitter);
+     *
+     * @method createBoundEmitter
+     * @param {Function} klass Event emitter constructor function
+     * @param {any} arg Argument to be passed for the constructor
+     */
+    createBoundEmitter: function(klass, arg) {
+        // http://stackoverflow.com/questions/1606797/use-of-apply-with-new-operator-is-this-possible
+        var emitter = new klass(arg);
+        this.reactTo(emitter);
+        return emitter;
+    },
+
 };
 
 module.exports = EventMixin;
