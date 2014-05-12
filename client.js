@@ -8,6 +8,7 @@ var Route = require("./utils/react-route");
 var User = require("./models/client/User");
 
 var TicketForm = require("./components/TicketForm");
+var TicketView = require("./components/TicketView");
 var TicketList = require("./components/TicketList");
 var EventMixin = require("./utils/EventMixin");
 
@@ -89,8 +90,10 @@ var Main = React.createClass({
                         <h1>Tukipalvelu</h1>
 
                         {routes.ticketList.match && <TicketList />}
+                        {routes.newTicket.match && <TicketForm />}
+                        {routes.existingTicket.match &&
+                            <TicketView ticketId={routes.existingTicket.match.params.id} />}
 
-                        {this.renderTicketForm()}
                     </div>
                 </div>
             </div>
