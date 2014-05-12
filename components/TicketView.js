@@ -115,7 +115,7 @@ var TicketView = React.createClass({
                         })}
                     </ul>
                     <input ref="comment" type="text" />
-                    <button onClick={this.saveComment}>Lähetä</button>
+                    <button onClick={this.saveComment} disabled={this.state.ticketModel.isOperating()}>Lähetä</button>
                     <button onClick={this.handleAddDevice} >Add device</button>
                 </div>
 
