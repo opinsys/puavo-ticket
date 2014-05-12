@@ -12,6 +12,7 @@ var Attachment = require("./Attachment");
 var Follower = require("./Follower");
 var Handler = require("./Handler");
 var Device = require("./Device");
+var User = require("./User");
 
 
 /**
@@ -249,6 +250,10 @@ var Ticket = Base.extend({
      */
     relatedUsers: function() {
         return this.hasMany(RelatedUser, "ticket_id");
+    },
+
+    createdBy: function() {
+        return this.belongsTo(User, "created_by");
     },
 
     /**
