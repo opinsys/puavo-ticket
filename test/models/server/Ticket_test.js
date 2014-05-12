@@ -137,7 +137,7 @@ describe("Ticket model", function() {
                     return Promise.all(otherTickets);
                 })
                 .then(function() {
-                    return Ticket.fetchByVisibility(["school:1"]);
+                    return Ticket.byVisibilities(["school:1"]).fetch();
                 })
                 .then(function(coll) {
                     assert.equal(1, coll.size());
