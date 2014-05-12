@@ -31,6 +31,12 @@ var Ticket = Base.extend({
         };
     },
 
+    initialize: function() {
+        this.on("created", function setInitialStatus(ticket) {
+            return ticket.setStatus("open", ticket.get("created_by"));
+        });
+    },
+
     /**
      *
      * @method comments
@@ -115,6 +121,35 @@ var Ticket = Base.extend({
      */
     setStatus: function(status, user){
         return this.addTag("status:" + status, user);
+    },
+
+    /**
+     * Return collection containing only one models.server.Tag representing the
+     * status of the ticket. When serialized as JSON this field will appear as
+     * a simple string field. Example: `status: "open"`.
+     *
+     * @method status
+     * @return {Bookshelf.Collection}
+     */
+    status: function() {
+        return this.tags()
+            .query(function(qb) {
+                qb
+                .whereNull("deleted_at")
+                .andWhere("tag", "LIKE", "status:%")
+                .orderBy("created_at")
+                .limit(1);
+            });
+    },
+
+    toJSON: function() {
+        var json = Base.prototype.toJSON.call(this);
+
+        if (this.related("status").models.length) {
+            json.status = this.related("status").models[0].getStatus();
+        }
+
+        return json;
     },
 
 
@@ -277,22 +312,21 @@ var Ticket = Base.extend({
  * Fetch tickets by give visibilities.
  *
  * @static
- * @method fetchByVisibility
+ * @method byVisibilities
  * @param {Array} visibilities Array of visibility strings. Strings are in the
  * form of `organisation|school|user:<entity id>`.
  *
  *     Example: "school:2"
  * @return {Bluebird.Promise} Backbone.Collection of models.server.Ticket
  */
-Ticket.fetchByVisibility = function(visibilities) {
+Ticket.byVisibilities = function(visibilities) {
     return Ticket
         .collection()
         .query(function(queryBuilder) {
             queryBuilder
             .join("visibilities", "tickets.id", "=", "visibilities.ticket_id")
             .whereIn("visibilities.entity", visibilities);
-        })
-        .fetch();
+        });
 };
 
 module.exports = Ticket;

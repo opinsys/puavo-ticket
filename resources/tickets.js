@@ -18,7 +18,10 @@ var app = express.Router();
  * @apiSuccess {Object[]} . List of tickets
  */
 app.get("/api/tickets", function(req, res, next) {
-    Ticket.fetchByVisibility(req.user.getVisibilities())
+    Ticket.byVisibilities(req.user.getVisibilities())
+    .fetch({
+        withRelated: "status"
+    })
     .then(function(coll) {
         res.json(coll.toJSON());
     })
@@ -35,7 +38,9 @@ app.get("/api/tickets", function(req, res, next) {
  */
 app.get("/api/tickets/:id", function(req, res, next) {
     // TODO: assert visibilities!
-    Ticket.forge({ id: req.params.id }).fetch()
+    Ticket.forge({ id: req.params.id }).fetch({
+        withRelated: ["createdBy", "status"],
+    })
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
         res.json(ticket.toJSON());

@@ -55,6 +55,7 @@ describe("/api/tickets", function() {
                 assert.equal(self.ticket.id, res.body[0].id);
                 assert.equal("Computer does not work", res.body[0].title);
                 assert.equal(self.ticket.id, res.body[0].id);
+                assert.equal("open", res.body[0].status);
             });
     });
 
@@ -102,6 +103,7 @@ describe("/api/tickets", function() {
                 assert.equal(res.status, 200);
                 assert.equal(self.ticket.id, res.body.id);
                 assert.equal("Computer does not work", res.body.title);
+                assert.equal("open", res.body.status);
             });
     });
 
@@ -154,13 +156,13 @@ describe("/api/tickets", function() {
                 .promise()
                 .then(function(res) {
                     assert.equal(res.status, 200);
-                    assert.equal(2, res.body.length);
-                    assert.equal("First comment to test ticket", res.body[0].comment);
+                    assert.equal(3, res.body.length);
+                    assert.equal("First comment to test ticket", res.body[1].comment);
 
-                    assert(res.body[0].createdBy, "created by is set");
-                    assert.equal("olli.opettaja", res.body[0].createdBy.external_data.username);
+                    assert(res.body[1].createdBy, "created by is set");
+                    assert.equal("olli.opettaja", res.body[1].createdBy.external_data.username);
 
-                    assert.equal("Second comment to test ticket", res.body[1].comment);
+                    assert.equal("Second comment to test ticket", res.body[2].comment);
                 });
         });
     });
