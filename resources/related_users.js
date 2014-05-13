@@ -29,7 +29,7 @@ app.post("/api/tickets/:id/related_users", function(req, res, next) {
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
         rTicket = ticket;
-        return User.forge({ external_id: req.params.external_id })
+        return User.forge({ external_id: req.body.external_id })
             .fetch();
     })
     .then(function(user) {
