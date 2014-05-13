@@ -33,8 +33,17 @@ var Ticket = Base.extend({
     },
 
     initialize: function() {
-        this.on("created", function setInitialStatus(ticket) {
-            return ticket.setStatus("open", ticket.get("created_by"));
+        this.on("created", function setInitialTicketState(ticket) {
+            return ticket.setStatus("open", ticket.get("created_by"))
+                .then(function() {
+                    return ticket.createdBy().fetch();
+                })
+                .then(function addVisibilityForTheCreator(user) {
+                    return ticket.addVisibility(
+                        user.getPersonalVisibility(),
+                        user
+                    );
+                });
         });
     },
 

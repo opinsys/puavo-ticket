@@ -64,15 +64,6 @@ app.post("/api/tickets", function(req, res, next) {
     })
     .save()
     .then(function(ticket) {
-        return ticket.addVisibility({
-                entity: req.user.getPersonalVisibility(),
-                created_by: req.user.get("id")
-            })
-            .then(function() {
-                return ticket;
-            });
-    })
-    .then(function(ticket) {
         res.json(ticket.toJSON());
     })
     .catch(next);
