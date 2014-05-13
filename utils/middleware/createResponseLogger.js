@@ -8,11 +8,12 @@ function noop() {}
  *
  * Adapted from https://github.com/expressjs/response-time
  *
- * @class responseLogger
+ * @namespace utils.middleware
+ * @class createResponseLogger
  * @constructor
  * @return {Function} connect middleware
  */
-module.exports = function responseTime(){
+function createResponseLogger(){
   return function(req, res, next){
     // express Router middlewares can alter this. Save it before continuing.
     var reqUrl = req.url;
@@ -30,4 +31,6 @@ module.exports = function responseTime(){
     };
     next();
   };
-};
+}
+
+module.exports = createResponseLogger;
