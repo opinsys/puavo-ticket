@@ -77,6 +77,8 @@ Route.createLink = function(hrefTemplate, override) {
         },
 
         navigate: function(e) {
+            // Only left click navigates
+            if (e && e.button !== 0) return;
             if (e && e.preventDefault) e.preventDefault();
             Route.navigate(this.renderHref());
         },
