@@ -1,11 +1,12 @@
-
 "use strict";
+
+var Cocktail = require("backbone.cocktail");
 
 require("../../db");
 
-
 var Base = require("./Base");
 var User = require("./User");
+var TagMixin = require("../TagMixin");
 
 /**
  * Ticket tags.
@@ -14,8 +15,9 @@ var User = require("./User");
  * Only one tag with the prefix can be active at once.
  *
  * @namespace models.server
- * @extends models.server.Base
  * @class Tag
+ * @extends models.server.Base
+ * @uses models.TagMixin
  */
 var Tag = Base.extend({
 
@@ -28,26 +30,6 @@ var Tag = Base.extend({
       };
     },
 
-    /**
-    * Returns true if the tag is a status tag
-    *
-    * @method isStatusTag
-    * @return {Boolean}
-    */
-    isStatusTag: function() {
-      return this.get("tag").indexOf("status:") === 0;
-    },
-
-    /**
-    * Get status part of the tag if the tag is status tag
-    *
-    * @method getStatus
-    * @return {String}
-    */
-    getStatus: function() {
-      if (!this.isStatusTag()) throw new Error("not a status tag");
-      return this.get("tag").replace(/^status:/, "");
-    },
 
     /**
     * Return Collection for clones of this tag
@@ -130,4 +112,5 @@ var Tag = Base.extend({
     }
 });
 
+Cocktail.mixin(Tag, TagMixin);
 module.exports = Tag;
