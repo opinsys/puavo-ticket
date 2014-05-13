@@ -21,6 +21,7 @@ var TicketView = React.createClass({
 
     getInitialState: function() {
         return {
+            comment: "",
             ticketModel: this.createBoundEmitter(Ticket)
         };
     },
@@ -40,19 +41,26 @@ var TicketView = React.createClass({
         });
     },
 
-    saveComment: function() {
-        var comment = new Comment({
-            comment: this.refs.comment.getDOMNode().value
-        });
+    handleAddComment: function() {
+        var comment = new Comment({ comment: this.state.comment });
 
         this.state.ticketModel.updates().add(comment);
 
         var self = this;
         return comment.save()
             .then(function() {
-                self.refs.comment.getDOMNode().value = "";
+                self.setState({ comment: "" });
             });
     },
+
+    handleCommentChange: function(e) {
+        this.setState({ comment: e.target.value });
+    },
+
+    hasUnsavedComment: function() {
+        return !!this.state.comment;
+    },
+
 
     handleClose: function() {
         this.state.ticketModel.close();
@@ -137,8 +145,15 @@ var TicketView = React.createClass({
                             return <li>{out}</li>;
                         })}
                     </ul>
-                    <input ref="comment" type="text" />
-                    <button onClick={this.saveComment} disabled={this.state.ticketModel.isOperating()}>Lähetä</button>
+                    <input
+                        ref="comment"
+                        type="text"
+                        onChange={this.handleCommentChange}
+                        value={this.state.comment}
+                    />
+                    <button
+                        onClick={this.handleAddComment}
+                        disabled={this.state.ticketModel.isOperating() || !this.hasUnsavedComment()} >Lähetä</button>
                     <button onClick={this.handleAddDevice} >Lisää laite</button>
                     <button onClick={this.handleClose} >Aseta ratkaistuksi</button>
                 </div>
