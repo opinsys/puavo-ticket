@@ -36,9 +36,7 @@ var User = Base.extend({
      * @return {Bluebird.Promise}
      */
     ensureUserFromJWTToken: function(token) {
-        return User.collection()
-            .query('where', 'external_id', '=', token.id)
-            .fetchOne()
+        return User.byExternalId(token.id).fetch()
             .then(function(user) {
                 if (!user) {
                     return User.forge({
