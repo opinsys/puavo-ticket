@@ -73,20 +73,20 @@ var TicketView = React.createClass({
         });
     },
 
-    handleAddComment: function() {
-        var comment = new Comment({ comment: this.state.comment });
-
-        this.state.ticketModel.updates().add(comment);
-
-        var self = this;
-        return comment.save()
-            .then(function() {
-                self.setState({ comment: "" });
-            });
-    },
 
     handleCommentChange: function(e) {
         this.setState({ comment: e.target.value });
+    },
+
+    saveComment: function() {
+        var comment = new Comment({ comment: this.state.comment });
+        this.state.ticketModel.updates().add(comment);
+        this.setState({ comment: "" });
+        return comment.save();
+    },
+
+    handleCommentKeyUp: function(e) {
+        if (e.key === "Enter") this.saveComment();
     },
 
     hasUnsavedComment: function() {
@@ -181,10 +181,11 @@ var TicketView = React.createClass({
                         ref="comment"
                         type="text"
                         onChange={this.handleCommentChange}
+                        onKeyUp={this.handleCommentKeyUp}
                         value={this.state.comment}
                     />
                     <button
-                        onClick={this.handleAddComment}
+                        onClick={this.saveComment}
                         disabled={this.state.ticketModel.isOperating() || !this.hasUnsavedComment()} >Lähetä</button>
                     <button onClick={this.handleAddDevice} >Lisää laite</button>
                     <ToggleStatusButton ticketModel={this.state.ticketModel} />
