@@ -9,7 +9,6 @@ var Base = require("./Base");
  * @namespace models.client
  * @class Device
  * @extends models.client.Base
- * @uses models.TicketMixin
  */
 var Device = Base.extend({
 
