@@ -11,7 +11,7 @@
  * This model can be used on both server and the client.
  *
  * @namespace models
- * @class UserSession
+ * @class UserMixin
  */
 var UserMixin = {
 
