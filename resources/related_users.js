@@ -30,7 +30,7 @@ app.post("/api/tickets/:id/related_users", function(req, res, next) {
         if (!_ticket) return res.json(404, { error: "no such ticket" });
         ticket = _ticket;
 
-        return User.byUsername(req.body.username);
+        return User.byUsername(req.body.username).fetch();
     })
     .then(function(user) {
         if (!user) {

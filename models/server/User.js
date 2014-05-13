@@ -73,11 +73,10 @@ var User = Base.extend({
      * @return {models.server.User}
      */
     byUsername: function(username) {
-        return User.collection()
+        return User.forge()
             .query(function(qb) {
                 qb.where( Bookshelf.DB.knex.raw( "external_data->>'username' = ?",  [username] ) );
-            })
-            .fetchOne();
+            });
     }
 
 });
