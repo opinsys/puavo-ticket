@@ -84,7 +84,7 @@ describe("/api/tickets/:id/related_users", function() {
                 });
 
                 assert.equal(1, relatedUsers.length);
-                assert.equal("olli.opettaja", relatedUsers[0].user.external_data.username);
+                assert.equal("joe.bloggs", relatedUsers[0].user.external_data.username);
             });
     });
 
