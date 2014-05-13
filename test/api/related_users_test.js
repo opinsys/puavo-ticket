@@ -42,6 +42,7 @@ describe("/api/tickets/:id/related_users", function() {
         nock("https://testing.opinsys.fi")
         .get("/v3/users/joe.bloggs")
         .reply(200, {
+            organisation_domain: "testing.opinsys.fi",
             email: "joe.bloggs@test.com",
             first_name: "Joe",
             last_name: "Bloggs",
@@ -52,7 +53,8 @@ describe("/api/tickets/:id/related_users", function() {
         return this.agent
             .post("/api/tickets/" + self.ticket.get("id") + "/related_users")
             .send({
-                external_id: "1432"
+                external_id: "1432",
+                external_domain: "testing.opinsys.fi"
             })
             .promise()
             .then(function(res) {

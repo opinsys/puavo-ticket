@@ -34,7 +34,7 @@ app.post("/api/tickets/:id/related_users", function(req, res, next) {
     })
     .then(function(user) {
         if (!user) {
-            var puavo = new Puavo({ domain: "testing.opinsys.fi" });
+            var puavo = new Puavo({ domain: req.body.external_domain });
 
             return puavo.userByUsername("joe.bloggs")
                 .then(function(userData) {
