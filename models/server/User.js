@@ -3,6 +3,7 @@
 require("../../db");
 var Base = require("./Base");
 var Cocktail = require("backbone.cocktail");
+var Bookshelf = require("bookshelf");
 var UserMixin = require("../UserMixin");
 
 /**
@@ -63,6 +64,21 @@ var User = Base.extend({
     byExternalId: function(id) {
         return this.forge({ external_id: id });
     },
+
+    /**
+     * Shortcut for getting user model by the username (external_data)
+     *
+     * @static
+     * @method byUsername
+     * @return {models.server.User}
+     */
+    byUsername: function(username) {
+        return User.collection()
+            .query(function(qb) {
+                qb.where( Bookshelf.DB.knex.raw( "external_data->>'username' = ?",  [username] ) );
+            })
+            .fetchOne();
+    }
 
 });
 

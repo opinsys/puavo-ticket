@@ -4,7 +4,6 @@
  */
 
 var express = require("express");
-var Bookshelf = require("bookshelf");
 
 var Ticket = require("../models/server/Ticket");
 var RelatedUser = require("../models/server/RelatedUser");
@@ -31,10 +30,7 @@ app.post("/api/tickets/:id/related_users", function(req, res, next) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
         rTicket = ticket;
 
-        return User.collection().query(function(qb) {
-            qb.where( Bookshelf.DB.knex.raw( "external_data->>'username' = ?",  [req.body.username] ) );
-        })
-        .fetchOne();
+        return User.byUsername(req.body.username);
     })
     .then(function(user) {
         if (!user) {
