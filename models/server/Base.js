@@ -1,6 +1,9 @@
 "use strict";
 
 var Bookshelf = require("bookshelf");
+var Cocktail = require("backbone.cocktail");
+
+var BaseMixin = require("../BaseMixin");
 
 
 /**
@@ -9,6 +12,7 @@ var Bookshelf = require("bookshelf");
  * @namespace models.server
  * @extends Bookshelf.Model
  * @class Base
+ * @uses models.BaseMixin
  */
 var Base = Bookshelf.DB.Model.extend({
 
@@ -110,4 +114,6 @@ var Base = Bookshelf.DB.Model.extend({
 
 });
 
+
+Cocktail.mixin(Base, BaseMixin);
 module.exports = Base;

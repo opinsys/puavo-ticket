@@ -6,6 +6,7 @@ var Backbone = require("backbone");
 var Promise = require("bluebird");
 var Cocktail = require("backbone.cocktail");
 
+var BaseMixin = require("../BaseMixin");
 
 /**
  * Decorate method execution with `<eventName>:start` and `<eventName>:end`
@@ -97,6 +98,7 @@ var PromiseWrapMixin = {
  * @class Base
  * @extends Backbone.Model
  * @uses models.client.PromiseWrapMixin
+ * @uses models.BaseMixin
  * @see http://backbonejs.org/#Model
  */
 var Base = Backbone.Model.extend({
@@ -188,6 +190,7 @@ Base.Collection = Backbone.Collection.extend({
 
 
 
+Cocktail.mixin(Base, BaseMixin);
 Cocktail.mixin(Base, PromiseWrapMixin);
 Cocktail.mixin(Base.Collection, PromiseWrapMixin);
 module.exports = Base;
