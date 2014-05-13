@@ -156,9 +156,7 @@ var Ticket = Base.extend({
             .query(function(qb) {
                 qb
                 .whereNull("deleted_at")
-                .andWhere("tag", "LIKE", "status:%")
-                .orderBy("created_at")
-                .limit(1);
+                .andWhere("tag", "LIKE", "status:%");
             });
     },
 
