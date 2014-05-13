@@ -55,7 +55,7 @@ var Tag = Base.extend({
             return tagModel.clones().fetch()
                 .then(function validateTagUniqueness(collection) {
                     if (collection.size() > 0) {
-                        throw new Error("tag already exists");
+                        throw new Error("tag " + tagModel.get("tag") + " already exists");
                     }
                 })
                 .then(function deletePreviousStatustags() {

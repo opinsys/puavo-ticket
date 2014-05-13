@@ -78,7 +78,7 @@ describe("Tag model", function() {
             })
             .catch(function(err) {
                 catchExecuted = true;
-                assert.equal("tag already exists", err.message);
+                assert.equal("tag footag already exists", err.message);
             })
             .then(function() {
                 assert(catchExecuted, "catch was not executed");
