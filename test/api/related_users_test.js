@@ -4,6 +4,10 @@ var assert = require("assert");
 
 var helpers = require("../helpers");
 
+var nock = require('nock');
+
+var User = require("../../models/server/User");
+
 describe("/api/tickets/:id/related_users", function() {
 
     before(function() {
@@ -35,13 +39,33 @@ describe("/api/tickets/:id/related_users", function() {
     it("can add related user to a ticket", function() {
         var self = this;
 
+        nock("https://testing.opinsys.fi")
+        .get("/v3/users/joe.bloggs")
+        .reply(200, {
+            email: "joe.bloggs@test.com",
+            first_name: "Joe",
+            last_name: "Bloggs",
+            username: "joe.bloggs",
+            id: "1432"
+        });
+
         return this.agent
             .post("/api/tickets/" + self.ticket.get("id") + "/related_users")
-            .send({ id: self.user.id })
+            .send({
+                external_id: "1432"
+            })
             .promise()
             .then(function(res) {
-                assert.equal(200, res.status);
-                assert.equal(self.user.get("id"), res.body.user);
+                assert.equal(res.status, 200);
+                //assert.equal(res.body.username, "testuser");
+                assert.equal(res.body.ticket_id, self.ticket.get("id"));
+                assert.equal(res.body.created_by, self.user.id);
+            })
+            .then(function() {
+                return User.forge({ external_id: "1432" }).fetch();
+            })
+            .then(function(related_user) {
+                assert.equal(related_user.get("external_data").username, "joe.bloggs");
             });
     });
 

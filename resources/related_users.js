@@ -3,12 +3,21 @@
  * REST resources documented with http://apidocjs.com/
  */
 
+var Promise = require("bluebird");
+var request = Promise.promisify(require("request"));
 var express = require("express");
 
 var Ticket = require("../models/server/Ticket");
 var RelatedUser = require("../models/server/RelatedUser");
+var User = require("../models/server/User");
 
 var app = express.Router();
+
+
+
+function clientError(e) {
+    return e.code >= 400 && e.code < 500;
+}
 
 
 /**
@@ -20,11 +29,35 @@ var app = express.Router();
  * @apiParam {Integer} id
  */
 app.post("/api/tickets/:id/related_users", function(req, res, next) {
+    var rTicket = null;
     Ticket.forge({ id: req.params.id })
     .fetch()
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
-        return ticket.addRelatedUser(req.body.id, req.user);
+        rTicket = ticket;
+        return User.forge({ external_id: req.params.external_id })
+            .fetch();
+    })
+    .then(function(user) {
+        if (!user) {
+            // FIXME: set url to config.json
+            return request("https://testing.opinsys.fi/v3/users/joe.bloggs")
+                .then(function(contents) {
+                    var userData = JSON.parse(contents[1]);
+                    return User.forge({
+                        external_id: userData.id,
+                        external_data: userData
+                    }).save();
+                })
+                .catch(clientError, function(e){
+                    console.log(e);
+                });
+        } else {
+            return user;
+        }
+    })
+    .then(function(user) {
+        return rTicket.addRelatedUser(user.id, req.user);
     })
     .then(function(user) {
         res.json(user.toJSON());
