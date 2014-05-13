@@ -188,5 +188,26 @@ describe("Tag model", function() {
             });
     });
 
+    it("renders status string to the JSON when using withRelated in fetch", function() {
+        var self = this;
+
+        return Ticket.byId(self.ticketId).fetch({
+                withRelated: "status"
+            })
+            .then(function(ticket) {
+                assert.equal("done", ticket.toJSON().status);
+                return ticket.setStatus("new", self.user);
+            })
+            .then(function() {
+                return Ticket.byId(self.ticketId).fetch({
+                    withRelated: "status"
+                });
+            })
+            .then(function(ticket) {
+                assert.equal("new", ticket.toJSON().status);
+            });
+
+    });
+
 
 });
