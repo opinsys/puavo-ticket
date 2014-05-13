@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * @namespace models
+ * @class TagMixin
+ */
 var TagMixin = {
 
     /**
