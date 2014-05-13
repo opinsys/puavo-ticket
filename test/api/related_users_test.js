@@ -59,7 +59,6 @@ describe("/api/tickets/:id/related_users", function() {
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                //assert.equal(res.body.username, "testuser");
                 assert.equal(res.body.ticket_id, self.ticket.get("id"));
                 assert.equal(res.body.created_by, self.user.id);
             })
