@@ -1,5 +1,6 @@
 "use strict";
 
+require("../../db");
 var Bookshelf = require("bookshelf");
 var Cocktail = require("backbone.cocktail");
 
