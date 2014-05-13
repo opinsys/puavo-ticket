@@ -94,7 +94,7 @@ var TicketView = React.createClass({
                 <h1>
                     {this.state.ticketModel.get("title")}
                     <span>
-                        ({this.state.ticketModel.get("status")})
+                        ({this.state.ticketModel.getCurrentStatus()})
                     </span>
                 </h1>
 
