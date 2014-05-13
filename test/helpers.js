@@ -82,8 +82,9 @@ function loginAsUser(userData){
 /**
  * Create two test tickets
  *
- * @method insertTestTickets
  * @static
+ * @method insertTestTickets
+ * @param {models.server.User} user User who creates the tickets
  * @return {Object}
  */
 function insertTestTickets(user) {
