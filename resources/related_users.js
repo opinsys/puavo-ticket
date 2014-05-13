@@ -4,6 +4,7 @@
  */
 
 var express = require("express");
+var Bookshelf = require("bookshelf");
 
 var Ticket = require("../models/server/Ticket");
 var RelatedUser = require("../models/server/RelatedUser");
@@ -20,7 +21,7 @@ var app = express.Router();
  * @apiGroup related_users
  *
  * @apiParam {String} username
- * @apiParam {Integer} id
+ * @apiParam {String} domain
  */
 app.post("/api/tickets/:id/related_users", function(req, res, next) {
     var rTicket = null;
@@ -29,14 +30,17 @@ app.post("/api/tickets/:id/related_users", function(req, res, next) {
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
         rTicket = ticket;
-        return User.forge({ external_id: req.body.external_id })
-            .fetch();
+
+        return User.collection().query(function(qb) {
+            qb.where( Bookshelf.DB.knex.raw( "external_data->>'username' = ?",  [req.body.username] ) );
+        })
+        .fetchOne();
     })
     .then(function(user) {
         if (!user) {
-            var puavo = new Puavo({ domain: req.body.external_domain });
+            var puavo = new Puavo({ domain: req.body.domain });
 
-            return puavo.userByUsername("joe.bloggs")
+            return puavo.userByUsername(req.body.username)
                 .then(function(userData) {
                     return User.forge({
                         external_id: userData.id,
