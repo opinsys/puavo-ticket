@@ -68,11 +68,21 @@ var Ticket = Base.extend({
     /**
      * Close ticket by adding `status:closed` tag to it
      *
-     * @method close
+     * @method setClosed
      * @return {Bluebird.Promise}
      */
-    close: function() {
+    setClosed: function() {
         return this.addTag("status:closed");
+    },
+
+    /**
+     * (re)open ticket by adding `status:open` tag to it
+     *
+     * @method setOpen
+     * @return {Bluebird.Promise}
+     */
+    setOpen: function() {
+        return this.addTag("status:open");
     },
 
     /**

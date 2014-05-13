@@ -9,6 +9,38 @@ var EventMixin = require("../utils/EventMixin");
 var Lightbox = require("./Lightbox");
 var AddDevice = require("./AddDevice");
 
+
+/**
+ * ToggleStatusButton
+ *
+ * @namespace components
+ * @class ToggleStatusButton
+ */
+var ToggleStatusButton = React.createClass({
+
+    render: function() {
+        var ticket = this.props.ticketModel;
+        var status = ticket.getCurrentStatus();
+
+        if (!status) return (
+            <button disabled={true} >loading...</button>
+        );
+
+        if (status === "open") return (
+            <button
+                disabled={ticket.isOperating()}
+                onClick={ticket.setClosed.bind(ticket)} >Aseta ratkaistuksi</button>
+        );
+
+        return (
+            <button
+                disabled={ticket.isOperating()}
+                onClick={ticket.setOpen.bind(ticket)} >Avaa uudelleen</button>
+        );
+
+    }
+});
+
 /**
  * TicketView
  *
@@ -155,7 +187,7 @@ var TicketView = React.createClass({
                         onClick={this.handleAddComment}
                         disabled={this.state.ticketModel.isOperating() || !this.hasUnsavedComment()} >Lähetä</button>
                     <button onClick={this.handleAddDevice} >Lisää laite</button>
-                    <button onClick={this.handleClose} >Aseta ratkaistuksi</button>
+                    <ToggleStatusButton ticketModel={this.state.ticketModel} />
                 </div>
 
 
