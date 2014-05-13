@@ -21,7 +21,6 @@ var UserMixin = {
      * @return {String}
      */
     getPersonalVisibility: function(){
-	// FIXME: should be use id from users table?
         return "user:" + this.get("id");
     },
 
