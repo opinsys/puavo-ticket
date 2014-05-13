@@ -51,7 +51,18 @@ var User = Base.extend({
                 }
 
             });
-    }
+    },
+
+    /**
+     * Shortcut for getting user models by the external_id
+     *
+     * @static
+     * @method byExternalId
+     * @return {models.server.User}
+     */
+    byExternalId: function(id) {
+        return this.forge({ external_id: id });
+    },
 
 });
 
