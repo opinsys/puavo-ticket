@@ -79,9 +79,13 @@ var TicketView = React.createClass({
     },
 
     saveComment: function() {
+        if (!this.hasUnsavedComment()) return;
+
         var comment = new Comment({ comment: this.state.comment });
         this.state.ticketModel.updates().add(comment);
         this.setState({ comment: "" });
+        this.refs.comment.getDOMNode().focus();
+
         return comment.save();
     },
 
