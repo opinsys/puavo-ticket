@@ -26,10 +26,7 @@ function promiseWrap(eventName, method) {
         var self = this;
         self.trigger(eventName + ":start");
 
-        self[eventName] = Promise.delay(10) // simulate slow network
-        .then(function() {
-            return Promise.cast(method.apply(self, arguments));
-        })
+        self[eventName] = Promise.cast(method.apply(self, arguments))
         .then(function(res) {
             self[eventName] = null;
             self.trigger(eventName + ":end");

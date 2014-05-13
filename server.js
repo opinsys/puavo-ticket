@@ -29,6 +29,7 @@ var app = express();
 
 var config = require("./config");
 
+app.use(require("./utils/middleware/createSlowInternet")());
 app.use(require("./utils/middleware/createResponseLogger")());
 app.use(bodyParser());
 app.use(require("./utils/middleware/createMultipartMiddleware")());
