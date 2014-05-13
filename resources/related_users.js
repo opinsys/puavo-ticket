@@ -3,21 +3,15 @@
  * REST resources documented with http://apidocjs.com/
  */
 
-var Promise = require("bluebird");
-var request = Promise.promisify(require("request"));
 var express = require("express");
 
 var Ticket = require("../models/server/Ticket");
 var RelatedUser = require("../models/server/RelatedUser");
 var User = require("../models/server/User");
+var Puavo = require("../utils/Puavo");
 
 var app = express.Router();
 
-
-
-function clientError(e) {
-    return e.code >= 400 && e.code < 500;
-}
 
 
 /**
@@ -40,17 +34,14 @@ app.post("/api/tickets/:id/related_users", function(req, res, next) {
     })
     .then(function(user) {
         if (!user) {
-            // FIXME: set url to config.json
-            return request("https://testing.opinsys.fi/v3/users/joe.bloggs")
-                .then(function(contents) {
-                    var userData = JSON.parse(contents[1]);
+            var puavo = new Puavo({ domain: "testing.opinsys.fi" });
+
+            return puavo.userByUsername("joe.bloggs")
+                .then(function(userData) {
                     return User.forge({
                         external_id: userData.id,
                         external_data: userData
                     }).save();
-                })
-                .catch(clientError, function(e){
-                    console.log(e);
                 });
         } else {
             return user;
