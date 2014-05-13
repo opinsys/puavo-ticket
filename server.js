@@ -72,7 +72,8 @@ app.use("/doc", serveStatic(__dirname + "/doc"));
 
 
 /**
- * An instance of  models.User when user has an authenticated session
+ * Set an instance of models.User to the request object when user has been
+ * authenticated
  *
  * @for server.Request
  * @property {models.User} user
@@ -83,16 +84,14 @@ app.use(function(req, res, next) {
         return res.requestJwt();
     }
 
-    User.collection()
-    .query("where", "external_id", "=", req.session.jwt.id)
-    .fetchOne()
+    User.byExternalId(req.session.jwt.id).fetch()
     .then(function(user) {
-        if (!user) return next();
+        if (!user) {
+            throw new Error("Unknown external_id: " + req.session.jwt.id);
+        }
         req.user = user;
     })
-    .then(function() {
-        next();
-    })
+    .then(next.bind(this, null))
     .catch(next);
 });
 
