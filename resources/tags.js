@@ -9,20 +9,20 @@ var app = express.Router();
 
 
 /**
- * @api {put} /api/tickets/:id/handlers Set status to a ticket
- * @apiName SetStatus
- * @apiGroup status
+ * @api {post} /api/tickets/:id/tags Add tag to a ticket
+ * @apiName AddTag
+ * @apiGroup tags
  *
- * @apiParam {String} status
+ * @apiParam {String} tag
  */
-app.put("/api/tickets/:id/status", function(req, res, next) {
+app.post("/api/tickets/:id/tags", function(req, res, next) {
     Ticket.forge({ id: req.params.id })
     .fetch()
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
-        return ticket.setStatus(req.body.status, req.user)
-            .then(function(foo) {
-                res.json(foo.toJSON());
+        return ticket.addTag(req.body.tag, req.user)
+            .then(function(tag) {
+                res.json(tag.toJSON());
             });
     })
     .catch(next);

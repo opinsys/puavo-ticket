@@ -9,7 +9,7 @@ var User = require("../../models/server/User");
 
 
 
-describe("/api/tickets/:id/status", function() {
+describe("/api/tickets/:id/tags", function() {
 
     before(function() {
         var self = this;
@@ -41,8 +41,8 @@ describe("/api/tickets/:id/status", function() {
     it("sets the status for a ticket", function() {
 
         return this.agent
-            .put("/api/tickets/" + this.ticket.get("id") + "/status")
-            .send({ status: "foostatus" })
+            .post("/api/tickets/" + this.ticket.get("id") + "/tags")
+            .send({ tag: "status:foostatus" })
             .promise()
             .then(function(res) {
                 assert.equal(200, res.status);
@@ -66,8 +66,8 @@ describe("/api/tickets/:id/status", function() {
     it("is available in /api/tickets as plain string", function() {
         var self = this;
         return this.agent
-            .put("/api/tickets/" + this.otherTicket.get("id") + "/status")
-            .send({ status: "barstatus" })
+            .post("/api/tickets/" + this.otherTicket.get("id") + "/tags")
+            .send({ tag: "status:barstatus" })
             .promise()
             .then(function(res) {
                 assert.equal(200, res.status);
