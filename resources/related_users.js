@@ -23,12 +23,12 @@ var app = express.Router();
  * @apiParam {String} domain
  */
 app.post("/api/tickets/:id/related_users", function(req, res, next) {
-    var rTicket = null;
+    var ticket = null;
     Ticket.forge({ id: req.params.id })
     .fetch()
-    .then(function(ticket) {
-        if (!ticket) return res.json(404, { error: "no such ticket" });
-        rTicket = ticket;
+    .then(function(_ticket) {
+        if (!_ticket) return res.json(404, { error: "no such ticket" });
+        ticket = _ticket;
 
         return User.byUsername(req.body.username);
     })
@@ -43,12 +43,12 @@ app.post("/api/tickets/:id/related_users", function(req, res, next) {
                         external_data: userData
                     }).save();
                 });
-        } else {
-            return user;
         }
+
+        return user;
     })
     .then(function(user) {
-        return rTicket.addRelatedUser(user.id, req.user);
+        return ticket.addRelatedUser(user.id, req.user);
     })
     .then(function(user) {
         res.json(user.toJSON());
