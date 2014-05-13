@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
+var _ = require("lodash");
 
 var Ticket = require("../models/client/Ticket");
 var Comment = require("../models/client/Comment");
@@ -53,6 +54,10 @@ var TicketView = React.createClass({
             });
     },
 
+    handleClose: function() {
+        this.state.ticketModel.close();
+    },
+
     isOperating: function() {
         return this.state.ticketModel.isOperating();
     },
@@ -86,7 +91,12 @@ var TicketView = React.createClass({
 
                 {this.isOperating() && <p>Ladataan...</p>}
 
-                <h1>{this.state.ticketModel.get("title")}</h1>
+                <h1>
+                    {this.state.ticketModel.get("title")}
+                    <span>
+                        ({this.state.ticketModel.get("status")})
+                    </span>
+                </h1>
 
                 <p>{this.state.ticketModel.get("description")}</p>
 
@@ -100,6 +110,19 @@ var TicketView = React.createClass({
                             }
                             else {
                                 out = update.get("comment");
+                            }
+
+                            if (!out) {
+                                out = JSON.stringify(_.omit(update.toJSON(),
+                                    "ticket_id",
+                                    "createdBy",
+                                    "created_by",
+                                    "created_at",
+                                    "updated_at",
+                                    "deleted_at",
+                                    "deleted_by",
+                                    "unique_id"
+                               ));
                             }
 
                             var user = update.get("createdBy");
@@ -116,7 +139,8 @@ var TicketView = React.createClass({
                     </ul>
                     <input ref="comment" type="text" />
                     <button onClick={this.saveComment} disabled={this.state.ticketModel.isOperating()}>Lähetä</button>
-                    <button onClick={this.handleAddDevice} >Add device</button>
+                    <button onClick={this.handleAddDevice} >Lisää laite</button>
+                    <button onClick={this.handleClose} >Aseta ratkaistuksi</button>
                 </div>
 
 

@@ -1,5 +1,6 @@
 "use strict";
 var Base = require("./Base");
+var Tag = require("./Tag");
 var _ = require("lodash");
 var UpdatesCollection = require("./UpdatesCollection");
 
@@ -51,6 +52,27 @@ var Ticket = Base.extend({
         }, this);
         this._setTicketIdForUpdates();
         return this._updates;
+    },
+
+    /**
+     * @method addTag
+     * @param {String} tagName
+     * @return {Bluebird.Promise}
+     */
+    addTag: function(tagName) {
+        var tag = new Tag({ tag: tagName });
+        this.updates().add(tag);
+        return tag.save();
+    },
+
+    /**
+     * Close ticket by adding `status:closed` tag to it
+     *
+     * @method close
+     * @return {Bluebird.Promise}
+     */
+    close: function() {
+        return this.addTag("status:closed");
     },
 
     /**
