@@ -116,6 +116,7 @@ var Tag = Base.extend({
      * @static
      * @method statusTagsFor
      * @param {models.server.Ticket|Number} ticket Model object or table id
+     * @return {Bookshelf.Collection} Collection of models.server.Tag models
      */
     statusTagsFor: function(ticket){
         var ticketId = Base.toId(ticket);
