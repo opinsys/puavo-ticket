@@ -76,7 +76,7 @@ test-server: jshint
 	mocha test/models/server/*_test.js test/api/*_test.js
 
 .PHONY: test
-test: jshint test-server test-browsers
+test: jshint test-server
 
 serve-tests:
 	node test/server.js
