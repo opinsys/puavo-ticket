@@ -2,7 +2,14 @@
 var Base = require("./Base");
 var Comment = require("./Comment");
 var Device = require("./Device");
+var Tag = require("./Tag");
 
+
+var MODEL = {
+    tags: Tag,
+    comments: Comment,
+    devices: Device
+};
 
 
 /**
@@ -21,11 +28,11 @@ var UpdatesCollection = Base.Collection.extend({
     },
 
     model: function(attrs, options) {
-        if (attrs.hostname) {
-            return new Device(attrs, options);
+        var Model = MODEL[attrs.type];
+        if (!Model) {
+            throw new Error("Unknown update type: " + attrs.type);
         }
-
-        return new Comment(attrs, options);
+        return new Model(attrs, options);
     },
 
     url: function() {
