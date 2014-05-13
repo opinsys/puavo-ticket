@@ -21,10 +21,7 @@ app.post("/api/tickets/:id/visibilities", function(req, res, next) {
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
         return Promise.all(req.body.visibilities.map(function(visibility) {
-            return ticket.addVisibility({
-                entity: visibility,
-                created_by: req.user.get("id")
-            });
+            return ticket.addVisibility(visibility, req.user);
         }));
     })
     .then(function(visibilities) {

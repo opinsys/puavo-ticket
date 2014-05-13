@@ -108,11 +108,11 @@ describe("Ticket model", function() {
             })
             .save()
             .then(function(ticket) {
-                return ticket.addVisibility({
-                    entity: "school:1",
-                    comment: "This ticket affects whole school",
-                    created_by: self.user.id
-                });
+                return ticket.addVisibility(
+                    "school:1",
+                    self.user.id,
+                    "This ticket affects whole school"
+                );
             });
 
             var otherTickets = [
@@ -124,11 +124,11 @@ describe("Ticket model", function() {
                     .forge(data)
                     .save()
                     .then(function(ticket) {
-                        return ticket.addVisibility({
-                            entity: "bad",
-                            comment: "for the other ticket",
-                            created_by: self.user.id
-                        });
+                        return ticket.addVisibility(
+                            "bad",
+                            self.user.id,
+                            "for the other ticket"
+                        );
                     });
             });
 

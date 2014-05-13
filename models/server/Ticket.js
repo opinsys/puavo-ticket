@@ -60,16 +60,26 @@ var Ticket = Base.extend({
     },
 
     /**
-     * Add visibility to the ticket
+     * Add visibility to the ticket.
+     *
+     * Visibility strings can be accessed for example from User#getVisibilities()
      *
      * @method addVisibility
-     * @param {Object} visibility Plain object with models.server.Visibility fields
+     * @param {String} visibility Visibility string
+     * @param {models.server.User|Number} addedBy User model or id of user who adds the visibility
+     * @param {String} [comment] Optional comment for the visibility
      * @return {Bluebird.Promise}
      */
-    addVisibility: function(visibility) {
-        visibility = _.clone(visibility);
-        visibility.ticket_id = this.get("id");
-        return Visibility.forge(visibility).save();
+    addVisibility: function(visibility, addedBy, comment) {
+        if (typeof visibility !== "string") {
+            throw new Error("visibility must be a string");
+        }
+        return Visibility.forge({
+            ticket_id: this.get("id"),
+            entity: visibility,
+            comment: comment,
+            created_by: Base.toId(addedBy)
+        }).save();
     },
 
     /**
