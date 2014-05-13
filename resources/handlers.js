@@ -11,6 +11,8 @@ var app = express.Router();
  * @api {post} /api/tickets/:id/handlers Add follower to a ticket
  * @apiName AddHandlers
  * @apiGroup handlers
+ *
+ * @apiParam {String} id User id for the handler
  */
 app.post("/api/tickets/:id/handlers", function(req, res, next) {
     Ticket.forge({ id: req.params.id })
