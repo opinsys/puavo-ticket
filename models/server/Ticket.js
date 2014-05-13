@@ -243,6 +243,8 @@ var Ticket = Base.extend({
      * Add related user to the ticket
      *
      * @method addRelatedUser
+     * @param {models.server.User|Number} user User object or id for the relation
+     * @param {models.server.User|Number} addedBy User model or id of user who adds the user
      * @return {models.server.RelatedUser}
      */
     addRelatedUser: function(user, addedBy){
