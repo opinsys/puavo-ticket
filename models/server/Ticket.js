@@ -138,6 +138,7 @@ var Ticket = Base.extend({
      * @method setStatus
      * @param {String} status
      * @param {models.server.User} user Creator of the status
+     * @return {Bluebird.Promise} models.server.Tag representing the status
      */
     setStatus: function(status, user){
         return this.addTag("status:" + status, user);
