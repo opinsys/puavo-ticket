@@ -9,6 +9,7 @@ function Puavo(options) {
 }
 
 Puavo.prototype.request = function(url) {
+    // FIXME: authentication
     return request("https://" + this.domain + url)
         .then(function(contents) {
             return JSON.parse(contents[1]);
