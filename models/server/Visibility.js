@@ -4,14 +4,14 @@ var Bookshelf = require("bookshelf");
 
 var Visibility = Bookshelf.DB.Model.extend({
 
-  tableName: "visibilities",
+    tableName: "visibilities",
 
-  defaults: function() {
-      return {
-          created_at: new Date(),
-          updated_at: new Date()
-      };
-  }
+    defaults: function() {
+        return {
+            created_at: new Date(),
+            updated_at: new Date()
+        };
+    }
 
 });
 
