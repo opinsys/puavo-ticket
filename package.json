@@ -52,7 +52,7 @@
     "jsonlint": "~1.6.0",
     "serve": "~1.4.0",
     "node-inspector": "~0.7.3",
-    "nock": "~0.28.3"
+    "nock": "~0.29.0"
   },
   "jshintConfig": {
     "undef": true,
