@@ -2,10 +2,6 @@
 var Base = require("./Base");
 
 
-function commentUrl(ticketId) {
-    return "/api/tickets/" + ticketId + "/comments";
-}
-
 /**
  * Client Comment model
  *
@@ -17,7 +13,7 @@ function commentUrl(ticketId) {
 var Comment = Base.extend({
 
     url: function() {
-        return commentUrl(this.collection.ticketId);
+        return this.collection.ticket.url() + "/comments";
     }
 
 });

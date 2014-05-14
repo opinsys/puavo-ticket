@@ -6,6 +6,7 @@ var React = require("react/addons");
 var Route = require("./utils/react-route");
 
 var User = require("./models/client/User");
+var Ticket = require("./models/client/Ticket");
 
 var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
@@ -55,24 +56,41 @@ var Main = React.createClass({
 
     mixins: [Route.Mixin, EventMixin],
 
-    /**
-     * @method renderTicketForm
-     */
-    renderTicketForm: function() {
-        if (routes.newTicket.match || routes.existingTicket.match) {
-            return <TicketForm user={this.state.user} />;
-        }
-    },
-
     getInitialState: function() {
         return {
-            user: new User(window.USER)
+            user: this.createBoundEmitter(User, window.USER),
+            ticket: this.createBoundEmitter(Ticket)
         };
     },
 
-    componentDidMount: function() {
-        this.reactTo(this.state.user);
+    componentWillMount: function() {
+        this.onNavigate();
     },
+
+    onNavigate: function() {
+        var existing = routes.existingTicket.match;
+
+        if (existing && existing.params.id !== this.state.ticket.get("id")) {
+            console.log("nav setting new ticket", existing.params.id);
+            this.setTicket(existing.params.id);
+            return;
+        } else if (routes.newTicket.match) {
+            console.log("nav setting empty ticket");
+            this.setTicket();
+        } else {
+            console.log("nav just render");
+            this.forceUpdate();
+        }
+
+    },
+
+    setTicket: function(id) {
+        if (this.state.ticket) this.state.ticket.off();
+        this.setState({
+            ticket: this.createBoundEmitter(Ticket, { id : id })
+        });
+    },
+
 
     render: function() {
         return (
@@ -90,9 +108,8 @@ var Main = React.createClass({
                         <h1>Tukipalvelu</h1>
 
                         {routes.ticketList.match && <TicketList />}
-                        {routes.newTicket.match && <TicketForm />}
-                        {routes.existingTicket.match &&
-                            <TicketView ticketId={routes.existingTicket.match.params.id} />}
+                        {routes.newTicket.match && <TicketForm ticket={this.state.ticket} />}
+                        {routes.existingTicket.match && <TicketView ticket={this.state.ticket} />}
 
                     </div>
                 </div>

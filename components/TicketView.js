@@ -3,7 +3,6 @@
 var React = require("react/addons");
 var _ = require("lodash");
 
-var Ticket = require("../models/client/Ticket");
 var Comment = require("../models/client/Comment");
 var EventMixin = require("../utils/EventMixin");
 var Lightbox = require("./Lightbox");
@@ -54,20 +53,15 @@ var TicketView = React.createClass({
     getInitialState: function() {
         return {
             comment: "",
-            ticketModel: this.createBoundEmitter(Ticket)
         };
     },
 
-    componentWillMount: function() {
-        this.setupModel();
-    },
-
-    componentWillReceiveProps: function() {
+    componentDidMount: function() {
         this.setupModel();
     },
 
     handleChange: function() {
-        this.state.ticketModel.set({
+        this.props.ticket.set({
             description: this.refs.description.getDOMNode().value,
             title: this.refs.title.getDOMNode().value,
         });
@@ -82,7 +76,7 @@ var TicketView = React.createClass({
         if (!this.hasUnsavedComment()) return;
 
         var comment = new Comment({ comment: this.state.comment });
-        this.state.ticketModel.updates().add(comment);
+        this.props.ticket.updates().add(comment);
         this.setState({ comment: "" });
         this.refs.comment.getDOMNode().focus();
 
@@ -99,11 +93,11 @@ var TicketView = React.createClass({
 
 
     handleClose: function() {
-        this.state.ticketModel.close();
+        this.props.ticket.close();
     },
 
     isOperating: function() {
-        return this.state.ticketModel.isOperating();
+        return this.props.ticket.isOperating();
     },
 
     /**
@@ -112,41 +106,35 @@ var TicketView = React.createClass({
      * @method setupModel
      */
     setupModel: function() {
-        if (this.state.ticketModel.get("id") !== this.props.ticketId) {
-            this.state.ticketModel.reset();
-            this.state.ticketModel.set({ id: this.props.ticketId });
-            this.state.ticketModel.fetch();
-            this.state.ticketModel.updates().fetch();
-        }
-
+        console.log("FETHCING TICKET", this.props.ticket.get("id"));
+        this.props.ticket.fetch();
+        this.props.ticket.updates().fetch();
     },
-
 
     handleAddDevice: function(e) {
         Lightbox.displayComponent(
-            <AddDevice ticketModel={this.state.ticketModel} />
+            <AddDevice ticketModel={this.props.ticket} />
         );
     },
 
     render: function() {
-        console.log("render TickerForm: updates: ", this.state.ticketModel.updates().size());
         return (
             <div className="ticket-form">
 
                 {this.isOperating() && <p>Ladataan...</p>}
 
                 <h1>
-                    {this.state.ticketModel.get("title")}
+                    {this.props.ticket.get("title")}
                     <span>
-                        ({this.state.ticketModel.getCurrentStatus()})
+                        ({this.props.ticket.getCurrentStatus()})
                     </span>
                 </h1>
 
-                <p>{this.state.ticketModel.get("description")}</p>
+                <p>{this.props.ticket.get("description")}</p>
 
                 <div>
                     <ul>
-                        {this.state.ticketModel.updates().map(function(update) {
+                        {this.props.ticket.updates().map(function(update) {
                             var out;
 
                             if (update.get("type") === "devices") {
@@ -190,9 +178,9 @@ var TicketView = React.createClass({
                     />
                     <button
                         onClick={this.saveComment}
-                        disabled={this.state.ticketModel.isOperating() || !this.hasUnsavedComment()} >Lähetä</button>
+                        disabled={this.props.ticket.isOperating() || !this.hasUnsavedComment()} >Lähetä</button>
                     <button onClick={this.handleAddDevice} >Lisää laite</button>
-                    <ToggleStatusButton ticketModel={this.state.ticketModel} />
+                    <ToggleStatusButton ticketModel={this.props.ticket} />
                 </div>
 
 

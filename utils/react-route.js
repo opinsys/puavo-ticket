@@ -110,7 +110,9 @@ function updateRoutes() {
     });
 
     rootComponents.forEach(function(component) {
-        component.forceUpdate();
+        if (typeof component.onNavigate === "function") {
+            component.onNavigate();
+        }
     });
 }
 

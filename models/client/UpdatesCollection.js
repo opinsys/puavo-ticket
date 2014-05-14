@@ -24,7 +24,11 @@ var UpdatesCollection = Base.Collection.extend({
 
 
     initialize: function(models, opts) {
-        if (opts && opts.ticketId) this.ticketId = opts.ticketId;
+        if (opts && opts.ticket) this.setTicket(opts.ticket);
+    },
+
+    setTicket: function(ticket) {
+        this.ticket = ticket;
     },
 
     model: function(attrs, options) {
@@ -36,10 +40,10 @@ var UpdatesCollection = Base.Collection.extend({
     },
 
     url: function() {
-        if (!this.ticketId) {
-            throw new Error("Cannot fetch comments without ticketId!");
+        if (!this.ticket.get("id")) {
+            throw new Error("Cannot fetch comments without ticket id!");
         }
-        return "/api/tickets/" + this.ticketId + "/updates";
+        return "/api/tickets/" + this.ticket.get("id") + "/updates";
     }
 
 });

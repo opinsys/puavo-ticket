@@ -4,7 +4,6 @@ var React = require("react/addons");
 
 var SimilarTickets = require("./SimilarTickets");
 var EventMixin = require("../utils/EventMixin");
-var Ticket = require("../models/client/Ticket");
 var routes = require("./routes");
 
 var LinkTicket = routes.LinkTicket;
@@ -24,25 +23,24 @@ var TicketForm = React.createClass({
 
     getInitialState: function() {
         return {
-            ticketModel: this.createBoundEmitter(Ticket)
+            description: "",
+            title: ""
         };
     },
 
     handleChange: function() {
-        this.state.ticketModel.set({
+        this.props.ticket.set({
             description: this.refs.description.getDOMNode().value,
-            title: this.refs.title.getDOMNode().value,
+            title: this.refs.title.getDOMNode().value
         });
     },
-
-
 
     /**
      * @method renderSimilarTickets
      */
     renderSimilarTickets: function() {
         if (routes.newTicket.match) {
-            return <SimilarTickets ticketModel={this.state.ticketModel} />;
+            return <SimilarTickets ticketModel={this.props.ticket} />;
         }
     },
 
@@ -51,42 +49,41 @@ var TicketForm = React.createClass({
      */
     handleSave: function() {
         var self = this;
-        this.state.ticketModel.save().then(function(foo) {
+        this.props.ticket.save().then(function(foo) {
             if (routes.existingTicket.match) return;
-            LinkTicket.navigate({ id: self.state.ticketModel.get("id") });
+            LinkTicket.navigate({ id: self.props.ticket.get("id") });
         });
     },
 
 
     render: function() {
-        console.log("render TickerForm: updates: ", this.state.ticketModel.updates().size());
         return (
             <div className="ticket-form">
 
-                {this.state.ticketModel.isOperating() && <p>Ladataan...</p>}
+                {this.props.ticket.isOperating() && <p>Ladataan...</p>}
 
                 {this.renderSimilarTickets()}
 
                 <input
-                    disabled={this.state.ticketModel.isOperating()}
+                    disabled={this.props.ticket.isOperating()}
                     autoFocus
                     ref="title"
                     type="text"
                     onChange={this.handleChange}
-                    value={this.state.ticketModel.get("title")}
+                    value={this.props.ticket.get("title")}
                     placeholder="Otsikko" />
                 <textarea
-                    disabled={this.state.ticketModel.isOperating()}
+                    disabled={this.props.ticket.isOperating()}
                     ref="description"
                     placeholder="Kuvaus ongelmastasi"
-                    value={this.state.ticketModel.get("description")}
+                    value={this.props.ticket.get("description")}
                     onChange={this.handleChange}
                 />
 
                 <div className="button-wrap">
                     <button
                         className="button"
-                        disabled={this.state.ticketModel.isOperating()}
+                        disabled={this.props.ticket.isOperating()}
                         onClick={this.handleSave} >Tallenna</button>
                 </div>
 

@@ -2,6 +2,7 @@
 var Base = require("./Base");
 var Tag = require("./Tag");
 var _ = require("lodash");
+var fwd = require("../../utils/Backbone.fwd");
 var UpdatesCollection = require("./UpdatesCollection");
 
 /**
@@ -13,6 +14,16 @@ var UpdatesCollection = require("./UpdatesCollection");
  * @uses models.TicketMixin
  */
 var Ticket = Base.extend({
+
+    fwd: fwd,
+
+    dispose: function() {
+        this.off();
+        this._updates.off();
+        this._updates.invoke("off");
+        this._updates.reset();
+        this._updates = null;
+    },
 
     url: function() {
         if (this.get("id")) {
@@ -29,11 +40,9 @@ var Ticket = Base.extend({
     },
 
     initialize: function() {
-        this.on("change:id", this._setTicketIdForUpdates.bind(this));
-    },
-
-    _setTicketIdForUpdates: function() {
-        this.updates().ticketId = this.get("id");
+        this._updates = new UpdatesCollection();
+        this._updates.setTicket(this);
+        this.fwd(this._updates);
     },
 
     /**
@@ -44,13 +53,6 @@ var Ticket = Base.extend({
      * @return {models.client.UpdatesCollection} Collection of comments wrapped in a Promise
      */
     updates: function(){
-        if (this._updates) return this._updates;
-        this._updates = new UpdatesCollection();
-        var self = this;
-        this._updates.on("all", function(eventName) {
-            self.trigger.apply(self, arguments);
-        }, this);
-        this._setTicketIdForUpdates();
         return this._updates;
     },
 

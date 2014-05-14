@@ -32,7 +32,6 @@ var TicketList = React.createClass({
     },
 
     render: function() {
-        console.log("render TicketList");
         return (
             <div>
                 <h2>Päivittyneet tukipyynnöt</h2>

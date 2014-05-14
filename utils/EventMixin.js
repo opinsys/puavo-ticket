@@ -1,5 +1,6 @@
 "use strict";
 
+var _ = require("lodash");
 
 /**
  * @namespace utils
@@ -26,14 +27,14 @@ var EventMixin = {
             if (this.isMounted()) this.forceUpdate();
 
         }, this);
+
+        this._emitters.push(emitter);
     },
 
     componentWillUnmount: function() {
-        var self = this;
-        this._emitters.forEach(function(emitter) {
-            emitter.off(null, null, self);
-        });
-        delete this._emitters;
+        if (!this._emitters) return;
+        _.invoke(this._emitters, "dispose");
+        this._emitters = null;
     },
 
     /**

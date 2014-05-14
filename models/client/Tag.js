@@ -16,7 +16,7 @@ var TagMixin = require("../TagMixin");
 var Tag = Base.extend({
 
     url: function() {
-        return "/api/tickets/" + this.collection.ticketId + "/tags";
+        return this.collection.ticket.url() + "/tags";
     }
 
 });
