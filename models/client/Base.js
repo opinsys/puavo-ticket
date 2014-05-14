@@ -151,6 +151,14 @@ var Base = Backbone.Model.extend({
      */
     saving: null,
 
+    /**
+     * Call when not using this model anymore. Unbinds all event listeners.
+     *
+     * @method dispose
+     */
+    dispose: function() {
+        this.off();
+    }
 
 });
 
@@ -181,7 +189,17 @@ Base.Collection = Backbone.Collection.extend({
      * @property fetching
      * @type Bluebird.Promise|null
      */
-    fetching: null
+    fetching: null,
+
+    /**
+     * Call when not using this Collection anymore. Unbinds all event
+     * listeners.
+     *
+     * @method dispose
+     */
+    dispose: function() {
+        this.off();
+    }
 });
 
 
