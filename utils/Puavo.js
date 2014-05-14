@@ -9,9 +9,12 @@ var config = require("../config.js");
  *
  * @namespace utils
  * @class Puavo
+ *
+ * @constructor
+ * @param {Object} options
+ * @param {Object} options.domain
  */
 function Puavo(options) {
-
     this.domain = options.domain;
 }
 
@@ -20,7 +23,7 @@ function Puavo(options) {
  *
  * @method request
  * @param {String} url
- * @return {Object}
+ * @return {Bluebird.Promise}
  */
 Puavo.prototype.request = function(url) {
     return request(config.puavo.protocol + this.domain + url, {
@@ -40,11 +43,10 @@ Puavo.prototype.request = function(url) {
  *
  * @method userByUsername
  * @param {String} username
- * @return {Object}
+ * @return {Bluebird.Promise}
  */
 Puavo.prototype.userByUsername = function(username) {
     return this.request("/v3/users/" + username);
-
 };
 
 module.exports = Puavo;
