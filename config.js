@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === "test") {
     }
 }
 
-config.database.debug = false;
+config.database.debug = !!process.env.SQL;
 config.database.client = "pg";
 
 module.exports = config;

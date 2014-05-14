@@ -158,6 +158,12 @@ Server-side tests can be debugged similarly using the `mocha` command:
 If you like GUIs the server can be debugged with
 [node-inspector](https://github.com/node-inspector/node-inspector) too.
 
+## Debug SQL
+
+Set `SQL` environment variable to `1` or `true`
+
+Example: `SQL=1 make test-server` or `SQL=1 node server.js`
+
 ## puavo-ticket API documentation
 
 The Javascript API documentation is generated with [YUIDoc][] and is available
