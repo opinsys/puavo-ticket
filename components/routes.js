@@ -1,16 +1,16 @@
 
-var Route = require("../utils/react-route");
+var Nav = require("../utils/Nav");
 
 
 module.exports = {
-    ticketList: Route.create("/"),
-    existingTicket: Route.create("/tickets/:id"),
-    newTicket: Route.create(/\/new.*/),
+    ticketList: Nav.createRoute("/"),
+    existingTicket: Nav.createRoute("/tickets/:id"),
+    newTicket: Nav.createRoute(/\/new.*/),
 
-    LinkTicket: Route.createLink("/tickets/:id"),
-    LinkNewTicket: Route.createLink("/new"),
-    LinkTicketList: Route.createLink("/"),
-    LinkLogout: Route.createLink("/logout")
+    LinkTicket: Nav.createLink("/tickets/:id"),
+    LinkNewTicket: Nav.createLink("/new"),
+    LinkTicketList: Nav.createLink("/"),
+    LinkLogout: Nav.createLink("/logout")
 };
 
 

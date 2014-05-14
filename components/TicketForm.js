@@ -39,7 +39,7 @@ var TicketForm = React.createClass({
      * @method renderSimilarTickets
      */
     renderSimilarTickets: function() {
-        if (routes.newTicket.match) {
+        if (routes.newTicket.isMatch()) {
             return <SimilarTickets ticketModel={this.props.ticket} />;
         }
     },
@@ -51,7 +51,7 @@ var TicketForm = React.createClass({
         var self = this;
         this.props.ticket.save().then(function(foo) {
             if (routes.existingTicket.match) return;
-            LinkTicket.navigate({ id: self.props.ticket.get("id") });
+            LinkTicket.go({ id: self.props.ticket.get("id") });
         });
     },
 

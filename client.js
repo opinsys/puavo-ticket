@@ -3,7 +3,7 @@
 require("./client_setup");
 
 var React = require("react/addons");
-var Route = require("./utils/react-route");
+var Nav = require("./utils/Nav");
 
 var User = require("./models/client/User");
 var Ticket = require("./models/client/Ticket");
@@ -50,11 +50,10 @@ var UserInformation = React.createClass({
  * @namespace components
  * @class Main
  * @extends react.ReactComponent
- * @uses utils.Route.Mixin
  */
 var Main = React.createClass({
 
-    mixins: [Route.Mixin, EventMixin],
+    mixins: [EventMixin],
 
     getInitialState: function() {
         return {
@@ -67,21 +66,23 @@ var Main = React.createClass({
         this.onNavigate();
     },
 
-    onNavigate: function() {
-        var existing = routes.existingTicket.match;
+    componentDidMount: function() {
+        Nav.onNavigate = this.onNavigate.bind(this);
+    },
 
-        if (existing && existing.params.id !== this.state.ticket.get("id")) {
-            console.log("nav setting new ticket", existing.params.id);
-            this.setTicket(existing.params.id);
+    onNavigate: function() {
+        var existing = routes.existingTicket;
+
+        if (existing.isMatch() && existing.get("id") !== this.state.ticket.get("id")) {
+            console.log("nav setting new ticket");
+            this.setTicket(existing.get("id"));
             return;
-        } else if (routes.newTicket.match) {
+        } else if (routes.newTicket.isMatch()) {
             console.log("nav setting empty ticket");
             this.setTicket();
         } else {
-            console.log("nav just render");
             this.forceUpdate();
         }
-
     },
 
     setTicket: function(id) {
@@ -96,8 +97,8 @@ var Main = React.createClass({
         return (
             <div>
                 <div className="topmenu">
-                    <button onClick={routes.LinkNewTicket.navigate} className="top-button" >Uusi</button>
-                    <button onClick={routes.LinkTicketList.navigate} className="top-button" >Tukipyynnöt</button>
+                    <button onClick={routes.LinkNewTicket.go} className="top-button" >Uusi</button>
+                    <button onClick={routes.LinkTicketList.go} className="top-button" >Tukipyynnöt</button>
 
                     <UserInformation user={this.state.user} />
                 </div>
@@ -107,9 +108,9 @@ var Main = React.createClass({
 
                         <h1>Tukipalvelu</h1>
 
-                        {routes.ticketList.match && <TicketList />}
-                        {routes.newTicket.match && <TicketForm ticket={this.state.ticket} />}
-                        {routes.existingTicket.match && <TicketView ticket={this.state.ticket} />}
+                        {routes.ticketList.isMatch() && <TicketList />}
+                        {routes.newTicket.isMatch() && <TicketForm ticket={this.state.ticket} />}
+                        {routes.existingTicket.isMatch() && <TicketView ticket={this.state.ticket} />}
 
                     </div>
                 </div>
@@ -118,5 +119,6 @@ var Main = React.createClass({
     }
 
 });
+
 
 React.renderComponent(<Main />, document.getElementById("app"));

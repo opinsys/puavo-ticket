@@ -19,7 +19,6 @@ var EventMixin = {
     reactTo: function(emitter) {
         if (!this._emitters) this._emitters = [];
         emitter.on("all", function(e) {
-            console.log("event from", e);
 
             // Update only when the component is mounted. An update might occur
             // for unmounted component when user navigates to an another view
