@@ -91,19 +91,8 @@ describe("/api/tickets/:id/related_users", function() {
             });
     });
 
-    it("can add related user to a other ticket", function() {
+    it("can add related user to a other ticket when related user exists on the users table", function() {
         var self = this;
-
-        nock("https://testing.opinsys.fi")
-        .get("/v3/users/joe.bloggs")
-        .reply(200, {
-            organisation_domain: "testing.opinsys.fi",
-            email: "joe.bloggs@test.com",
-            first_name: "Joe",
-            last_name: "Bloggs",
-            username: "joe.bloggs",
-            id: "1432"
-        });
 
         return this.agent
             .post("/api/tickets/" + self.otherTicket.get("id") + "/related_users")
