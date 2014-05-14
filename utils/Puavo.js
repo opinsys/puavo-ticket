@@ -2,6 +2,7 @@
 
 var Promise = require("bluebird");
 var request = Promise.promisify(require("request"));
+var config = require("../config.js");
 
 function Puavo(options) {
 
@@ -9,11 +10,16 @@ function Puavo(options) {
 }
 
 Puavo.prototype.request = function(url) {
-    // FIXME: authentication
-    return request("https://" + this.domain + url)
-        .then(function(contents) {
-            return JSON.parse(contents[1]);
+    return request(config.puavo.protocol + this.domain + url, {
+        'auth': {
+            'user': config.puavo.organisations[this.domain].user,
+            'pass': config.puavo.organisations[this.domain].password
+        }
+        })
+        .spread(function(res, body) {
+            return JSON.parse(body);
         });
+
 };
 
 

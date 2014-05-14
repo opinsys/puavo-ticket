@@ -42,6 +42,7 @@ describe("/api/tickets/:id/related_users", function() {
 
         nock("https://testing.opinsys.fi")
         .get("/v3/users/joe.bloggs")
+        .matchHeader("Authorization", 'Basic cHVhdm8tdGlja2V0OnBhc3N3b3Jk')
         .reply(200, {
             organisation_domain: "testing.opinsys.fi",
             email: "joe.bloggs@test.com",

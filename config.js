@@ -21,6 +21,14 @@ if (process.env.NODE_ENV === "test") {
         password: "password",
         database: "puavo-ticket-test"
     };
+    config.puavo = {};
+    config.puavo.protocol = "https://";
+    config.puavo.organisations = {
+        "testing.opinsys.fi": {
+            "user": "puavo-ticket",
+            "password": "password"
+        }
+    };
 } else {
     config = _.extend(config, require("./_config"));
     if (!config.puavoSharedSecret) {
