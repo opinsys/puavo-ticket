@@ -57,11 +57,8 @@ var Ticket = Base.extend({
 
 
     /**
-     *
      * @method visibilities
-     * @return {Bluebird.Promise}
-     *     resolves to Backbone.Collection of models.server.Visibility wrapped
-     *     in a `Promise`.
+     * @return {models.server.Visibility}
      */
     visibilities: function() {
         return this.hasMany(Visibility, "ticket_id");
@@ -76,7 +73,7 @@ var Ticket = Base.extend({
      * @param {String} visibility Visibility string
      * @param {models.server.User|Number} addedBy User model or id of user who adds the visibility
      * @param {String} [comment] Optional comment for the visibility
-     * @return {Bluebird.Promise}
+     * @return {Bluebird.Promise} with models.server.Visibility
      */
     addVisibility: function(visibility, addedBy, comment) {
         if (typeof visibility !== "string") {
@@ -95,7 +92,7 @@ var Ticket = Base.extend({
      *
      * @method addComment
      * @param {Object} comment Plain object with models.server.Comment fields
-     * @return {Bluebird.Promise}
+     * @return {Bluebird.Promise} with models.server.Comment
      */
     addComment: function(comment) {
         comment = _.clone(comment);
@@ -109,7 +106,7 @@ var Ticket = Base.extend({
      * @method addTag
      * @param {String} tag
      * @param {models.server.User} user Creator of the tag
-     * @return {Bluebird.Promise}
+     * @return {Bluebird.Promise} with models.server.Tag
      */
     addTag: function(tag, user) {
         return Tag.forge({
@@ -186,7 +183,7 @@ var Ticket = Base.extend({
      *
      * @method addFollower
      * @param {Object} comment Plain object with models.server.Follower fields
-     * @return {Bluebird.Promise}
+     * @return {Bluebird.Promise} with models.server.Follower
      */
     addFollower: function(follower) {
         follower = _.clone(follower);
@@ -299,7 +296,7 @@ var Ticket = Base.extend({
      * Get all updates related to this ticket
      *
      * @method fetchUpdates
-     * @return {Bluebird.Promise} Bookshelf Collection of Comment|Device|RelatedUser models
+     * @return {Bluebird.Promise} with Bookshelf Collection of Comment|Device|RelatedUser models
      * wrapped in a promise
      */
     fetchUpdates: function() {
@@ -361,7 +358,7 @@ var Ticket = Base.extend({
  * form of `organisation|school|user:<entity id>`.
  *
  *     Example: "school:2"
- * @return {Bluebird.Promise} Backbone.Collection of models.server.Ticket
+ * @return {Bluebird.Promise} with Backbone.Collection of models.server.Ticket
  */
 Ticket.byVisibilities = function(visibilities) {
     return Ticket
