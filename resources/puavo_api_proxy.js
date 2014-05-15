@@ -53,7 +53,10 @@ app.use(function(req, res, next) {
             url: puavoUrl,
             pool: {},
             form: req.body,
-            auth: config.puavo,
+            auth: {
+                'user': config.puavo.user,
+                'pass': config.puavo.password
+            },
             // XXX: How to use our cert auth?
             strictSSL: false
         }),
