@@ -37,6 +37,17 @@ Nav.createRoute = function(path) {
 };
 
 
+/**
+ * @static
+ * @method renderPathTemplate
+ * @param {String} tmpl A URL path template
+ * @param {Object} props Properties to be rendered on the template
+ * @return {String}
+ *
+ * @example
+ *     Nav.renderPathTemplate("/tickets/:id", { id: 1 }) // "/tickets/1"
+ *
+ */
 Nav.renderPathTemplate = function(tmpl, props) {
     var fields = tmpl.match(/\:[a-zA-Z]+/g);
     if (!fields) return tmpl;
@@ -65,6 +76,12 @@ function updateRoutes() {
         r._doMatch();
     });
 
+    /**
+     * Event fired when the browser navigates from Nav.go(...) or from pop
+     * state
+     *
+     * @event navigate
+     */
     Nav.trigger("navigate");
 }
 
@@ -228,13 +245,11 @@ Route.prototype = {
     },
 
     /**
-     * Get value for given route param
+     * Get value for given route param. Throws an error when the route does not
+     * match.
      *
-     * Example:
-     *
-     * Path .get("id") for `/tickets/:id` gives `1` in url `/tickets/1`
-     *
-     * throws an error when the route does not match
+     * Route#get("id") with template `/tickets/:id` on url `/tickets/1`
+     * returns `1`.
      *
      * @method get
      * @param {String} key
