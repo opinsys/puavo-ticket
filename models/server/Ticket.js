@@ -243,7 +243,7 @@ var Ticket = Base.extend({
      * @method addDevice
      * @param {models.server.Device|Number} device Device model or external id of the device
      * @param {models.server.User|Number} addedBy User model or id of user who adds the device
-     *
+     * @return {Bluebird.Promise} with models.server.Device
      */
     addDevice: function(device, addedBy){
         return Device.forge({
