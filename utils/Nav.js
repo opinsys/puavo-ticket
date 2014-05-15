@@ -212,13 +212,23 @@ Nav.createLink = function(hrefTemplate, override) {
  * @namespace utils.Nav
  * @class Route
  * @constructor
- * @param {String} path Path matcher string. For example `/tickets/:id`. See
- * routes.js documentation for details
+ * @param {String} path
+ *      Path matcher string. For example `/tickets/:id`. See routes.js
+ *      documentation for details
+ * @param {Object} [options]
+ * @param {utils.Nav.Route} [options.depends]
+ *      Other Route instances that must match before this Route matches.
+ *
  */
-function Route(path) {
+function Route(path, options) {
+    this._dependencies = [];
     this._match = null;
     this._router = createRouter();
     this._path = path;
+
+    if (options && options.depends) {
+        this._dependencies = [].concat(options.depends);
+    }
 
     [].concat(path).forEach(function(path) {
         this._router.addRoute(path, noop);
@@ -237,11 +247,23 @@ Route.prototype = {
      * @return {Boolean}
      */
     isMatch: function() {
-        return !!this._match;
+        if (!this._match) return false;
+
+        var invalidDep = this._dependencies.some(function(dep) {
+            return !dep.isMatch();
+        });
+
+        return !invalidDep;
     },
 
     _doMatch: function() {
-        this._match = this._router.match(Nav.getCurrentPath());
+        if (this._matchedPath === Nav.getCurrentPath()) return;
+
+        this._dependencies.forEach(function(route) {
+            return route._doMatch();
+        });
+        this._matchedPath = Nav.getCurrentPath();
+        this._match = this._router.match(this._matchedPath);
     },
 
     /**
