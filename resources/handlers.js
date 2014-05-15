@@ -15,15 +15,11 @@ var app = express.Router();
  * @apiParam {String} id User id for the handler
  */
 app.post("/api/tickets/:id/handlers", function(req, res, next) {
-    Ticket.forge({ id: req.params.id })
-    .fetch()
+    Ticket.byId(req.params.id).fetch({ require: true })
     .then(function(ticket) {
-        if (!ticket) return res.json(404, { error: "no such ticket" });
-        return ticket.addHandler(req.body.id, req.user)
-            .then(function(handler) {
-                res.json(handler.toJSON());
-            });
+        return ticket.addHandler(req.body.id, req.user);
     })
+    .then(res.json.bind(res))
     .catch(next);
 });
 
