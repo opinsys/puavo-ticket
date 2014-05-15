@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 "use strict";
-var React = require("react");
+var React = require("react/addons");
 var createRouter = require("routes");
 var xtend = require("xtend");
 var Backbone = require("backbone");

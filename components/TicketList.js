@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 "use strict";
-var React = require("react");
+var React = require("react/addons");
 var routes = require("./routes");
 var Ticket = require("../models/client/Ticket");
 var EventMixin = require("../utils/EventMixin");
