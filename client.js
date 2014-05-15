@@ -67,7 +67,11 @@ var Main = React.createClass({
     },
 
     componentDidMount: function() {
-        Nav.onNavigate = this.onNavigate.bind(this);
+        Nav.on("navigate", this.onNavigate);
+    },
+
+    componentWillUnmount: function() {
+        Nav.off("navigate", this.onNavigate);
     },
 
     onNavigate: function() {

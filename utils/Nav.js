@@ -3,6 +3,8 @@
 var React = require("react");
 var createRouter = require("routes");
 var xtend = require("xtend");
+var Backbone = require("backbone");
+var _ = require("lodash");
 
 function noop() { }
 
@@ -14,7 +16,7 @@ var ROUTES = [];
  * @namespace utils
  * @class Nav
  */
-var Nav = {};
+var Nav = _.extend({}, Backbone.Events);
 
 /**
  * Forced prefix for navigation
@@ -63,17 +65,7 @@ function updateRoutes() {
         r._doMatch();
     });
 
-    /**
-     * Called when browser navigates from pop state or Nav.go(...)
-     *
-     * User must override this.
-     *
-     * @static
-     * @method onNavigate
-     */
-    if (typeof Nav.onNavigate === "function") {
-        Nav.onNavigate();
-    }
+    Nav.trigger("navigate");
 }
 
 
