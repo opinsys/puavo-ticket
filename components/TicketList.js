@@ -7,6 +7,31 @@ var EventMixin = require("../utils/EventMixin");
 var navigation = require("./navigation");
 var TicketViewLink = navigation.link.TicketViewLink;
 
+function isClosed(ticket) {
+    return ticket.get("status") === "closed";
+}
+
+function isOpen(ticket) {
+    return ticket.get("status") === "open";
+}
+
+var List = React.createClass({
+    render: function() {
+        return (
+            <ul ref="list">
+                {this.props.tickets.map(function(ticket) {
+                    return (
+                        <li key={ticket.get("id")}>
+                            <TicketViewLink id={ticket.get("id")}>
+                            {ticket.get("title")}
+                            </TicketViewLink>
+                        </li>
+                    );
+                })}
+            </ul>
+        );
+    }
+});
 
 /**
  * List existing tickes
@@ -34,19 +59,12 @@ var TicketList = React.createClass({
     render: function() {
         return (
             <div>
-                <h2>Päivittyneet tukipyynnöt</h2>
                 {this.state.ticketCollection.fetching && <p>Ladataan...</p>}
-                <ul ref="list">
-                    {this.state.ticketCollection.map(function(ticket) {
-                        return (
-                            <li key={ticket.get("id")}>
-                                <TicketViewLink id={ticket.get("id")}>
-                                {ticket.get("title")} ({ticket.get("status")})
-                                </TicketViewLink>
-                            </li>
-                        );
-                    })}
-                </ul>
+                <h2>Avoimet tukipyynnöt</h2>
+                <List tickets={this.state.ticketCollection.filter(isOpen)} />
+
+                <h2>Suljetut tukipyynnöt</h2>
+                <List tickets={this.state.ticketCollection.filter(isClosed)} />
             </div>
         );
     }
