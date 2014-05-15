@@ -33,7 +33,7 @@ var User = Base.extend({
      * @method ensureUserFromJWTToken
      * @param {Object} JWT token object from Opinsys SSO
      * @static
-     * @return {Bluebird.Promise}
+     * @return {Bluebird.Promise} models.server.User
      */
     ensureUserFromJWTToken: function(token) {
         return User.byExternalId(token.id).fetch()
