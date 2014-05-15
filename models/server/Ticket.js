@@ -269,7 +269,7 @@ var Ticket = Base.extend({
      * @method addRelatedUser
      * @param {models.server.User|Number} user User object or id for the relation
      * @param {models.server.User|Number} addedBy User model or id of user who adds the user
-     * @return {models.server.RelatedUser}
+     * @return {Bluebird.Promise} with models.server.RelatedUser
      */
     addRelatedUser: function(user, addedBy){
         return RelatedUser.forge({
