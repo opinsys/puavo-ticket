@@ -27,7 +27,7 @@ describe("api.opinsys.fi proxy", function() {
          nock("https://testing.opinsys.fi")
         .get("/v3/devices")
         // XXX: https://github.com/pgte/nock/issues/163
-        // .matchHeader("Authorization", /.*/)
+        .matchHeader("Authorization", 'Basic cHVhdm8tdGlja2V0OnBhc3N3b3Jk')
         .reply(200, [
             {
                 username: "foo"
@@ -46,6 +46,7 @@ describe("api.opinsys.fi proxy", function() {
     it("GET with querystring /api/puavo/v3/devices", function() {
          nock("https://testing.opinsys.fi")
         .get("/v3/devices?foo=bar")
+        .matchHeader("Authorization", 'Basic cHVhdm8tdGlja2V0OnBhc3N3b3Jk')
         .reply(200, [
             {
                 username: "bar"
