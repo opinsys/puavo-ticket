@@ -54,3 +54,44 @@
           - puavo-ticket-test
 
 
+      - name: Install Puavo dependencies
+        command: apt-get install -y --force-yes puavo-standalone ruby1.9.1 ruby1.9.1-dev libxml2-dev libxslt-dev libsqlite3-dev libmagickwand-dev ldap-utils libpq-dev libssl-dev build-essential libopenssl-ruby xpdf-utils git libreadline6-dev libxml2-dev libxslt1-dev libpq-dev libmagickwand-dev libsqlite3-dev ruby-bundler puavo-client nodejs-bundle puavo-ca-rails redis-server aptirepo-upload puavo-devscripts
+
+      - name: LDAP-configuration
+        command: puavo-init-standalone --unsafe-passwords opinsys.net
+
+      - name: Create organisatios for test and development
+        command: puavo-add-new-organisation --yes {{ item.organisation }} --username {{ item.username }} --password {{ item.password }} --given-name {{ item.given-name }} --surname {{ item.surname }}
+        creates: /var/lib/ldap/dc=edu,dc=hogwarts,dc=fi
+        with_items:
+          - { organisation: "hogwarts",
+              username: "albus",
+              password: "albus",
+              given-name: "Albus",
+              surname: "Dumbledore" }
+          - { organisation: "example",
+              username: "cucumber",
+              password: "cucumber",
+              given-name: "cucumber",
+              surname: "cucumber" }
+          - { organisation: "anotherorg",
+              username: "admin",
+              password: "admin",
+              given-name: "Admin",
+              surname: "Administrator" }
+
+      - name: Clone puavo-user repository
+        git: repo=git://github.com/opinsys/puavo-users.git
+        dest={{ code_dest }}/puavo-users
+
+      - name: puavo-web, Install Ruby gems, node modules and build assets.
+        command: make
+          chdir={{ code_dest }}/puavo-users
+
+      - name: puavo-web configuration
+        command: bundle exec rake puavo:configuration
+          chdir={{ code_dest }}/puavo-users
+
+      - name: puavo-rest, Install Ruby gems etc.
+        command: make dev-install
+          chdir={{ code_dest }}/puavo-users/rest
