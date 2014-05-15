@@ -4,9 +4,9 @@ var React = require("react/addons");
 
 var SimilarTickets = require("./SimilarTickets");
 var EventMixin = require("../utils/EventMixin");
-var routes = require("./routes");
 
-var LinkTicket = routes.LinkTicket;
+var navigation = require("./navigation");
+var TicketViewLink = navigation.link.TicketViewLink;
 
 
 /**
@@ -35,23 +35,15 @@ var TicketForm = React.createClass({
         });
     },
 
-    /**
-     * @method renderSimilarTickets
-     */
-    renderSimilarTickets: function() {
-        if (routes.newTicket.isMatch()) {
-            return <SimilarTickets ticketModel={this.props.ticket} />;
-        }
-    },
+
 
     /**
      * @method handleSave
      */
     handleSave: function() {
         var self = this;
-        this.props.ticket.save().then(function(foo) {
-            if (routes.existingTicket.match) return;
-            LinkTicket.go({ id: self.props.ticket.get("id") });
+        this.props.ticket.save().then(function() {
+            TicketViewLink.go({ id: self.props.ticket.get("id") });
         });
     },
 
@@ -62,7 +54,7 @@ var TicketForm = React.createClass({
 
                 {this.props.ticket.isOperating() && <p>Ladataan...</p>}
 
-                {this.renderSimilarTickets()}
+                <SimilarTickets ticketModel={this.props.ticket} />
 
                 <input
                     disabled={this.props.ticket.isOperating()}

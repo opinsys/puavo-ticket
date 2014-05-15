@@ -1,11 +1,11 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
-var routes = require("./routes");
+
 var Ticket = require("../models/client/Ticket");
 var EventMixin = require("../utils/EventMixin");
-var LinkNewTicket = routes.LinkNewTicket;
-var LinkTicket = routes.LinkTicket;
+var navigation = require("./navigation");
+var TicketViewLink = navigation.link.TicketViewLink;
 
 
 /**
@@ -40,14 +40,13 @@ var TicketList = React.createClass({
                     {this.state.ticketCollection.map(function(ticket) {
                         return (
                             <li key={ticket.get("id")}>
-                                <LinkTicket id={ticket.get("id")}>
+                                <TicketViewLink id={ticket.get("id")}>
                                 {ticket.get("title")} ({ticket.get("status")})
-                                </LinkTicket>
+                                </TicketViewLink>
                             </li>
                         );
                     })}
                 </ul>
-                <LinkNewTicket>Uusi</LinkNewTicket>
             </div>
         );
     }
