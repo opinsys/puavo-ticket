@@ -200,15 +200,35 @@ var Ticket = Base.extend({
      * @method addHandler
      * @param {models.server.User|Number} handler User model or id of handler
      * @param {models.server.User|Number} addedBy User model or id of user who adds the handler
-     * @return {Bluebird.Promise}
+     * @return {Bluebird.Promise} with models.server.Handler
      */
     addHandler: function(handler, addedBy) {
-        return Handler.forge({
-                ticket_id: this.get("id"),
-                created_by: Base.toId(addedBy),
-                handler: Base.toId(handler)
-            })
-            .save();
+        var self = this;
+
+        if (Base.isModel(handler)) handler = Promise.cast(handler);
+        else handler = User.byId(handler).fetch({ require: true });
+
+        return handler.then(function(handler) {
+            return Promise.all([
+
+                Handler.forge({
+                    ticket_id: self.get("id"),
+                    created_by: Base.toId(addedBy),
+                    handler: Base.toId(handler)
+                }).save(),
+
+                // TODO: handle unique constraint errors
+                self.addVisibility(
+                    handler.getPersonalVisibility(),
+                    addedBy
+                )
+
+            ])
+            .spread(function(handler, visibility) {
+                return handler;
+            });
+        });
+
     },
 
     /**

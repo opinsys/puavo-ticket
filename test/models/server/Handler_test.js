@@ -49,6 +49,17 @@ describe("Handler model", function() {
                 assert.equal("matti.meikalainen", handlers[0].handler.external_data.username);
 
                 return self.ticket.visibilities().fetch();
+            })
+            .then(function(visibilities) {
+                visibilities = visibilities.map(function(v) {
+                    return v.get("entity");
+                });
+
+                assert(
+                    visibilities.indexOf(self.otherUser.getPersonalVisibility()) !== -1,
+                    "personal visibility for the new handler is added"
+                );
+
             });
 
     });
