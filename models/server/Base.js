@@ -78,10 +78,11 @@ var Base = Bookshelf.DB.Model.extend({
      *
      * @static
      * @method byId
+     * @param {Number|models.server.Base} id
      * @return {models.server.Base} subclass of models.server.Base
      */
     byId: function(id) {
-        return this.forge({ id: id });
+        return this.forge({ id: Base.toId(id) });
     },
 
     /**
@@ -90,7 +91,7 @@ var Base = Bookshelf.DB.Model.extend({
      *
      * @static
      * @method toId
-     * @param {Backbone.Model|Bookshelf.Model|mixed} model
+     * @param {Backbone.Model|any} model
      * @return {Number}
      */
     toId: function(model) {
@@ -103,14 +104,27 @@ var Base = Bookshelf.DB.Model.extend({
      *
      * @static
      * @method toAttr
-     * @param {Backbone.Model|Bookshelf.Model|mixed} model
+     * @param {Backbone.Model|any} model
      * @param {String} attr Attribute to get from the model
      * @return {mixed}
      */
     toAttr: function(model, attr) {
-        if (typeof model.get === "function") return model.get(attr);
+        if (this.isModel(model)) return model.get(attr);
         return model;
-    }
+    },
+
+    /**
+     * Returns true if the given value is a Backbone.Model like object
+     *
+     * @static
+     * @method isModel
+     * @param {any}
+     * @return {Boolean}
+     */
+    isModel: function(model) {
+        if (!model) return false;
+        return typeof model.get === "function";
+    },
 
 
 });
