@@ -14,12 +14,20 @@ function addLifecycleColumns(table) {
     table.dateTime("updated_at").notNullable();
     table.dateTime("deleted_at");
 
-    // A helper boolean column for the unique constraints. Null value in the
-    // delete_at field won't work as one would expect.
+    // A helper column for the uniqueForTicket constraints. Null value
+    // in the delete_at field won't work as one would expect.
     // See http://stackoverflow.com/a/5834554
-    table.boolean("deleted").defaultTo(false).notNullable();
+    //
+    // _deleted defaults to 0 and when the Model is soft deleted it is set to
+    // id of the Model (See models.server.Base#softDelete). Using this
+    // uniqueForTicket constraint can ensure that only one columnName can be in
+    // non soft deleted state.
+    table.integer("_deleted").defaultTo(0).notNullable();
 }
 
+function uniqueForTicket(table, columnName) {
+    table.unique(["ticket_id", "_deleted"].concat(columnName));
+}
 
 function addTicketRelation(table) {
     return table.integer("ticket_id")
@@ -61,7 +69,7 @@ exports.up = function(knex, Promise) {
                 table.increments("id");
                 table.string("comment");
                 table.string("entity").notNullable();
-                table.unique(["entity", "ticket_id", "deleted"]);
+                uniqueForTicket(table, "entity");
             }),
 
             knex.schema.createTable("related_users", function(table) {
@@ -74,7 +82,7 @@ exports.up = function(knex, Promise) {
                     .references("id")
                     .inTable("users");
 
-                table.unique(["user", "ticket_id", "deleted"]);
+                uniqueForTicket(table, "user");
             }),
 
             knex.schema.createTable("handlers", function(table) {
@@ -87,7 +95,7 @@ exports.up = function(knex, Promise) {
                     .references("id")
                     .inTable("users");
 
-                table.unique(["handler", "ticket_id", "deleted"]);
+                uniqueForTicket(table, "handler");
             }),
 
             knex.schema.createTable("devices", function(table) {
@@ -123,7 +131,7 @@ exports.up = function(knex, Promise) {
 
                 table.string("tag").notNullable();
                 table.increments("id");
-                table.unique(["tag", "ticket_id", "deleted"]);
+                uniqueForTicket(table, "tag");
             })
         ]);
     });
