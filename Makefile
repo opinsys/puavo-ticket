@@ -5,10 +5,12 @@ export PATH := tools/bin:$(PATH)
 JSHINT=jsxhint
 KARMA=node_modules/karma/bin/karma
 
-all: npm doc install-git-hooks
+all: npm doc install-git-hooks protip
 	@echo
 	@echo All OK!
 	@echo
+
+protip:
 	@echo Protip: Add local node module scripts to PATH
 	@echo
 	@echo '    export PATH="$(CURDIR)/node_modules/.bin:$$PATH"'
