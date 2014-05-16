@@ -10,8 +10,8 @@ function addLifecycleColumns(table) {
         .references("id")
         .inTable("users");
 
-    table.dateTime("created_at");
-    table.dateTime("updated_at");
+    table.dateTime("created_at").notNullable();
+    table.dateTime("updated_at").notNullable();
     table.dateTime("deleted_at");
 
     // A helper boolean column for the unique constraints. Null value in the
@@ -32,9 +32,9 @@ exports.up = function(knex, Promise) {
     return knex.schema.createTable("users", function(table) {
         table.increments("id");
         table.string("external_id").notNullable().unique();
-        table.json("external_data");
-        table.dateTime("created_at");
-        table.dateTime("updated_at");
+        table.json("external_data").notNullable();
+        table.dateTime("created_at").notNullable();
+        table.dateTime("updated_at").notNullable();
     })
     .then(function createTicketsTable() {
         return knex.schema.createTable("tickets", function(table) {
@@ -60,7 +60,7 @@ exports.up = function(knex, Promise) {
 
                 table.increments("id");
                 table.string("comment");
-                table.string("entity");
+                table.string("entity").notNullable();
                 table.unique(["entity", "ticket_id", "deleted"]);
             }),
 
@@ -121,7 +121,7 @@ exports.up = function(knex, Promise) {
                 addLifecycleColumns(table);
                 addTicketRelation(table);
 
-                table.string("tag");
+                table.string("tag").notNullable();
                 table.increments("id");
                 table.unique(["tag", "ticket_id", "deleted"]);
             })
