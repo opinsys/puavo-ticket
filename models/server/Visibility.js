@@ -19,6 +19,24 @@ var Visibility = Bookshelf.DB.Model.extend({
         return this.belongsTo(User, "created_by");
     }
 
+}, {
+
+    /**
+     * Visibility assertion helper
+     *
+     * @method hasVisibility
+     * @param {String} visibility
+     * @param {Array} models Array of models.server.Visibility models
+     * @return Boolean
+     */
+    hasVisibility: function(visibility, models){
+        var visibilities = models.map(function(v) {
+            return v.get("entity");
+        });
+
+        return visibilities.indexOf(visibility) !== -1;
+    }
+
 });
 
 module.exports = Visibility;

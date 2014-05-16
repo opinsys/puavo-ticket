@@ -56,6 +56,7 @@ exports.up = function(knex, Promise) {
                 table.increments("id");
                 table.string("comment");
                 table.string("entity");
+                table.unique(["entity", "ticket_id"]);
             }),
 
             knex.schema.createTable("related_users", function(table) {
