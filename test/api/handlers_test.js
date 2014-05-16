@@ -1,8 +1,11 @@
 "use strict";
 
-var helpers = require("../helpers");
-
 var assert = require("assert");
+var Promise = require("bluebird");
+
+var helpers = require("../helpers");
+var User = require("../../models/server/User");
+
 
 
 describe("/api/tickets/:id/handlers", function() {
@@ -12,17 +15,21 @@ describe("/api/tickets/:id/handlers", function() {
 
         return helpers.clearTestDatabase()
             .then(function() {
+                return Promise.all([
+                    User.ensureUserFromJWTToken(helpers.user.teacher),
+                    User.ensureUserFromJWTToken(helpers.user.teacher2)
+                ]);
+            })
+            .spread(function(user, otherUser) {
+                self.user = user;
+                self.otherUser = otherUser;
+
                 return helpers.loginAsUser(helpers.user.teacher);
             })
             .then(function(agent) {
                 self.agent = agent;
 
-                return helpers.fetchTestUser();
-            })
-            .then(function(user) {
-                self.user = user;
-
-                return helpers.insertTestTickets(user);
+                return helpers.insertTestTickets(self.user);
             })
             .then(function(tickets) {
                 self.ticket = tickets.ticket;
@@ -39,11 +46,11 @@ describe("/api/tickets/:id/handlers", function() {
 
         return this.agent
             .post("/api/tickets/" + self.ticket.get("id") + "/handlers")
-            .send({ id: self.user.id })
+            .send({ id: self.otherUser.get("id") })
             .promise()
             .then(function(res) {
                 assert.equal(200, res.status);
-                assert.equal(self.user.id, res.body.handler);
+                assert.equal(self.otherUser.get("id"), res.body.handler);
             });
     });
 
@@ -59,7 +66,10 @@ describe("/api/tickets/:id/handlers", function() {
                     return update.type === "handlers";
                 });
                 assert.equal(1, handlers.length);
-                assert.equal("olli.opettaja", handlers[0].handler.external_data.username);
+                assert.equal(
+                    "matti.meikalainen",
+                    handlers[0].handler.external_data.username
+                );
             });
     });
 

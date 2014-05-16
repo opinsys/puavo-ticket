@@ -25,6 +25,14 @@ migrate:
 rollback:
 	knex migrate:rollback
 
+reset-test-db:
+	NODE_ENV=test $(MAKE) rollback
+	NODE_ENV=test $(MAKE) migrate
+
+reset-db:
+	$(MAKE) rollback
+	$(MAKE) migrate
+
 create-test-db:
 	echo "\nCreate test database and user to PostgreSQL server (use postgres user)\n"
 	su -c "createdb -E UNICODE puavo-ticket-test" postgres
