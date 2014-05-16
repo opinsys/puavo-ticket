@@ -18,15 +18,15 @@ function addLifecycleColumns(table) {
     // in the delete_at field won't work as one would expect.
     // See http://stackoverflow.com/a/5834554
     //
-    // _deleted defaults to 0 and when the Model is soft deleted it is set to
-    // id of the Model (See models.server.Base#softDelete). Using this
+    // "deleted" column  defaults to 0 and when the Model is soft deleted it is
+    // set to id of the Model (See models.server.Base#softDelete). Using this
     // uniqueForTicket constraint can ensure that only one columnName can be in
     // non soft deleted state.
-    table.integer("_deleted").defaultTo(0).notNullable();
+    table.integer("deleted").defaultTo(0).notNullable();
 }
 
 function uniqueForTicket(table, columnName) {
-    table.unique(["ticket_id", "_deleted"].concat(columnName));
+    table.unique(["ticket_id", "deleted"].concat(columnName));
 }
 
 function addTicketRelation(table) {
