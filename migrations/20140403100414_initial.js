@@ -13,6 +13,11 @@ function addLifecycleColumns(table) {
     table.dateTime("created_at");
     table.dateTime("updated_at");
     table.dateTime("deleted_at");
+
+    // A helper boolean column for the unique constraints. Null value in the
+    // delete_at field won't work as one would expect.
+    // See http://stackoverflow.com/a/5834554
+    table.boolean("deleted").defaultTo(false).notNullable();
 }
 
 
@@ -56,7 +61,7 @@ exports.up = function(knex, Promise) {
                 table.increments("id");
                 table.string("comment");
                 table.string("entity");
-                table.unique(["entity", "ticket_id"]);
+                table.unique(["entity", "ticket_id", "deleted"]);
             }),
 
             knex.schema.createTable("related_users", function(table) {
@@ -68,6 +73,8 @@ exports.up = function(knex, Promise) {
                     .notNullable()
                     .references("id")
                     .inTable("users");
+
+                table.unique(["user", "ticket_id", "deleted"]);
             }),
 
             knex.schema.createTable("handlers", function(table) {
@@ -79,6 +86,8 @@ exports.up = function(knex, Promise) {
                     .notNullable()
                     .references("id")
                     .inTable("users");
+
+                table.unique(["handler", "ticket_id", "deleted"]);
             }),
 
             knex.schema.createTable("devices", function(table) {
@@ -114,6 +123,7 @@ exports.up = function(knex, Promise) {
 
                 table.string("tag");
                 table.increments("id");
+                table.unique(["tag", "ticket_id", "deleted"]);
             })
         ]);
     });

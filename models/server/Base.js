@@ -67,7 +67,8 @@ var Base = Bookshelf.DB.Model.extend({
         }
         this.set({
             deleted_by: Base.toId(byUser),
-            deleted_at: new Date()
+            deleted_at: new Date(),
+            deleted: true
         });
         return this.save();
     }
