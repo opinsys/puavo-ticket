@@ -7,6 +7,7 @@ var helpers = require("../../helpers");
 var Visibility= require("../../../models/server/Visibility");
 var Ticket = require("../../../models/server/Ticket");
 var User = require("../../../models/server/User");
+var Base = require("../../../models/server/Base");
 
 
 describe("Visibility model", function() {
@@ -71,19 +72,18 @@ describe("Visibility model", function() {
             });
     });
 
-    it("does not allow duplicate visibilities for the same ticket", function() {
-        var self = this;
-        var error;
-        return self.ticket.addVisibility(
-                self.otherUser.getPersonalVisibility(),
-                self.user
-            )
-            .catch(function(err) {
-                error = err;
-            })
-            .then(function() {
-                assert(error);
-            });
+    it("does not allow duplicate visibilities for the same ticket", function(done) {
+
+        this.ticket.addVisibility(
+            this.otherUser.getPersonalVisibility(),
+            this.user
+        )
+        .catch(Base.isUniqueConstraintError, function(err) {
+            assert(err);
+            done(); // use done() to assert that this assert is ran
+        })
+        .catch(done);
+
     });
 
 });

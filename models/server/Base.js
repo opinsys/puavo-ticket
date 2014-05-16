@@ -126,6 +126,23 @@ var Base = Bookshelf.DB.Model.extend({
         return typeof model.get === "function";
     },
 
+    /**
+     * Constraint error detection. Handy when used as predicate
+     * Promise#catch(...).
+     *
+     * XXX: This implementation sucks. I've yet to find more reliable way to
+     * detect this error.
+     *
+     * @method isUniqueConstraintError
+     * @param {Error} err Error object to test
+     * @return Boolean
+     */
+    isUniqueConstraintError: function(err){
+        if (!err) return false;
+        var re = /^duplicate key value violates unique constraint/;
+        return re.test(err.message);
+    }
+
 
 });
 
