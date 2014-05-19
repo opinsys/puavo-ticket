@@ -5,7 +5,7 @@
         command: apt-get install -y python-apt python-psycopg2
 
       - name: Add archive.opinsys.fi
-        apt_repository: repo='deb http://archive.opinsys.fi/git-trusty trusty main restricted universe multiverse' state=present update_cache=yes
+        apt_repository: repo='deb http://archive.opinsys.fi/git-master precise main' state=present update_cache=yes
 
       - name: install postgresql
         apt: pkg=postgresql state=present
