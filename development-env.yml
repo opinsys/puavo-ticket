@@ -10,8 +10,11 @@
       - name: Add archive.opinsys.fi
         apt_repository: repo='deb http://archive.opinsys.fi/slapd-old precise main' state=present update_cache=yes
 
+      - name: Add apt.postgresql.org
+        apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' state=present update_cache=yes
+
       - name: install postgresql
-        apt: pkg=postgresql state=present
+        apt: pkg=postgresql-9.3 state=present
 
       - name: Install git
         apt: pkg=git state=present force=yes
