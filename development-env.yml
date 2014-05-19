@@ -108,6 +108,11 @@
         command: bundle exec rake puavo:configuration
           chdir={{ code_dest }}/puavo-users
 
+      - name: Generate test data to Puavo
+        command: bundle exec rails runner db/seeds.rb && touch db/seed.rb-is-run
+          chdir={{ code_dest }}/puavo-users
+          creates={{ code_dest }}/puavo-users/db/seed.rb-is-run
+
       - name: puavo-rest, Install Ruby gems etc.
         command: make
           chdir={{ code_dest }}/puavo-users/rest
