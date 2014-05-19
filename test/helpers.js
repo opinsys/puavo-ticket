@@ -10,13 +10,11 @@
 
 // Ensure testing env
 process.env.NODE_ENV = "test";
-
-
+process.env.BLUEBIRD_DEBUG = "true";
 
 
 var assert = require("assert");
 var Promise = require("bluebird");
-Promise.longStackTraces();
 
 
 require("../utils/superagentPromise");
