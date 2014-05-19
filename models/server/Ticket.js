@@ -76,15 +76,24 @@ var Ticket = Base.extend({
      * @return {Bluebird.Promise} with models.server.Visibility
      */
     addVisibility: function(visibility, addedBy, comment) {
-        if (typeof visibility !== "string") {
+        var self = this;
+        if (typeof visibility !== "string" || !visibility) {
             throw new Error("visibility must be a string");
         }
+
         return Visibility.forge({
-            ticket_id: this.get("id"),
-            entity: visibility,
-            comment: comment,
-            created_by: Base.toId(addedBy)
-        }).save();
+                ticket_id: self.get("id"),
+                entity: visibility,
+            }).fetch()
+            .then(function(existingVisibility) {
+                if (existingVisibility) return existingVisibility;
+                return Visibility.forge({
+                    ticket_id: self.get("id"),
+                    entity: visibility,
+                    comment: comment,
+                    created_by: Base.toId(addedBy)
+                }).save();
+            });
     },
 
     /**

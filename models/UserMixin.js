@@ -21,6 +21,7 @@ var UserMixin = {
      * @return {String}
      */
     getPersonalVisibility: function(){
+        if (!this.get("id")) throw new Error("Cannot get visibility before save");
         return "user:" + this.get("id");
     },
 
