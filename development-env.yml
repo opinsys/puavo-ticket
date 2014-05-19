@@ -71,6 +71,7 @@
 
       - name: LDAP-configuration
         command: puavo-init-standalone --unsafe-passwords opinsys.net
+          creates=/etc/puavo
 
       - name: Create organisatios for test and development
         command: puavo-add-new-organisation --yes {{ item.organisation }} --username {{ item.username }} --password {{ item.password }} --given-name {{ item.given-name }} --surname {{ item.surname }}
