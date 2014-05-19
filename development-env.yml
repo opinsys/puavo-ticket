@@ -116,3 +116,6 @@
       - name: puavo-rest, Install Ruby gems etc.
         command: make
           chdir={{ code_dest }}/puavo-users/rest
+
+      - name: Configuration for puavo-rest
+        copy: src=.ansible-files/puavo-rest.yml dest=/etc/puavo-rest.yml
