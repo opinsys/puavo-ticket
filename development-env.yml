@@ -74,24 +74,27 @@
           creates=/etc/puavo
 
       - name: Create organisatios for test and development
-        command: puavo-add-new-organisation --yes {{ item.organisation }} --username {{ item.username }} --password {{ item.password }} --given-name {{ item.given-name }} --surname {{ item.surname }}
-        creates: /var/lib/ldap/dc=edu,dc=hogwarts,dc=fi
+        command: puavo-add-new-organisation --yes {{ item.organisation }} --username {{ item.username }} --password {{ item.password }} --given-name {{ item.givenname }} --surname {{ item.surname }}
+          creates={{ item.creates }}
         with_items:
           - { organisation: "hogwarts",
               username: "albus",
               password: "albus",
-              given-name: "Albus",
-              surname: "Dumbledore" }
+              givenname: "Albus",
+              surname: "Dumbledore",
+              creates: "/var/lib/ldap/dc=edu,dc=hogwarts,dc=fi" }
           - { organisation: "example",
               username: "cucumber",
               password: "cucumber",
-              given-name: "cucumber",
-              surname: "cucumber" }
+              givenname: "cucumber",
+              surname: "cucumber",
+              creates: "/var/lib/ldap/dc=edu,dc=example,dc=fi" }
           - { organisation: "anotherorg",
               username: "admin",
               password: "admin",
-              given-name: "Admin",
-              surname: "Administrator" }
+              givenname: "Admin",
+              surname: "Administrator",
+              creates: "/var/lib/ldap/dc=edu,dc=anotherorg,dc=fi" }
 
       - name: Clone puavo-user repository
         git: repo=git://github.com/opinsys/puavo-users.git
