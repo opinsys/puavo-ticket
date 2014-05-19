@@ -1,0 +1,7 @@
+{
+    "puavoSharedSecret":"secret",
+    "puavo": {
+        "user":"albus",
+        "pass":"albus"
+    }
+}
