@@ -98,7 +98,7 @@
 
       - name: Clone puavo-user repository
         git: repo=git://github.com/opinsys/puavo-users.git
-        dest={{ code_dest }}/puavo-users
+          dest={{ code_dest }}/puavo-users
 
       - name: puavo-web, Install Ruby gems, node modules and build assets.
         command: make
