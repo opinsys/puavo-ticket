@@ -41,6 +41,7 @@ describe("User model", function() {
 describe("UserMixin", function() {
     before(function() {
         this.user = new User({
+            id: 1,
             external_id: helpers.user.teacher.id,
             external_data: helpers.user.teacher
         });
