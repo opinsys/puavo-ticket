@@ -109,5 +109,5 @@
           chdir={{ code_dest }}/puavo-users
 
       - name: puavo-rest, Install Ruby gems etc.
-        command: make dev-install
+        command: make
           chdir={{ code_dest }}/puavo-users/rest
