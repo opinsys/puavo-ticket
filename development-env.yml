@@ -1,5 +1,10 @@
 - hosts: localhost
   sudo: yes
+  vars:
+    puavo_ca_port: 3000
+    puavo_web_port: 3001
+    puavo_ticket_port: 3002
+    puavo_rest_port: 9393
   tasks:
       - name: Install ansible dependencies
         command: apt-get install -y python-apt python-psycopg2
@@ -60,7 +65,7 @@
           - puavo-ticket-test
 
       - name: Configuration for puavo-ticket
-        copy: src=.ansible_files/_config.json dest={{ code_dest }}/puavo-ticket/_config.json
+        template: src=.ansible_files/_config.json.tmpl dest={{ code_dest }}/puavo-ticket/_config.json
 
       - name: Install nodejs moduiles, generate documentation and install git hooks
         command: make
@@ -122,4 +127,4 @@
           chdir={{ code_dest }}/puavo-users/rest
 
       - name: Configuration for puavo-rest
-        copy: src=.ansible-files/puavo-rest.yml dest=/etc/puavo-rest.yml
+        copy: src=.ansible_files/puavo-rest.yml dest=/etc/puavo-rest.yml
