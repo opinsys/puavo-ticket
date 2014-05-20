@@ -73,8 +73,10 @@ Create `_config.json` with
 
 ```json
 {
-    "puavoSharedSecret": "xxxxx",
     "puavo": {
+        "sharedSecret":"secret",
+        "authEndpoint": "https://rest.example.com/v3/sso",
+        "mountPoint": "https://ticket.example.com",
         "user": "admin",
         "pass": "xxxxx"
     }
