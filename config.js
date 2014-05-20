@@ -34,7 +34,7 @@ if (process.env.NODE_ENV === "test") {
     };
 } else {
     config = _.extend(config, require("./_config"));
-    if (!config.puavoSharedSecret) {
+    if (!config.puavo.puavoSharedSecret) {
         throw new Error('"puavoSharedSecret" is missing from _config.json');
     }
 }
