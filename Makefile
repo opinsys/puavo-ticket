@@ -106,3 +106,10 @@ install-ansible:
 	sudo apt-add-repository ppa:rquillo/ansible --yes
 	sudo apt-get update
 	sudo apt-get install -y ansible
+
+dev-install:
+	# FIXME locale?
+	#sudo su -c "echo 'LANG=\"en_US.UTF-8\"' > /etc/default/locale"
+	#sudo locale-gen en_US.UTF-8
+	#sudo dpkg-reconfigure locales
+	sudo ansible-playbook development-env.yml --extra-vars code_dest=$HOME --extra-vars server_host=$(hostname -f)
