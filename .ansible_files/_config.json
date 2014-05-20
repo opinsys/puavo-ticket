@@ -1,7 +1,0 @@
-{
-    "puavoSharedSecret":"secret",
-    "puavo": {
-        "user":"uid=admin,o=puavo",
-        "pass":"password"
-    }
-}
