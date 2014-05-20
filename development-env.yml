@@ -66,14 +66,17 @@
 
       - name: Configuration for puavo-ticket
         template: src=.ansible_files/_config.json.tmpl dest={{ code_dest }}/puavo-ticket/_config.json
+          owner={{ dev_user }}
 
       - name: Install nodejs moduiles, generate documentation and install git hooks
         command: make
           chdir={{ code_dest }}/puavo-ticket
+        sudo_user: {{ dev_user }}
 
       - name: Runs puavo-ticket migrations
         command: make migrate
           chdir={{ code_dest }}/puavo-ticket
+        sudo_user: {{ dev_user }}
 
       - name: Install Puavo dependencies
         command: apt-get install -y --force-yes puavo-standalone ruby1.9.1 ruby1.9.1-dev libxml2-dev libxslt-dev libsqlite3-dev libmagickwand-dev ldap-utils libpq-dev libssl-dev build-essential libopenssl-ruby xpdf-utils git libreadline6-dev libxml2-dev libxslt1-dev libpq-dev libmagickwand-dev libsqlite3-dev ruby-bundler puavo-client nodejs-bundle puavo-ca-rails redis-server aptirepo-upload puavo-devscripts
@@ -108,23 +111,28 @@
       - name: Clone puavo-user repository
         git: repo=git://github.com/opinsys/puavo-users.git
           dest={{ code_dest }}/puavo-users
+        sudo_user: {{ dev_user }}
 
       - name: puavo-web, Install Ruby gems, node modules and build assets.
         command: make
           chdir={{ code_dest }}/puavo-users
+        sudo_user: {{ dev_user }}
 
       - name: puavo-web configuration
         command: bundle exec rake puavo:configuration
           chdir={{ code_dest }}/puavo-users
+        sudo_user: {{ dev_user }}
 
       - name: Generate test data to Puavo
         command: bundle exec rails runner db/seeds.rb && touch db/seed.rb-is-run
           chdir={{ code_dest }}/puavo-users
           creates={{ code_dest }}/puavo-users/db/seed.rb-is-run
+        sudo_user: {{ dev_user }}
 
       - name: puavo-rest, Install Ruby gems etc.
         command: make
           chdir={{ code_dest }}/puavo-users/rest
+        sudo_user: {{ dev_user }}
 
       - name: Configuration for puavo-rest
         copy: src=.ansible_files/puavo-rest.yml dest=/etc/puavo-rest.yml
