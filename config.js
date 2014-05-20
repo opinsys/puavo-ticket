@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "test") {
         database: "puavo-ticket-test"
     };
     config.puavo = {};
-    config.puavo.puavoSharedSecret = "secret";
+    config.puavo.sharedSecret = "secret";
     config.puavo.protocol = "https://";
     config.puavo.user = "puavo-ticket";
     config.puavo.password = "password";
@@ -34,8 +34,8 @@ if (process.env.NODE_ENV === "test") {
     };
 } else {
     config = _.extend(config, require("./_config"));
-    if (!config.puavo.puavoSharedSecret) {
-        throw new Error('"puavoSharedSecret" is missing from _config.json');
+    if (!config.puavo.sharedSecret) {
+        throw new Error('"sharedSecret" is missing from _config.json');
     }
 }
 

@@ -44,7 +44,7 @@ app.use(jwtsso({
     authEndpoint: config.puavo.authEndpoint,
 
     // Shared secret string with the above service
-    sharedSecret: config.puavo.puavoSharedSecret,
+    sharedSecret: config.puavo.sharedSecret,
 
     // Public mountpoint for this app
     mountPoint: config.mountPoint,
