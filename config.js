@@ -14,7 +14,6 @@ var config = {
 };
 
 if (process.env.NODE_ENV === "test") {
-    config.puavoSharedSecret = "secret";
     config.database.connection = {
         host: "127.0.0.1",
         user: "puavo-ticket",
@@ -22,6 +21,7 @@ if (process.env.NODE_ENV === "test") {
         database: "puavo-ticket-test"
     };
     config.puavo = {};
+    config.puavo.puavoSharedSecret = "secret";
     config.puavo.protocol = "https://";
     config.puavo.user = "puavo-ticket";
     config.puavo.password = "password";

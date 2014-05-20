@@ -41,13 +41,13 @@ app.use(session({
 app.use(jwtsso({
 
     // Service endpoint that issues the jwt tokens
-    authEndpoint: "https://api.opinsys.fi/v3/sso",
+    authEndpoint: config.puavo.authEndpoint,
 
     // Shared secret string with the above service
-    sharedSecret: config.puavoSharedSecret,
+    sharedSecret: config.puavo.puavoSharedSecret,
 
     // Public mountpoint for this app
-    mountPoint: "http://puavo-ticket-dev:3000",
+    mountPoint: config.mountPoint,
 
     // Set max age in seconds for the tokens
     // Defaults to 60 seconds
@@ -128,7 +128,7 @@ app.get("/*", function(req, res) {
 module.exports = app;
 
 if (require.main === module) {
-    var server = app.listen(3000, function() {
+    var server = app.listen(config.port, function() {
         console.log("Javascript API docs http://opinsys.github.io/puavo-ticket/");
         console.log("REST API docs http://opinsys.github.io/puavo-ticket/rest");
 
