@@ -63,7 +63,7 @@ describe("/api/tickets/:id/tags", function() {
             });
     });
 
-    it("is available in /api/tickets as plain string", function() {
+    it("is available in /api/tickets as an array", function() {
         var self = this;
         return this.agent
             .post("/api/tickets/" + this.otherTicket.get("id") + "/tags")
@@ -78,24 +78,23 @@ describe("/api/tickets/:id/tags", function() {
             .then(function(res) {
                 assert.equal(2, res.body.length);
 
-                var ticket = _.find(res.body, function(t) {
-                    return t.title === self.ticket.get("title");
+                var ticket = _.findWhere(res.body, {
+                    title: self.ticket.get("title")
                 });
                 assert(ticket);
-                assert.equal(
-                    "foostatus",
-                    ticket.status,
-                    "first ticket has a plain status property"
+                assert(
+                    _.findWhere(ticket.tags, { tag: "status:foostatus" }),
+                    "has 'status:foostatus' tag"
                 );
 
-                var otherTicket = _.find(res.body, function(t) {
-                    return t.title === self.otherTicket.get("title");
+
+                var otherTicket = _.findWhere(res.body, {
+                    title: self.otherTicket.get("title")
                 });
                 assert(otherTicket);
-                assert.equal(
-                    "barstatus",
-                    otherTicket.status,
-                    "second ticket has a plain status property"
+                assert(
+                    _.findWhere(otherTicket.tags, { tag: "status:barstatus" }),
+                    "has 'status:barstatus' tag"
                 );
 
             });

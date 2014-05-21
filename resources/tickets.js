@@ -20,7 +20,7 @@ var app = express.Router();
 app.get("/api/tickets", function(req, res, next) {
     Ticket.byVisibilities(req.user.getVisibilities())
     .fetch({
-        withRelated: "status"
+        withRelated: "tags"
     })
     .then(function(coll) {
         res.json(coll.toJSON());

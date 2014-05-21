@@ -1,5 +1,8 @@
 "use strict";
+
+var _ = require("lodash");
 var assert = require("assert");
+
 var helpers = require("../helpers");
 
 describe("/api/tickets", function() {
@@ -55,7 +58,10 @@ describe("/api/tickets", function() {
                 assert.equal(self.ticket.id, res.body[0].id);
                 assert.equal("Computer does not work", res.body[0].title);
                 assert.equal(self.ticket.id, res.body[0].id);
-                assert.equal("open", res.body[0].status);
+                assert(
+                    _.findWhere(res.body[0].tags, { tag: "status:open" }),
+                    "has status:open tag"
+                );
             });
     });
 

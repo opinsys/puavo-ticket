@@ -162,9 +162,14 @@ var Ticket = Base.extend({
      * @method tags
      */
     tags: function(){
-        return this.hasMany(Tag, "ticket_id");
+        return this.tagHistory().query(function(qb) {
+            qb.where({ deleted: 0 });
+        });
     },
 
+    tagHistory: function() {
+        return this.hasMany(Tag, "ticket_id");
+    },
 
     /**
      * Set status of the ticket
@@ -343,7 +348,7 @@ var Ticket = Base.extend({
         var updatePromises = [
             "comments",
             "devices",
-            "tags",
+            "tagHistory",
         ].map(function(method) {
             return self[method]().fetch({
                 withRelated: "createdBy"
