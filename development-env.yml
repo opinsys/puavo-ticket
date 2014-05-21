@@ -85,7 +85,35 @@
         sudo_user: "{{ dev_user }}"
 
       - name: Install Puavo dependencies
-        command: apt-get install -y --force-yes puavo-standalone ruby1.9.1 ruby1.9.1-dev libxml2-dev libxslt-dev libsqlite3-dev libmagickwand-dev ldap-utils libpq-dev libssl-dev build-essential libopenssl-ruby xpdf-utils git libreadline6-dev libxml2-dev libxslt1-dev libpq-dev libmagickwand-dev libsqlite3-dev ruby-bundler puavo-client nodejs-bundle puavo-ca-rails redis-server aptirepo-upload puavo-devscripts
+        action: apt pkg={{item}} state=present force=yes
+        with_items:
+          - puavo-standalone
+          - ruby1.9.1
+          - ruby1.9.1-dev
+          - libxml2-dev
+          - libxslt-dev
+          - libsqlite3-dev
+          - libmagickwand-dev
+          - ldap-utils
+          - libpq-dev
+          - libssl-dev
+          - build-essential
+          - libopenssl-ruby
+          - xpdf-utils
+          - git
+          - libreadline6-dev
+          - libxml2-dev
+          - libxslt1-dev
+          - libpq-dev
+          - libmagickwand-dev
+          - libsqlite3-dev
+          - ruby-bundler
+          - puavo-client
+          - nodejs-bundle
+          - puavo-ca-rails
+          - redis-server
+          - aptirepo-upload
+          - puavo-devscripts
 
       - name: LDAP-configuration
         command: puavo-init-standalone --unsafe-passwords opinsys.net
