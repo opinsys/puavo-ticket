@@ -6,6 +6,9 @@
     puavo_ticket_port: 3002
     puavo_rest_port: 9393
   tasks:
+      - name: Create en_US.UTF-8 locale
+        locale_gen: name=en_US.UTF-8 state=present
+
       - name: Install ansible dependencies
         command: apt-get install -y python-apt python-psycopg2
 
