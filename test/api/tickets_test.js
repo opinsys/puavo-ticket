@@ -109,7 +109,7 @@ describe("/api/tickets", function() {
                 assert.equal(res.status, 200);
                 assert.equal(self.ticket.id, res.body.id);
                 assert.equal("Computer does not work", res.body.title);
-                assert.equal("open", res.body.status);
+                assert(_.findWhere(res.body.tags, { tag: "status:open" }));
             });
     });
 
