@@ -160,6 +160,24 @@ var Base = Backbone.Model.extend({
         this.off();
     }
 
+}, {
+
+    /**
+     * Create instance of models.client.Base.Collection with this model class
+     * as the `model` property
+     *
+     * @static
+     * @method collection
+     * @param {Array} [models] Array of models.client.Base models
+     * @param {Object} [options] http://backbonejs.org/#Collection-constructor
+     * @return {models.client.Base.Collection}
+     */
+    collection: function(models, options) {
+        var Klass = this.Collection.extend({
+            model: this
+        });
+        return new Klass(models, options);
+    },
 });
 
 /**
@@ -172,6 +190,14 @@ var Base = Backbone.Model.extend({
  * @uses models.client.PromiseWrapMixin
  */
 Base.Collection = Backbone.Collection.extend({
+
+    /**
+     * http://backbonejs.org/#Collection-model
+     *
+     * @property model
+     * @type models.client.Base
+     */
+    model: Base,
 
     /**
      * Fetch models from the server
