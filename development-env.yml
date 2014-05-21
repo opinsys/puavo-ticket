@@ -22,7 +22,7 @@
         apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' state=present update_cache=yes
 
       - name: install postgresql
-        apt: pkg=postgresql-9.3 state=present
+        apt: pkg=postgresql-9.3 state=present force=yes
 
       - name: Install git
         apt: pkg=git state=present force=yes
