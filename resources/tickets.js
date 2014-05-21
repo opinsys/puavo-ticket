@@ -39,7 +39,7 @@ app.get("/api/tickets", function(req, res, next) {
 app.get("/api/tickets/:id", function(req, res, next) {
     // TODO: assert visibilities!
     Ticket.forge({ id: req.params.id }).fetch({
-        withRelated: ["createdBy", "status"],
+        withRelated: ["createdBy", "tags"],
     })
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
