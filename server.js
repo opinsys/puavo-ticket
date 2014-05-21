@@ -47,7 +47,7 @@ app.use(jwtsso({
     sharedSecret: config.puavo.sharedSecret,
 
     // Public mountpoint for this app
-    mountPoint: config.mountPoint,
+    mountPoint: config.puavo.mountPoint,
 
     // Set max age in seconds for the tokens
     // Defaults to 60 seconds
