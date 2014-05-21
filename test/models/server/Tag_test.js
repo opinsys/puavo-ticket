@@ -68,21 +68,22 @@ describe("Tag model", function() {
             });
     });
 
-    it("cannot have multiple instances of the same tag", function() {
+    it("cannot have multiple instances of the same tag", function(done) {
         var self = this;
         var catchExecuted = false;
 
-        return Ticket.byId(this.ticketId).fetch()
-            .then(function(ticket) {
-                return ticket.addTag("footag", self.user);
-            })
-            .catch(function(err) {
-                catchExecuted = true;
-                assert.equal("tag footag already exists", err.message);
-            })
-            .then(function() {
-                assert(catchExecuted, "catch was not executed");
-            });
+        Ticket.byId(this.ticketId).fetch()
+        .then(function(ticket) {
+            return ticket.addTag("footag", self.user);
+        })
+        .catch(function(err) {
+            catchExecuted = true;
+            assert.equal("tag footag already exists", err.message);
+        })
+        .then(function() {
+            assert(catchExecuted, "catch was not executed");
+            done();
+        }).catch(done);
     });
 
     it("other tickets can have the same tag", function() {
