@@ -5,6 +5,8 @@ export PATH := tools/bin:$(PATH)
 JSHINT=jsxhint
 KARMA=node_modules/karma/bin/karma
 
+HOSTNAME=$(shell hostname -f)
+
 all: npm doc install-git-hooks protip
 	@echo
 	@echo All OK!
@@ -112,7 +114,7 @@ dev-install:
 	#sudo su -c "echo 'LANG=\"en_US.UTF-8\"' > /etc/default/locale"
 	#sudo locale-gen en_US.UTF-8
 	#sudo dpkg-reconfigure locales
-	sudo ansible-playbook development-env.yml --extra-vars dev_user=$(USER) --extra-vars code_dest=$(HOME) --extra-vars server_host=$(hostname -f)
+	sudo ansible-playbook development-env.yml --extra-vars dev_user=$(USER) --extra-vars code_dest=$(HOME) --extra-vars server_host=$(HOSTNAME)
 
 tmux-start-servers:
 	tmux -2 new-session -d -s puavo 'cd /home/opinsys/puavo-users; bundle exec rails s -p 3001'
