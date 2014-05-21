@@ -1,7 +1,5 @@
 "use strict";
 
-var Promise = require("bluebird");
-
 var helpers = require("../../helpers");
 
 var Ticket = require("../../../models/server/Ticket");
@@ -101,14 +99,25 @@ describe("Tag model", function() {
                     });
             })
             .then(function(tags) {
-                var tagSrings = tags.map(function(m) {
-                    return m.get("tag");
-                });
-
-                assert(tagSrings.indexOf("footag") !== -1);
+                assert(tags.findWhere({ tag: "footag" }));
             });
     });
 
+    it("tag can be removed", function() {
+        var self = this;
+        var ticket;
+        return Ticket.byId(this.ticketId).fetch()
+            .then(function(_ticket) {
+                ticket = _ticket;
+                return ticket.removeTag("footag", self.user);
+            })
+            .then(function() {
+                return ticket.tags().fetch();
+            })
+            .then(function(tags) {
+                assert(!tags.findWhere({ tag: "footag" }));
+            });
+    });
 
     it("can be readded when the previous one is soft deleted", function() {
         var self = this;
@@ -116,19 +125,13 @@ describe("Tag model", function() {
         return Ticket.byId(this.ticketId).fetch()
             .then(function(_ticket) {
                 ticket = _ticket;
-                return _ticket.fetchUpdates();
-            })
-            .then(function(updates) {
-                return new Promise(function(resolve, reject){
-                    updates.forEach(function(update) {
-                        if (update.get("type") !== "tags") return;
-                        if (update.get("tag") !== "footag") return;
-                        resolve(update.softDelete(self.user));
-                    });
-                });
+                return ticket.addTag("footag", self.user);
             })
             .then(function() {
-                return ticket.addTag("footag", self.user);
+                return ticket.tags().fetch();
+            })
+            .then(function(tags) {
+                assert(tags.findWhere({ tag: "footag" }));
             });
 
     });

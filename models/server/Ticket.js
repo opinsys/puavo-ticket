@@ -126,6 +126,35 @@ var Ticket = Base.extend({
     },
 
     /**
+     * Soft delete given tag
+     *
+     * @method removeTag
+     * @param {String} tag
+     * @param {models.server.User|Number} removedBy
+     * @param {Object} [options]
+     * @param {Boolean} [options.require=false] When true the promise is
+     * rejected if the tag is missing
+     * @return {Bluebird.Promise}
+     */
+    removeTag: function(tag, removedBy, options){
+        var self = this;
+        return Tag.collection().query(function(qb) {
+                qb.where({
+                    tag: tag,
+                    ticket_id: self.get("id"),
+                    deleted: 0
+                });
+            })
+            .fetch()
+            .then(function(tags) {
+                if (options && options.require && tags.size() === 0) {
+                    throw new Error("Cannot find tag '" + tag + "'");
+                }
+                return tags.invokeThen("softDelete", removedBy);
+            });
+    },
+
+    /**
      * Get all tags for this ticket
      *
      * @method tags
