@@ -36,12 +36,13 @@ var Ticket = Base.extend({
         this.on("created", function setInitialTicketState(ticket) {
             return ticket.createdBy().fetch().then(function(user) {
                 var isOpen = ticket.setStatus("open", user);
+                var hasNoHandlersTag = ticket.addTag("nohandlers", user);
                 var creatorCanView = ticket.addVisibility(
                     user.getPersonalVisibility(),
                     user
                 );
 
-                return Promise.all([isOpen, creatorCanView]);
+                return Promise.all([isOpen, creatorCanView, hasNoHandlersTag]);
             });
         });
     },
@@ -261,7 +262,9 @@ var Ticket = Base.extend({
                 self.addVisibility(
                     handler.getPersonalVisibility(),
                     addedBy
-                )
+                ),
+
+                self.removeTag("nohandlers", addedBy)
 
             ])
             .spread(function(handler, visibility) {

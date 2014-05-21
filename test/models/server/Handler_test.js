@@ -6,7 +6,7 @@ var Promise = require("bluebird");
 var helpers = require("../../helpers");
 var User = require("../../../models/server/User");
 
-describe("Handler model", function() {
+describe("Ticket handlers", function() {
 
     before(function() {
         var self = this;
@@ -28,6 +28,13 @@ describe("Handler model", function() {
             });
     });
 
+    it("new tickets has an implicit 'nohandlers' tag", function() {
+        return this.ticket.tags().fetch().then(function(tags) {
+            var tagStrings = tags.pluck("tag");
+            assert(tagStrings.indexOf("nohandlers") !== -1);
+        });
+    });
+
     it("can be added from a ticket", function() {
         var self = this;
 
@@ -46,21 +53,33 @@ describe("Handler model", function() {
                 assert.equal(1, handlers.length, "has one handler");
                 assert.equal(self.user.id, handlers[0].created_by);
                 assert.equal(self.otherUser.id, handlers[0].handler.id);
-                assert.equal("matti.meikalainen", handlers[0].handler.external_data.username);
+                assert.equal(
+                    "matti.meikalainen",
+                    handlers[0].handler.external_data.username
+                );
+            });
 
-                return self.ticket.visibilities().fetch();
-            })
+    });
+
+    it("personal visibility is given to the handler", function() {
+        var self = this;
+
+        return self.ticket.visibilities().fetch()
             .then(function(visibilities) {
                 visibilities = visibilities.map(function(v) {
                     return v.get("entity");
                 });
 
-                assert(
-                    visibilities.indexOf(self.otherUser.getPersonalVisibility()) !== -1,
-                    "personal visibility for the new handler is added"
-                );
-
+                assert(visibilities.indexOf(self.otherUser.getPersonalVisibility()) !== -1);
             });
-
     });
+
+    it("'nohandlers' tag is removed", function() {
+        return this.ticket.tags().fetch().then(function(tags) {
+            var tagStrings = tags.pluck("tag");
+            assert(tagStrings.indexOf("nohandlers") === -1);
+        });
+    });
+
+
 });
