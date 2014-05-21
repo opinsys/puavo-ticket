@@ -27,6 +27,9 @@
       - name: Install git
         apt: pkg=git state=present force=yes
 
+      - name: Install tmux
+        apt: pkg=tmux state=present force=yes
+
       - name: Install browsers
         action: apt pkg={{item}} state=present
         with_items:
