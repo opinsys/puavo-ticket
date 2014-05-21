@@ -103,6 +103,14 @@ var Ticket = Base.extend({
     },
 
     /**
+     * @method tags
+     * @return {models.client.Base.Collection} Collection of models.client.Tag models
+     */
+    tags: function() {
+        return Tag.collection(this.get("tags"));
+    },
+
+    /**
      * Get ticket status using the updates relation. Ticket updates must be
      * fetched with `this.updates().fetch() for this to work.
      *
@@ -110,8 +118,8 @@ var Ticket = Base.extend({
      * @return {String}
      */
     getCurrentStatus: function() {
-        var statusTags = this.updates().filter(function(update) {
-            return _.result(update, "isStatusTag");
+        var statusTags = this.tags().filter(function(tag) {
+            return tag.isStatusTag();
         });
 
         if (statusTags.length === 0) {

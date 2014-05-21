@@ -8,11 +8,11 @@ var navigation = require("./navigation");
 var TicketViewLink = navigation.link.TicketViewLink;
 
 function isClosed(ticket) {
-    return ticket.get("status") === "closed";
+    return ticket.getCurrentStatus() === "closed";
 }
 
 function isOpen(ticket) {
-    return ticket.get("status") === "open";
+    return ticket.getCurrentStatus() === "open";
 }
 
 var List = React.createClass({
