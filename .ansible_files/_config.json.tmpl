@@ -2,8 +2,8 @@
     "port": 3002,
     "puavo": {
         "sharedSecret": "secret",
-        "authEndpoint": "http://{{ server_host }}:{{ puavo_rest_port }}/v3/sso",
-        "mountPoint": "http://{{ server_host }}:{{ puavo_ticket_port }}",
+        "authEndpoint": "http://{{ hostname_command["stdout"] }}:{{ puavo_rest_port }}/v3/sso",
+        "mountPoint": "http://{{ hostname_command["stdout"] }}:{{ puavo_ticket_port }}",
         "user":"uid=admin,o=puavo",
         "pass":"password"
     }

@@ -73,6 +73,10 @@
           - puavo-ticket
           - puavo-ticket-test
 
+      - name: Get hostname
+        command: hostname -f
+        register: hostname_command
+
       - name: Configuration for puavo-ticket
         template: src=.ansible_files/_config.json.tmpl dest={{ code_dest }}/puavo-ticket/_config.json
           owner={{ dev_user }}
