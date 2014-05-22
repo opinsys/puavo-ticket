@@ -105,7 +105,7 @@ install-ansible:
 	sudo apt-get install -y python-software-properties
 	sudo apt-add-repository ppa:rquillo/ansible --yes
 	sudo apt-get update
-	sudo apt-get install -y ansible
+	sudo apt-get install -y --force-yes ansible
 
 dev-install:
 	# FIXME locale?
