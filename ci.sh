@@ -9,6 +9,7 @@ env
 ## fix home for now
 export HOME=/home/ci
 
+sudo apt-get update
 make install-ansible
 make dev-install
 
