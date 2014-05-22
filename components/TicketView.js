@@ -4,7 +4,6 @@ var React = require("react/addons");
 var _ = require("lodash");
 
 var Comment = require("../models/client/Comment");
-var EventMixin = require("../utils/EventMixin");
 var Lightbox = require("./Lightbox");
 var AddDevice = require("./AddDevice");
 
@@ -47,8 +46,6 @@ var ToggleStatusButton = React.createClass({
  * @class TicketView
  */
 var TicketView = React.createClass({
-
-    mixins: [EventMixin],
 
     getInitialState: function() {
         return {

@@ -2,7 +2,6 @@
 var Base = require("./Base");
 var Tag = require("./Tag");
 var _ = require("lodash");
-var fwd = require("../../utils/Backbone.fwd");
 var UpdatesCollection = require("./UpdatesCollection");
 
 /**
@@ -15,14 +14,15 @@ var UpdatesCollection = require("./UpdatesCollection");
  */
 var Ticket = Base.extend({
 
-    fwd: fwd,
 
     dispose: function() {
         this.off();
-        this._updates.off();
-        this._updates.invoke("off");
-        this._updates.reset();
-        this._updates = null;
+        if (this._updates) {
+            this._updates.off();
+            this._updates.invoke("off");
+            this._updates.reset();
+            this._updates = null;
+        }
     },
 
     url: function() {
@@ -42,7 +42,7 @@ var Ticket = Base.extend({
     initialize: function() {
         this._updates = new UpdatesCollection();
         this._updates.setTicket(this);
-        this.fwd(this._updates);
+        Base.prototype.initialize.call(this);
     },
 
     /**

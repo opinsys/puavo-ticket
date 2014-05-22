@@ -166,7 +166,11 @@ Nav.createLink = function(hrefTemplate, override) {
             // Only left click navigates
             if (e && e.button !== 0) return;
             if (e && e.preventDefault) e.preventDefault();
-            this.go();
+            if (typeof this.props.onClick === "function") {
+                this.props.onClick(e);
+            } else {
+                this.go();
+            }
         },
 
         render: function() {

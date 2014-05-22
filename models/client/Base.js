@@ -3,10 +3,19 @@
  */
 "use strict";
 var Backbone = require("backbone");
+var _ = require("lodash");
 var Promise = require("bluebird");
 var Cocktail = require("backbone.cocktail");
 
 var BaseMixin = require("../BaseMixin");
+
+function proxyToBase() {
+    /*jshint validthis:true */
+    this.on("all", function(eventName) {
+        console.log("Backbone event", eventName);
+        Base.trigger(eventName);
+    });
+}
 
 /**
  * Decorate method execution with `<eventName>:start` and `<eventName>:end`
@@ -100,6 +109,8 @@ var PromiseWrapMixin = {
  */
 var Base = Backbone.Model.extend({
 
+    initialize: proxyToBase,
+
     /**
      *
      * Use unique_id from {{#crossLink "models.server.Base"}}{{/crossLink}} as
@@ -191,6 +202,8 @@ var Base = Backbone.Model.extend({
  */
 Base.Collection = Backbone.Collection.extend({
 
+    initialize: proxyToBase,
+
     /**
      * http://backbonejs.org/#Collection-model
      *
@@ -234,4 +247,5 @@ Base.Collection = Backbone.Collection.extend({
 Cocktail.mixin(Base, BaseMixin);
 Cocktail.mixin(Base, PromiseWrapMixin);
 Cocktail.mixin(Base.Collection, PromiseWrapMixin);
+_.extend(Base, Backbone.Events);
 module.exports = Base;
