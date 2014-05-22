@@ -11,7 +11,7 @@ export HOME=/home/ci
 
 sudo apt-get update
 make install-ansible
-make dev-install
+sudo ansible-playbook development-env.yml --extra-vars dev_user=$USER --extra-vars code_dest=/cirun
 
 Xvfb :99 -screen 0 1920x1080x24 &> /cirun/xvfb.log &
 export DISPLAY=:99
