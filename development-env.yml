@@ -16,16 +16,22 @@
         command: apt-get install -y python-apt python-psycopg2
 
       - name: Add archive.opinsys.fi
-        apt_repository: repo='deb http://archive.opinsys.fi/git-master precise main' state=present update_cache=yes
+        apt_repository: repo='deb http://archive.opinsys.fi/git-master precise main' state=present
 
       - name: Add archive.opinsys.fi
-        apt_repository: repo='deb http://archive.opinsys.fi/slapd-old precise main' state=present update_cache=yes
+        apt_repository: repo='deb http://archive.opinsys.fi/slapd-old precise main' state=present
+
+      - name: Add key for archive.opinsys.fi
+        apt_key: url=http://archive.opinsys.fi/key state=present
 
       - name: Add apt.postgresql.org
-        apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' state=present update_cache=yes
+        apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' state=present
+
+      - name: Add key for apt.postgresql.org
+        apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc state=present
 
       - name: install postgresql
-        apt: pkg=postgresql-9.3 state=present force=yes
+        apt: pkg=postgresql-9.3 state=present force=yes update_cache=yes
 
       - name: Install git
         apt: pkg=git state=present force=yes
