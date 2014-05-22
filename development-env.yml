@@ -5,6 +5,7 @@
     puavo_web_port: 3001
     puavo_ticket_port: 3002
     puavo_rest_port: 9393
+    archive_server: archive.opinsys.fi
   tasks:
       - name: Create en_US.UTF-8 locale
         locale_gen: name=en_US.UTF-8 state=present
@@ -16,13 +17,13 @@
         command: apt-get install -y python-apt python-psycopg2
 
       - name: Add archive.opinsys.fi
-        apt_repository: repo='deb http://archive.opinsys.fi/git-master precise main' state=present
+        apt_repository: repo='deb http://{{ archive_server }}/git-master precise main' state=present
 
       - name: Add archive.opinsys.fi
-        apt_repository: repo='deb http://archive.opinsys.fi/slapd-old precise main' state=present
+        apt_repository: repo='deb http://{{ archive_server }}/slapd-old precise main' state=present
 
       - name: Add key for archive.opinsys.fi
-        apt_key: url=http://archive.opinsys.fi/key state=present
+        apt_key: url=http://{{ archive_server }}/key state=present
 
       - name: Add apt.postgresql.org
         apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' state=present
