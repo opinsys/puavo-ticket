@@ -411,7 +411,8 @@ Ticket.byVisibilities = function(visibilities) {
         .query(function(queryBuilder) {
             queryBuilder
             .join("visibilities", "tickets.id", "=", "visibilities.ticket_id")
-            .whereIn("visibilities.entity", visibilities);
+            .whereIn("visibilities.entity", visibilities)
+            .whereNull("visibilities.deleted_at");
         });
 };
 

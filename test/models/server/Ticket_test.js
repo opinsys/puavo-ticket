@@ -77,6 +77,26 @@ describe("Ticket model", function() {
             });
     });
 
+    it("ticket is not fetched in Ticket.byVisibilities(...) for a soft deleted visibility", function() {
+        var self = this;
+        return Ticket.byVisibilities([self.user.getPersonalVisibility()])
+            .fetch({ withRelated: "visibilities" })
+            .then(function(coll) {
+                var visibility = coll.first().related("visibilities")
+                .findWhere({
+                    entity: self.user.getPersonalVisibility()
+                });
+
+                return visibility.softDelete(self.user);
+            })
+            .then(function() {
+                return Ticket.byVisibilities([self.user.getPersonalVisibility()]).fetch();
+            })
+            .then(function(coll) {
+                assert.equal(0, coll.size());
+            });
+    });
+
     it("can have comments", function() {
         var self = this;
         var ticketId = Ticket.forge({
