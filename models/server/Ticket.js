@@ -201,16 +201,6 @@ var Ticket = Base.extend({
             });
     },
 
-    toJSON: function() {
-        var json = Base.prototype.toJSON.call(this);
-
-        if (this.related("status").models.length) {
-            json.status = this.related("status").models[0].getStatus();
-        }
-
-        return json;
-    },
-
 
     /**
      * Get all attachments to this ticket
