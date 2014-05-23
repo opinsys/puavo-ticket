@@ -19,7 +19,7 @@ function addLifecycleColumns(table) {
     // See http://stackoverflow.com/a/5834554
     //
     // "deleted" column  defaults to 0 and when the Model is soft deleted it is
-    // set to id of the Model (See models.server.Base#softDelete). Using this
+    // set as the id of the Model (See models.server.Base#softDelete). Using this
     // uniqueForTicket constraint can ensure that only one columnName can be in
     // non soft deleted state.
     table.integer("deleted").defaultTo(0).notNullable();
