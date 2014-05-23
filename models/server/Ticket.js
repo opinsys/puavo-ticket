@@ -41,8 +41,17 @@ var Ticket = Base.extend({
                     user.getPersonalVisibility(),
                     user
                 );
+                var organisationAdminCanView = ticket.addVisibility(
+                    user.getOrganisationAdminVisibility(),
+                    user
+                );
 
-                return Promise.all([isOpen, creatorCanView, hasNoHandlersTag]);
+                return Promise.all([
+                    isOpen,
+                    creatorCanView,
+                    hasNoHandlersTag,
+                    organisationAdminCanView
+                ]);
             });
         });
     },
@@ -394,7 +403,7 @@ var Ticket = Base.extend({
  * form of `organisation|school|user:<entity id>`.
  *
  *     Example: "school:2"
- * @return {Bluebird.Promise} with Backbone.Collection of models.server.Ticket
+ * @return {models.server.Base.Collection} with models.server.Ticket models
  */
 Ticket.byVisibilities = function(visibilities) {
     return Ticket

@@ -4,6 +4,7 @@ var Promise = require("bluebird");
 var helpers = require("../../helpers");
 
 var Ticket = require("../../../models/server/Ticket");
+var User = require("../../../models/server/User");
 var assert = require("assert");
 
 
@@ -13,35 +14,67 @@ describe("Ticket model", function() {
         var self = this;
         return helpers.clearTestDatabase()
             .then(function() {
-                return helpers.loginAsUser(helpers.user.teacher);
+                return Promise.all([
+                    User.ensureUserFromJWTToken(helpers.user.teacher),
+                    User.ensureUserFromJWTToken(helpers.user.teacher2)
+                ]);
             })
-            .then(function(agent) {
-                self.agent = agent;
-
-                return helpers.fetchTestUser();
-            })
-            .then(function(user) {
+            .spread(function(user, otherUser) {
                 self.user = user;
+                self.otherUser = otherUser;
             });
     });
 
-    it("Instance can be created", function() {
+    it("can be instantiated", function() {
         var self = this;
         var title = "Computer does not work :(";
 
         return Ticket.forge({
                 title: title,
                 description: "It just doesn't",
-                created_by: self.user.id
+                created_by: self.user.get("id")
             })
             .save()
             .then(function(ticket) {
                 return Ticket.forge({ id: ticket.get("id") }).fetch();
             })
             .then(function(ticket) {
-                 assert.equal(title, ticket.get("title"));
+                 assert.equal(title, ticket.get("title"), "the ticket can be fetched");
+            })
+            .then(function() {
+                return Ticket.forge({
+                        title: "Other ticket",
+                        description: "by other user",
+                        created_by: self.otherUser.get("id")
+                }).save();
             });
+    });
 
+    it("is not listed with bad visibility", function() {
+        return Ticket.byVisibilities(["badvisibility"])
+            .fetch()
+            .then(function(coll) {
+                assert.equal(0, coll.size());
+            });
+    });
+
+    it("has personal visibility for the creator", function() {
+        return Ticket.byVisibilities([this.user.getPersonalVisibility()])
+            .fetch()
+            .then(function(coll) {
+                assert(coll.findWhere({ title: "Computer does not work :(" }));
+                assert.equal(1, coll.size(), "does not list other tickets by other users");
+            });
+    });
+
+    it("has organisation admin visibility", function() {
+        return Ticket.byVisibilities([this.user.getOrganisationAdminVisibility()])
+            .fetch()
+            .then(function(coll) {
+                assert(coll.findWhere({ title: "Computer does not work :(" }));
+                assert(coll.findWhere({ title: "Other ticket" }));
+                assert.equal(2, coll.size(), "does list all tickets in the organisation");
+            });
     });
 
     it("can have comments", function() {
@@ -95,57 +128,6 @@ describe("Ticket model", function() {
             .then(function(ticket) {
                 assert.equal(ticket.get("title"), "new title");
             });
-    });
-
-    describe("visibilities", function() {
-
-        it("can be set for tickets", function() {
-            var self = this;
-            var withVisibility = Ticket.forge({
-                title: "With visibility",
-                description: "desc",
-                created_by: self.user.id
-            })
-            .save()
-            .then(function(ticket) {
-                return ticket.addVisibility(
-                    "school:1",
-                    self.user.id,
-                    "This ticket affects whole school"
-                );
-            });
-
-            var otherTickets = [
-                { title: "foo1", description: "bar", created_by: self.user.id },
-                { title: "foo2", description: "bar", created_by: self.user.id },
-                { title: "foo2", description: "bar", created_by: self.user.id }
-            ].map(function(data) {
-                return Ticket
-                    .forge(data)
-                    .save()
-                    .then(function(ticket) {
-                        return ticket.addVisibility(
-                            "bad",
-                            self.user.id,
-                            "for the other ticket"
-                        );
-                    });
-            });
-
-            return withVisibility
-                .then(function() {
-                    return Promise.all(otherTickets);
-                })
-                .then(function() {
-                    return Ticket.byVisibilities(["school:1"]).fetch();
-                })
-                .then(function(coll) {
-                    assert.equal(1, coll.size());
-                    assert.equal("With visibility", coll.first().get("title"));
-                });
-
-        });
-
     });
 
 });
