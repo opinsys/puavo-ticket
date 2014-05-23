@@ -23,6 +23,7 @@ var Ticket = Base.extend({
             this._updates.reset();
             this._updates = null;
         }
+        this._disposed = true;
     },
 
     url: function() {
