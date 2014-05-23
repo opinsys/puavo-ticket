@@ -60,14 +60,16 @@ var Main = React.createClass({
 
     getInitialState: function() {
         return {
-            user: new User(window.USER),
-            ticket: new Ticket()
+            user: new User(window.USER)
         };
     },
 
     componentDidMount: function() {
         Nav.on("navigate", this.onNavigate);
         Base.on("all", this.onBackboneUpdate);
+    },
+
+    componentWillMount: function() {
         this.onNavigate();
     },
 
@@ -83,16 +85,17 @@ var Main = React.createClass({
     onNavigate: function() {
         var existing = route.ticket.existing;
 
-        if (existing.isMatch() && existing.get("id") !== this.state.ticket.get("id")) {
-            console.log("nav setting new ticket");
+        if (route.ticket.newForm.isMatch()) {
+            this.setTicket(new Ticket());
+            return;
+        }
+
+        if (existing.isMatch()) {
             this.setTicket(new Ticket({ id: existing.get("id") }));
             return;
-        } else if (route.ticket.newForm.isMatch()) {
-            console.log("nav setting empty ticket");
-            this.setTicket(new Ticket());
-        } else {
-            this.forceUpdate();
         }
+
+        this.forceUpdate();
     },
 
     setTicket: function(ticket) {
@@ -102,6 +105,7 @@ var Main = React.createClass({
             this.state.ticket.dispose();
         }
 
+        if (ticket.get("id")) ticket.fetchAll();
         this.setState({ ticket: ticket });
     },
 

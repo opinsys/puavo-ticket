@@ -53,10 +53,6 @@ var TicketView = React.createClass({
         };
     },
 
-    componentDidMount: function() {
-        this.setupModel();
-    },
-
     handleChange: function() {
         this.props.ticket.set({
             description: this.refs.description.getDOMNode().value,
@@ -97,16 +93,6 @@ var TicketView = React.createClass({
         return this.props.ticket.isOperating();
     },
 
-    /**
-     * clear the model for new tickets
-     *
-     * @method setupModel
-     */
-    setupModel: function() {
-        console.log("FETHCING TICKET", this.props.ticket.get("id"));
-        this.props.ticket.fetch();
-        this.props.ticket.updates().fetch();
-    },
 
     handleAddDevice: function(e) {
         Lightbox.displayComponent(
