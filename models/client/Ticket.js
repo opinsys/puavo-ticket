@@ -46,6 +46,18 @@ var Ticket = Base.extend({
     },
 
     /**
+     * Fetch ticket content and its updates
+     *
+     * @method fetchAll
+     * @return {Bluebird.Promise}
+     */
+    fetchAll: function() {
+        if (!this.get("id")) throw new Error("Cannot fetch without an id");
+        this.fetch();
+        this.updates().fetch();
+    },
+
+    /**
      * Return updates for the Ticket. Calls are cached. Ie. multiple calls to
      * this method will return the same collection instance.
      *
