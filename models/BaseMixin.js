@@ -48,7 +48,7 @@ var BaseMixin = {
     isSame: function(other){
         if (!other || !other.get("id")) return false;
         if (other.constructor !== this.constructor) return false;
-        return this.get("id") === other.get("id");
+        return String(this.get("id")) === String(other.get("id"));
     }
 
 };
