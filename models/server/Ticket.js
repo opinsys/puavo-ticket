@@ -75,7 +75,8 @@ var Ticket = Base.extend({
     },
 
     /**
-     * Add visibility to the ticket.
+     * Add visibility to the ticket. If the visibility already exists for the
+     * ticket the existing visibility is returned.
      *
      * Visibility strings can be accessed for example from User#getVisibilities()
      *
@@ -169,7 +170,6 @@ var Ticket = Base.extend({
      *
      * @method tags
      * @return {Bookshelf.Collection} Bookshelf.Collection of tag models
-     * @method tags
      */
     tags: function(){
         return this.tagHistory().query(function(qb) {
@@ -257,7 +257,6 @@ var Ticket = Base.extend({
                     handler: Base.toId(handler)
                 }).save(),
 
-                // TODO: handle unique constraint errors
                 self.addVisibility(
                     handler.getPersonalVisibility(),
                     addedBy
