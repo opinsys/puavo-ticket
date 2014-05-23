@@ -173,7 +173,7 @@
 
         # FIXME??
       - name: Generate test data to Puavo
-        command: bundle exec rails runner db/seeds.rb && touch db/seed.rb-is-run
+        shell: bundle exec rails runner db/seeds.rb && touch db/seed.rb-is-run
           chdir={{ code_dest }}/puavo-users
           creates={{ code_dest }}/puavo-users/db/seed.rb-is-run
         sudo_user: "{{ dev_user }}"
