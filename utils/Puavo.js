@@ -28,7 +28,7 @@ function Puavo(options) {
 Puavo.prototype.request = function(url) {
     return request(config.puavo.protocol + this.domain + url, {
         'auth': {
-            'user': config.puavo.organisations[this.domain].user,
+            'user': config.puavo.organisations[this.domain].username,
             'pass': config.puavo.organisations[this.domain].password
         }
         })

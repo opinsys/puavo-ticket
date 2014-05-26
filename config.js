@@ -23,12 +23,12 @@ if (process.env.NODE_ENV === "test") {
     config.puavo = {};
     config.puavo.sharedSecret = "secret";
     config.puavo.protocol = "https://";
-    config.puavo.user = "puavo-ticket";
+    config.puavo.username = "puavo-ticket";
     config.puavo.password = "password";
     // FIXME: use one user for all organisations (o=puavo)
     config.puavo.organisations = {
         "testing.opinsys.fi": {
-            "user": "puavo-ticket",
+            "username": "puavo-ticket",
             "password": "password"
         }
     };
