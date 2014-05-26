@@ -37,7 +37,6 @@ app.use(function(req, res, next) {
     var puavoUrl = url.format({
         protocol: url.parse(config.puavo.restServerAddress).protocol,
         host: url.parse(config.puavo.restServerAddress).host,
-        headers: req.headers,
         pathname: u.pathname,
         search: u.search
     });
