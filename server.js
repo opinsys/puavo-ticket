@@ -41,13 +41,13 @@ app.use(session({
 app.use(jwtsso({
 
     // Service endpoint that issues the jwt tokens
-    authEndpoint: config.puavo.authEndpoint,
+    authEndpoint: config.puavo.restServerAddress + "/v3/sso",
 
     // Shared secret string with the above service
     sharedSecret: config.puavo.sharedSecret,
 
     // Public mountpoint for this app
-    mountPoint: config.puavo.mountPoint,
+    mountPoint: config.publicURL,
 
     // Set max age in seconds for the tokens
     // Defaults to 60 seconds

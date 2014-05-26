@@ -35,8 +35,8 @@ app.use(function(req, res, next) {
     var u =  url.parse(req.url);
 
     var puavoUrl = url.format({
-        protocol: "https",
-        host: req.user.get("external_data").organisation_domain,
+        protocol: url.parse(config.puavo.restServerAddress).protocol,
+        host: url.parse(config.puavo.restServerAddress).host,
         headers: req.headers,
         pathname: u.pathname,
         search: u.search
@@ -54,7 +54,7 @@ app.use(function(req, res, next) {
             pool: {},
             form: req.body,
             auth: {
-                'user': config.puavo.user,
+                'user': config.puavo.username,
                 'pass': config.puavo.password
             },
             // XXX: How to use our cert auth?

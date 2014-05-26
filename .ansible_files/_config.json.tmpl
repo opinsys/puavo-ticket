@@ -1,10 +1,10 @@
 {
     "port": 3002,
+    "publicURL": "http://{{ hostname_command["stdout"] }}:{{ puavo_ticket_port }}",
     "puavo": {
         "sharedSecret": "secret",
-        "authEndpoint": "http://{{ hostname_command["stdout"] }}:{{ puavo_rest_port }}/v3/sso",
-        "mountPoint": "http://{{ hostname_command["stdout"] }}:{{ puavo_ticket_port }}",
-        "user":"uid=admin,o=puavo",
-        "pass":"password"
+        "restServerAddress": "http://{{ hostname_command["stdout"] }}:{{ puavo_rest_port }}",
+        "username":"uid=admin,o=puavo",
+        "password":"password"
     }
 }
