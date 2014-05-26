@@ -80,23 +80,6 @@
           - puavo-ticket
           - puavo-ticket-test
 
-      - name: Get hostname
-        command: hostname -f
-        register: hostname_command
-
-      - name: Configuration for puavo-ticket
-        template: src=.ansible_files/_config.json.tmpl dest={{ code_dest }}/puavo-ticket/_config.json
-          owner={{ dev_user }}
-
-      - name: Install nodejs moduiles, generate documentation and install git hooks
-        command: make
-          chdir={{ code_dest }}/puavo-ticket
-        sudo_user: "{{ dev_user }}"
-
-      - name: Runs puavo-ticket migrations
-        command: make migrate
-          chdir={{ code_dest }}/puavo-ticket
-        sudo_user: "{{ dev_user }}"
 
       - name: Install Puavo dependencies
         action: apt pkg={{item}} state=present force=yes
@@ -185,3 +168,21 @@
 
       - name: Configuration for puavo-rest
         copy: src=.ansible_files/puavo-rest.yml dest=/etc/puavo-rest.yml
+
+      - name: Get hostname
+        command: hostname -f
+        register: hostname_command
+
+      - name: Configuration for puavo-ticket
+        template: src=.ansible_files/_config.json.tmpl dest={{ code_dest }}/puavo-ticket/_config.json
+          owner={{ dev_user }}
+
+      - name: Install nodejs moduiles, generate documentation and install git hooks
+        command: make
+          chdir={{ code_dest }}/puavo-ticket
+        sudo_user: "{{ dev_user }}"
+
+      - name: Runs puavo-ticket migrations
+        command: make migrate
+          chdir={{ code_dest }}/puavo-ticket
+        sudo_user: "{{ dev_user }}"
