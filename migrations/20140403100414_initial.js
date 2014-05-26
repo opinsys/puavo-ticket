@@ -132,7 +132,20 @@ exports.up = function(knex, Promise) {
                 table.string("tag").notNullable();
                 table.increments("id");
                 uniqueForTicket(table, "tag");
+            }),
+
+            knex.schema.createTable("read_tickets", function(table) {
+                addTicketRelation(table);
+                table.integer("read_by")
+                    .notNullable()
+                    .references("id")
+                    .inTable("users");
+
+                table.increments("id");
+                table.dateTime("read_at");
+                table.boolean("updates");
             })
+
         ]);
     });
 };
@@ -147,7 +160,8 @@ exports.down = function(knex, Promise) {
         knex.schema.dropTableIfExists("attachments"),
         knex.schema.dropTableIfExists("followers"),
         knex.schema.dropTableIfExists("tags"),
-        knex.schema.dropTableIfExists("handlers")
+        knex.schema.dropTableIfExists("handlers"),
+        knex.schema.dropTableIfExists("read_tickets")
     ])
     .then(function() {
         return knex.schema.dropTableIfExists("tickets");
