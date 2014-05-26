@@ -4,7 +4,6 @@ var React = require("react/addons");
 var _ = require("lodash");
 
 var Comment = require("../models/client/Comment");
-var EventMixin = require("../utils/EventMixin");
 var Lightbox = require("./Lightbox");
 var AddDevice = require("./AddDevice");
 
@@ -48,16 +47,10 @@ var ToggleStatusButton = React.createClass({
  */
 var TicketView = React.createClass({
 
-    mixins: [EventMixin],
-
     getInitialState: function() {
         return {
             comment: "",
         };
-    },
-
-    componentDidMount: function() {
-        this.setupModel();
     },
 
     handleChange: function() {
@@ -100,16 +93,6 @@ var TicketView = React.createClass({
         return this.props.ticket.isOperating();
     },
 
-    /**
-     * clear the model for new tickets
-     *
-     * @method setupModel
-     */
-    setupModel: function() {
-        console.log("FETHCING TICKET", this.props.ticket.get("id"));
-        this.props.ticket.fetch();
-        this.props.ticket.updates().fetch();
-    },
 
     handleAddDevice: function(e) {
         Lightbox.displayComponent(

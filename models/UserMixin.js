@@ -34,6 +34,16 @@ var UserMixin = {
     },
 
     /**
+     * Returned in User#getVisibilities() if the user is an organisation admin
+     *
+     * @method getOrganisationAdminVisibility
+     * @return {String}
+     */
+    getOrganisationAdminVisibility: function(){
+        return "organisationadmin:" + this.get("external_data").organisation_domain;
+    },
+
+    /**
      * Get visibility strings for the user
      *
      * @method getVisibilities
@@ -44,6 +54,10 @@ var UserMixin = {
             this.getPersonalVisibility(),
             this.getOrganisationVisibility(),
         ];
+
+        // XXX: add getOrganisationAdminVisibility if the user is organisation admin
+
+        // XXX: add organisationmanager visibility if the user is an opinsys employee
 
         // XXX: restore after schools has been added to the db
         // visibilities = visibilities.concat(this.get("schools").map(function(school) {

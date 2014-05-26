@@ -37,6 +37,20 @@ var BaseMixin = {
         return null;
     },
 
+    /**
+     * Return true if the other object is built using the same constructor and
+     * they have the same id
+     *
+     * @method isSame
+     * @param {Backbone.Model} other
+     * @return Boolean
+     */
+    isSame: function(other){
+        if (!other || !other.get("id")) return false;
+        if (other.constructor !== this.constructor) return false;
+        return String(this.get("id")) === String(other.get("id"));
+    }
+
 };
 
 module.exports = BaseMixin;

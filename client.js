@@ -7,11 +7,11 @@ var Nav = require("./utils/Nav");
 
 var User = require("./models/client/User");
 var Ticket = require("./models/client/Ticket");
+var Base = require("./models/client/Base");
 
 var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
 var TicketList = require("./components/TicketList");
-var EventMixin = require("./utils/EventMixin");
 
 var navigation = require("./components/navigation");
 var route = navigation.route;
@@ -19,6 +19,7 @@ var route = navigation.route;
 var LogoutLink = navigation.link.LogoutLink;
 var RootLink = navigation.link.RootLink;
 var NewTicketLink = navigation.link.NewTicketLink;
+var TicketViewLink = navigation.link.TicketViewLink;
 
 
 /**
@@ -57,47 +58,60 @@ var UserInformation = React.createClass({
  */
 var Main = React.createClass({
 
-    mixins: [EventMixin],
-
     getInitialState: function() {
         return {
-            user: this.createBoundEmitter(User, window.USER),
-            ticket: this.createBoundEmitter(Ticket)
+            user: new User(window.USER)
         };
+    },
+
+    componentDidMount: function() {
+        Nav.on("navigate", this.onNavigate);
+        Base.on("all", this.onBackboneUpdate);
     },
 
     componentWillMount: function() {
         this.onNavigate();
     },
 
-    componentDidMount: function() {
-        Nav.on("navigate", this.onNavigate);
+    onBackboneUpdate: function(eventName) {
+        this.forceUpdate();
     },
 
     componentWillUnmount: function() {
         Nav.off("navigate", this.onNavigate);
+        Base.off("all", this.onBackboneUpdate);
     },
 
     onNavigate: function() {
         var existing = route.ticket.existing;
 
-        if (existing.isMatch() && existing.get("id") !== this.state.ticket.get("id")) {
-            console.log("nav setting new ticket");
-            this.setTicket(existing.get("id"));
+        if (route.ticket.newForm.isMatch()) {
+            this.setTicket(new Ticket());
             return;
-        } else if (route.ticket.newForm.isMatch()) {
-            console.log("nav setting empty ticket");
-            this.setTicket();
-        } else {
-            this.forceUpdate();
         }
+
+        if (existing.isMatch()) {
+            this.setTicket(new Ticket({ id: existing.get("id") }));
+            return;
+        }
+
+        this.forceUpdate();
     },
 
-    setTicket: function(id) {
-        if (this.state.ticket) this.state.ticket.off();
-        this.setState({
-            ticket: this.createBoundEmitter(Ticket, { id : id })
-        });
+    setTicket: function(ticket) {
+        if (typeof ticket.get !== "function") throw new Error("Bad ticket");
+
+        if (this.state.ticket && !this.state.ticket.isSame(ticket)) {
+            this.state.ticket.dispose();
+        }
+
+        if (ticket.get("id")) ticket.fetchAll();
+        this.setState({ ticket: ticket });
+    },
+
+    handleSelectTicket: function(ticket) {
+        this.setTicket(ticket);
+        TicketViewLink.go({ id: ticket.get("id") });
     },
 
 
@@ -116,8 +130,8 @@ var Main = React.createClass({
 
                         <h1>Tukipalvelu</h1>
 
-                        {route.root.isMatch() && <TicketList />}
-                        {route.ticket.newForm.isMatch() && <TicketForm ticket={this.state.ticket} />}
+                        {route.root.isMatch() && <TicketList onSelect={this.handleSelectTicket} />}
+                        {route.ticket.newForm.isMatch() && <TicketForm onSaved={this.handleSelectTicket} ticket={this.state.ticket} />}
                         {route.ticket.existing.isMatch() && <TicketView ticket={this.state.ticket} />}
 
                     </div>

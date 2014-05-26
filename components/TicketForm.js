@@ -3,11 +3,6 @@
 var React = require("react/addons");
 
 var SimilarTickets = require("./SimilarTickets");
-var EventMixin = require("../utils/EventMixin");
-
-var navigation = require("./navigation");
-var TicketViewLink = navigation.link.TicketViewLink;
-
 
 /**
  * Edit form for a ticket
@@ -15,11 +10,8 @@ var TicketViewLink = navigation.link.TicketViewLink;
  * @namespace components
  * @class TicketForm
  * @extends React.ReactComponent
- * @uses utils.EventMixin
  */
 var TicketForm = React.createClass({
-
-    mixins: [EventMixin],
 
     getInitialState: function() {
         return {
@@ -43,7 +35,7 @@ var TicketForm = React.createClass({
     handleSave: function() {
         var self = this;
         this.props.ticket.save().then(function() {
-            TicketViewLink.go({ id: self.props.ticket.get("id") });
+            self.props.onSaved(self.props.ticket);
         });
     },
 

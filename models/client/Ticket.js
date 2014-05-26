@@ -2,7 +2,6 @@
 var Base = require("./Base");
 var Tag = require("./Tag");
 var _ = require("lodash");
-var fwd = require("../../utils/Backbone.fwd");
 var UpdatesCollection = require("./UpdatesCollection");
 
 /**
@@ -15,14 +14,16 @@ var UpdatesCollection = require("./UpdatesCollection");
  */
 var Ticket = Base.extend({
 
-    fwd: fwd,
 
     dispose: function() {
         this.off();
-        this._updates.off();
-        this._updates.invoke("off");
-        this._updates.reset();
-        this._updates = null;
+        if (this._updates) {
+            this._updates.off();
+            this._updates.invoke("off");
+            this._updates.reset();
+            this._updates = null;
+        }
+        this._disposed = true;
     },
 
     url: function() {
@@ -42,7 +43,19 @@ var Ticket = Base.extend({
     initialize: function() {
         this._updates = new UpdatesCollection();
         this._updates.setTicket(this);
-        this.fwd(this._updates);
+        Base.prototype.initialize.call(this);
+    },
+
+    /**
+     * Fetch ticket content and its updates
+     *
+     * @method fetchAll
+     * @return {Bluebird.Promise}
+     */
+    fetchAll: function() {
+        if (!this.get("id")) throw new Error("Cannot fetch without an id");
+        this.fetch();
+        this.updates().fetch();
     },
 
     /**

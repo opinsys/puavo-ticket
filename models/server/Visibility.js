@@ -1,10 +1,10 @@
 "use strict";
 require("../../db");
-var Bookshelf = require("bookshelf");
 
 var User = require("./User");
+var Base = require("./Base");
 
-var Visibility = Bookshelf.DB.Model.extend({
+var Visibility = Base.extend({
 
     tableName: "visibilities",
 

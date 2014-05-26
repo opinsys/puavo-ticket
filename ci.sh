@@ -10,7 +10,7 @@ env
 export HOME=/home/ci
 
 sudo apt-get update
-make install-ansible
+sudo make install-ansible
 sudo ansible-playbook development-env.yml --extra-vars dev_user=$USER --extra-vars code_dest=/cirun --extra-vars archive_server=new-archive.opinsys.fi
 
 Xvfb :99 -screen 0 1920x1080x24 &> /cirun/xvfb.log &

@@ -4,7 +4,6 @@ var React = require("react/addons");
 
 var Device = require("../models/client/Device");
 var Lightbox = require("./Lightbox");
-var EventMixin = require("../utils/EventMixin");
 var Base = require("../models/client/Base");
 
 var DeviceCollection = Base.Collection.extend({
@@ -18,11 +17,7 @@ var DeviceCollection = Base.Collection.extend({
 
 var AddDevice = React.createClass({
 
-    mixins: [EventMixin],
-
     componentDidMount: function() {
-        this.reactTo(this.state.device);
-        this.reactTo(this.state.deviceCollection);
         this.state.deviceCollection.fetch();
     },
 

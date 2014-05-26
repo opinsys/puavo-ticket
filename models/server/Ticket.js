@@ -41,8 +41,17 @@ var Ticket = Base.extend({
                     user.getPersonalVisibility(),
                     user
                 );
+                var organisationAdminCanView = ticket.addVisibility(
+                    user.getOrganisationAdminVisibility(),
+                    user
+                );
 
-                return Promise.all([isOpen, creatorCanView, hasNoHandlersTag]);
+                return Promise.all([
+                    isOpen,
+                    creatorCanView,
+                    hasNoHandlersTag,
+                    organisationAdminCanView
+                ]);
             });
         });
     },
@@ -66,7 +75,8 @@ var Ticket = Base.extend({
     },
 
     /**
-     * Add visibility to the ticket.
+     * Add visibility to the ticket. If the visibility already exists for the
+     * ticket the existing visibility is returned.
      *
      * Visibility strings can be accessed for example from User#getVisibilities()
      *
@@ -160,7 +170,6 @@ var Ticket = Base.extend({
      *
      * @method tags
      * @return {Bookshelf.Collection} Bookshelf.Collection of tag models
-     * @method tags
      */
     tags: function(){
         return this.tagHistory().query(function(qb) {
@@ -199,16 +208,6 @@ var Ticket = Base.extend({
                 .whereNull("deleted_at")
                 .andWhere("tag", "LIKE", "status:%");
             });
-    },
-
-    toJSON: function() {
-        var json = Base.prototype.toJSON.call(this);
-
-        if (this.related("status").models.length) {
-            json.status = this.related("status").models[0].getStatus();
-        }
-
-        return json;
     },
 
 
@@ -258,7 +257,6 @@ var Ticket = Base.extend({
                     handler: Base.toId(handler)
                 }).save(),
 
-                // TODO: handle unique constraint errors
                 self.addVisibility(
                     handler.getPersonalVisibility(),
                     addedBy
@@ -404,7 +402,7 @@ var Ticket = Base.extend({
  * form of `organisation|school|user:<entity id>`.
  *
  *     Example: "school:2"
- * @return {Bluebird.Promise} with Backbone.Collection of models.server.Ticket
+ * @return {models.server.Base.Collection} with models.server.Ticket models
  */
 Ticket.byVisibilities = function(visibilities) {
     return Ticket
@@ -412,7 +410,8 @@ Ticket.byVisibilities = function(visibilities) {
         .query(function(queryBuilder) {
             queryBuilder
             .join("visibilities", "tickets.id", "=", "visibilities.ticket_id")
-            .whereIn("visibilities.entity", visibilities);
+            .whereIn("visibilities.entity", visibilities)
+            .whereNull("visibilities.deleted_at");
         });
 };
 

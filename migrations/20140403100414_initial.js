@@ -19,7 +19,7 @@ function addLifecycleColumns(table) {
     // See http://stackoverflow.com/a/5834554
     //
     // "deleted" column  defaults to 0 and when the Model is soft deleted it is
-    // set to id of the Model (See models.server.Base#softDelete). Using this
+    // set as the id of the Model (See models.server.Base#softDelete). Using this
     // uniqueForTicket constraint can ensure that only one columnName can be in
     // non soft deleted state.
     table.integer("deleted").defaultTo(0).notNullable();
@@ -132,7 +132,20 @@ exports.up = function(knex, Promise) {
                 table.string("tag").notNullable();
                 table.increments("id");
                 uniqueForTicket(table, "tag");
+            }),
+
+            knex.schema.createTable("read_tickets", function(table) {
+                addTicketRelation(table);
+                table.integer("read_by")
+                    .notNullable()
+                    .references("id")
+                    .inTable("users");
+
+                table.increments("id");
+                table.dateTime("read_at");
+                table.boolean("updates");
             })
+
         ]);
     });
 };
@@ -147,7 +160,8 @@ exports.down = function(knex, Promise) {
         knex.schema.dropTableIfExists("attachments"),
         knex.schema.dropTableIfExists("followers"),
         knex.schema.dropTableIfExists("tags"),
-        knex.schema.dropTableIfExists("handlers")
+        knex.schema.dropTableIfExists("handlers"),
+        knex.schema.dropTableIfExists("read_tickets")
     ])
     .then(function() {
         return knex.schema.dropTableIfExists("tickets");
