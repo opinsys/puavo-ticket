@@ -1,6 +1,10 @@
+"use strict";
+
+var Cocktail = require("backbone.cocktail");
+var $ = require("jquery");
+var Promise = require("bluebird");
 
 var Base = require("./Base");
-var Cocktail = require("backbone.cocktail");
 var UserMixin = require("../UserMixin");
 
 /**
@@ -13,6 +17,29 @@ var UserMixin = require("../UserMixin");
  */
 var User = Base.extend({
 
+}, {
+
+    search: function(keywords) {
+        return Promise.cast($.get("/api/puavo/v3/users/_search", {
+                q: keywords
+            })).cancellable()
+            .catch(function convertJQueryAjaxObjectoToError(err) {
+                if (!err.responseText) throw err;
+                var ajaxErr = new Error("Ajax error: " + err.responseText);
+                ajaxErr.jquery = err;
+                throw ajaxErr;
+            })
+            .then(function(data) {
+                var users =  data.map(function(user) {
+                    return new User({
+                        external_id: user.id,
+                        external_data: user,
+                    });
+                });
+
+                return users;
+            });
+    },
 });
 
 Cocktail.mixin(User, UserMixin);

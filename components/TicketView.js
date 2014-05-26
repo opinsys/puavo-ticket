@@ -6,6 +6,7 @@ var _ = require("lodash");
 var Comment = require("../models/client/Comment");
 var Lightbox = require("./Lightbox");
 var AddDevice = require("./AddDevice");
+var SelectUsers = require("./SelectUsers");
 
 
 /**
@@ -100,6 +101,16 @@ var TicketView = React.createClass({
         );
     },
 
+    handleAddHandler: function() {
+        Lightbox.displayComponent(
+            <SelectUsers onSelect={function(users) {
+                // XXX
+                console.log(users);
+                Lightbox.removeCurrentComponent();
+            }}/>
+        );
+    },
+
     render: function() {
         return (
             <div className="ticket-form">
@@ -164,6 +175,7 @@ var TicketView = React.createClass({
                         disabled={this.props.ticket.isOperating() || !this.hasUnsavedComment()} >Lähetä</button>
                     <button onClick={this.handleAddDevice} >Lisää laite</button>
                     <ToggleStatusButton ticketModel={this.props.ticket} />
+                    <button onClick={this.handleAddHandler} >Lisää käsittelijä</button>
                 </div>
 
 
