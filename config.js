@@ -21,6 +21,7 @@ if (process.env.NODE_ENV === "test") {
         database: "puavo-ticket-test"
     };
     config.puavo = {};
+    config.puavo.restServerAddress = "https://testing.opinsys.fi";
     config.puavo.sharedSecret = "secret";
     config.puavo.protocol = "https://";
     config.puavo.username = "puavo-ticket";
