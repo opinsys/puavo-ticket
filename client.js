@@ -3,11 +3,10 @@
 require("./client_setup");
 
 var React = require("react/addons");
-var Nav = require("./utils/Nav");
 
+var UpdateMixin = require("./components/UpdateMixin");
 var User = require("./models/client/User");
 var Ticket = require("./models/client/Ticket");
-var Base = require("./models/client/Base");
 
 var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
@@ -58,29 +57,14 @@ var UserInformation = React.createClass({
  */
 var Main = React.createClass({
 
+    mixins: [UpdateMixin],
+
     getInitialState: function() {
         return {
             user: new User(window.USER)
         };
     },
 
-    componentDidMount: function() {
-        Nav.on("navigate", this.onNavigate);
-        Base.on("all", this.onBackboneUpdate);
-    },
-
-    componentWillMount: function() {
-        this.onNavigate();
-    },
-
-    onBackboneUpdate: function(eventName) {
-        this.forceUpdate();
-    },
-
-    componentWillUnmount: function() {
-        Nav.off("navigate", this.onNavigate);
-        Base.off("all", this.onBackboneUpdate);
-    },
 
     onNavigate: function() {
         var existing = route.ticket.existing;
