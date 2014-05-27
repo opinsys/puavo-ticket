@@ -114,8 +114,7 @@ dev-install:
 	#sudo dpkg-reconfigure locales
 	ansible-playbook development-env.yml --extra-vars dev_user=$(USER) --extra-vars code_dest=$(HOME)
 
-tmux-start-servers:
+puavo-start:
 	tmux -2 new-session -d -s puavo 'cd /home/opinsys/puavo-users; bundle exec rails s -p 3001'
 	tmux split-window -v -d 'cd /home/opinsys/puavo-users/rest; make serve-dev'
-	tmux split-window -v -d 'cd /home/opinsys/puavo-ticket/; node server.js'
 	tmux -2 attach-session -t puavo
