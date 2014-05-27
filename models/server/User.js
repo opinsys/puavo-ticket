@@ -75,6 +75,8 @@ var User = Base.extend({
      * @return {Bluebird.Promise} with models.server.User
      */
     ensureUserByUsername: function(username, puavoDomain) {
+        if (!username) throw new Error("Invalid arguments: username is missing");
+        if (!puavoDomain) throw new Error("Invalid arguments: puavoDomain is missing");
         var puavo = new Puavo({ domain: puavoDomain });
         return puavo.userByUsername(username)
             .then(function(userdata) {

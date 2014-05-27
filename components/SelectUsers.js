@@ -66,8 +66,8 @@ var SelectUsers = React.createClass({
             error: null,
             searchString: "",
             searchOp: null,
-            users: [],
-            selectedUsers: [],
+            users: new Base.Collection(),
+            selectedUsers: new Base.Collection(),
         };
     },
 
@@ -78,20 +78,12 @@ var SelectUsers = React.createClass({
     },
 
     handleSelectUser: function(user) {
-
-
-        this.setState({
-            selectedUsers: this.state.selectedUsers.concat(user)
-        });
+        this.state.selectedUsers.add(user);
         this.refs.search.getDOMNode().focus();
     },
 
     handleRemoveUser: function(user) {
-        this.setState({
-            selectedUsers: this.state.selectedUsers.filter(function(current) {
-                return current.get("external_id") !== user.get("external_id");
-            })
-        });
+        this.state.selectedUsers.remove(user);
     },
 
     handleOk: function(e) {

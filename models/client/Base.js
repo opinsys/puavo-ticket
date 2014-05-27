@@ -25,7 +25,6 @@ function proxyToBase() {
  *
  * @method promiseWrap
  * @static
- * @private
  * @for models.client.Base
  * @param {String} eventName
  * @param {Function} method
@@ -189,6 +188,8 @@ var Base = Backbone.Model.extend({
         });
         return new Klass(models, options);
     },
+
+    promiseWrap: promiseWrap
 });
 
 /**

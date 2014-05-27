@@ -1,7 +1,6 @@
 "use strict";
 var _ = require("lodash");
 var Promise = require("bluebird");
-var Bookshelf = require("bookshelf");
 
 var Base = require("./Base");
 var Comment = require("./Comment");
@@ -386,8 +385,7 @@ var Ticket = Base.extend({
 
                 });
 
-                // convert back to Bookshelf Collection
-                return new Bookshelf.DB.Collection(updates);
+                return updates;
             });
 
     },

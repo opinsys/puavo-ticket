@@ -1,5 +1,7 @@
 "use strict";
 
+var _ = require("lodash");
+
 var helpers = require("../../helpers");
 
 var Ticket = require("../../../models/server/Ticket");
@@ -148,7 +150,9 @@ describe("Tag model", function() {
                 return ticket.fetchUpdates();
             })
             .then(function(updates) {
-                var status = updates.findWhere({ tag: "status:inprogress" });
+                var status = _.findWhere(updates, function(update) {
+                    return update.get("tag") === "status:inprogress";
+                });
                 assert(status, "has 'status:inprogress' tag");
                 assert.equal(
                     status.getStatus(),
@@ -172,11 +176,15 @@ describe("Tag model", function() {
             })
             .then(function(updates) {
                 assert(
-                    updates.findWhere({ tag: "status:done" }),
+                    _.findWhere(updates, function(update) {
+                        return update.get("tag") === "status:done";
+                    }),
                     "has 'status:done' tag"
                 );
 
-                var prevStatus = updates.findWhere({ tag: "status:inprogress" });
+                var prevStatus = _.findWhere(updates, function(update) {
+                    return update.get("tag") === "status:inprogress";
+                });
 
                 assert(prevStatus, "previous status is present");
                 assert(prevStatus.get("deleted_at"), "previous is soft deleted");
@@ -186,7 +194,9 @@ describe("Tag model", function() {
                     self.user.get("id")
                 );
 
-                var otherTag = updates.findWhere({ tag: "othertag" });
+                var otherTag = _.findWhere(updates, function(update) {
+                    return update.get("tag") === "othertag";
+                });
                 assert(otherTag, "othertag is available");
                 assert(!otherTag.get("deleted_at"), "othertag is not soft deleted");
             });

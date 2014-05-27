@@ -3,12 +3,14 @@ var Base = require("./Base");
 var Comment = require("./Comment");
 var Device = require("./Device");
 var Tag = require("./Tag");
+var Handler = require("./Handler");
 
 
 var MODEL = {
     tags: Tag,
     comments: Comment,
-    devices: Device
+    devices: Device,
+    handlers: Handler
 };
 
 

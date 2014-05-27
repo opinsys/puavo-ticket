@@ -37,7 +37,7 @@ var User = Base.extend({
                     });
                 });
 
-                return users;
+                return new Base.Collection(users);
             });
     },
 });

@@ -16,7 +16,7 @@ var UpdateMixin = {
 
     onBackboneUpdate: function(eventName) {
         console.log("backbone update from", eventName, this.foo);
-        this.setState(this.state || {});
+        this.forceUpdate();
     },
 
     componentWillUnmount: function() {

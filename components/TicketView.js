@@ -2,8 +2,10 @@
 "use strict";
 var React = require("react/addons");
 var _ = require("lodash");
+var Promise = require("bluebird");
 
 var Comment = require("../models/client/Comment");
+var Handler = require("../models/client/Handler");
 var Lightbox = require("./Lightbox");
 var AddDevice = require("./AddDevice");
 var SelectUsers = require("./SelectUsers");
@@ -102,10 +104,27 @@ var TicketView = React.createClass({
     },
 
     handleAddHandler: function() {
+        var self = this;
         Lightbox.displayComponent(
             <SelectUsers onSelect={function(users) {
-                // XXX
-                console.log(users);
+
+                var handlers = users.map(function(user) {
+                    return new Handler({ user: user });
+                });
+
+                handlers.forEach(function(handler) {
+                    self.props.ticket.updates().add(handler);
+                });
+
+                Promise.all(_.invoke(handlers, "save"))
+                .then(function() {
+                    console.log("handler save ok");
+                })
+                .catch(function(err) {
+                    console.log("failed to save handlers", err);
+                });
+
+
                 Lightbox.removeCurrentComponent();
             }}/>
         );
