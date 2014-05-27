@@ -1,5 +1,9 @@
 "use strict";
 
+if (process.env.NODE_ENV !== "production") {
+    process.env.BLUEBIRD_DEBUG = "true";
+}
+
 require("./db");
 var browserify = require("browserify-middleware");
 var express = require("express");
