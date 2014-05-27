@@ -4,11 +4,11 @@
  */
 
 var express = require("express");
+var Promise = require("bluebird");
 
 var Ticket = require("../models/server/Ticket");
 var RelatedUser = require("../models/server/RelatedUser");
 var User = require("../models/server/User");
-var Puavo = require("../utils/Puavo");
 
 var app = express.Router();
 
@@ -23,32 +23,12 @@ var app = express.Router();
  * @apiParam {String} domain
  */
 app.post("/api/tickets/:id/related_users", function(req, res, next) {
-    var ticket = null;
-    Ticket.forge({ id: req.params.id })
-    .fetch()
-    .then(function(_ticket) {
-        if (!_ticket) return res.json(404, { error: "no such ticket" });
-        ticket = _ticket;
-
-        return User.byUsername(req.body.username).fetch();
-    })
-    .then(function(user) {
-        if (!user) {
-            var puavo = new Puavo({ domain: req.body.domain });
-
-            return puavo.userByUsername(req.body.username)
-                .then(function(userData) {
-                    return User.forge({
-                        external_id: userData.id,
-                        external_data: userData
-                    }).save();
-                });
-        }
-
-        return user;
-    })
-    .then(function(user) {
-        return ticket.addRelatedUser(user.id, req.user);
+    Promise.all([
+        Ticket.byId(req.params.id).fetch({ require: true }),
+        User.ensureUserByUsername(req.body.username, req.body.domain)
+    ])
+    .spread(function(ticket, relatedUser) {
+        return ticket.addRelatedUser(relatedUser, req.user);
     })
     .then(function(user) {
         res.json(user.toJSON());

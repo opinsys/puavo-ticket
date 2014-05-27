@@ -5,6 +5,7 @@ var Base = require("./Base");
 var Cocktail = require("backbone.cocktail");
 var Bookshelf = require("bookshelf");
 var UserMixin = require("../UserMixin");
+var Puavo = require("../../utils/Puavo");
 
 /**
  * Server User model
@@ -61,6 +62,24 @@ var User = Base.extend({
      */
     byExternalId: function(id) {
         return this.forge({ external_id: id });
+    },
+
+    /**
+     * Fetch user from puavo-rest, save it to the local SQL DB and return it in
+     * a Promise.
+     *
+     * @static
+     * @method ensureUserByUsername
+     * @param {String} username
+     * @param {String} puavoDomain
+     * @return {Bluebird.Promise} with models.server.User
+     */
+    ensureUserByUsername: function(username, puavoDomain) {
+        var puavo = new Puavo({ domain: puavoDomain });
+        return puavo.userByUsername(username)
+            .then(function(userdata) {
+                return User.ensureUserFromJWTToken(userdata);
+            });
     },
 
     /**

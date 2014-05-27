@@ -8,6 +8,20 @@ var nock = require('nock');
 
 var User = require("../../models/server/User");
 
+function mockJoeBloggsAPI() {
+    nock("https://testing.opinsys.fi")
+    .get("/v3/users/joe.bloggs")
+    .matchHeader("Authorization", 'Basic cHVhdm8tdGlja2V0OnBhc3N3b3Jk')
+    .reply(200, {
+        organisation_domain: "testing.opinsys.fi",
+        email: "joe.bloggs@test.com",
+        first_name: "Joe",
+        last_name: "Bloggs",
+        username: "joe.bloggs",
+        id: "1432"
+    });
+}
+
 describe("/api/tickets/:id/related_users", function() {
 
     before(function() {
@@ -40,17 +54,7 @@ describe("/api/tickets/:id/related_users", function() {
     it("can add related user to a ticket", function() {
         var self = this;
 
-        nock("https://testing.opinsys.fi")
-        .get("/v3/users/joe.bloggs")
-        .matchHeader("Authorization", 'Basic cHVhdm8tdGlja2V0OnBhc3N3b3Jk')
-        .reply(200, {
-            organisation_domain: "testing.opinsys.fi",
-            email: "joe.bloggs@test.com",
-            first_name: "Joe",
-            last_name: "Bloggs",
-            username: "joe.bloggs",
-            id: "1432"
-        });
+        mockJoeBloggsAPI();
 
         return this.agent
             .post("/api/tickets/" + self.ticket.get("id") + "/related_users")
@@ -92,6 +96,7 @@ describe("/api/tickets/:id/related_users", function() {
     });
 
     it("can add related user to a other ticket when related user exists on the users table", function() {
+        mockJoeBloggsAPI();
         var self = this;
 
         return this.agent
