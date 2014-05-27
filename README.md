@@ -104,6 +104,22 @@ This will prevent you from committing broken or trivially bad Javascript. It
 uses [JSHint][] to automatically validate the staged Javascript files when you
 try to commit them.
 
+..or install puavo-ticket with puavo-web and puavo-rest (ansible)
+
+```bash
+    sudo apt-get install git build-essential
+    git clone https://github.com/opinsys/puavo-ticket.git
+    cd puavo-ticket
+    sudo make install-ansbile
+    sudo ansible-playbook development-env.yml --extra-vars dev_user=$USER --extra-vars code_dest=$HOME
+```
+
+and start puavo-web and puavo-rest
+
+```bash
+make puavo-start
+```
+
 ### Editors
 
 Better yet you should integrate real time JSHint validation to your editor.
