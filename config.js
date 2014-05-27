@@ -9,6 +9,7 @@ var config = {
             database: "puavo-ticket"
         }
     },
+    puavo: {},
     directory: "./migrations",
     tableName: "migrations"
 };
@@ -20,10 +21,8 @@ if (process.env.NODE_ENV === "test") {
         password: "password",
         database: "puavo-ticket-test"
     };
-    config.puavo = {};
     config.puavo.restServerAddress = "https://testing.opinsys.fi";
     config.puavo.sharedSecret = "secret";
-    config.puavo.protocol = "https://";
     config.puavo.username = "puavo-ticket";
     config.puavo.password = "password";
     // FIXME: use one user for all organisations (o=puavo)

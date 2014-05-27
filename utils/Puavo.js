@@ -1,5 +1,6 @@
 "use strict";
 
+var url = require("url");
 var Promise = require("bluebird");
 var request = Promise.promisify(require("request"));
 var config = require("../config.js");
@@ -22,15 +23,25 @@ function Puavo(options) {
  * Create request to the puavo-rest with authentication by organisation
  *
  * @method request
- * @param {String} url
+ * @param {String} pathname
  * @return {Bluebird.Promise}
  */
-Puavo.prototype.request = function(url) {
-    return request(config.puavo.protocol + this.domain + url, {
-        'auth': {
-            'user': config.puavo.organisations[this.domain].username,
-            'pass': config.puavo.organisations[this.domain].password
-        }
+Puavo.prototype.request = function(pathname) {
+
+    var puavoUrl = url.format({
+        protocol: url.parse(config.puavo.restServerAddress).protocol,
+        host: url.parse(config.puavo.restServerAddress).host,
+        pathname: pathname,
+    });
+
+    return request(puavoUrl, {
+            auth: {
+                'user': config.puavo.organisations[this.domain].username,
+                'pass': config.puavo.organisations[this.domain].password
+            },
+            headers: {
+                host: this.domain
+            }
         })
         .spread(function(res, body) {
             return JSON.parse(body);
