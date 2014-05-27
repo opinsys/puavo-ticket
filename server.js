@@ -115,6 +115,7 @@ app.use(require("./resources/followers"));
 app.use(require("./resources/visibilities"));
 app.use(require("./resources/handlers"));
 app.use(require("./resources/tags"));
+app.use(require("./resources/read_tickets"));
 
 app.use("/api/puavo", require("./resources/puavo_api_proxy")(config));
 

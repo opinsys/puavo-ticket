@@ -13,6 +13,7 @@ var Follower = require("./Follower");
 var Handler = require("./Handler");
 var Device = require("./Device");
 var User = require("./User");
+var ReadTicket = require("./ReadTicket");
 
 
 /**
@@ -390,6 +391,14 @@ var Ticket = Base.extend({
             });
 
     },
+
+    markAsRead: function(user) {
+        ReadTicket.forge({
+            ticket_id: this.get("id"),
+            read_by: Base.toId(user),
+            read_at: new Date()
+        });
+    }
 
 });
 
