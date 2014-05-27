@@ -6,9 +6,17 @@ var React = require("react/addons");
 var Promise = require("bluebird");
 
 var User = require("../models/client/User");
+var Base = require("../models/client/Base");
+var UpdateMixin = require("./UpdateMixin");
 
 
 var SelectUsers = React.createClass({
+
+    mixins: [UpdateMixin],
+
+    onNavigate: function() {
+        this.forceUpdate();
+    },
 
     componentWillMount: function() {
         var self = this;

@@ -2,8 +2,6 @@
 "use strict";
 var React = require("react/addons");
 
-var UpdateMixin = require("../components/UpdateMixin");
-
 /**
  * Render React component in a modal lightbox
  *
@@ -12,12 +10,6 @@ var UpdateMixin = require("../components/UpdateMixin");
  * @extends React.ReactComponent
  */
 var Lightbox = React.createClass({
-
-    mixins: [UpdateMixin],
-
-    onNavigate: function() {
-        this.forceUpdate();
-    },
 
     render: function() {
         return (
