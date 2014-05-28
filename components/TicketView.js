@@ -153,7 +153,11 @@ var TicketView = React.createClass({
                             if (update.get("type") === "devices") {
                                 out = "Laite " + update.get("hostname");
                             }
-                            else {
+
+                            if (update.get("type") === "handlers") {
+                                out = "'" + update.get("handler").external_data.username + "' lisättiin käsittelijäksi";
+                            }
+                            if (update.get("type") === "comments") {
                                 out = update.get("comment");
                             }
 
