@@ -390,6 +390,14 @@ var Ticket = Base.extend({
 
     },
 
+
+    /**
+     * Mark ticket as read
+     *
+     * @method markAsRead
+     * @param {models.server.User|Number} user User model or id of user
+     * @return {Bluebird.Promise} with models.server.ReadTicket
+     */
     markAsRead: function(user) {
         ReadTicket.forge({
             ticket_id: this.get("id"),
