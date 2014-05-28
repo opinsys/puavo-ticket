@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
+var _ = require("lodash");
 
 var Ticket = require("../models/client/Ticket");
 var navigation = require("./navigation");
@@ -12,6 +13,12 @@ function isClosed(ticket) {
 
 function isOpen(ticket) {
     return ticket.getCurrentStatus() === "open";
+}
+
+function isHandledBy(user, ticket) {
+    return !!_.find(ticket.get("handlers"), function(handler) {
+        return handler.handler.id === user.get("id");
+    });
 }
 
 var List = React.createClass({
@@ -60,6 +67,13 @@ var TicketList = React.createClass({
         return (
             <div>
                 {this.state.ticketCollection.fetching && <p>Ladataan...</p>}
+
+                <h2>Minulle osoitetut avoimet tukipyynnöt</h2>
+                <List onSelect={this.props.onSelect}
+                      tickets={this.state.ticketCollection
+                          .filter(isOpen)
+                          .filter(isHandledBy.bind(null, this.props.user))} />
+
                 <h2>Avoimet tukipyynnöt</h2>
                 <List onSelect={this.props.onSelect}
                       tickets={this.state.ticketCollection.filter(isOpen)} />

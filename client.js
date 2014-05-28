@@ -114,7 +114,7 @@ var Main = React.createClass({
 
                         <h1>Tukipalvelu</h1>
 
-                        {route.root.isMatch() && <TicketList onSelect={this.handleSelectTicket} />}
+                        {route.root.isMatch() && <TicketList user={this.state.user} onSelect={this.handleSelectTicket} />}
                         {route.ticket.newForm.isMatch() && <TicketForm onSaved={this.handleSelectTicket} ticket={this.state.ticket} />}
                         {route.ticket.existing.isMatch() && <TicketView ticket={this.state.ticket} />}
 
