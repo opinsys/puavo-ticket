@@ -395,7 +395,8 @@ var Ticket = Base.extend({
             ticket_id: this.get("id"),
             read_by: Base.toId(user),
             read_at: new Date()
-        });
+        })
+        .save();
     }
 
 });
