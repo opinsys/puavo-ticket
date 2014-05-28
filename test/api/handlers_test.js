@@ -3,6 +3,7 @@
 var assert = require("assert");
 var Promise = require("bluebird");
 var nock = require("nock");
+var _ = require("lodash");
 
 var helpers = require("../helpers");
 var User = require("../../models/server/User");
@@ -79,6 +80,24 @@ describe("/api/tickets/:id/handlers", function() {
                 assert.equal(
                     "matti.meikalainen",
                     handlers[0].handler.external_data.username
+                );
+            });
+    });
+
+    it("lists handlers as an objects in /api/tickets", function() {
+        var self = this;
+
+        return this.agent
+            .get("/api/tickets/")
+            .promise()
+            .then(function(res) {
+                assert.equal(200, res.status);
+                var ticket = _.find(res.body, { id: self.ticket.get("id")});
+                assert(ticket);
+                assert(ticket.handlers, "has handlers array in the response");
+                assert.equal(
+                    "matti.meikalainen",
+                    ticket.handlers[0].handler.external_data.username
                 );
             });
     });
