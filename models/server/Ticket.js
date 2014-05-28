@@ -225,7 +225,7 @@ var Ticket = Base.extend({
      * Add follower to the ticket
      *
      * @method addFollower
-     * @param {Object} comment Plain object with models.server.Follower fields
+     * @param {Object} follower Plain object with models.server.Follower fields
      * @return {Bluebird.Promise} with models.server.Follower
      */
     addFollower: function(follower) {
