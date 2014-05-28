@@ -6,41 +6,12 @@ var Promise = require("bluebird");
 
 var Comment = require("../models/client/Comment");
 var Handler = require("../models/client/Handler");
+var Base = require("../models/client/Base");
 var Lightbox = require("./Lightbox");
 var AddDevice = require("./AddDevice");
 var SelectUsers = require("./SelectUsers");
 
 
-/**
- * ToggleStatusButton
- *
- * @namespace components
- * @class ToggleStatusButton
- */
-var ToggleStatusButton = React.createClass({
-
-    render: function() {
-        var ticket = this.props.ticketModel;
-        var status = ticket.getCurrentStatus();
-
-        if (!status) return (
-            <button disabled={true} >loading...</button>
-        );
-
-        if (status === "open") return (
-            <button
-                disabled={ticket.isOperating()}
-                onClick={ticket.setClosed.bind(ticket)} >Aseta ratkaistuksi</button>
-        );
-
-        return (
-            <button
-                disabled={ticket.isOperating()}
-                onClick={ticket.setOpen.bind(ticket)} >Avaa uudelleen</button>
-        );
-
-    }
-});
 
 /**
  * TicketView
@@ -121,6 +92,7 @@ var TicketView = React.createClass({
                     console.log("handler save ok");
                 })
                 .catch(function(err) {
+                    // XXX notify user about the error
                     console.log("failed to save handlers", err);
                 });
 
@@ -148,42 +120,9 @@ var TicketView = React.createClass({
                 <div>
                     <ul>
                         {this.props.ticket.updates().map(function(update) {
-                            var out;
-
-                            if (update.get("type") === "devices") {
-                                out = "Laite " + update.get("hostname");
-                            }
-
-                            if (update.get("type") === "handlers") {
-                                out = "'" + update.get("handler").external_data.username + "' lisättiin käsittelijäksi";
-                            }
-                            if (update.get("type") === "comments") {
-                                out = update.get("comment");
-                            }
-
-                            if (!out) {
-                                out = JSON.stringify(_.omit(update.toJSON(),
-                                    "ticket_id",
-                                    "createdBy",
-                                    "created_by",
-                                    "created_at",
-                                    "updated_at",
-                                    "deleted_at",
-                                    "deleted_by",
-                                    "unique_id"
-                               ));
-                            }
-
-                            var user = update.get("createdBy");
-                            if (user) {
-                                out += ". Lähetti " + user.external_data.username;
-                            }
-
-                            if (update.saving) {
-                                out  += " (saving...)";
-                            }
-
-                            return <li>{out}</li>;
+                            var view = VIEW_TYPES[update.get("type")];
+                            if (view) return <li>{view({ update: update })}</li>;
+                            return <li>Unknown update type: {update.get("type")}</li>;
                         })}
                     </ul>
                     <input
@@ -197,7 +136,7 @@ var TicketView = React.createClass({
                         onClick={this.saveComment}
                         disabled={this.props.ticket.isOperating() || !this.hasUnsavedComment()} >Lähetä</button>
                     <button onClick={this.handleAddDevice} >Lisää laite</button>
-                    <ToggleStatusButton ticketModel={this.props.ticket} />
+                    <ToggleStatusButton ticket={this.props.ticket} />
                     <button onClick={this.handleAddHandler} >Lisää käsittelijä</button>
                 </div>
 
@@ -206,6 +145,95 @@ var TicketView = React.createClass({
         );
     },
 
+});
+
+var UpdateMixin = {
+    propTypes: {
+        update: React.PropTypes.instanceOf(Base).isRequired
+    },
+
+    getCreatorName: function() {
+        return this.props.update.get("createdBy").external_data.username;
+    },
+};
+
+/**
+ * Individual components for each ticket update type
+ *
+ * @namespace components
+ * @private
+ * @class TicketView.VIEW_TYPES
+ */
+var VIEW_TYPES = {
+
+    comments: React.createClass({
+        mixins: [UpdateMixin],
+        render: function() {
+            return (
+                <div>
+                    <i>{this.getCreatorName()}: </i>
+                    <span>{this.props.update.get("comment")}</span>
+                </div>
+            );
+        },
+    }),
+
+    tags: React.createClass({
+        mixins: [UpdateMixin],
+        render: function() {
+            return (
+                <div>
+                    <i>{this.getCreatorName()} lisäsi tagin: </i>
+                    <span>{this.props.update.get("tag")}</span>
+                </div>
+            );
+        },
+    }),
+
+    handlers: React.createClass({
+        mixins: [UpdateMixin],
+        render: function() {
+            return (
+                <div>
+                    <i>{this.getCreatorName()} lisäsi käsittelijäksi käyttäjän </i>
+                    <span>{this.props.update.get("handler").external_data.username}</span>
+                </div>
+            );
+        },
+    })
+};
+
+
+/**
+ * ToggleStatusButton
+ *
+ * @namespace components
+ * @private
+ * @class TicketView.ToggleStatusButton
+ */
+var ToggleStatusButton = React.createClass({
+
+    render: function() {
+        var ticket = this.props.ticket;
+        var status = ticket.getCurrentStatus();
+
+        if (!status) return (
+            <button disabled={true} >loading...</button>
+        );
+
+        if (status === "open") return (
+            <button
+                disabled={ticket.isOperating()}
+                onClick={ticket.setClosed.bind(ticket)} >Aseta ratkaistuksi</button>
+        );
+
+        return (
+            <button
+                disabled={ticket.isOperating()}
+                onClick={ticket.setOpen.bind(ticket)} >Avaa uudelleen</button>
+        );
+
+    }
 });
 
 module.exports = TicketView;
