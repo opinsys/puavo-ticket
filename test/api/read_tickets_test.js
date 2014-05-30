@@ -56,4 +56,18 @@ describe("/api/tickets/:id/read", function() {
             });
     });
 
+    it("can see is ticket as read", function() {
+        var self = this;
+
+        return this.agent
+            .get("/api/tickets")
+            .promise()
+            .then(function(res) {
+                assert.equal(res.status, 200);
+                assert.equal("Test ticket", res.body[0].title);
+                assert.equal(ticket.get("id"), res.body[0].read_tickets[0].ticket_id);
+                assert.equal(self.user.id, res.body[0].read_tickets[0].read_by);
+            });
+    });
+
 });
