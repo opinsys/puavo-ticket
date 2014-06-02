@@ -1,5 +1,6 @@
 "use strict";
 var Base = require("./Base");
+var User = require("./User");
 var $ = require("jquery");
 var Promise = require("bluebird");
 
@@ -12,6 +13,16 @@ var Promise = require("bluebird");
  * @extends models.client.Base
  */
 var Handler = Base.extend({
+
+    /**
+     * Return the handler user object
+     *
+     * @method getHandlerUser
+     * @return {models.client.User}
+     */
+    getHandlerUser: function(){
+        return new User(this.get("handler"));
+    },
 
     save: Base.promiseWrap("saving", function() {
         var self = this;
