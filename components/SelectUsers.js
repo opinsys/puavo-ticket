@@ -20,7 +20,8 @@ var UserItem = React.createClass({
 
     getDefaultProps: function() {
         return {
-            checked: false
+            checked: false,
+            disabled: false
         };
     },
 
@@ -35,6 +36,7 @@ var UserItem = React.createClass({
                 <input
                     type="checkbox"
                     checked={this.props.checked}
+                    disabled={this.props.disabled}
                     onChange={this.handleOnChange}
                     ref="checkbox" />
                 {this.props.user.get("external_data").first_name}
@@ -54,28 +56,30 @@ var SelectUsers = React.createClass({
         this.forceUpdate();
     },
 
-    componentWillMount: function() {
+    doSearch: function(searchString) {
         var self = this;
-        this.doSearch = _.debounce(function(searchString) {
-            self.cancelCurrentSearch();
+        self.cancelCurrentSearch();
 
-            var searchOp = User.search(searchString)
-            .then(function(users) {
-                self.setState({ users: users });
-            })
-            .catch(Promise.CancellationError, function() {
-                // cancel is ok
-            })
-            .catch(function(err) {
-                self.setState({ error: err });
-            });
+        var searchOp = User.search(searchString)
+        .then(function(users) {
+            self.setState({ users: users });
+        })
+        .catch(Promise.CancellationError, function() {
+            // cancel is ok
+        })
+        .catch(function(err) {
+            self.setState({ error: err });
+        });
 
-            self.setState({
-                error: null,
-                searchOp: searchOp
-            });
+        self.setState({
+            error: null,
+            searchOp: searchOp
+        });
+    },
 
-        }, 500);
+    componentWillMount: function() {
+        // search after 500ms of silence for each mounted component
+        this.bouncedSearch = _.debounce(this.doSearch, 500);
     },
 
     componentDidMount: function() {
@@ -103,14 +107,13 @@ var SelectUsers = React.createClass({
             searchString: "",
             searchOp: null,
             users: new Base.Collection(),
-            selectedUsers: new Base.Collection(),
+            selectedUsers: new Base.Collection(this.props.currentHandlers),
         };
     },
 
-    handleOnChange: function(e) {
+    handleSearchStringChange: function(e) {
         this.setState({ searchString: e.target.value });
-        console.log("change", e.target.value);
-        this.doSearch(e.target.value);
+        this.bouncedSearch(e.target.value);
     },
 
     handleSelectUser: function(user) {
@@ -123,9 +126,18 @@ var SelectUsers = React.createClass({
         this.refs.search.getDOMNode().focus();
     },
 
+    /**
+     * saved handlers cannot be removed yet...
+     */
+    isSaved: function(user) {
+        return this.props.currentHandlers.some(function(selectedUser) {
+            return selectedUser.getExternalId() === user.getExternalId();
+        });
+    },
+
     isSelected: function(user) {
-        return !!this.state.selectedUsers.findWhere({
-            external_id: user.get("external_id")
+        return this.state.selectedUsers.some(function(selectedUser) {
+            return selectedUser.getExternalId() === user.getExternalId();
         });
     },
 
@@ -143,13 +155,14 @@ var SelectUsers = React.createClass({
                 <input
                     ref="search"
                     value={self.state.searchString}
-                    onChange={self.handleOnChange} />
+                    onChange={self.handleSearchStringChange} />
                 <ul>
                     {self.state.users.map(function(user) {
                         return (
                             <li key={user.get("external_id")} >
                                 <UserItem
                                     user={user}
+                                    disabled={self.isSaved(user)}
                                     checked={self.isSelected(user)}
                                     onRemoveUser={self.handleRemoveUser}
                                     onSelectUser={self.handleSelectUser} />
@@ -167,6 +180,7 @@ var SelectUsers = React.createClass({
                                 <UserItem
                                     user={user}
                                     checked={self.isSelected(user)}
+                                    disabled={self.isSaved(user)}
                                     onRemoveUser={self.handleRemoveUser}
                                     onSelectUser={self.handleSelectUser} />
                             </li>

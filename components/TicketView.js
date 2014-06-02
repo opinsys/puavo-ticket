@@ -77,27 +77,29 @@ var TicketView = React.createClass({
     handleAddHandler: function() {
         var self = this;
         Lightbox.displayComponent(
-            <SelectUsers onSelect={function(users) {
+            <SelectUsers
+                currentHandlers={this.props.ticket.handlers().invoke("getHandlerUser")}
+                onSelect={function(users) {
 
-                var handlers = users.map(function(user) {
-                    return new Handler({ user: user });
-                });
+                    var handlers = users.map(function(user) {
+                        return new Handler({ user: user });
+                    });
 
-                handlers.forEach(function(handler) {
-                    self.props.ticket.updates().add(handler);
-                });
+                    handlers.forEach(function(handler) {
+                        self.props.ticket.updates().add(handler);
+                    });
 
-                Promise.all(_.invoke(handlers, "save"))
-                .then(function() {
-                    console.log("handler save ok");
-                })
-                .catch(function(err) {
-                    // XXX notify user about the error
-                    console.log("failed to save handlers", err);
-                });
+                    Promise.all(_.invoke(handlers, "save"))
+                    .then(function() {
+                        console.log("handler save ok");
+                    })
+                    .catch(function(err) {
+                        // XXX notify user about the error
+                        console.log("failed to save handlers", err);
+                    });
 
 
-                Lightbox.removeCurrentComponent();
+                    Lightbox.removeCurrentComponent();
             }}/>
         );
     },
