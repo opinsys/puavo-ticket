@@ -61,7 +61,9 @@ describe("/api/tickets/:id/handlers", function() {
             .then(function(res) {
                 assert.equal(200, res.status);
                 assert(res.body.id, "got handler relation id");
-                assert.equal(self.otherUser.get("id"), res.body.handler);
+                assert(_.isObject(res.body.handler), "has handler object");
+                assert.equal(self.otherUser.get("id"), res.body.handler.id);
+                assert(res.body.createdBy, "has created by object");
             });
     });
 

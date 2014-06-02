@@ -25,6 +25,9 @@ app.post("/api/tickets/:id/handlers", function(req, res, next) {
         return ticket.addHandler(handler, req.user);
     })
     .then(function(handler) {
+        return handler.load(["createdBy", "handler"]);
+    })
+    .then(function(handler) {
         res.json(handler);
     })
     .catch(next);
