@@ -103,8 +103,8 @@ var Main = React.createClass({
         return (
             <div>
                 <div className="topmenu">
-                    <button onClick={NewTicketLink.go} className="top-button" >Uusi</button>
-                    <button onClick={RootLink.go} className="top-button" >Tukipyynnöt</button>
+                    <button onClick={NewTicketLink.go} className="top-button" >Uusi tukipyyntö</button>
+                    <button onClick={RootLink.go} className="top-button" >Omat tukipyynnöt</button>
 
                     <UserInformation user={this.state.user} />
                 </div>
@@ -118,6 +118,19 @@ var Main = React.createClass({
                         {route.ticket.newForm.isMatch() && <TicketForm onSaved={this.handleSelectTicket} ticket={this.state.ticket} />}
                         {route.ticket.existing.isMatch() && <TicketView ticket={this.state.ticket} />}
 
+                    </div>
+                    <div className="sidebar">
+                        <h2>Muistathan ilmoittaa nämä asiat tukipyyntöä tehdessä</h2>
+                        <ul>
+                            <li>tarkka kuvaus tuen tarpeesta</li>
+                            <li>laite</li>
+                            <li>käyttäjätunnus</li>
+                            <li>ajankohta</li>
+                            <li>koskeeko yhtä vai useampaa laitetta/käyttäjää</li>
+                        </ul>
+                        <div className="contact">
+                            <p>Kiireisissä tapauksissa soita tukinumeroomme 014-4591625</p>
+                        </div>
                     </div>
                 </div>
             </div>
