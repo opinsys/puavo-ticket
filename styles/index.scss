@@ -6,14 +6,21 @@ body, html {
 }
 
 a:visited {
-  color: blue;
+    color: brown;
+}
+
+a:hover{
+    background-color: brown;
+}
+
+a {
+    color: black;
 }
 
 blockquote {
   color: gray;
   font-style: italic;
 }
-
 
 
 table td {
@@ -28,13 +35,47 @@ table td {
     border-radius: 10px;
     -webkit-box-shadow: 0 15px 15px rgba(68,68,68,0.7);
     box-shadow: 0 15px 15px rgba(68,68,68,0.7);
-
-    max-width: 40em;
+    height: 700px;
+    max-width: 55em;
     margin: 0 auto;
-    margin-top: 0.5em;
+    margin-top: 1em;
 }
 
 .main {
+    border: 1px solid black;
+    -webkit-border-radius: 10px 10px 0 0;
+    border-radius: 10px 10px 0 0;
+    -webkit-box-shadow: 0 15px 15px rgba(68,68,68,0.7);
+    background-color: white;
+    float: left;
+    margin: 1em;
+    padding: 1em;
+    ul li{
+        list-style-type: none;
+        border-top: 1px solid lightgrey;
+        padding: 15px 0 15px 0;
+    } 
+    width: 70%;
+    p{
+    border: 1px solid grey;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 1em;
+    padding: 5px;
+    }
+    h1{
+    font-size: 2em;
+    background-color: white;
+    }
+    a:hover {
+    background-color: lightgrey;
+    }
+}
+
+.sidebar {
+    float: right;
+    height: 600px;
+    width: 15%;
     margin: 1em;
     border: 1px solid black;
     -webkit-border-radius: 10px 10px 0 0;
@@ -42,6 +83,31 @@ table td {
     -webkit-box-shadow: 0 15px 15px rgba(68,68,68,0.7);
     background-color: white;
     padding: 1em;
+    ul li{
+    margin-left: -20px;
+    } 
+    p{
+    border: 1px solid grey;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 1em;
+    padding: 5px;
+    }
+    h1{
+    font-size: 3em;
+    background-color: lightgrey;
+    }
+    h2{
+    font-size: 1em;
+    background-color: white;
+    }
+    a:hover {
+    background-color: lightgrey;
+    }
+}
+
+.contact{
+    background-color: pink;
 }
 
 .topmenu {
@@ -102,6 +168,8 @@ table td {
 
 .button, .top-button {
     cursor: pointer;
+    font-size: 15pt;
+    margin-right: 12pt;
 }
 
 
