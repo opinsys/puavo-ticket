@@ -68,6 +68,14 @@ var UserMixin = {
     },
 
     /**
+     * @method getExternalId
+     * @return {String}
+     */
+    getExternalId: function() {
+        return String(this.get("external_data").id);
+    },
+
+    /**
      * @method getProfileImage
      * @return {String} url to the profile image
      */
