@@ -30,10 +30,9 @@ var User = Base.extend({
                 throw ajaxErr;
             })
             .then(function(data) {
-                var users =  data.map(function(user) {
+                var users =  data.map(function(userData) {
                     return new User({
-                        external_id: user.id,
-                        external_data: user,
+                        external_data: userData
                     });
                 });
 
