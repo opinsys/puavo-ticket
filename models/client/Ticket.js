@@ -1,6 +1,7 @@
 "use strict";
 var Base = require("./Base");
 var Tag = require("./Tag");
+var Handler = require("./Handler");
 var _ = require("lodash");
 var UpdatesCollection = require("./UpdatesCollection");
 
@@ -121,6 +122,15 @@ var Ticket = Base.extend({
      */
     tags: function() {
         return Tag.collection(this.get("tags"));
+    },
+
+    /**
+     *
+     * @method handlers
+     * @return {models.client.Base.Collection} Collection of models.client.Handler models
+     */
+    handlers: function() {
+        return Handler.collection(this.updates().where({ type: "handlers" }));
     },
 
     /**
