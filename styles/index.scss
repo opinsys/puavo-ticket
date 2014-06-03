@@ -1,8 +1,8 @@
 
 body, html {
-    padding: 0;
-    margin: 0;
     font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 a:visited {
@@ -18,14 +18,14 @@ a {
 }
 
 blockquote {
-  color: gray;
-  font-style: italic;
+    color: gray;
+    font-style: italic;
 }
 
 
 table td {
-  min-width: 200px;
-  text-overflow: none;
+    min-width: 200px;
+    text-overflow: none;
 }
 
 .main-wrap {
@@ -35,10 +35,19 @@ table td {
     border-radius: 10px;
     -webkit-box-shadow: 0 15px 15px rgba(68,68,68,0.7);
     box-shadow: 0 15px 15px rgba(68,68,68,0.7);
-    height: 700px;
-    max-width: 55em;
+    max-width: 54em;
     margin: 0 auto;
     margin-top: 1em;
+    min-width: 40em;
+    position: relative;
+    &:before,
+    &:after {
+    content: " ";
+    display: table;
+    }
+    &:after {
+    clear: both;
+  }
 }
 
 .main {
@@ -54,10 +63,11 @@ table td {
         list-style-type: none;
         border-top: 1px solid lightgrey;
         padding: 15px 0 15px 0;
+        word-wrap:break-word;
     } 
-    width: 70%;
+    width: 65%;
     p{
-    border: 1px solid grey;
+    border: 1px solid lightgrey;
     -webkit-border-radius: 5px;
     border-radius: 5px;
     margin-bottom: 1em;
@@ -73,18 +83,19 @@ table td {
 }
 
 .sidebar {
-    float: right;
-    height: 600px;
-    width: 15%;
-    margin: 1em;
     border: 1px solid black;
     -webkit-border-radius: 10px 10px 0 0;
     border-radius: 10px 10px 0 0;
     -webkit-box-shadow: 0 15px 15px rgba(68,68,68,0.7);
     background-color: white;
+    margin: 1em;
     padding: 1em;
-    ul li{
+    float: right;
+    width: 17%;
+    ul li{   
+    word-wrap:break-word;
     margin-left: -20px;
+    margin-right: -20px;   
     } 
     p{
     border: 1px solid grey;
@@ -92,10 +103,6 @@ table td {
     border-radius: 5px;
     margin-bottom: 1em;
     padding: 5px;
-    }
-    h1{
-    font-size: 3em;
-    background-color: lightgrey;
     }
     h2{
     font-size: 1em;
@@ -107,21 +114,21 @@ table td {
 }
 
 .contact{
-    background-color: pink;
+    background-color: orange;
 }
 
 .topmenu {
-    padding: 1.2em;
     background-color: #f59545;
     background-image: -webkit-linear-gradient(top, #fab32e 0%, #f59545 100%);
     border-bottom: 1px solid black;
     box-shadow: 2px 4px 6px rgba(68,68,68,0.8);
+    padding: 1.2em;
 }
 
 .user {
     position: absolute;
-    top: 5px;
     right: 5px;
+    top: 5px;
     font-size: 9pt;
     ul {
         list-style-type: none;
@@ -135,7 +142,7 @@ table td {
 
 .ticket-form {
     textarea {
-      height: 20em;
+    height: 20em;
     }
 
     .button, input, textarea {
@@ -162,7 +169,7 @@ table td {
 }
 
 .similar-tickets * {
-  font-size: 9pt;
+    font-size: 9pt;
 }
 
 
@@ -211,16 +218,16 @@ table td {
 
 
 .lightbox-bg {
-  position: absolute;
-  margin: 0;
-  padding: 0;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background-color: black;
-  opacity: 0.3;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: black;
+    opacity: 0.3;
 }
 
 .lightbox {
