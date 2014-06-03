@@ -399,7 +399,7 @@ var Ticket = Base.extend({
      * @return {Bluebird.Promise} with models.server.ReadTicket
      */
     markAsRead: function(user) {
-        ReadTicket.forge({
+        return ReadTicket.forge({
             ticket_id: this.get("id"),
             read_by: Base.toId(user),
             read_at: new Date()
