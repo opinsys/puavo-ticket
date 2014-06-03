@@ -76,8 +76,9 @@ describe("Ticket handlers", function() {
 
     it("'nohandlers' tag is removed", function() {
         return this.ticket.tags().fetch().then(function(tags) {
-            var tagStrings = tags.pluck("tag");
-            assert(tagStrings.indexOf("nohandlers") === -1);
+            var tag = tags.findWhere({ tag: "nohandlers" });
+            assert(tag);
+            assert(tag.isSoftDeleted());
         });
     });
 

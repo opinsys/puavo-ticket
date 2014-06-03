@@ -16,6 +16,30 @@ var ReadTicket = require("./ReadTicket");
 
 
 /**
+ * Knex query helpers
+ *
+ * @namespace models.server
+ * @private
+ * @class Ticket.queries
+ */
+var queries = {
+
+    /**
+     * Get updates that are not soft deleted
+     *
+     * Example:
+     *
+     *      ticket.tags().query(queries.notSoftDeleted).fetch();
+     *
+     * @method notSoftDeleted
+     */
+    notSoftDeleted: function(qb) {
+        qb.where({ deleted: 0 });
+    }
+};
+
+
+/**
  * Server Ticket model
  *
  * @namespace models.server
@@ -149,11 +173,12 @@ var Ticket = Base.extend({
      */
     removeTag: function(tag, removedBy, options){
         var self = this;
-        return Tag.collection().query(function(qb) {
+        return Tag.collection()
+            .query(queries.notSoftDeleted)
+            .query(function(qb) {
                 qb.where({
                     tag: tag,
                     ticket_id: self.get("id"),
-                    deleted: 0
                 });
             })
             .fetch()
@@ -172,12 +197,6 @@ var Ticket = Base.extend({
      * @return {Bookshelf.Collection} Bookshelf.Collection of tag models
      */
     tags: function(){
-        return this.tagHistory().query(function(qb) {
-            qb.where({ deleted: 0 });
-        });
-    },
-
-    tagHistory: function() {
         return this.hasMany(Tag, "ticket_id");
     },
 
@@ -203,10 +222,9 @@ var Ticket = Base.extend({
      */
     status: function() {
         return this.tags()
+            .query(queries.notSoftDeleted)
             .query(function(qb) {
-                qb
-                .whereNull("deleted_at")
-                .andWhere("tag", "LIKE", "status:%");
+                qb.where("tag", "LIKE", "status:%");
             });
     },
 
@@ -349,7 +367,7 @@ var Ticket = Base.extend({
         var updatePromises = [
             "comments",
             "devices",
-            "tagHistory",
+            "tags",
         ].map(function(method) {
             return self[method]().fetch({
                 withRelated: "createdBy"

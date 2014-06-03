@@ -117,7 +117,9 @@ describe("Tag model", function() {
                 return ticket.tags().fetch();
             })
             .then(function(tags) {
-                assert(!tags.findWhere({ tag: "footag" }));
+                var tag = tags.findWhere({ tag: "footag" });
+                assert(tag);
+                assert(tag.isSoftDeleted());
             });
     });
 
