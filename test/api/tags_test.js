@@ -83,7 +83,7 @@ describe("/api/tickets/:id/tags", function() {
                 });
                 assert(ticket);
                 assert(
-                    _.findWhere(ticket.tags, { tag: "status:foostatus" }),
+                    _.findWhere(ticket.eagerUpdates, { tag: "status:foostatus" }),
                     "has 'status:foostatus' tag"
                 );
 
@@ -93,7 +93,7 @@ describe("/api/tickets/:id/tags", function() {
                 });
                 assert(otherTicket);
                 assert(
-                    _.findWhere(otherTicket.tags, { tag: "status:barstatus" }),
+                    _.findWhere(otherTicket.eagerUpdates, { tag: "status:barstatus" }),
                     "has 'status:barstatus' tag"
                 );
 
