@@ -155,7 +155,9 @@ var UpdateMixin = {
     },
 
     getCreatorName: function() {
-        return this.props.update.get("createdBy").external_data.username;
+        var createdBy = this.props.update.get("createdBy");
+        if (!createdBy) return "Unknown";
+        return createdBy.external_data.username;
     },
 };
 

@@ -67,6 +67,9 @@ var Ticket = Base.extend({
      * @return {models.client.UpdatesCollection} Collection of comments wrapped in a Promise
      */
     updates: function(){
+        if (this._updates.size() === 0) {
+            this._updates.reset(this.get("eagerUpdates"));
+        }
         return this._updates;
     },
 
@@ -118,10 +121,10 @@ var Ticket = Base.extend({
 
     /**
      * @method tags
-     * @return {models.client.Base.Collection} Collection of models.client.Tag models
+     * @return {Array} Collection of models.client.Tag models
      */
     tags: function() {
-        return Tag.collection(this.get("tags"));
+        return this.updates().where({ type: "tags" });
     },
 
     /**
@@ -141,6 +144,7 @@ var Ticket = Base.extend({
      * @return {String}
      */
     getCurrentStatus: function() {
+
         var statusTags = this.tags().filter(function(tag) {
             return tag.isStatusTag();
         });
@@ -148,6 +152,7 @@ var Ticket = Base.extend({
         if (statusTags.length === 0) {
             return null;
         }
+
 
         return _.max(statusTags,  function(update) {
             return update.createdAt().getTime();

@@ -20,10 +20,13 @@ var app = express.Router();
 app.get("/api/tickets", function(req, res, next) {
     Ticket.byVisibilities(req.user.getVisibilities())
     .fetch({
-        withRelated: ["tags", "handlers.handler"]
+        withRelated: ["handlers.handler"]
     })
-    .then(function(coll) {
-        res.json(coll.toJSON());
+    .then(function(tickets) {
+        return tickets.invokeThen("loadEagerUpdates");
+    })
+    .then(function(tickets) {
+        res.json(tickets);
     })
     .catch(next);
 });
@@ -39,11 +42,14 @@ app.get("/api/tickets", function(req, res, next) {
 app.get("/api/tickets/:id", function(req, res, next) {
     // TODO: assert visibilities!
     Ticket.forge({ id: req.params.id }).fetch({
-        withRelated: ["createdBy", "tags"],
+        withRelated: ["createdBy"],
+        require: true
     })
     .then(function(ticket) {
-        if (!ticket) return res.json(404, { error: "no such ticket" });
-        res.json(ticket.toJSON());
+        return ticket.loadEagerUpdates();
+    })
+    .then(function(ticket) {
+        res.json(ticket);
     })
     .catch(next);
 });

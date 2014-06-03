@@ -59,7 +59,7 @@ describe("/api/tickets", function() {
                 assert.equal("Computer does not work", res.body[0].title);
                 assert.equal(self.ticket.id, res.body[0].id);
                 assert(
-                    _.findWhere(res.body[0].tags, { tag: "status:open" }),
+                    _.findWhere(res.body[0].eagerUpdates, { tag: "status:open" }),
                     "has status:open tag"
                 );
             });
@@ -109,7 +109,7 @@ describe("/api/tickets", function() {
                 assert.equal(res.status, 200);
                 assert.equal(self.ticket.id, res.body.id);
                 assert.equal("Computer does not work", res.body.title);
-                assert(_.findWhere(res.body.tags, { tag: "status:open" }));
+                assert(_.findWhere(res.body.eagerUpdates, { tag: "status:open" }));
             });
     });
 

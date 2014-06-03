@@ -354,6 +354,42 @@ var Ticket = Base.extend({
         return this.belongsTo(User, "created_by");
     },
 
+
+
+    /**
+     * Placeholder for Ticket#loadEagerUpdates.
+     *
+     * Null before it is called, array afterwards.
+     *
+     * @property
+     * @type {Array|null}
+     */
+    eagerUpdates: null,
+
+    /**
+     * Eager version of .fetchUpdates(). Fetches all updates that are required
+     * for the frontpage ticket list view. When called an eagerUpdates property
+     * is added to the toJSON() serialization.
+     *
+     * @method loadEagerUpdates
+     * @return {Bluebird.Promise} with self
+     */
+    loadEagerUpdates: function() {
+        var self = this;
+        return this.tags().query(queries.notSoftDeleted)
+            .fetch()
+            .then(function(updates) {
+                self.eagerUpdates = updates;
+                return self;
+            });
+    },
+
+    toJSON: function() {
+        var json = Base.prototype.toJSON.call(this);
+        json.eagerUpdates = this.eagerUpdates;
+        return json;
+    },
+
     /**
      * Get all updates related to this ticket
      *
