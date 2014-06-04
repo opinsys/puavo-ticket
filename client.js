@@ -11,6 +11,8 @@ var Ticket = require("./models/client/Ticket");
 var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
 var TicketList = require("./components/TicketList");
+var SideInfo = require("./components/SideInfo");
+var SimilarTickets = require("./components/SimilarTickets");
 
 var navigation = require("./components/navigation");
 var route = navigation.route;
@@ -109,7 +111,7 @@ var Main = React.createClass({
                     <UserInformation user={this.state.user} />
                 </div>
 
-                <div className="main-wrap" class="clearfix">
+                <div className="main-wrap clearfix" >
                     <div className="main">
 
                         <h1>Tukipalvelu</h1>
@@ -119,19 +121,12 @@ var Main = React.createClass({
                         {route.ticket.existing.isMatch() && <TicketView ticket={this.state.ticket} />}
 
                     </div>
-                    <div className="sidebar">
-                        <h2>Muistathan ilmoittaa nämä asiat tukipyyntöä tehdessä</h2>
-                        <ul>
-                            <li>tarkka kuvaus tuen tarpeesta</li>
-                            <li>laite</li>
-                            <li>käyttäjätunnus</li>
-                            <li>ajankohta</li>
-                            <li>koskeeko yhtä vai useampaa laitetta/käyttäjää</li>
-                        </ul>
-                        <div className="contact">
-                            <p>Kiireisissä tapauksissa soita tukinumeroomme 014-4591625</p>
-                        </div>
-                    </div>
+                    {this.state.ticket &&
+                        <div className="sidebar">
+                           <SideInfo>
+                              <SimilarTickets ticketModel={this.state.ticket} />
+                            </SideInfo>
+                        </div>}
                 </div>
             </div>
         );
