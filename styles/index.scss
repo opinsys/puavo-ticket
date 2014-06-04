@@ -38,7 +38,7 @@ table td {
     max-width: 54em;
     margin: 0 auto;
     margin-top: 1em;
-    min-width: 40em;
+    min-width: 300px;
     position: relative;
     &:before,
     &:after {
@@ -47,7 +47,7 @@ table td {
     }
     &:after {
     clear: both;
-  }
+    }
 }
 
 .main {
@@ -92,10 +92,10 @@ table td {
     padding: 1em;
     float: right;
     width: 17%;
-    ul li{   
     word-wrap:break-word;
+    ul li{   
     margin-left: -20px;
-    margin-right: -20px;   
+    margin-right: -15px;   
     } 
     p{
     border: 1px solid grey;
@@ -111,6 +111,87 @@ table td {
     a:hover {
     background-color: lightgrey;
     }
+}
+
+@media screen and (max-width: 760px) {
+
+    .main-wrap {
+        background: none repeat scroll 0 0 #e3e3d9;
+        border: 5px solid #3e3e2d;
+        -webkit-border-radius: 10px 10px 0 0;
+        border-radius: 10px;
+        -webkit-box-shadow: 0 15px 15px rgba(68,68,68,0.7);
+        box-shadow: 0 15px 15px rgba(68,68,68,0.7);
+        margin: 0 auto;
+        margin-top: 1em;
+        max-width: 600px;
+        
+    }
+
+    .main {
+        border: 1px solid black;
+        -webkit-border-radius: 10px 10px 0 0;
+        border-radius: 10px 10px 0 0;
+        -webkit-box-shadow: 0 15px 15px rgba(68,68,68,0.7);
+        background-color: white;
+        margin: 1em;
+        padding: 1em;
+        float: none;
+        ul li{
+            list-style-type: none;
+            border-top: 1px solid lightgrey;
+            padding: 15px 0 15px 0;
+            word-wrap:break-word;
+        } 
+        width: 85%;
+        p{
+        border: 1px solid lightgrey;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        margin-bottom: 1em;
+        padding: 5px;
+        }
+        h1{
+        font-size: 2em;
+        background-color: white;
+        }
+        a:hover {
+        background-color: lightgrey;
+        }
+    }
+
+    .sidebar {
+        border: 1px solid black;
+        -webkit-border-radius: 10px 10px 0 0;
+        border-radius: 10px 10px 0 0;
+        -webkit-box-shadow: 0 15px 15px rgba(68,68,68,0.7);
+        background-color: white;
+        float: none;
+        margin: 1em;
+        padding: 1em;
+        width: 85%;
+        word-wrap:break-word;
+        ul li{   
+        margin-left: -20px;
+        margin-right: -15px;   
+        } 
+        p{
+        border: 1px solid grey;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        margin-bottom: 1em;
+        padding: 5px;
+        }
+        h2{
+        font-size: 1em;
+        background-color: white;
+        }
+        a:hover {
+        background-color: lightgrey;
+        }
+    }
+
+
 }
 
 .contact{
