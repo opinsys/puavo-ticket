@@ -68,7 +68,7 @@ var TicketForm = React.createClass({
                     <button
                         className="button"
                         disabled={this.props.ticket.isOperating()}
-                        onClick={this.handleSave} >Tallenna</button>
+                        onClick={this.handleSave} >Lähetä</button>
                 </div>
 
             </div>

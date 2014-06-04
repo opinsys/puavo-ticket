@@ -109,7 +109,7 @@ var Main = React.createClass({
                     <UserInformation user={this.state.user} />
                 </div>
 
-                <div className="main-wrap">
+                <div className="main-wrap" class="clearfix">
                     <div className="main">
 
                         <h1>Tukipalvelu</h1>
