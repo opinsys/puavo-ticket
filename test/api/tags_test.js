@@ -39,7 +39,6 @@ describe("/api/tickets/:id/tags", function() {
     });
 
     it("sets the status for a ticket", function() {
-
         return this.agent
             .post("/api/tickets/" + this.ticket.get("id") + "/tags")
             .send({ tag: "status:foostatus" })
@@ -47,19 +46,6 @@ describe("/api/tickets/:id/tags", function() {
             .then(function(res) {
                 assert.equal(200, res.status);
                 assert.equal("status:foostatus", res.body.tag);
-            });
-    });
-
-    it("is available in /api/tickets/:id/updates", function() {
-        return this.agent
-            .get("/api/tickets/" + this.ticket.get("id") + "/updates")
-            .promise()
-            .then(function(res) {
-                assert.equal(200, res.status);
-                var statuses = res.body.filter(function(update) {
-                    return update.tag === "status:foostatus";
-                });
-                assert.equal(1, statuses.length);
             });
     });
 
@@ -83,7 +69,7 @@ describe("/api/tickets/:id/tags", function() {
                 });
                 assert(ticket);
                 assert(
-                    _.findWhere(ticket.eagerUpdates, { tag: "status:foostatus" }),
+                    _.findWhere(ticket.tags, { tag: "status:foostatus" }),
                     "has 'status:foostatus' tag"
                 );
 
@@ -93,7 +79,7 @@ describe("/api/tickets/:id/tags", function() {
                 });
                 assert(otherTicket);
                 assert(
-                    _.findWhere(otherTicket.eagerUpdates, { tag: "status:barstatus" }),
+                    _.findWhere(otherTicket.tags, { tag: "status:barstatus" }),
                     "has 'status:barstatus' tag"
                 );
 

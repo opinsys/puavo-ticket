@@ -2,8 +2,9 @@
 var Base = require("./Base");
 var Tag = require("./Tag");
 var Handler = require("./Handler");
+var Comment = require("./Comment");
+var Tag = require("./Tag");
 var _ = require("lodash");
-var UpdatesCollection = require("./UpdatesCollection");
 
 /**
  * Client ticket model
@@ -15,18 +16,6 @@ var UpdatesCollection = require("./UpdatesCollection");
  */
 var Ticket = Base.extend({
 
-
-    dispose: function() {
-        this.off();
-        if (this._updates) {
-            this._updates.off();
-            this._updates.invoke("off");
-            this._updates.reset();
-            this._updates = null;
-        }
-        this._disposed = true;
-    },
-
     url: function() {
         if (this.get("id")) {
             return "/api/tickets/" + this.get("id");
@@ -37,15 +26,14 @@ var Ticket = Base.extend({
     defaults: function() {
         return {
             title: "",
-            description: ""
+            description: "",
+            tags: [],
+            tagHistory: [],
+            comments: [],
+            handlers: []
         };
     },
 
-    initialize: function() {
-        this._updates = new UpdatesCollection();
-        this._updates.setTicket(this);
-        Base.prototype.initialize.call(this);
-    },
 
     /**
      * Fetch ticket content and its updates
@@ -56,7 +44,6 @@ var Ticket = Base.extend({
     fetchAll: function() {
         if (!this.get("id")) throw new Error("Cannot fetch without an id");
         this.fetch();
-        this.updates().fetch();
     },
 
     /**
@@ -67,11 +54,53 @@ var Ticket = Base.extend({
      * @return {models.client.UpdatesCollection} Collection of comments wrapped in a Promise
      */
     updates: function(){
-        if (this._updates.size() === 0) {
-            this._updates.reset(this.get("eagerUpdates"));
-        }
-        return this._updates;
+        var updates =  this.tags()
+        .concat(this.tagHistory())
+        .concat(this.handlers())
+        .concat(this.comments())
+        ;
+        updates.sort(function(a, b) {
+            if (a.get("created_at") > b.get("created_at")) return 1;
+            if (a.get("created_at") < b.get("created_at")) return -1;
+            return 0;
+        });
+
+        return updates;
     },
+
+    tags: function() {
+        var self = this;
+        return this.get("tags").map(function(data) {
+            return new Tag(data, { parent: self });
+        });
+    },
+
+    tagHistory: function() {
+        var self = this;
+        return this.get("tagHistory").map(function(data) {
+            return new Tag(data, { parent: self });
+        });
+    },
+
+    comments: function() {
+        var self = this;
+        return this.get("comments").map(function(data) {
+            return new Comment(data, { parent: self });
+        });
+    },
+
+    /**
+     * TODO
+     *
+     * @method addComment
+     * @return {Bluebird.Promise}
+     */
+    addComment: function(comment){
+        var model = new Comment({ comment: comment }, { parent: this });
+        this.push("comments", model.toJSON());
+        return model.save().then(this.fetch.bind(this, null));
+    },
+
 
     /**
      * @method addTag
@@ -79,9 +108,9 @@ var Ticket = Base.extend({
      * @return {Bluebird.Promise}
      */
     addTag: function(tagName) {
-        var tag = new Tag({ tag: tagName });
-        this.updates().add(tag);
-        return tag.save();
+        var model = new Tag({ tag: tagName }, { parent: this });
+        this.push("tags", model.toJSON());
+        return model.save().then(this.fetch.bind(this, null));
     },
 
     /**
@@ -111,21 +140,10 @@ var Ticket = Base.extend({
      * @method reset
      */
     reset: function() {
-        if (this._updates) {
-            this._updates.off(null, null, this);
-            this._updates = null;
-        }
         this.clear();
         this.set(_.result(this, "defaults"));
     },
 
-    /**
-     * @method tags
-     * @return {Array} Collection of models.client.Tag models
-     */
-    tags: function() {
-        return this.updates().where({ type: "tags" });
-    },
 
     /**
      *
@@ -133,7 +151,10 @@ var Ticket = Base.extend({
      * @return {models.client.Base.Collection} Collection of models.client.Handler models
      */
     handlers: function() {
-        return Handler.collection(this.updates().where({ type: "handlers" }));
+        var self = this;
+        return this.get("handlers").map(function(data) {
+            return new Handler(data, { parent: self });
+        });
     },
 
     /**

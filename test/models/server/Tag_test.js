@@ -1,7 +1,5 @@
 "use strict";
 
-var _ = require("lodash");
-
 var helpers = require("../../helpers");
 
 var Ticket = require("../../../models/server/Ticket");
@@ -45,14 +43,11 @@ describe("Tag model", function() {
                     });
             })
             .then(function() {
-                return ticket.fetchUpdates();
+                return ticket.tags().fetch();
             })
-            .then(function(updates) {
+            .then(function(tags) {
 
-                var tags = updates.filter(function(update) {
-                    return update.get("type") === "tags";
-                })
-                .filter(function(update) {
+                tags = tags.filter(function(update) {
                     return update.get("tag") === "footag";
                 });
 
@@ -118,8 +113,7 @@ describe("Tag model", function() {
             })
             .then(function(tags) {
                 var tag = tags.findWhere({ tag: "footag" });
-                assert(tag);
-                assert(tag.isSoftDeleted());
+                assert(!tag);
             });
     });
 
@@ -149,12 +143,10 @@ describe("Tag model", function() {
                 return ticket.setStatus("inprogress", self.user);
             })
             .then(function() {
-                return ticket.fetchUpdates();
+                return ticket.tags().fetch();
             })
-            .then(function(updates) {
-                var status = _.findWhere(updates, function(update) {
-                    return update.get("tag") === "status:inprogress";
-                });
+            .then(function(tags) {
+                var status = tags.findWhere({ tag: "status:inprogress" });
                 assert(status, "has 'status:inprogress' tag");
                 assert.equal(
                     status.getStatus(),
@@ -174,31 +166,18 @@ describe("Tag model", function() {
                 return ticket.setStatus("done", self.user);
             })
             .then(function() {
-                return ticket.fetchUpdates();
+                return ticket.tags().fetch();
             })
-            .then(function(updates) {
+            .then(function(tags) {
                 assert(
-                    _.findWhere(updates, function(update) {
-                        return update.get("tag") === "status:done";
-                    }),
+                    tags.findWhere({ tag: "status:done" }),
                     "has 'status:done' tag"
                 );
 
-                var prevStatus = _.findWhere(updates, function(update) {
-                    return update.get("tag") === "status:inprogress";
-                });
+                var prevStatus = tags.findWhere({ tag: "status:inprogress" });
+                assert(!prevStatus, "prev status is not present");
 
-                assert(prevStatus, "previous status is present");
-                assert(prevStatus.get("deleted_at"), "previous is soft deleted");
-                assert(prevStatus.get("deleted_by"), "deleted_by id is set");
-                assert.equal(
-                    prevStatus.get("deleted_by"),
-                    self.user.get("id")
-                );
-
-                var otherTag = _.findWhere(updates, function(update) {
-                    return update.get("tag") === "othertag";
-                });
+                var otherTag = tags.findWhere({ tag: "othertag" });
                 assert(otherTag, "othertag is available");
                 assert(!otherTag.get("deleted_at"), "othertag is not soft deleted");
             });

@@ -143,7 +143,10 @@ var SelectUsers = React.createClass({
 
     handleOk: function(e) {
         e.preventDefault();
-        this.props.onSelect(this.state.selectedUsers);
+        var self = this;
+        this.props.onSelect(this.state.selectedUsers.filter(function(user) {
+            return !self.isSaved(user);
+        }));
     },
 
     render: function() {

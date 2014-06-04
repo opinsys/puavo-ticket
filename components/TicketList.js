@@ -64,9 +64,14 @@ var TicketList = React.createClass({
     },
 
     render: function() {
+        console.log("render list");
         return (
             <div>
+                <p>ticket count: {this.state.ticketCollection.size()}</p>
                 {this.state.ticketCollection.fetching && <p>Ladataan...</p>}
+
+                <List onSelect={this.props.onSelect}
+                    tickets={this.state.ticketCollection} />
 
                 <h2>Minulle osoitetut avoimet tukipyynnöt</h2>
                 <List onSelect={this.props.onSelect}

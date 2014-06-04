@@ -15,8 +15,14 @@ var TagMixin = require("../TagMixin");
  */
 var Tag = Base.extend({
 
+    defaults: function() {
+        return {
+            type: "tags"
+        };
+    },
+
     url: function() {
-        return this.collection.ticket.url() + "/tags";
+        return this.parent.url() + "/tags";
     }
 
 });

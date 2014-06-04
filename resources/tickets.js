@@ -20,10 +20,11 @@ var app = express.Router();
 app.get("/api/tickets", function(req, res, next) {
     Ticket.byVisibilities(req.user.getVisibilities())
     .fetch({
-        withRelated: ["handlers.handler"]
-    })
-    .then(function(tickets) {
-        return tickets.invokeThen("loadEagerUpdates");
+        withRelated: [
+            "createdBy",
+            "handlers.handler",
+            "tags"
+        ]
     })
     .then(function(tickets) {
         res.json(tickets);
@@ -42,11 +43,19 @@ app.get("/api/tickets", function(req, res, next) {
 app.get("/api/tickets/:id", function(req, res, next) {
     // TODO: assert visibilities!
     Ticket.forge({ id: req.params.id }).fetch({
-        withRelated: ["createdBy"],
+        withRelated: [
+            "createdBy",
+            "comments.createdBy",
+            "handlers",
+            "tags.createdBy",
+            "tagHistory",
+            "handlers.handler",
+            "handlers.createdBy",
+            "devices.createdBy",
+            "relatedUsers.user",
+            "relatedUsers.createdBy"
+        ],
         require: true
-    })
-    .then(function(ticket) {
-        return ticket.loadEagerUpdates();
     })
     .then(function(ticket) {
         res.json(ticket);
@@ -106,16 +115,16 @@ app.put("/api/tickets/:id", function(req, res, next) {
  *
  * @apiSuccess {Object[]} . List of updates
  */
-app.get("/api/tickets/:id/updates", function(req, res, next) {
-    Ticket.forge({ id: req.params.id })
-    .fetch()
-    .then(function(ticket) {
-        return ticket.fetchUpdates();
-    })
-    .then(function(updates) {
-        res.json(updates);
-    })
-    .catch(next);
-});
+// app.get("/api/tickets/:id/updates", function(req, res, next) {
+//     Ticket.forge({ id: req.params.id })
+//     .fetch()
+//     .then(function(ticket) {
+//         return ticket.fetchUpdates();
+//     })
+//     .then(function(updates) {
+//         res.json(updates);
+//     })
+//     .catch(next);
+// });
 
 module.exports = app;

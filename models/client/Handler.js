@@ -27,9 +27,9 @@ var Handler = Base.extend({
     save: Base.promiseWrap("saving", function() {
         var self = this;
 
-        return Promise.cast($.post(this.collection.ticket.url() + "/handlers", {
-                username: this.get("user").get("external_data").username,
-                organisation_domain: this.get("user").get("external_data").organisation_domain
+        return Promise.cast($.post(this.parent.url() + "/handlers", {
+                username: this.getHandlerUser().get("external_data").username,
+                organisation_domain: this.getHandlerUser().get("external_data").organisation_domain
             }))
             .then(function(res) {
                 self.set(res);

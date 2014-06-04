@@ -14,6 +14,8 @@ function createSlowInternet(time) {
     return function(req, res, next) {
         time = parseInt(process.env.SLOW || time, 10);
         if (!time) return next();
+
+        console.log("Adding", time, "ms extra to the request");
         setTimeout(next.bind(this, null), time);
     };
 }

@@ -2,6 +2,7 @@
 var helpers = require("../helpers");
 
 var assert = require("assert");
+var _ = require("lodash");
 
 
 describe("/api/tickets/:id/comments", function() {
@@ -43,25 +44,28 @@ describe("/api/tickets/:id/comments", function() {
         return this.agent
             .post("/api/tickets/" + ticket.get("id") + "/comments")
             .send({
-                comment: "add more test comment for ticket"
+                comment: "another test comment"
             })
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.equal(res.body.comment, "add more test comment for ticket");
+                assert.equal(res.body.comment, "another test comment");
                 assert.equal(res.body.ticket_id, ticket.get("id"));
                 assert.equal(res.body.created_by, self.user.id);
             });
     });
 
-    it("can get the comments by ticket", function() {
+    it("are visible in the tickets api", function() {
         return this.agent
-            .get("/api/tickets/" + ticket.get("id") + "/comments")
+            .get("/api/tickets/" + ticket.get("id"))
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.equal(3, res.body.length);
-                assert.equal("add more test comment for ticket", res.body[2].comment);
+                assert(res.body.comments);
+                var comment = _.findWhere(res.body.comments, { comment: "another test comment" });
+                assert(comment);
+                assert(comment.createdBy);
+                assert.equal("olli.opettaja", comment.createdBy.external_data.username);
             });
     });
 

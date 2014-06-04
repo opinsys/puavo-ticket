@@ -12,8 +12,14 @@ var Base = require("./Base");
  */
 var Comment = Base.extend({
 
+    defaults: function() {
+        return {
+            type: "comments"
+        };
+    },
+
     url: function() {
-        return this.collection.ticket.url() + "/comments";
+        return this.parent.url() + "/comments";
     }
 
 });

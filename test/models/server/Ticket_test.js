@@ -118,7 +118,7 @@ describe("Ticket model", function() {
 
         return ticketId.then(function(id) {
             return Ticket.forge({ id: id })
-                .fetch({ withRelated: "comments" })
+                .fetch({ withRelated: "comments.createdBy" })
                 .then(function(ticket) {
                     assert.equal(
                         ticket.related("comments").length,

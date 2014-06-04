@@ -59,7 +59,7 @@ describe("/api/tickets", function() {
                 assert.equal("Computer does not work", res.body[0].title);
                 assert.equal(self.ticket.id, res.body[0].id);
                 assert(
-                    _.findWhere(res.body[0].eagerUpdates, { tag: "status:open" }),
+                    _.findWhere(res.body[0].tags, { tag: "status:open" }),
                     "has status:open tag"
                 );
             });
@@ -109,7 +109,10 @@ describe("/api/tickets", function() {
                 assert.equal(res.status, 200);
                 assert.equal(self.ticket.id, res.body.id);
                 assert.equal("Computer does not work", res.body.title);
-                assert(_.findWhere(res.body.eagerUpdates, { tag: "status:open" }));
+                assert(
+                    _.findWhere(res.body.tags, { tag: "status:open" }),
+                    "has status:open tag"
+                  );
             });
     });
 
@@ -145,26 +148,4 @@ describe("/api/tickets", function() {
             });
     });
 
-    describe("/api/tickets/:id/updates", function() {
-
-        before(function() {
-            var self = this;
-            return helpers.insertTestTickets(self.user)
-                .then(function(tickets) {
-                    self.tickets = tickets;
-                });
-        });
-
-        it("can get list of ticket updates", function() {
-
-            return this.agent
-                .get("/api/tickets/" + this.tickets.ticket.id + "/updates")
-                .promise()
-                .then(function(res) {
-                    assert.equal(res.status, 200);
-                    assert(_.findWhere(res.body, { comment: "First comment to test ticket" }));
-                    assert(_.findWhere(res.body, { comment: "Second comment to test ticket" }));
-                });
-        });
-    });
 });

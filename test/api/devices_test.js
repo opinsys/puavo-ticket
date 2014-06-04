@@ -53,13 +53,14 @@ describe("/api/tickets/:id/devices", function() {
             });
     });
 
-    it("is listed on /api/tickets/:id/updates", function() {
+    it("is listed in /api/tickets/:id as an attribute", function() {
         return this.agent
-            .get("/api/tickets/" + ticket.get("id") + "/updates")
+            .get("/api/tickets/" + ticket.get("id"))
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                var deviceEntry = res.body.filter(function(update) {
+                assert(res.body.devices, "has devices attr");
+                var deviceEntry = res.body.devices.filter(function(update) {
                     return update.hostname === "fatclient-01";
                 });
 

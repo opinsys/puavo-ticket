@@ -4,7 +4,6 @@ var React = require("react/addons");
 var _ = require("lodash");
 var Promise = require("bluebird");
 
-var Comment = require("../models/client/Comment");
 var Handler = require("../models/client/Handler");
 var Base = require("../models/client/Base");
 var Lightbox = require("./Lightbox");
@@ -42,12 +41,9 @@ var TicketView = React.createClass({
     saveComment: function() {
         if (!this.hasUnsavedComment()) return;
 
-        var comment = new Comment({ comment: this.state.comment });
-        this.props.ticket.updates().add(comment);
+        this.props.ticket.addComment(this.state.comment);
         this.setState({ comment: "" });
         this.refs.comment.getDOMNode().focus();
-
-        return comment.save();
     },
 
     handleCommentKeyUp: function(e) {
@@ -78,24 +74,17 @@ var TicketView = React.createClass({
         var self = this;
         Lightbox.displayComponent(
             <SelectUsers
-                currentHandlers={this.props.ticket.handlers().invoke("getHandlerUser")}
+                currentHandlers={_.invoke(this.props.ticket.handlers(), "getHandlerUser")}
                 onSelect={function(users) {
 
                     var handlers = users.map(function(user) {
-                        return new Handler({ user: user });
+                        return new Handler({ handler: user.toJSON() }, { parent: self.props.ticket });
                     });
 
-                    handlers.forEach(function(handler) {
-                        self.props.ticket.updates().add(handler);
-                    });
 
                     Promise.all(_.invoke(handlers, "save"))
                     .then(function() {
-                        console.log("handler save ok");
-                    })
-                    .catch(function(err) {
-                        // XXX notify user about the error
-                        console.log("failed to save handlers", err);
+                        return self.props.ticket.fetch();
                     });
 
 

@@ -74,11 +74,17 @@ describe("Ticket handlers", function() {
             });
     });
 
-    it("'nohandlers' tag is removed", function() {
-        return this.ticket.tags().fetch().then(function(tags) {
+    it("'nohandlers' tag is removed because a handler is added", function() {
+        return this.ticket.tags().fetch().bind(this).then(function(tags) {
             var tag = tags.findWhere({ tag: "nohandlers" });
-            assert(tag);
-            assert(tag.isSoftDeleted());
+            assert(!tag);
+
+            return this.ticket.tagHistory().fetch().bind(this);
+        })
+        .then(function(tags) {
+            var tag = tags.findWhere({ tag: "nohandlers" });
+            assert(tag, "tag is moved to history");
+            assert(tag.isSoftDeleted(), "tag is soft deleted");
         });
     });
 

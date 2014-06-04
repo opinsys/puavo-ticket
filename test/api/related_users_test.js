@@ -77,21 +77,19 @@ describe("/api/tickets/:id/related_users", function() {
             });
     });
 
-    it("related user is visible in the updates api", function() {
+    it("related user is visible in the tickets api", function() {
         var self = this;
 
         return this.agent
-            .get("/api/tickets/" + self.ticket.get("id") + "/updates")
+            .get("/api/tickets/" + self.ticket.get("id"))
             .promise()
             .then(function(res) {
                 assert.equal(200, res.status);
-
-                var relatedUsers = res.body.filter(function(update) {
-                    return update.type === "related_users";
-                });
-
-                assert.equal(1, relatedUsers.length);
-                assert.equal("joe.bloggs", relatedUsers[0].user.external_data.username);
+                assert(res.body.relatedUsers, "response has a relatedUsers attr");
+                var relatedUser = res.body.relatedUsers[0];
+                assert(relatedUser.user.external_data, "user relation is present");
+                assert.equal("joe.bloggs", relatedUser.user.external_data.username);
+                assert(relatedUser.createdBy, "createdBy relation is present");
             });
     });
 

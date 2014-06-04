@@ -12,7 +12,6 @@ var BaseMixin = require("../BaseMixin");
 function proxyToBase() {
     /*jshint validthis:true */
     this.on("all", function(eventName) {
-        console.log("Backbone event", eventName);
         Base.trigger(eventName);
     });
 }
@@ -108,7 +107,17 @@ var PromiseWrapMixin = {
  */
 var Base = Backbone.Model.extend({
 
-    initialize: proxyToBase,
+    initialize: function(attrs, options) {
+        this.parent = options && options.parent;
+        proxyToBase.call(this);
+    },
+
+
+    push: function(attr, value) {
+        var array = this.get(attr);
+        array.push(value);
+        this.set(attr, array);
+    },
 
     /**
      *

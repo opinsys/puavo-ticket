@@ -34,8 +34,14 @@ var queries = {
      * @method notSoftDeleted
      */
     notSoftDeleted: function(qb) {
-        qb.where({ deleted: 0 });
+        qb.where("deleted", "=",  "0");
+    },
+
+    softDeleted: function(qb) {
+        qb.where("deleted", "!=",  "0");
     }
+
+
 };
 
 
@@ -197,7 +203,11 @@ var Ticket = Base.extend({
      * @return {Bookshelf.Collection} Bookshelf.Collection of tag models
      */
     tags: function(){
-        return this.hasMany(Tag, "ticket_id");
+        return this.hasMany(Tag, "ticket_id").query(queries.notSoftDeleted);
+    },
+
+    tagHistory: function() {
+        return this.hasMany(Tag, "ticket_id").query(queries.softDeleted);
     },
 
     /**
@@ -236,7 +246,7 @@ var Ticket = Base.extend({
      * @return {Bookshelf.Collection} Bookshelf.Collection of Attachment models
      */
     attachments: function() {
-        return this.hasMany(Attachment, "ticket_id");
+        return this.hasMany(Attachment, "ticket_id").query(queries.notSoftDeleted);
     },
 
     /**
@@ -353,97 +363,6 @@ var Ticket = Base.extend({
     createdBy: function() {
         return this.belongsTo(User, "created_by");
     },
-
-
-
-    /**
-     * Placeholder for Ticket#loadEagerUpdates.
-     *
-     * Null before it is called, array afterwards.
-     *
-     * @property
-     * @type {Array|null}
-     */
-    eagerUpdates: null,
-
-    /**
-     * Eager version of .fetchUpdates(). Fetches all updates that are required
-     * for the frontpage ticket list view. When called an eagerUpdates property
-     * is added to the toJSON() serialization.
-     *
-     * @method loadEagerUpdates
-     * @return {Bluebird.Promise} with self
-     */
-    loadEagerUpdates: function() {
-        var self = this;
-        return this.tags().query(queries.notSoftDeleted)
-            .fetch()
-            .then(function(updates) {
-                self.eagerUpdates = updates;
-                return self;
-            });
-    },
-
-    toJSON: function() {
-        var json = Base.prototype.toJSON.call(this);
-        json.eagerUpdates = this.eagerUpdates;
-        return json;
-    },
-
-    /**
-     * Get all updates related to this ticket
-     *
-     * @method fetchUpdates
-     * @return {Bluebird.Promise} with Array of Comment|Device|RelatedUser models
-     * wrapped in a promise
-     */
-    fetchUpdates: function() {
-        var self = this;
-
-        var updatePromises = [
-            "comments",
-            "devices",
-            "tags",
-        ].map(function(method) {
-            return self[method]().fetch({
-                withRelated: "createdBy"
-            });
-        });
-
-        updatePromises.push(this.handlers().fetch({
-            withRelated: ["createdBy", "handler"]
-        }));
-
-        updatePromises.push(this.relatedUsers().fetch({
-            withRelated: ["createdBy", "user"]
-        }));
-
-        return Promise.all(updatePromises)
-            .then(function(updates) {
-
-                updates = _.flatten(updates.map(function(coll) {
-                    // Convert to array so the resulting array of arrays can be
-                    // flattened to a flat array
-                    return coll.toArray();
-                }));
-
-                updates.sort(function(a,b) {
-                    if ( a.get("updated_at") > b.get("updated_at") ) {
-                        return 1;
-                    }
-                    if ( a.get("updated_at") < b.get("updated_at") ) {
-                        return -1;
-                    }
-
-                    return 0;
-
-                });
-
-                return updates;
-            });
-
-    },
-
 
     /**
      * Mark ticket as read

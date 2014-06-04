@@ -67,25 +67,6 @@ describe("/api/tickets/:id/handlers", function() {
             });
     });
 
-    it("handler is visible in the updates api", function() {
-        var self = this;
-
-        return this.agent
-            .get("/api/tickets/" + self.ticket.get("id") + "/updates")
-            .promise()
-            .then(function(res) {
-                assert.equal(200, res.status);
-                var handlers = res.body.filter(function(update) {
-                    return update.type === "handlers";
-                });
-                assert.equal(1, handlers.length);
-                assert.equal(
-                    "matti.meikalainen",
-                    handlers[0].handler.external_data.username
-                );
-            });
-    });
-
     it("lists handlers as an objects in /api/tickets", function() {
         var self = this;
 
@@ -103,5 +84,28 @@ describe("/api/tickets/:id/handlers", function() {
                 );
             });
     });
+
+    it("lists handlers with createdBy object in /api/tickets/:id", function() {
+        var self = this;
+
+        return this.agent
+            .get("/api/tickets/" + self.ticket.get("id"))
+            .promise()
+            .then(function(res) {
+                assert.equal(200, res.status);
+                var ticket = res.body;
+                assert(ticket);
+                assert(ticket.handlers, "has handlers array in the response");
+                assert.equal(
+                    "matti.meikalainen",
+                    ticket.handlers[0].handler.external_data.username
+                );
+                assert.equal(
+                    "olli.opettaja",
+                    ticket.handlers[0].createdBy.external_data.username
+                );
+            });
+    });
+
 
 });
