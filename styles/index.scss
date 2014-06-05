@@ -40,6 +40,9 @@ table td {
     margin-top: 1em;
     min-width: 330px;
     position: relative;
+}
+
+.clearfix{
     &:before,
     &:after {
     content: " ";
@@ -228,7 +231,6 @@ table td {
 }
 
 
-
 .lightbox-bg {
     position: absolute;
     margin: 0;
@@ -245,7 +247,7 @@ table td {
 .lightbox {
     // background-color: red;
     position: absolute;
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
     top: 1em;
     bottom: 1em;
@@ -272,11 +274,28 @@ table td {
       2px -2px 2px rgba(0, 0, 0, 0.5), -2px 2px 2px rgba(0,0,0,0.5), inset 0 5px 100px rgba(65, 120, 107, 0.2);
     box-shadow:
       2px -2px 2px rgba(0, 0, 0, 0.5), -2px 2px 2px rgba(0,0,0,0.5), inset 0 5px 100px rgba(65, 120, 107, 0.2);
-    margin: 1em auto;
     max-width: 800px;
     padding: 2%;
     text-align: center;
+    word-wrap:break-word;
+    ul li{
+        list-style-type: none;
+        text-align: left;
+    }
+    ul{
+        margin-left: -45px; 
+    }
 }
+
+.selectuser{
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+//.first-name .last-name .username {
+//    white-space: normal;
+//    color: white;
+//}
 
 @media screen and (max-width: 760px) {
 
@@ -303,6 +322,7 @@ table td {
 }
 
 @media screen and (max-width: 470px) {
+
     .top-button {
         margin-right: 80px;
         margin-bottom: 3px;

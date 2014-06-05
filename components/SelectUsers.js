@@ -39,9 +39,9 @@ var UserItem = React.createClass({
                     disabled={this.props.disabled}
                     onChange={this.handleOnChange}
                     ref="checkbox" />
-                {this.props.user.get("external_data").first_name}
-                {this.props.user.get("external_data").last_name}
-                ({this.props.user.get("external_data").username})
+                <span className="first-name" >{this.props.user.get("external_data").first_name + " "}</span>
+                <span className="last-name" >{this.props.user.get("external_data").last_name + " "}</span>      
+                <span className="username" >({this.props.user.get("external_data").username})</span>
             </label>
         );
     }
@@ -156,37 +156,42 @@ var SelectUsers = React.createClass({
                     ref="search"
                     value={self.state.searchString}
                     onChange={self.handleSearchStringChange} />
-                <ul>
-                    {self.state.users.map(function(user) {
-                        return (
-                            <li key={user.get("external_id")} >
-                                <UserItem
-                                    user={user}
-                                    disabled={self.isSaved(user)}
-                                    checked={self.isSelected(user)}
-                                    onRemoveUser={self.handleRemoveUser}
-                                    onSelectUser={self.handleSelectUser} />
-                            </li>
-                        );
-                    })}
-                </ul>
+                    
+                    <div className="selectuser">
+                    
+                        <ul>
+                            {self.state.users.map(function(user) {
+                                return (
+                                    <li key={user.get("external_id")} >
+                                        <UserItem
+                                            user={user}
+                                            disabled={self.isSaved(user)}
+                                            checked={self.isSelected(user)}
+                                            onRemoveUser={self.handleRemoveUser}
+                                            onSelectUser={self.handleSelectUser} />
+                                    </li>
+                                );
+                            })}
+                        </ul>
 
-                <h2>Valitut</h2>
+                        <h2>Valitut</h2>
 
-                <ul>
-                    {self.state.selectedUsers.map(function(user) {
-                        return (
-                            <li key={user.get("external_id")} >
-                                <UserItem
-                                    user={user}
-                                    checked={self.isSelected(user)}
-                                    disabled={self.isSaved(user)}
-                                    onRemoveUser={self.handleRemoveUser}
-                                    onSelectUser={self.handleSelectUser} />
-                            </li>
-                        );
-                    })}
-                </ul>
+                        <ul>
+                            {self.state.selectedUsers.map(function(user) {
+                                return (
+                                    <li key={user.get("external_id")} >
+                                        <UserItem
+                                            user={user}
+                                            checked={self.isSelected(user)}
+                                            disabled={self.isSaved(user)}
+                                            onRemoveUser={self.handleRemoveUser}
+                                            onSelectUser={self.handleSelectUser} />
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    
+                    </div>
 
                 <button onClick={self.handleOk}>ok</button>
 

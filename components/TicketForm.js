@@ -2,7 +2,6 @@
 "use strict";
 var React = require("react/addons");
 
-var SimilarTickets = require("./SimilarTickets");
 
 /**
  * Edit form for a ticket
@@ -44,10 +43,6 @@ var TicketForm = React.createClass({
         return (
             <div className="ticket-form">
 
-                {this.props.ticket.isOperating() && <p>Ladataan...</p>}
-
-                <SimilarTickets ticketModel={this.props.ticket} />
-
                 <input
                     disabled={this.props.ticket.isOperating()}
                     autoFocus
@@ -55,14 +50,20 @@ var TicketForm = React.createClass({
                     type="text"
                     onChange={this.handleChange}
                     value={this.props.ticket.get("title")}
-                    placeholder="Otsikko" />
+                    placeholder="Tukipyyntöä kuvaava otsikko" />
+                
+                
+                <a href="#" title=""><span title="Seuraavassa vaiheessa pääset halutessasi valitsemaan laitteet ja tunnukset">
                 <textarea
                     disabled={this.props.ticket.isOperating()}
                     ref="description"
-                    placeholder="Kuvaus ongelmastasi"
+                    placeholder="Tarkka kuvaus tuen tarpeesta."
                     value={this.props.ticket.get("description")}
                     onChange={this.handleChange}
                 />
+
+                </span></a>
+
 
                 <div className="button-wrap">
                     <button
