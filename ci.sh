@@ -24,8 +24,9 @@ sudo npm set registry http://registry.npmjs.org/
 
 export NODE_ENV=test
 
-puavo-dch 0.1.0
 
+puavo-build-debian-dir
+puavo-dch 0.1.0
 dpkg-buildpackage -us -uc
 
 aptirepo-upload -r $APTIREPO_REMOTE -b "git-$(echo "$GIT_BRANCH" | cut -d / -f 2)" ../puavo-ticket*.changes
