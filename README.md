@@ -110,7 +110,7 @@ try to commit them.
     sudo apt-get install git build-essential
     git clone https://github.com/opinsys/puavo-ticket.git
     cd puavo-ticket
-    sudo make install-ansbile
+    sudo make install-ansible
     sudo ansible-playbook development-env.yml --extra-vars dev_user=$USER --extra-vars code_dest=$HOME
 ```
 
