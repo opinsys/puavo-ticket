@@ -1,0 +1,12 @@
+description "puavo-ticket"
+
+start on runlevel [23]
+stop on shutdown
+
+env NODE_ENV=production
+setuid puavo-ticket
+chdir /usr/lib/node_modules/puavo-ticket
+
+exec node server.js
+
+respawn

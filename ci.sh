@@ -23,6 +23,9 @@ export DISPLAY=:99
 sudo npm set registry http://registry.npmjs.org/
 
 export NODE_ENV=test
-make
-make migrate
-make test
+
+puavo-dch 0.1.0
+
+dpkg-buildpackage -us -uc
+
+aptirepo-upload -r $APTIREPO_REMOTE -b "git-$(echo "$GIT_BRANCH" | cut -d / -f 2)" ../puavo-ticket*.changes

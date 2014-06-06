@@ -1,6 +1,8 @@
 export PATH := node_modules/.bin:$(PATH)
 export PATH := tools/bin:$(PATH)
 
+prefix ?= /usr/local
+
 # Use jsxhint wrapper since we use JSX for the React components
 JSHINT=jsxhint
 KARMA=node_modules/karma/bin/karma
@@ -86,13 +88,28 @@ test-server: jshint
 	mocha test/models/server/*_test.js test/api/*_test.js
 
 .PHONY: test
-test: jshint test-server
+test:
+	NODE_ENV=test $(MAKE) migrate
+	$(MAKE) jshint
+	$(MAKE) test-server
+
+
 
 serve-tests:
 	node test/server.js
 
 clean:
 	rm -rf doc node_modules
+
+install-dirs:
+	mkdir -p mkdir -p $(DESTDIR)$(prefix)/lib/node_modules/puavo-ticket
+	mkdir -p $(DESTDIR)$(prefix)/lib/node_modules/puavo-ticket
+	mkdir -p $(DESTDIR)/etc
+
+install: install-dirs
+	npm prune --production
+	cp -r *.js *.json node_modules components resources utils models views styles $(DESTDIR)$(prefix)/lib/node_modules/puavo-ticket
+	ln -fs /etc/puavo-ticket/config.json $(DESTDIR)$(prefix)/lib/node_modules/puavo-ticket/_config.json
 
 install-git-hooks:
 	cp tools/pre-commit.hook .git/hooks/pre-commit
