@@ -141,7 +141,7 @@ table td {
 
 .user {
     position: absolute;
-    right: 5px;
+    right: 10px;
     top: 5px;
     font-size: 9pt;
     ul {
@@ -249,12 +249,11 @@ table td {
     position: absolute;
     margin: 0 auto;
     padding: 0;
-    top: 1em;
-    bottom: 1em;
+    top: 3em;
     left: 1em;
     right: 1em;
     z-index: 1001;
-
+    min-height: 80%;
     background-color: #f0eee1;
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(240, 238, 225)), to(rgb(230, 228, 215)));
     background-image: -webkit-linear-gradient(top, rgb(240, 238, 225), rgb(230, 228, 215));
@@ -285,6 +284,25 @@ table td {
     ul{
         margin-left: -45px; 
     }
+    textbox{
+        width: 50%;
+    }
+
+    a:hover{
+        background-color: transparent;
+    }
+}
+
+.lightbox, .adddevice{
+    button {
+        display: inline;
+        padding: 1px;
+        box-sizing: border-box;
+        display: block;
+        width: 70%;
+        margin: 0 auto 0 auto;
+        border: 1px solid gray;
+    }
 }
 
 .selectuser{
@@ -292,10 +310,7 @@ table td {
     margin: 0 auto;
 }
 
-//.first-name .last-name .username {
-//    white-space: normal;
-//    color: white;
-//}
+
 
 @media screen and (max-width: 760px) {
 

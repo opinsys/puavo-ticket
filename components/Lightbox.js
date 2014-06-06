@@ -15,7 +15,7 @@ var Lightbox = React.createClass({
         return (
             <div>
                 <div onClick={Lightbox.removeCurrentComponent} className="lightbox-bg"></div>
-                <div className="lightbox">
+                <div className="lightbox clearfix">
                     <div className="lightbox-wrap">
                         {this.props.children}
                     </div>

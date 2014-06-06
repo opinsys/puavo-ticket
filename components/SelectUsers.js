@@ -151,50 +151,60 @@ var SelectUsers = React.createClass({
         return (
             <form>
                 {self.renderSearchError()}
-
+                    <h2>Lisää käsittelijä</h2>
+                    
+<a href="#" className="tooltip" title=""><span title="Aloita kirjoittamaan käsittelijän nimeä">
+                    
                 <input
                     ref="search"
                     value={self.state.searchString}
                     onChange={self.handleSearchStringChange} />
                     
-                    <div className="selectuser">
+</span></a>
                     
-                        <ul>
-                            {self.state.users.map(function(user) {
-                                return (
-                                    <li key={user.get("external_id")} >
-                                        <UserItem
-                                            user={user}
-                                            disabled={self.isSaved(user)}
-                                            checked={self.isSelected(user)}
-                                            onRemoveUser={self.handleRemoveUser}
-                                            onSelectUser={self.handleSelectUser} />
-                                    </li>
-                                );
-                            })}
-                        </ul>
+                <div className="selectuser">
 
-                        <h2>Valitut</h2>
-
-                        <ul>
-                            {self.state.selectedUsers.map(function(user) {
-                                return (
-                                    <li key={user.get("external_id")} >
-                                        <UserItem
-                                            user={user}
-                                            checked={self.isSelected(user)}
-                                            disabled={self.isSaved(user)}
-                                            onRemoveUser={self.handleRemoveUser}
-                                            onSelectUser={self.handleSelectUser} />
-                                    </li>
-                                );
-                            })}
-                        </ul>
+                    <ul>
+                        {self.state.users.map(function(user) {
+                            return (
+                                <li key={user.get("external_id")} >
+                                    <UserItem
+                                        user={user}
+                                        disabled={self.isSaved(user)}
+                                        checked={self.isSelected(user)}
+                                        onRemoveUser={self.handleRemoveUser}
+                                        onSelectUser={self.handleSelectUser} />
+                                </li>
+                            );
+                        })}
+                    </ul>
                     
-                    </div>
+                    {self.state.selectedUsers.length > 0 && <h2>    
+                        Valitut
+                    </h2>}
 
-                <button onClick={self.handleOk}>ok</button>
+                    <ul>
+                        {self.state.selectedUsers.map(function(user) {
+                            return (
+                                <li key={user.get("external_id")} >
+                                    <UserItem
+                                        user={user}
+                                        checked={self.isSelected(user)}
+                                        disabled={self.isSaved(user)}
+                                        onRemoveUser={self.handleRemoveUser}
+                                        onSelectUser={self.handleSelectUser} />
+                                </li>
+                            );
+                        })}
+                    </ul>
+                
+                </div>
 
+                <button
+                    className="button" 
+                    onClick={self.handleOk}>ok
+                </button>
+                
             </form>
         );
     },
