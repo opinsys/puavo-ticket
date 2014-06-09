@@ -53,7 +53,6 @@ var TicketForm = React.createClass({
                     placeholder="Tukipyyntöä kuvaava otsikko" />
 
 
-                <a href="#" title=""><span title="Seuraavassa vaiheessa pääset halutessasi valitsemaan laitteet ja tunnukset">
                 <textarea
                     disabled={this.props.ticket.isOperating()}
                     ref="description"
@@ -61,9 +60,6 @@ var TicketForm = React.createClass({
                     value={this.props.ticket.get("description")}
                     onChange={this.handleChange}
                 />
-
-                </span></a>
-
 
                 <div className="button-wrap">
                     <button
