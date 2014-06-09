@@ -92,12 +92,7 @@ var Main = React.createClass({
 
     setTicket: function(ticket) {
         if (typeof ticket.get !== "function") throw new Error("Bad ticket");
-
-        if (this.state.ticket && !this.state.ticket.isSame(ticket)) {
-            this.state.ticket.dispose();
-        }
-
-        if (ticket.get("id")) ticket.fetchAll();
+        if (ticket.get("id")) ticket.fetch();
         this.setState({ ticket: ticket });
     },
 
