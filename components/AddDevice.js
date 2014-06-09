@@ -40,15 +40,18 @@ var AddDevice = React.createClass({
 
     render: function() {
         return (
-            <div className="adddevice">
-                {this.state.device.isOperating() && "Saving..."}
-                <select ref="select">
-                    {this.state.deviceCollection.map(function(d) {
-                        return <option>{d.get("hostname")}</option>;
-                    })}
-                </select>
-                {this.state.deviceCollection.fetching && "Loading..."}
-                {this.state.deviceCollection.getError() && "AJAX FAIL :("}
+            <div>
+            <h2>Lisää laite</h2>
+                <div className="adddevice">
+                    {this.state.device.isOperating() && "Saving..."}
+                    <select ref="select">
+                        {this.state.deviceCollection.map(function(d) {
+                            return <option>{d.get("hostname")}</option>;
+                        })}
+                    </select>
+                    {this.state.deviceCollection.fetching && "Loading..."}
+                    {this.state.deviceCollection.getError() && "AJAX FAIL :("}
+                </div>
                 <button className="button"
                     onClick={this.handleAdd}>Lisää
                 </button>
