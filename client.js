@@ -63,13 +63,19 @@ var Main = React.createClass({
 
     getInitialState: function() {
         return {
-            user: new User(window.USER)
+            user: new User(window.USER),
+            ticket: null
         };
     },
 
 
     onNavigate: function() {
         var existing = route.ticket.existing;
+
+        if (route.root.isMatch()) {
+            this.setState({ ticket: null });
+            return;
+        }
 
         if (route.ticket.newForm.isMatch()) {
             this.setTicket(new Ticket());
