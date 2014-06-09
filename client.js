@@ -68,6 +68,17 @@ var Main = React.createClass({
         };
     },
 
+    /**
+     * Return true if the current ticket has the id
+     *
+     * @method
+     * @param {String} id
+     * @return {Boolean}
+     */
+    hasTicket: function(id) {
+        if (!this.state.ticket) return false;
+        return String(this.state.ticket.get("id")) === String(id);
+    },
 
     onNavigate: function() {
         var existing = route.ticket.existing;
@@ -83,8 +94,11 @@ var Main = React.createClass({
         }
 
         if (existing.isMatch()) {
-            this.setTicket(new Ticket({ id: existing.get("id") }));
-            return;
+            var id = existing.get("id");
+            if (!this.hasTicket(id)) {
+                this.setTicket(new Ticket({ id: id }));
+                return;
+            }
         }
 
         this.forceUpdate();
