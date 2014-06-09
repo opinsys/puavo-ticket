@@ -121,12 +121,13 @@ var Main = React.createClass({
                         {route.ticket.existing.isMatch() && <TicketView ticket={this.state.ticket} />}
 
                     </div>
-                    {this.state.ticket &&
                         <div className="sidebar">
                            <SideInfo>
-                              <SimilarTickets ticketModel={this.state.ticket} />
+                                {this.state.ticket && this.state.ticket.isNew() &&
+                                  <SimilarTickets ticketModel={this.state.ticket} />
+                                 }
                             </SideInfo>
-                        </div>}
+                        </div>
                 </div>
             </div>
         );
