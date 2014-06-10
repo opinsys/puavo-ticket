@@ -131,16 +131,30 @@ var Main = React.createClass({
 
                         <h1>Tukipalvelu</h1>
 
-                        {route.root.isMatch() && <TicketList user={this.state.user} onSelect={this.handleSelectTicket} />}
-                        {route.ticket.newForm.isMatch() && <TicketForm onSaved={this.handleSelectTicket} ticket={this.state.ticket} />}
-                        {route.ticket.existing.isMatch() && <TicketView ticket={this.state.ticket} />}
+                        {route.root.isMatch() &&
+                            <TicketList
+                                user={this.state.user}
+                                onSelect={this.handleSelectTicket} />
+                        }
+
+                        {route.ticket.newForm.isMatch() &&
+                            <TicketForm
+                                onSaved={this.handleSelectTicket}
+                                ticket={this.state.ticket} />
+                        }
+
+                        {route.ticket.existing.isMatch() &&
+                            <TicketView
+                                ticket={this.state.ticket}
+                            />
+                        }
 
                     </div>
                         <div className="sidebar">
                            <SideInfo>
                                 {this.state.ticket && this.state.ticket.isNew() &&
                                   <SimilarTickets ticketModel={this.state.ticket} />
-                                 }
+                                }
                             </SideInfo>
                         </div>
                 </div>
