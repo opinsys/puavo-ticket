@@ -21,6 +21,21 @@ function isHandledBy(user, ticket) {
     });
 }
 
+/**
+ * Return true if the needle model is not in the haystack array
+ *
+ * @private
+ * @method notIn
+ * @param {Array} haystack Array of tickets
+ * @param {Backbone.Modle} needle
+ * @return {Boolean}
+ */
+function notIn(haystack, needle) {
+    return !haystack.some(function(existing) {
+        return existing.get("id") === needle.get("id");
+    });
+}
+
 var List = React.createClass({
 
     render: function() {
@@ -64,7 +79,7 @@ var TicketList = React.createClass({
     },
 
     render: function() {
-        var handledByMe = this.state.ticketCollection
+        var handledByCurrentUser = this.state.ticketCollection
                           .filter(isOpen)
                           .filter(isHandledBy.bind(null, this.props.user));
 
@@ -73,14 +88,16 @@ var TicketList = React.createClass({
                 <p>ticket count: {this.state.ticketCollection.size()}</p>
                 {this.state.ticketCollection.fetching && <p>Ladataan...</p>}
 
-                {handledByMe.length > 0 && <div>
+                {handledByCurrentUser.length > 0 && <div>
                     <h2>Minulle osoitetut avoimet tukipyynnöt</h2>
-                    <List onSelect={this.props.onSelect} tickets={handledByMe} />
+                    <List onSelect={this.props.onSelect} tickets={handledByCurrentUser} />
                 </div>}
 
                 <h2>Avoimet tukipyynnöt</h2>
                 <List onSelect={this.props.onSelect}
-                      tickets={this.state.ticketCollection.filter(isOpen)} />
+                    tickets={this.state.ticketCollection
+                    .filter(isOpen)
+                    .filter(notIn.bind(null, handledByCurrentUser))} />
 
                 <h2>Suljetut tukipyynnöt</h2>
                 <List onSelect={this.props.onSelect}
