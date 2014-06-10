@@ -80,8 +80,8 @@ var TicketList = React.createClass({
 
     render: function() {
         var handledByCurrentUser = this.state.ticketCollection
-                          .filter(isOpen)
-                          .filter(isHandledBy.bind(null, this.props.user));
+          .filter(isOpen)
+          .filter(isHandledBy.bind(null, this.props.user));
 
         return (
             <div>
