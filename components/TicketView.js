@@ -42,7 +42,10 @@ var TicketView = React.createClass({
     saveComment: function() {
         if (!this.hasUnsavedComment()) return;
 
-        this.props.ticket.addComment(this.state.comment, this.props.user);
+        this.props.ticket.addComment(this.state.comment, this.props.user)
+        .then(function() {
+            window.scrollTo(0, document.body.scrollHeight);
+        });
         this.setState({ comment: "" });
         this.refs.comment.getDOMNode().focus();
     },
