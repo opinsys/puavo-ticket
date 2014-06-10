@@ -112,8 +112,14 @@ var TicketView = React.createClass({
                     <ul>
                         {this.props.ticket.updates().map(function(update) {
                             var view = VIEW_TYPES[update.get("type")];
-                            if (view) return <li>{view({ update: update })}</li>;
-                            return <li>Unknown update type: {update.get("type")}</li>;
+                            return (
+                                <li key={update.get("unique_id")}>
+                                    {view ?  view({ update: update })
+                                          : "Unknown update type: " + update.get("type")
+                                    }
+                                </li>
+                            );
+
                         })}
                     </ul>
                     <input

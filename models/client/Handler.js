@@ -14,6 +14,13 @@ var Promise = require("bluebird");
  */
 var Handler = Base.extend({
 
+    defaults: function() {
+        return {
+            type: "handlers",
+            created_at: new Date().toString()
+        };
+    },
+
     /**
      * Return the handler user object
      *

@@ -30,7 +30,8 @@ var Ticket = Base.extend({
             tags: [],
             tagHistory: [],
             comments: [],
-            handlers: []
+            handlers: [],
+            created_at: new Date().toString()
         };
     },
 

@@ -14,7 +14,8 @@ var Comment = Base.extend({
 
     defaults: function() {
         return {
-            type: "comments"
+            type: "comments",
+            created_at: new Date().toString()
         };
     },
 

@@ -17,7 +17,8 @@ var Tag = Base.extend({
 
     defaults: function() {
         return {
-            type: "tags"
+            type: "tags",
+            created_at: new Date().toString()
         };
     },
 
