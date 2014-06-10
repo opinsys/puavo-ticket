@@ -41,7 +41,7 @@ var TicketView = React.createClass({
     saveComment: function() {
         if (!this.hasUnsavedComment()) return;
 
-        this.props.ticket.addComment(this.state.comment);
+        this.props.ticket.addComment(this.state.comment, this.props.user);
         this.setState({ comment: "" });
         this.refs.comment.getDOMNode().focus();
     },
@@ -133,7 +133,7 @@ var TicketView = React.createClass({
                         onClick={this.saveComment}
                         disabled={this.props.ticket.isOperating() || !this.hasUnsavedComment()} >Lähetä</button>
                     <button onClick={this.handleAddDevice} >Lisää laite</button>
-                    <ToggleStatusButton ticket={this.props.ticket} />
+                    <ToggleStatusButton ticket={this.props.ticket} user={this.props.user} />
                     <button onClick={this.handleAddHandler} >Lisää käsittelijä</button>
                 </div>
 
@@ -223,13 +223,17 @@ var ToggleStatusButton = React.createClass({
         if (status === "open") return (
             <button
                 disabled={ticket.isOperating()}
-                onClick={ticket.setClosed.bind(ticket)} >Aseta ratkaistuksi</button>
+                onClick={ticket.setClosed.bind(ticket, this.props.user)} >
+                Aseta ratkaistuksi
+            </button>
         );
 
         return (
             <button
                 disabled={ticket.isOperating()}
-                onClick={ticket.setOpen.bind(ticket)} >Avaa uudelleen</button>
+                onClick={ticket.setOpen.bind(ticket, this.props.user)} >
+                Avaa uudelleen
+            </button>
         );
 
     }

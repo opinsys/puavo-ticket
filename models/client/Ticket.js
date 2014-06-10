@@ -82,22 +82,36 @@ var Ticket = Base.extend({
      * TODO
      *
      * @method addComment
+     * @param {String} comment
+     * @param {models.client.User} createdBy
      * @return {Bluebird.Promise}
      */
-    addComment: function(comment){
-        var model = new Comment({ comment: comment }, { parent: this });
+    addComment: function(comment, createdBy){
+        var model = new Comment({
+            comment: comment,
+            createdBy: createdBy.toJSON()
+        }, { parent: this });
+
         this.push("comments", model.toJSON());
-        return model.save().then(this.fetch.bind(this, null));
+
+        return model.save().bind(this).then(function() {
+            this.fetch();
+        });
+
     },
 
 
     /**
      * @method addTag
      * @param {String} tagName
+     * @param {models.client.User} createdBy
      * @return {Bluebird.Promise}
      */
-    addTag: function(tagName) {
-        var model = new Tag({ tag: tagName }, { parent: this });
+    addTag: function(tagName, createdBy) {
+        var model = new Tag({
+            tag: tagName,
+            createdBy: createdBy.toJSON()
+        }, { parent: this });
         this.push("tags", model.toJSON());
         return model.save().then(this.fetch.bind(this, null));
     },
@@ -106,20 +120,22 @@ var Ticket = Base.extend({
      * Close ticket by adding `status:closed` tag to it
      *
      * @method setClosed
+     * @param {models.client.User} createdBy
      * @return {Bluebird.Promise}
      */
-    setClosed: function() {
-        return this.addTag("status:closed");
+    setClosed: function(createdBy) {
+        return this.addTag("status:closed", createdBy);
     },
 
     /**
      * (re)open ticket by adding `status:open` tag to it
      *
      * @method setOpen
+     * @param {models.client.User} createdBy
      * @return {Bluebird.Promise}
      */
-    setOpen: function() {
-        return this.addTag("status:open");
+    setOpen: function(createdBy) {
+        return this.addTag("status:open", createdBy);
     },
 
     /**

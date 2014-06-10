@@ -146,6 +146,7 @@ var Main = React.createClass({
                         {route.ticket.existing.isMatch() &&
                             <TicketView
                                 ticket={this.state.ticket}
+                                user={this.state.user}
                             />
                         }
 
