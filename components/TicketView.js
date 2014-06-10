@@ -4,6 +4,7 @@ var React = require("react/addons");
 var _ = require("lodash");
 var Promise = require("bluebird");
 
+var Loading = require("./Loading");
 var Handler = require("../models/client/Handler");
 var Base = require("../models/client/Base");
 var Lightbox = require("./Lightbox");
@@ -97,7 +98,7 @@ var TicketView = React.createClass({
         return (
             <div className="ticket-form">
 
-                {this.isOperating() && <p>Ladataan...</p>}
+                {this.isOperating() && <Loading />}
 
                 <h1>
                     {this.props.ticket.get("title")}
@@ -172,6 +173,7 @@ var VIEW_TYPES = {
                 <div>
                     <i>{this.getCreatorName()}: </i>
                     <span>{this.props.update.get("comment")}</span>
+                    {this.props.update.isNew() && <Loading />}
                 </div>
             );
         },
@@ -184,6 +186,7 @@ var VIEW_TYPES = {
                 <div>
                     <i>{this.getCreatorName()} lisäsi tagin: </i>
                     <span>{this.props.update.get("tag")}</span>
+                    {this.props.update.isNew() && <Loading />}
                 </div>
             );
         },
