@@ -193,16 +193,9 @@ var Ticket = Base.extend({
      * @return {Boolean}
      */
     hasRead: function(userId) {
-        var status = false;
-
-        this.get("read_tickets").forEach( function(read_ticket) {
-            if (read_ticket.read_by == userId) {
-                status = true;
-                // FIXME breaking loop?
-            }
+        return this.get("read_tickets").some( function(read_ticket) {
+            return read_ticket.read_by === userId;
         });
-
-        return status;
     },
 
 }, {
