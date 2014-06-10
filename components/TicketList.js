@@ -64,17 +64,19 @@ var TicketList = React.createClass({
     },
 
     render: function() {
-        console.log("render list");
+        var handledByMe = this.state.ticketCollection
+                          .filter(isOpen)
+                          .filter(isHandledBy.bind(null, this.props.user));
+
         return (
             <div>
                 <p>ticket count: {this.state.ticketCollection.size()}</p>
                 {this.state.ticketCollection.fetching && <p>Ladataan...</p>}
 
-                <h2>Minulle osoitetut avoimet tukipyynnöt</h2>
-                <List onSelect={this.props.onSelect}
-                      tickets={this.state.ticketCollection
-                          .filter(isOpen)
-                          .filter(isHandledBy.bind(null, this.props.user))} />
+                {handledByMe.length > 0 && <div>
+                    <h2>Minulle osoitetut avoimet tukipyynnöt</h2>
+                    <List onSelect={this.props.onSelect} tickets={handledByMe} />
+                </div>}
 
                 <h2>Avoimet tukipyynnöt</h2>
                 <List onSelect={this.props.onSelect}
