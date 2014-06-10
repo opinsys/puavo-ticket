@@ -104,6 +104,10 @@ var Ticket = Base.extend({
         return this.hasMany(Visibility, "ticket_id");
     },
 
+    read_tickets: function() {
+        return this.hasMany(ReadTicket, "ticket_id");
+    },
+
     /**
      * Add visibility to the ticket. If the visibility already exists for the
      * ticket the existing visibility is returned.

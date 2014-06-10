@@ -23,7 +23,8 @@ app.get("/api/tickets", function(req, res, next) {
         withRelated: [
             "createdBy",
             "handlers.handler",
-            "tags"
+            "tags",
+            "read_tickets"
         ]
     })
     .then(function(tickets) {

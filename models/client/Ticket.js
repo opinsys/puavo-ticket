@@ -168,6 +168,26 @@ var Ticket = Base.extend({
         }).getStatus();
     },
 
+    /**
+     * Get read status of ticket
+     *
+     * @method hasRead
+     * @param {Integer} userId
+     * @return {Boolean}
+     */
+    hasRead: function(userId) {
+        var status = false;
+
+        this.get("read_tickets").forEach( function(read_ticket) {
+            if (read_ticket.read_by == userId) {
+                status = true;
+                // FIXME breaking loop?
+            }
+        });
+
+        return status;
+    },
+
 }, {
 
 
