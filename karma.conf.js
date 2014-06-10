@@ -8,7 +8,7 @@ module.exports = function(config) {
     files: [
       "test/vendor/sinon.js",
       // "test/components/index.js"
-      "test/components/bundle.js"
+      "test/bundle.js"
       // {pattern: "test/components/bundle.js", watched: true}
     ],
     client: {

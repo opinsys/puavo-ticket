@@ -8,7 +8,7 @@ var spawn = require("child_process").spawn;
 var browserify = require("browserify-middleware");
 var app = express();
 
-app.get("/test/components/bundle.js", browserify(projectDir + "/test/components/index.js", {
+app.get("/test/bundle.js", browserify(projectDir + "/test/client.js", {
     transform: ["reactify"]
 }));
 

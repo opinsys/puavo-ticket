@@ -67,7 +67,7 @@ jshint: $(js_files)
 	$(JSHINT) $?
 
 browserify-test: jshint
-	browserify -d -t reactify test/components/index.js -o test/components/bundle.js
+	browserify -d -t reactify test/client.js -o test/bundle.js
 
 export CHROME_BIN := chromium-browser
 test-chrome: browserify-test
@@ -92,10 +92,11 @@ test:
 	NODE_ENV=test $(MAKE) migrate
 	$(MAKE) jshint
 	$(MAKE) test-server
+	$(MAKE) test-browsers
 
 
 
-serve-tests:
+serve-tests: browserify-test
 	node test/server.js
 
 clean:
