@@ -143,6 +143,12 @@ Nav.createLink = function(hrefTemplate, override) {
      */
     var Link = React.createClass(xtend({
 
+        getDefaultProps: function() {
+            return {
+                pushState: true
+            };
+        },
+
         /**
          * Navigate browser to the href of this component instance
          *
@@ -163,6 +169,8 @@ Nav.createLink = function(hrefTemplate, override) {
         },
 
         handleClick: function(e) {
+            if (!this.props.pushState) return;
+
             // Only left click navigates
             if (e && e.button !== 0) return;
             if (e && e.preventDefault) e.preventDefault();
