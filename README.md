@@ -62,8 +62,8 @@ A client has following visibility properties by default:
 When ticket is created it will get only the visibility of the user who created
 it. Ticket will get additional visibilities when:
 
-  - A handler is added: handlers own visiblity
-  - Follower is added: followers own visibility
+  - A handler is added: handler's own visiblity
+  - Follower is added: followe's own visibility
   - Visibility is explicitly added by a handler
     - For example school visibility
 
