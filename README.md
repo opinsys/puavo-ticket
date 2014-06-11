@@ -5,20 +5,22 @@ Cool new ticketing system with deep puavo integration.
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
 - [puavo-ticket](#user-content-puavo-ticket)
+	- [Roles](#user-content-roles)
+	- [Ticket hanlders](#user-content-ticket-hanlders)
+	- [Visibilities](#user-content-visibilities)
 - [Development Documentation](#user-content-development-documentation)
-  - [Project structure](#user-content-project-structure)
-  - [Installation for development](#user-content-installation-for-development)
-  - [Development tools](#user-content-development-tools)
-    - [Editors](#user-content-editors)
-    - [Setup PATH](#user-content-setup-path)
-  - [Running tests](#user-content-running-tests)
-  - [Debug browser Javascript](#user-content-debug-browser-javascript)
-  - [Debug server Javascript](#user-content-debug-server-javascript)
-  - [Debug server tests](#user-content-debug-server-tests)
-  - [Debug SQL](#user-content-debug-sql)
-  - [puavo-ticket API documentation](#user-content-puavo-ticket-api-documentation)
-    - [External documentation](#user-content-external-documentation)
-
+	- [Project structure](#user-content-project-structure)
+	- [Installation for development](#user-content-installation-for-development)
+	- [Development tools](#user-content-development-tools)
+		- [Editors](#user-content-editors)
+		- [Setup PATH](#user-content-setup-path)
+	- [Running tests](#user-content-running-tests)
+	- [Debug browser Javascript](#user-content-debug-browser-javascript)
+	- [Debug server Javascript](#user-content-debug-server-javascript)
+	- [Debug server tests](#user-content-debug-server-tests)
+	- [Debug SQL](#user-content-debug-sql)
+	- [puavo-ticket API documentation](#user-content-puavo-ticket-api-documentation)
+		- [External documentation](#user-content-external-documentation)
 
 ## Roles
 
