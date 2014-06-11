@@ -51,7 +51,7 @@ Ticket creator is automatically a handler.
 
 ## Visibilities
 
-Users and tickets have a visibility properties. Users see the tickets where the
+Users and tickets have visibility properties. Users see the tickets where the
 visibility properties match.
 
 A client has following visibility properties by default:
