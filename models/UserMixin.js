@@ -68,6 +68,15 @@ var UserMixin = {
     },
 
     /**
+     *
+     * @method getUsername
+     * @return {String}
+     */
+    getUsername: function(){
+        return this.get("external_data").username;
+    },
+
+    /**
      * @method getExternalId
      * @return {String}
      */
