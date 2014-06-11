@@ -38,7 +38,6 @@ When client has only a visibility to a ticket he/she do following:
 
   - Comment
   - Follow the ticket
-  - Add other followers
   - Add related users
   - Add related devices
 
