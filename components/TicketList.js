@@ -38,13 +38,22 @@ function notIn(haystack, needle) {
 
 var List = React.createClass({
 
+    getTitleClass: function(ticket, userId) {
+        if (ticket.hasRead( userId )) {
+            return "read";
+        }
+        return "unread";
+    },
+
+
     render: function() {
         var self = this;
+
         return (
             <ul ref="list">
                 {this.props.tickets.map(function(ticket) {
                     return (
-                        <li key={ticket.get("id")}>
+                            <li key={ticket.get("id")} className={ self.getTitleClass(ticket, self.props.user.get("id")) }>
                             <TicketViewLink
                                 id={ticket.get("id")}
                                 onClick={self.props.onSelect.bind(null, ticket)} >
@@ -95,6 +104,7 @@ var TicketList = React.createClass({
 
                 <h2>Avoimet tukipyynnöt</h2>
                 <List onSelect={this.props.onSelect}
+                    user={this.props.user}
                     tickets={this.state.ticketCollection
                     .filter(isOpen)
                     .filter(notIn.bind(null, handledByCurrentUser))} />
