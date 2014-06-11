@@ -68,6 +68,9 @@ table td {
         border-top: 1px solid lightgrey;
         padding: 15px 0 15px 0;
     } 
+    ul li:first-child{
+        border-top: 0;
+    }
     width: 64%;
     p{
     border: 1px solid lightgrey;
@@ -156,6 +159,7 @@ table td {
 .ticket-form {
     textarea {
     height: 20em;
+    max-width: 100%;
     }
 
     .button, input, textarea {
@@ -188,6 +192,13 @@ table td {
     }
 }
 
+.comments{
+}
+
+.tags{
+    color: gray;
+    font-size: 9pt;
+}
 
 .similar-tickets * {
     font-size: 9pt;

@@ -127,12 +127,12 @@ var TicketView = React.createClass({
 
                 {this.isOperating() && <Loading />}
 
-                <h1>
-                    {this.props.ticket.get("title")}
+                <h2>
+                    {this.props.ticket.get("title") + " "}
                     <span>
                         ({this.props.ticket.getCurrentStatus()})
                     </span>
-                </h1>
+                </h2>
 
                 <p>{this.props.ticket.get("description")}</p>
 
@@ -197,7 +197,7 @@ var VIEW_TYPES = {
         mixins: [UpdateMixin],
         render: function() {
             return (
-                <div>
+                <div className="comments">
                     <i>{this.getCreatorName()}: </i>
                     <span>{this.props.update.get("comment")}</span>
                     {this.props.update.isNew() && <Loading />}
@@ -210,7 +210,7 @@ var VIEW_TYPES = {
         mixins: [UpdateMixin],
         render: function() {
             return (
-                <div>
+                <div className="tags">
                     <i>{this.getCreatorName()} lisäsi tagin: </i>
                     <span>{this.props.update.get("tag")}</span>
                     {this.props.update.isNew() && <Loading />}
@@ -223,7 +223,7 @@ var VIEW_TYPES = {
         mixins: [UpdateMixin],
         render: function() {
             return (
-                <div>
+                <div className="tags">
                     <i>{this.getCreatorName()} lisäsi käsittelijäksi käyttäjän </i>
                     <span>{this.props.update.get("handler").external_data.username}</span>
                 </div>
