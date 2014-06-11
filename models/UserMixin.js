@@ -76,6 +76,14 @@ var UserMixin = {
     },
 
     /**
+     * @method getEmail
+     * @return {String}
+     */
+    getEmail: function(){
+        return this.get("external_data").email;
+    },
+
+    /**
      * @method getProfileImage
      * @return {String} url to the profile image
      */
