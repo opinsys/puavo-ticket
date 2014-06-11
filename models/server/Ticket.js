@@ -376,12 +376,28 @@ var Ticket = Base.extend({
      * @return {Bluebird.Promise} with models.server.ReadTicket
      */
     markAsRead: function(user) {
+        var self = this;
+
+        console.log("Mark ticket as read: " + this.get("title"));
+
         return ReadTicket.forge({
-            ticket_id: this.get("id"),
-            read_by: Base.toId(user),
-            read_at: new Date()
+            ticket_id: self.get("id"),
+            read_by: Base.toId(user)
         })
-        .save();
+        .fetch()
+        .then(function(read_ticket) {
+            console.log(read_ticket);
+            if(read_ticket) {
+                read_ticket.set({ read_at: new Date() });
+                return read_ticket.save();
+            }
+
+            return ReadTicket.forge({
+                ticket_id: self.get("id"),
+                read_by: Base.toId(user),
+                read_at: new Date()
+            }).save();
+        });
     }
 
 });
