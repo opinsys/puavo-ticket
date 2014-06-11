@@ -10,7 +10,7 @@ describe("User model", function() {
         return helpers.clearTestDatabase();
     });
 
-    it("Instance can be created", function() {
+    it("can be instantiated", function() {
         var testUser = {
             username: "testuser",
             email: "joe.bloggs@testdomain.com",
@@ -34,8 +34,8 @@ describe("User model", function() {
                 assert.equal("Bloggs", user.get("external_data").last_name);
                 assert.equal("test.testdomain.com", user.get("external_data").organisation_domain);
             });
-
     });
+
 });
 
 describe("UserMixin", function() {
