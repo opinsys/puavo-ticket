@@ -1,5 +1,9 @@
 var _ = require("lodash");
 
+if (typeof window !== "undefined") {
+    throw new Error("config.js is not allowed in the browser");
+}
+
 var config = {
     database: {
         connection: {
