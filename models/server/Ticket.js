@@ -62,27 +62,29 @@ var Ticket = Base.extend({
         };
     },
 
-    initialize: function() {
-        this.on("created", function setInitialTicketState(ticket) {
-            return ticket.createdBy().fetch().then(function(user) {
-                var isOpen = ticket.setStatus("open", user);
-                var hasNoHandlersTag = ticket.addTag("nohandlers", user);
-                var creatorCanView = ticket.addVisibility(
-                    user.getPersonalVisibility(),
-                    user
-                );
-                var organisationAdminCanView = ticket.addVisibility(
-                    user.getOrganisationAdminVisibility(),
-                    user
-                );
+    initialize: function(attrs, options) {
+        this.on("created", this._setInitialTicketState.bind(this));
+    },
 
-                return Promise.all([
-                    isOpen,
-                    creatorCanView,
-                    hasNoHandlersTag,
-                    organisationAdminCanView
-                ]);
-            });
+    _setInitialTicketState: function (ticket) {
+        return ticket.createdBy().fetch().then(function(user) {
+            var isOpen = ticket.setStatus("open", user);
+            var hasNoHandlersTag = ticket.addTag("nohandlers", user);
+            var creatorCanView = ticket.addVisibility(
+                user.getPersonalVisibility(),
+                user
+            );
+            var organisationAdminCanView = ticket.addVisibility(
+                user.getOrganisationAdminVisibility(),
+                user
+            );
+
+            return Promise.all([
+                isOpen,
+                creatorCanView,
+                hasNoHandlersTag,
+                organisationAdminCanView
+            ]);
         });
     },
 
