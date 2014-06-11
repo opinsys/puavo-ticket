@@ -4,6 +4,7 @@ var Tag = require("./Tag");
 var Handler = require("./Handler");
 var Comment = require("./Comment");
 var Tag = require("./Tag");
+var ReadTicket = require("./ReadTicket");
 var _ = require("lodash");
 
 /**
@@ -197,6 +198,18 @@ var Ticket = Base.extend({
             return read_ticket.read_by === userId;
         });
     },
+
+    /**
+     * @method markAsRead
+     * @param {Integer} userId
+     * @return {Bluebird.Promise}
+     */
+    markAsRead: function() {
+        console.log("Mark ticket as read: " + this.get("title"));
+        var model = new ReadTicket({}, { parent: this });
+        return model.save();
+    },
+
 
 }, {
 
