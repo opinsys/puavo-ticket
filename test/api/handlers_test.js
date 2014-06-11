@@ -26,7 +26,7 @@ describe("/api/tickets/:id/handlers", function() {
                 self.user = user;
                 self.otherUser = otherUser;
 
-                return helpers.loginAsUser(helpers.user.teacher);
+                return helpers.loginAsUser(helpers.user.manager);
             })
             .then(function(agent) {
                 self.agent = agent;
@@ -101,7 +101,7 @@ describe("/api/tickets/:id/handlers", function() {
                     ticket.handlers[0].handler.external_data.username
                 );
                 assert.equal(
-                    "olli.opettaja",
+                    "pointyhair",
                     ticket.handlers[0].createdBy.external_data.username
                 );
             });

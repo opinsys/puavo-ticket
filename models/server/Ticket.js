@@ -285,27 +285,35 @@ var Ticket = Base.extend({
         if (Base.isModel(handler)) handler = Promise.cast(handler);
         else handler = User.byId(handler).fetch({ require: true });
 
-        return handler.then(function(handler) {
-            return Promise.all([
-
-                Handler.forge({
-                    ticket_id: self.get("id"),
-                    created_by: Base.toId(addedBy),
-                    handler: Base.toId(handler)
-                }).save(),
-
-                self.addVisibility(
-                    handler.getPersonalVisibility(),
-                    addedBy
-                ),
-
-                self.removeTag("nohandlers", addedBy)
-
+        return Promise.all([
+                handler,
+                User.byId(Base.toId(addedBy)).fetch({ require: true })
             ])
+            .spread(function(handler, addedBy) {
+                if (!addedBy.isManager()) {
+                    throw new Error("Only managers can add handlers");
+                }
+
+                return Promise.all([
+
+                    Handler.forge({
+                        ticket_id: self.get("id"),
+                        created_by: Base.toId(addedBy),
+                        handler: Base.toId(handler)
+                    }).save(),
+
+                    self.addVisibility(
+                        handler.getPersonalVisibility(),
+                        addedBy
+                    ),
+
+                    self.removeTag("nohandlers", addedBy)
+
+                ]);
+            })
             .spread(function(handler, visibility) {
                 return handler;
             });
-        });
 
     },
 

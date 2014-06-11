@@ -13,14 +13,14 @@ describe("Ticket handlers", function() {
         return helpers.clearTestDatabase()
             .then(function() {
                 return Promise.all([
-                    User.ensureUserFromJWTToken(helpers.user.teacher),
+                    User.ensureUserFromJWTToken(helpers.user.manager),
                     User.ensureUserFromJWTToken(helpers.user.teacher2)
                 ]);
             })
-            .spread(function(user, otherUser) {
-                self.user = user;
+            .spread(function(manager, otherUser) {
+                self.manager = manager;
                 self.otherUser = otherUser;
-                return helpers.insertTestTickets(user);
+                return helpers.insertTestTickets(manager);
             })
             .then(function(tickets) {
                 self.ticket = tickets.ticket;
@@ -41,7 +41,7 @@ describe("Ticket handlers", function() {
         return User.byExternalId(helpers.user.teacher2.id)
             .fetch({ require: true })
             .then(function(otherUser) {
-                return self.ticket.addHandler(otherUser, self.user);
+                return self.ticket.addHandler(otherUser, self.manager);
             })
             .then(function() {
                 return self.ticket.handlers().fetch({
@@ -51,7 +51,7 @@ describe("Ticket handlers", function() {
             .then(function(handlers) {
                 handlers = handlers.toJSON();
                 assert.equal(1, handlers.length, "has one handler");
-                assert.equal(self.user.id, handlers[0].created_by);
+                assert.equal(self.manager.id, handlers[0].created_by);
                 assert.equal(self.otherUser.id, handlers[0].handler.id);
                 assert.equal(
                     "matti.meikalainen",
@@ -60,6 +60,23 @@ describe("Ticket handlers", function() {
             });
 
     });
+
+    it("only managers can add handlers", function() {
+        var self = this;
+
+        return User.ensureUserFromJWTToken(helpers.user.teacher)
+            .then(function(normalUser) {
+                return self.ticket.addHandler(normalUser, normalUser)
+                    .catch(function(_err) {
+                        return _err;
+                    })
+                    .then(function(err) {
+                        assert(err instanceof Error, "must have error");
+                        assert.equal("Only managers can add handlers", err.message);
+                    });
+            });
+    });
+
 
     it("personal visibility is given to the handler", function() {
         var self = this;
