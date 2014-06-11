@@ -107,13 +107,8 @@ describe("Ticket model", function() {
         })
         .save()
         .then(function(ticket) {
-            return ticket.addComment({
-                    comment: "foo",
-                    created_by: self.user.id
-                })
-                .then(function() {
-                    return ticket.get("id");
-                });
+            return ticket.addComment("foo", self.user)
+                .then(function() { return ticket.get("id"); });
         });
 
         return ticketId.then(function(id) {

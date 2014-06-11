@@ -33,10 +33,7 @@ describe("Comment model", function() {
             .save()
             .then(function(ticket) {
                 self.ticket = ticket;
-                return ticket.addComment({
-                        comment: "foo",
-                        created_by: self.user.get("id")
-                    });
+                return ticket.addComment("foo", self.user);
             })
             .then(function() {
                 return self.ticket.comments().fetch({
