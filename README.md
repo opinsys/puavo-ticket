@@ -20,6 +20,50 @@ Cool new ticketing system with deep puavo integration.
     - [External documentation](#user-content-external-documentation)
 
 
+## Roles
+
+The system has currently only to types of users. Managers (Opinsys staff in our
+case) and clients.
+
+There are currently only two differences:
+
+  1. Clients can only see the tickets they have visibility to - managers can see all the tickets
+  2. Managers can add handlers to tickets
+
+## Ticket hanlders
+
+When client has a visibility to a ticket he/she do following:
+
+  - Comment
+  - Follow the ticket
+  - Add related users
+  - Add related devices
+
+but when user is a handler for a ticket he/she can also:
+
+  - Close or reopen the ticket
+  - Add visibilities
+
+Ticket creator is automatically a handler.
+
+## Visibilities
+
+Users and tickets have a visibility properties. Users see the tickets where the
+visibility properties match.
+
+A client has following visibility properties by default:
+
+  - Own visibility
+  - School visibility
+  - Organisation visibility
+
+When ticket is created it will get only the visibility of the user who created
+it. Ticket will get additional visibilities when:
+
+  - A handler is added: handlers own visiblity
+  - Follower is added: followers own visibility
+  - Visibility is explicitly added by a handler
+    - For example school visibility
 
 # Development Documentation
 
