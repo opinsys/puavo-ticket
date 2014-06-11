@@ -30,7 +30,7 @@ var UserMixin = {
      * @return {String}
      */
     getOrganisationVisibility: function(){
-        return "organisation:" + this.get("external_data").organisation_domain;
+        return "organisation:" + this.getOrganisationDomain();
     },
 
     /**
@@ -40,7 +40,7 @@ var UserMixin = {
      * @return {String}
      */
     getOrganisationAdminVisibility: function(){
-        return "organisationadmin:" + this.get("external_data").organisation_domain;
+        return "organisationadmin:" + this.getOrganisationDomain();
     },
 
     /**
@@ -65,6 +65,14 @@ var UserMixin = {
         // }));
 
         return visibilities;
+    },
+
+    /**
+     * @method getOrganisationDomain
+     * @return {String}
+     */
+    getOrganisationDomain: function(){
+        return this.get("external_data").organisation_domain;
     },
 
     /**

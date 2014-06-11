@@ -36,6 +36,9 @@ if (process.env.NODE_ENV === "test") {
             "password": "password"
         }
     };
+
+    config.managerOrganisationDomain = "managertesting.opinsys.net";
+
 } else {
     config = _.extend(config, require("./_config"));
     if (!config.puavo.sharedSecret) {
