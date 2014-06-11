@@ -32,12 +32,13 @@ There are currently only two differences:
   1. Clients can only see the tickets they have visibility to - managers can see all the tickets
   2. Managers can add handlers to tickets
 
-## Ticket hanlders
+## Ticket handler
 
-When client has a visibility to a ticket he/she do following:
+When client has only a visibility to a ticket he/she do following:
 
   - Comment
   - Follow the ticket
+  - Add other followers
   - Add related users
   - Add related devices
 
