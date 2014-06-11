@@ -3,7 +3,6 @@
 var Cocktail = require("backbone.cocktail");
 
 var Base = require("./Base");
-var TagMixin = require("../TagMixin");
 
 /**
  * Client ReadTicket model
@@ -27,5 +26,5 @@ var ReadTicket = Base.extend({
 
 });
 
-Cocktail.mixin(ReadTicket, TagMixin);
+Cocktail.mixin(ReadTicket);
 module.exports = ReadTicket;
