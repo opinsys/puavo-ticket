@@ -38,6 +38,12 @@ var TicketForm = React.createClass({
         });
     },
 
+    isFormOk: function() {
+        return (
+            this.props.ticket.get("title") &&
+            this.props.ticket.get("description")
+        );
+    },
 
     render: function() {
         return (
@@ -63,8 +69,8 @@ var TicketForm = React.createClass({
 
                 <div className="button-wrap">
                     <button
-                        className="button"
-                        disabled={this.props.ticket.isOperating()}
+                        className="button save-button"
+                        disabled={this.props.ticket.isOperating() || !this.isFormOk()}
                         onClick={this.handleSave} >Lähetä</button>
                 </div>
 
