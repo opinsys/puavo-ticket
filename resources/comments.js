@@ -20,18 +20,12 @@ var app = express.Router();
  */
 app.post("/api/tickets/:id/comments", function(req, res, next) {
     Ticket.forge({ id: req.params.id })
-    .fetch()
+    .fetch({ require: true })
     .then(function(ticket) {
-        if (!ticket) return res.json(404, { error: "no such ticket" });
-        Comment.forge({
-            comment: req.body.comment,
-            ticket_id: req.params.id,
-            created_by: req.user.id
-        })
-        .save()
-        .then(function(comment) {
-            res.json(comment.toJSON());
-        });
+        return ticket.addComment(req.body.comment, req.user);
+    })
+    .then(function(comment) {
+        res.json(comment.toJSON());
     })
     .catch(next);
 });

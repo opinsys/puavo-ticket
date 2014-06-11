@@ -145,13 +145,16 @@ var Ticket = Base.extend({
      * Add comment to the ticket
      *
      * @method addComment
-     * @param {Object} comment Plain object with models.server.Comment fields
+     * @param {String} comment
+     * @param {models.server.User|Number} user Creator of the tag
      * @return {Bluebird.Promise} with models.server.Comment
      */
-    addComment: function(comment) {
-        comment = _.clone(comment);
-        comment.ticket_id = this.get("id");
-        return Comment.forge(comment).save();
+    addComment: function(comment, user) {
+        return Comment.forge({
+            ticket_id: this.get("id"),
+            comment: comment,
+            created_by: Base.toId(user)
+        }).save();
     },
 
     /**
