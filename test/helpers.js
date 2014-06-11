@@ -256,6 +256,42 @@ var testUser = {
                 ]
             }
         ]
+    },
+
+    /**
+     * Manager user from managertesting.opinsys.net organisation
+     *
+     * @property user.manager
+     * @type {Object}
+     */
+    manager: {
+        "id": "599",
+        "username": "pointyhair",
+        "first_name": "Pointy-haired",
+        "last_name": "Boss",
+        "email": "pointyhair@testing.opinsys.fi",
+        "organisation_name": "Manager Testing",
+        "organisation_domain": "managertesting.opinsys.net",
+        "primary_school_id": "349",
+        "schools": [
+            {
+                "id": "249",
+                "dn": "puavoId=249,ou=Groups,dc=edu,dc=managertesting,dc=fi",
+                "name": "Administration",
+                "abbreviation": "admin",
+                "roles": [
+                    "manager"
+                ],
+                "groups": [
+                    {
+                        "id": "325",
+                        "dn": "puavoId=325,ou=Groups,dc=edu,dc=managertesting,dc=fi",
+                        "name": "Managers",
+                        "abbreviation": "managers"
+                    }
+                ]
+            }
+        ]
     }
 
 };

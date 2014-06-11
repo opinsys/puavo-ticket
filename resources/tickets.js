@@ -18,8 +18,15 @@ var app = express.Router();
  * @apiSuccess {Object[]} . List of tickets
  */
 app.get("/api/tickets", function(req, res, next) {
-    Ticket.byVisibilities(req.user.getVisibilities())
-    .fetch({
+    var tickets;
+
+    if (req.user.isManager()) {
+        tickets = Ticket.collection();
+    } else {
+        tickets = Ticket.byVisibilities(req.user.getVisibilities());
+    }
+
+    tickets.fetch({
         withRelated: [
             "createdBy",
             "handlers.handler",

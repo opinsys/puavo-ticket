@@ -6,6 +6,7 @@ var Cocktail = require("backbone.cocktail");
 var Bookshelf = require("bookshelf");
 var UserMixin = require("../UserMixin");
 var Puavo = require("../../utils/Puavo");
+var config = require("../../config");
 
 /**
  * Server User model
@@ -24,7 +25,22 @@ var User = Base.extend({
             created_at: new Date(),
             updated_at: new Date()
         };
-    }
+    },
+
+    /**
+     * Return true if the user a manager
+     *
+     * @method isManager
+     * @return {Boolean}
+     */
+    isManager: function(){
+        if (!config.managerOrganisationDomain) {
+            throw new Error("'managerOrganisationDomain is not configured!");
+        }
+
+        return this.getOrganisationDomain() === config.managerOrganisationDomain;
+    },
+
 }, {
 
     /**

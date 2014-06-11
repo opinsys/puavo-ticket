@@ -76,6 +76,18 @@ describe("/api/tickets", function() {
             });
     });
 
+    it("but manager can see it", function() {
+        return helpers.loginAsUser(helpers.user.manager)
+            .then(function(agent) {
+                return agent.get("/api/tickets").promise();
+            })
+            .then(function(res) {
+                assert.equal(res.status, 200);
+                assert.equal(1, res.body.length);
+                assert.equal("Computer does not work", res.body[0].title);
+            });
+    });
+
     it("user in the same organisation can see the ticket if ticket has the organisation visibility", function() {
         return this.agent
             .post("/api/tickets/" + this.ticket.id + "/visibilities")
