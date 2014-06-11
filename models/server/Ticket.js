@@ -2,6 +2,7 @@
 var _ = require("lodash");
 var Promise = require("bluebird");
 
+var config = require("../../config");
 var Base = require("./Base");
 var Comment = require("./Comment");
 var Tag = require("./Tag");
@@ -62,7 +63,27 @@ var Ticket = Base.extend({
         };
     },
 
+    /**
+     * nodemailer email transport object
+     *
+     * https://github.com/andris9/Nodemailer
+     *
+     * @property emailTransport
+     * @type Object
+     */
+    emailTransport: config.emailTransport,
+
+    /**
+     *
+     * @method initialize
+     * @param attrs Model attributes
+     * @param [options.emailTransport] custom email transport
+     */
     initialize: function(attrs, options) {
+        if (options && options.emailTransport) {
+            this.emailTransport = options.emailTransport;
+        }
+
         this.on("created", this._setInitialTicketState.bind(this));
     },
 

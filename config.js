@@ -1,4 +1,5 @@
 var _ = require("lodash");
+var nodemailer = require("nodemailer");
 
 if (typeof window !== "undefined") {
     throw new Error("config.js is not allowed in the browser");
@@ -17,6 +18,8 @@ var config = {
     directory: "./migrations",
     tableName: "migrations"
 };
+
+config.emailTransport = nodemailer.createTransport("stub", {error: false});
 
 if (process.env.NODE_ENV === "test") {
     config.database.connection = {
@@ -40,7 +43,20 @@ if (process.env.NODE_ENV === "test") {
     config.managerOrganisationDomain = "managertesting.opinsys.net";
 
 } else {
-    config = _.extend(config, require("./_config"));
+
+    var productionConfig = require("./_config");
+    config = _.extend(config, productionConfig);
+
+    if (productionConfig.smtp) {
+        config.emailTransport = nodemailer.createTransport(
+            "SMTP",
+            productionConfig.smtp
+        );
+    } else {
+        console.warn("'smtp' config is missing from _config.json. Email sending is disabled.");
+    }
+
+
     if (!config.puavo.sharedSecret) {
         throw new Error('"sharedSecret" is missing from _config.json');
     }
