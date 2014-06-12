@@ -51,8 +51,8 @@ describe("/api/tickets/:id/read", function() {
             .then(function() {
                 return ReadTicket.forge({ readById: self.user.id }).fetch();
             })
-            .then(function(read_ticket) {
-                assert.equal(read_ticket.get("ticket_id"), ticket.get("id"));
+            .then(function(readTicket) {
+                assert.equal(readTicket.get("ticket_id"), ticket.get("id"));
             });
     });
 

@@ -398,13 +398,13 @@ var Ticket = Base.extend({
             readById: Base.toId(user)
         })
         .fetch()
-        .then(function(read_ticket) {
-            console.log(read_ticket);
-            if(read_ticket) {
-                read_ticket.set({
+        .then(function(readTicket) {
+            console.log(readTicket);
+            if(readTicket) {
+                readTicket.set({
                     readAt: new Date(),
                     unread: false });
-                return read_ticket.save();
+                return readTicket.save();
             }
 
             return ReadTicket.forge({
@@ -426,8 +426,8 @@ var Ticket = Base.extend({
             .fetch()
             .then(function(readTickets) {
                 return Promise.all(
-                    readTickets.mapThen(function(read_ticket) {
-                        return read_ticket.set(
+                    readTickets.mapThen(function(readTicket) {
+                        return readTicket.set(
                             { "readAt": new Date(),
                               "unread": "true" }
                             )

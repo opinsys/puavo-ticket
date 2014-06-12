@@ -39,11 +39,11 @@ describe("ReadTicket model", function() {
                 unread: true
             })
             .save()
-            .then(function(read_ticket) {
-                return ReadTicket.forge({ id: read_ticket.get("id") }).fetch();
+            .then(function(readTicket) {
+                return ReadTicket.forge({ id: readTicket.get("id") }).fetch();
             })
-            .then(function(read_ticket) {
-                assert.equal(new Date('2013', '01', '01').toString(), read_ticket.get("readAt").toString());
+            .then(function(readTicket) {
+                assert.equal(new Date('2013', '01', '01').toString(), readTicket.get("readAt").toString());
             });
 
 
