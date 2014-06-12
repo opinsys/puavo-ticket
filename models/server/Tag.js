@@ -71,10 +71,6 @@ var Tag = Base.extend({
 
     createdBy: function() {
         return this.belongsTo(User, "created_by");
-    },
-
-    lol: function() {
-        return this.belongsTo(User, "created_by");
     }
 
 
