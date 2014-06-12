@@ -111,7 +111,7 @@ var Tag = Base.extend({
                 qb
                 .whereNull("deleted_at")
                 .andWhere({ ticket_id: ticketId })
-                .andWhere("tag", "LIKE", "status:%");
+                .andWhere("tag", "like", "status:%");
             });
     }
 });
