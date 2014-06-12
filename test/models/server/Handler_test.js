@@ -58,7 +58,18 @@ describe("Ticket handlers", function() {
                     handlers[0].handler.external_data.username
                 );
             });
+    });
 
+    it("returns true (promise) from Ticket#isHandler(user) for handlers", function() {
+        var self = this;
+        return User.byExternalId(helpers.user.teacher2.id)
+            .fetch({ require: true })
+            .then(function(otherUser) {
+                return self.ticket.isHandler(otherUser);
+            })
+            .then(function(isHandler) {
+                assert(isHandler);
+            });
     });
 
     it("only managers can add handlers", function() {

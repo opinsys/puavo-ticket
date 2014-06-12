@@ -326,6 +326,26 @@ var Ticket = Base.extend({
         return this.hasMany(Handler, "ticket_id");
     },
 
+    handlerUsers: function() {
+        return this.belongsToMany(User, "handlers", "ticket_id", "handler");
+    },
+
+    /**
+     * @method isHandler
+     * @param {models.server.User|Number}
+     * @return {Bluebird.Promise} with Boolean
+     */
+    isHandler: function(user){
+        return this.handlerUsers()
+            .query(function(qb) {
+                qb.where({ "users.id": user.get("id") });
+            })
+            .fetch()
+            .then(function(users) {
+                return !!users.findWhere({ id: user.get("id") });
+            });
+    },
+
     /**
      * Add device relation
      *
