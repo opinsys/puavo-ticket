@@ -146,8 +146,11 @@ describe("Ticket model", function() {
             });
     });
 
-    it("can be marked as read", function() {
+    it("can be marked as read or unread", function() {
         var self = this;
+
+        var testTicket = null;
+
         return Ticket.forge({
                 title: "Will be read",
                 description: "foo",
@@ -157,6 +160,26 @@ describe("Ticket model", function() {
             .then(function(ticket) {
                 return ticket.markAsRead(self.user)
                     .then(function() { return ticket; });
+            })
+            .then(function(ticket) {
+                testTicket = ticket;
+
+                return ReadTicket.forge({
+                    ticket_id: ticket.get("id")
+                }).fetch({ require: true });
+            })
+            .then(function(read) {
+                assert(read);
+                assert.equal(
+                    self.user.get("id"),
+                    read.get("read_by"),
+                    "has the reader id in the read_by column"
+                );
+            })
+            .then(function() {
+                return testTicket.markAsUnread()
+                    .then(function() { return testTicket; });
+
             })
             .then(function(ticket) {
                 return ReadTicket.forge({
@@ -170,6 +193,7 @@ describe("Ticket model", function() {
                     read.get("read_by"),
                     "has the reader id in the read_by column"
                 );
+                assert.equal(read.get("updates"), true);
             });
     });
 
