@@ -422,8 +422,24 @@ var Ticket = Base.extend({
     },
 
     markAsUnread: function(model) {
-        console.log("Mark ticket as unread: " + this.get("title"));
+        var self = this;
+        console.log("Mark ticket as unread: " + self.get("title"));
         console.log(model);
+
+        return ReadTicket.collection()
+            .query("where", "ticket_id", "=", self.get("id"))
+            .fetch()
+            .then(function(read_tickets) {
+                return Promise.all(
+                    read_tickets.mapThen(function(read_ticket) {
+                        return read_ticket.set(
+                            { "read_at": new Date(),
+                              "updates": "true" }
+                            )
+                            .save();
+                    })
+                );
+            });
     }
 
 });
