@@ -416,6 +416,13 @@ var Ticket = Base.extend({
         });
     },
 
+    /**
+     * Mark ticket as unread
+     *
+     * @method markAsUnread
+     * @param {models.server.Attachment|Comment|Device|Follower|Handler|RelatedUsers|Tag}
+     * @return {Bluebird.Promise} with models.server.ReadTicket
+     */
     markAsUnread: function(model) {
         var self = this;
         console.log("Mark ticket as unread: " + self.get("title"));
