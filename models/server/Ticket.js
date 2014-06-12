@@ -64,6 +64,8 @@ var Ticket = Base.extend({
 
     initialize: function(attrs, options) {
         this.on("created", this._setInitialTicketState.bind(this));
+        this.on("update", this.markAsUnread, this);
+
     },
 
     _setInitialTicketState: function (ticket) {
@@ -417,6 +419,11 @@ var Ticket = Base.extend({
                 read_at: new Date()
             }).save();
         });
+    },
+
+    markAsUnread: function(model) {
+        console.log("Mark ticket as unread: " + this.get("title"));
+        console.log(model);
     }
 
 });
