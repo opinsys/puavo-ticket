@@ -152,11 +152,17 @@ var Ticket = Base.extend({
      * @return {Bluebird.Promise} with models.server.Comment
      */
     addComment: function(comment, user) {
+        var self = this;
+
         return Comment.forge({
             ticket_id: this.get("id"),
             comment: comment,
             created_by: Base.toId(user)
-        }).save();
+        }).save()
+        .then(function(comment) {
+            return self.triggerThen("update", { model: comment })
+                .then(function() { return comment; });
+        });
     },
 
     /**
