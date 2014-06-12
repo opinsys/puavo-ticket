@@ -24,6 +24,10 @@ npm:
 migrate:
 	knex migrate:latest
 
+drop-db:
+	sudo -u postgres psql -c "drop database \"puavo-ticket\"";
+	sudo -u postgres psql -c "drop database \"puavo-ticket-test\"";
+
 rollback:
 	knex migrate:rollback
 
