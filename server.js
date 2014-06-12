@@ -13,6 +13,7 @@ var bodyParser = require("body-parser");
 var jwtsso = require("jwtsso");
 var cookieParser = require("cookie-parser");
 var session = require("express-session");
+var RedisStore = require("connect-redis")(session);
 
 var User = require("./models/server/User");
 
@@ -38,7 +39,10 @@ app.use(require("./utils/middleware/createResponseLogger")());
 app.use(bodyParser());
 app.use(require("./utils/middleware/createMultipartMiddleware")());
 app.use(cookieParser());
+
+
 app.use(session({
+    store: new RedisStore(),
     secret: "keyboard cat", // XXX
 }));
 

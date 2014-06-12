@@ -14,7 +14,7 @@
         copy: src=.ansible_files/locale dest=/etc/default/locale
 
       - name: Install ansible dependencies
-        command: apt-get install -y python-apt python-psycopg2
+        command: apt-get install -y python-apt python-psycopg2 redis-server
 
       - name: Add archive.opinsys.fi
         apt_repository: repo='deb http://{{ archive_server }}/git-master precise main' state=present
