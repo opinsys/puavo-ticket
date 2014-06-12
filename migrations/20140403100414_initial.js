@@ -143,7 +143,7 @@ exports.up = function(knex, Promise) {
 
                 table.increments("id");
                 table.dateTime("read_at");
-                table.boolean("updates");
+                table.boolean("unread");
             })
 
         ]);
