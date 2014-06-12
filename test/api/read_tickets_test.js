@@ -49,7 +49,7 @@ describe("/api/tickets/:id/read", function() {
                 assert.equal(res.status, 200);
             })
             .then(function() {
-                return ReadTicket.forge({ read_by: self.user.id }).fetch();
+                return ReadTicket.forge({ readById: self.user.id }).fetch();
             })
             .then(function(read_ticket) {
                 assert.equal(read_ticket.get("ticket_id"), ticket.get("id"));
@@ -65,8 +65,8 @@ describe("/api/tickets/:id/read", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal("Test ticket", res.body[0].title);
-                assert.equal(ticket.get("id"), res.body[0].read_tickets[0].ticket_id);
-                assert.equal(self.user.id, res.body[0].read_tickets[0].read_by);
+                assert.equal(ticket.get("id"), res.body[0].readTickets[0].ticket_id);
+                assert.equal(self.user.id, res.body[0].readTickets[0].readById);
             });
     });
 

@@ -194,8 +194,8 @@ var Ticket = Base.extend({
      * @return {Boolean}
      */
     hasRead: function(userId) {
-        return this.get("read_tickets").some( function(read_ticket) {
-            return read_ticket.read_by === userId;
+        return this.get("readTickets").some( function(read_ticket) {
+            return read_ticket.readBy === userId;
         });
     },
 

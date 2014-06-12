@@ -108,7 +108,7 @@ var Ticket = Base.extend({
         return this.hasMany(Visibility, "ticket_id");
     },
 
-    read_tickets: function() {
+    readTickets: function() {
         return this.hasMany(ReadTicket, "ticket_id");
     },
 
@@ -403,20 +403,20 @@ var Ticket = Base.extend({
 
         return ReadTicket.forge({
             ticket_id: self.get("id"),
-            read_by: Base.toId(user)
+            readById: Base.toId(user)
         })
         .fetch()
         .then(function(read_ticket) {
             console.log(read_ticket);
             if(read_ticket) {
-                read_ticket.set({ read_at: new Date() });
+                read_ticket.set({ readAt: new Date() });
                 return read_ticket.save();
             }
 
             return ReadTicket.forge({
                 ticket_id: self.get("id"),
-                read_by: Base.toId(user),
-                read_at: new Date()
+                readById: Base.toId(user),
+                readAt: new Date()
             }).save();
         });
     },
@@ -429,12 +429,12 @@ var Ticket = Base.extend({
         return ReadTicket.collection()
             .query("where", "ticket_id", "=", self.get("id"))
             .fetch()
-            .then(function(read_tickets) {
+            .then(function(readTickets) {
                 return Promise.all(
-                    read_tickets.mapThen(function(read_ticket) {
+                    readTickets.mapThen(function(read_ticket) {
                         return read_ticket.set(
-                            { "read_at": new Date(),
-                              "updates": "true" }
+                            { "readAt": new Date(),
+                              "unread": "true" }
                             )
                             .save();
                     })

@@ -134,15 +134,15 @@ exports.up = function(knex, Promise) {
                 uniqueForTicket(table, "tag");
             }),
 
-            knex.schema.createTable("read_tickets", function(table) {
+            knex.schema.createTable("readTickets", function(table) {
                 addTicketRelation(table);
-                table.integer("read_by")
+                table.integer("readById")
                     .notNullable()
                     .references("id")
                     .inTable("users");
 
                 table.increments("id");
-                table.dateTime("read_at");
+                table.dateTime("readAt");
                 table.boolean("unread");
             })
 
@@ -161,7 +161,7 @@ exports.down = function(knex, Promise) {
         knex.schema.dropTableIfExists("followers"),
         knex.schema.dropTableIfExists("tags"),
         knex.schema.dropTableIfExists("handlers"),
-        knex.schema.dropTableIfExists("read_tickets")
+        knex.schema.dropTableIfExists("readTickets")
     ])
     .then(function() {
         return knex.schema.dropTableIfExists("tickets");

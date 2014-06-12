@@ -34,16 +34,16 @@ describe("ReadTicket model", function() {
 
         return ReadTicket.forge({
                 ticket_id: self.ticket.id,
-                read_by: self.user.id,
-                read_at: new Date('2013', '01', '01'),
-                updates: true
+                readById: self.user.id,
+                readAt: new Date('2013', '01', '01'),
+                unread: true
             })
             .save()
             .then(function(read_ticket) {
                 return ReadTicket.forge({ id: read_ticket.get("id") }).fetch();
             })
             .then(function(read_ticket) {
-                assert.equal(new Date('2013', '01', '01').toString(), read_ticket.get("read_at").toString());
+                assert.equal(new Date('2013', '01', '01').toString(), read_ticket.get("readAt").toString());
             });
 
 

@@ -13,7 +13,7 @@ var Base = require("./Base");
  */
 var ReadTicket = Base.extend({
 
-  tableName: "read_tickets",
+  tableName: "readTickets",
 
 });
 

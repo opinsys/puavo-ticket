@@ -172,8 +172,8 @@ describe("Ticket model", function() {
                 assert(read);
                 assert.equal(
                     self.user.get("id"),
-                    read.get("read_by"),
-                    "has the reader id in the read_by column"
+                    read.get("readById"),
+                    "has the reader id in the readBy column"
                 );
             })
             .then(function() {
@@ -190,10 +190,10 @@ describe("Ticket model", function() {
                 assert(read);
                 assert.equal(
                     self.user.get("id"),
-                    read.get("read_by"),
-                    "has the reader id in the read_by column"
+                    read.get("readById"),
+                    "has the reader id in the readById column"
                 );
-                assert.equal(read.get("updates"), true);
+                assert.equal(read.get("unread"), true);
             });
     });
 

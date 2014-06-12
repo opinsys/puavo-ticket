@@ -16,7 +16,7 @@ var ReadTicket = Base.extend({
 
     defaults: function() {
         return {
-            type: "read_tickets"
+            type: "readTickets"
         };
     },
 

@@ -13,7 +13,7 @@ var app = express.Router();
 /**
  * @api {post} /api/tickets/:id/read Mark ticket as read
  * @apiName CreateReadTicket
- * @apiGroup read_tickets
+ * @apiGroup readTickets
  */
 app.post("/api/tickets/:id/read", function(req, res, next) {
     Ticket.forge({ id: req.params.id })
