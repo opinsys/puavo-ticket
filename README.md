@@ -153,11 +153,11 @@ try to commit them.
 ..or install puavo-ticket with puavo-web and puavo-rest (ansible)
 
 ```bash
-    sudo apt-get install git build-essential
-    git clone https://github.com/opinsys/puavo-ticket.git
-    cd puavo-ticket
-    sudo make install-ansible
-    sudo ansible-playbook development-env.yml --extra-vars dev_user=$USER --extra-vars code_dest=$HOME
+sudo apt-get install git build-essential
+git clone https://github.com/opinsys/puavo-ticket.git
+cd puavo-ticket
+sudo make install-ansible
+sudo ansible-playbook development-env.yml --extra-vars dev_user=$USER --extra-vars code_dest=$HOME
 ```
 
 and start puavo-web and puavo-rest
