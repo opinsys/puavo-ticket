@@ -30,6 +30,45 @@ var Tag = Base.extend({
       };
     },
 
+    initialize: function(attrs, options) {
+
+        this.on("creating", function(tagModel) {
+            return tagModel.clones().fetch()
+                .bind(this)
+                .then(function validateTagUniqueness(collection) {
+                    if (collection.size() > 0) {
+                        throw new Error("tag " + tagModel.get("tag") + " already exists");
+                    }
+                })
+                .then(function deletePreviousStatustags() {
+                    if (tagModel.isStatusTag()) {
+                        return Tag.softDeleteStatusTagsFor(
+                            tagModel.get("ticket_id"),
+                            tagModel.get("created_by")
+                        );
+                    }
+                })
+                .then(function() {
+                    return this._assertOnlyHandlerCanChangeStatus(options);
+                });
+        });
+    },
+
+
+    _assertOnlyHandlerCanChangeStatus: function(options) {
+        if (!this.isStatusTag()) return;
+        if (options && options.force) return;
+        return this.ticket().fetch({ require: true })
+            .bind(this)
+            .then(function(ticket) {
+                return ticket.isHandler(this.get("created_by"));
+            })
+            .then(function(isHandler) {
+                if (!isHandler) {
+                    throw new Error("Only handlers can change status");
+                }
+            });
+    },
 
     /**
     * Return Collection for clones of this tag
@@ -50,23 +89,9 @@ var Tag = Base.extend({
             });
     },
 
-    initialize: function() {
-        this.on("creating", function(tagModel) {
-            return tagModel.clones().fetch()
-                .then(function validateTagUniqueness(collection) {
-                    if (collection.size() > 0) {
-                        throw new Error("tag " + tagModel.get("tag") + " already exists");
-                    }
-                })
-                .then(function deletePreviousStatustags() {
-                    if (tagModel.isStatusTag()) {
-                        return Tag.softDeleteStatusTagsFor(
-                            tagModel.get("ticket_id"),
-                            tagModel.get("created_by")
-                        );
-                    }
-                });
-        });
+    ticket: function() {
+        var Ticket = require("./Ticket");
+        return this.belongsTo(Ticket, "ticket_id");
     },
 
     createdBy: function() {

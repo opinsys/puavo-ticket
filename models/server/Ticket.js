@@ -70,7 +70,9 @@ var Ticket = Base.extend({
 
     _setInitialTicketState: function (ticket) {
         return ticket.createdBy().fetch().then(function(user) {
-            var isOpen = ticket.setStatus("open", user);
+            var isOpen = ticket.setStatus("open", user, {
+                force: true
+            });
             var hasNoHandlersTag = ticket.addTag("nohandlers", user);
             var creatorCanView = ticket.addVisibility(
                 user.getPersonalVisibility(),
@@ -175,12 +177,12 @@ var Ticket = Base.extend({
      * @param {models.server.User} user Creator of the tag
      * @return {Bluebird.Promise} with models.server.Tag
      */
-    addTag: function(tag, user) {
+    addTag: function(tag, user, options) {
         return Tag.forge({
             tag: tag,
             created_by: Base.toId(user),
             ticket_id: this.get("id")
-        }).save();
+        }, options).save();
     },
 
     /**
@@ -233,10 +235,11 @@ var Ticket = Base.extend({
      * @method setStatus
      * @param {String} status
      * @param {models.server.User} user Creator of the status
+     * @param {Boolean} [options.force=false] Set to true to skip manager validation
      * @return {Bluebird.Promise} models.server.Tag representing the status
      */
-    setStatus: function(status, user){
-        return this.addTag("status:" + status, user);
+    setStatus: function(status, user, options){
+        return this.addTag("status:" + status, user, options);
     },
 
     /**
@@ -338,11 +341,11 @@ var Ticket = Base.extend({
     isHandler: function(user){
         return this.handlerUsers()
             .query(function(qb) {
-                qb.where({ "users.id": user.get("id") });
+                qb.where({ "users.id": Base.toId(user) });
             })
             .fetch()
             .then(function(users) {
-                return !!users.findWhere({ id: user.get("id") });
+                return !!users.findWhere({ id: Base.toId(user) });
             });
     },
 
