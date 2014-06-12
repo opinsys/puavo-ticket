@@ -99,7 +99,9 @@ var TicketList = React.createClass({
 
                 {handledByCurrentUser.length > 0 && <div>
                     <h2>Minulle osoitetut avoimet tukipyynnöt</h2>
-                    <List onSelect={this.props.onSelect} tickets={handledByCurrentUser} />
+                    <List user={this.props.user}
+                        onSelect={this.props.onSelect}
+                        tickets={handledByCurrentUser} />
                 </div>}
 
                 <h2>Avoimet tukipyynnöt</h2>
@@ -111,7 +113,8 @@ var TicketList = React.createClass({
 
                 <h2>Suljetut tukipyynnöt</h2>
                 <List onSelect={this.props.onSelect}
-                      tickets={this.state.ticketCollection.filter(isClosed)} />
+                    user={this.props.user}
+                    tickets={this.state.ticketCollection.filter(isClosed)} />
             </div>
         );
     }
