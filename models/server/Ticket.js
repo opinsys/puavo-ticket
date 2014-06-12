@@ -409,14 +409,17 @@ var Ticket = Base.extend({
         .then(function(read_ticket) {
             console.log(read_ticket);
             if(read_ticket) {
-                read_ticket.set({ readAt: new Date() });
+                read_ticket.set({
+                    readAt: new Date(),
+                    unread: false });
                 return read_ticket.save();
             }
 
             return ReadTicket.forge({
                 ticket_id: self.get("id"),
                 readById: Base.toId(user),
-                readAt: new Date()
+                readAt: new Date(),
+                unread: false
             }).save();
         });
     },
