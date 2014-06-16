@@ -14,11 +14,13 @@ describe("Ticket handlers", function() {
             .then(function() {
                 return Promise.all([
                     User.ensureUserFromJWTToken(helpers.user.manager),
+                    User.ensureUserFromJWTToken(helpers.user.teacher),
                     User.ensureUserFromJWTToken(helpers.user.teacher2)
                 ]);
             })
-            .spread(function(manager, otherUser) {
+            .spread(function(manager, user, otherUser) {
                 self.manager = manager;
+                self.user = user;
                 self.otherUser = otherUser;
                 return helpers.insertTestTickets(manager);
             })
@@ -38,10 +40,10 @@ describe("Ticket handlers", function() {
     it("can be added from a ticket", function() {
         var self = this;
 
-        return User.byExternalId(helpers.user.teacher2.id)
+        return User.byExternalId(helpers.user.teacher.id)
             .fetch({ require: true })
-            .then(function(otherUser) {
-                return self.ticket.addHandler(otherUser, self.manager);
+            .then(function(user) {
+                return self.ticket.addHandler(user, self.manager);
             })
             .then(function() {
                 return self.ticket.handlers().fetch({
@@ -52,9 +54,9 @@ describe("Ticket handlers", function() {
                 handlers = handlers.toJSON();
                 assert.equal(1, handlers.length, "has one handler");
                 assert.equal(self.manager.id, handlers[0].created_by);
-                assert.equal(self.otherUser.id, handlers[0].handler.id);
+                assert.equal(self.user.id, handlers[0].handler.id);
                 assert.equal(
-                    "matti.meikalainen",
+                    "olli.opettaja",
                     handlers[0].handler.external_data.username
                 );
             });
@@ -62,10 +64,10 @@ describe("Ticket handlers", function() {
 
     it("returns true (promise) from Ticket#isHandler(user) for handlers", function() {
         var self = this;
-        return User.byExternalId(helpers.user.teacher2.id)
+        return User.byExternalId(helpers.user.teacher.id)
             .fetch({ require: true })
-            .then(function(otherUser) {
-                return self.ticket.isHandler(otherUser);
+            .then(function(user) {
+                return self.ticket.isHandler(user);
             })
             .then(function(isHandler) {
                 assert(isHandler);
@@ -78,8 +80,8 @@ describe("Ticket handlers", function() {
         return User.ensureUserFromJWTToken(helpers.user.teacher)
             .then(function(normalUser) {
                 return self.ticket.addHandler(normalUser, normalUser)
-                    .catch(function(_err) {
-                        return _err;
+                    .catch(function(err) {
+                        return err;
                     })
                     .then(function(err) {
                         assert(err instanceof Error, "must have error");
@@ -98,7 +100,7 @@ describe("Ticket handlers", function() {
                     return v.get("entity");
                 });
 
-                assert(visibilities.indexOf(self.otherUser.getPersonalVisibility()) !== -1);
+                assert(visibilities.indexOf(self.user.getPersonalVisibility()) !== -1);
             });
     });
 

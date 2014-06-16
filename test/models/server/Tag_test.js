@@ -1,8 +1,10 @@
 "use strict";
+var Promise = require("bluebird");
 
 var helpers = require("../../helpers");
 
 var Ticket = require("../../../models/server/Ticket");
+var User = require("../../../models/server/User");
 var assert = require("assert");
 
 describe("Tag model", function() {
@@ -11,13 +13,16 @@ describe("Tag model", function() {
         var self = this;
         return helpers.clearTestDatabase()
             .then(function() {
-                return helpers.loginAsUser(helpers.user.teacher);
+                return Promise.all([
+                    User.ensureUserFromJWTToken(helpers.user.manager),
+                    User.ensureUserFromJWTToken(helpers.user.teacher),
+                    User.ensureUserFromJWTToken(helpers.user.teacher2)
+                ]);
             })
-            .then(function() {
-                return helpers.fetchTestUser();
-            })
-            .then(function(user) {
+            .spread(function(manager, user, otherUser) {
+                self.manager = manager;
                 self.user = user;
+                self.otherUser = otherUser;
 
                 return Ticket.forge({
                         created_by: self.user.get("id"),
@@ -136,13 +141,16 @@ describe("Tag model", function() {
 
     it("can be added as ticket status", function() {
         var self = this;
-        var ticket;
         return Ticket.byId(this.ticketId).fetch()
-            .then(function(_ticket) {
-                ticket = _ticket;
-                return ticket.setStatus("inprogress", self.user);
+            .then(function(ticket) {
+                return ticket.addHandler(self.user, self.manager)
+                    .then(function() { return ticket; });
             })
-            .then(function() {
+            .then(function(ticket) {
+                return ticket.setStatus("inprogress", self.user)
+                    .then(function() { return ticket; });
+            })
+            .then(function(ticket) {
                 return ticket.tags().fetch();
             })
             .then(function(tags) {

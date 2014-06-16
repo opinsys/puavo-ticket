@@ -38,14 +38,14 @@ describe("/api/tickets/:id/tags", function() {
         return this.agent.logout();
     });
 
-    it("sets the status for a ticket", function() {
+    it("sets the tag for a ticket", function() {
         return this.agent
             .post("/api/tickets/" + this.ticket.get("id") + "/tags")
-            .send({ tag: "status:foostatus" })
+            .send({ tag: "footag" })
             .promise()
             .then(function(res) {
                 assert.equal(200, res.status);
-                assert.equal("status:foostatus", res.body.tag);
+                assert.equal("footag", res.body.tag);
             });
     });
 
@@ -53,11 +53,11 @@ describe("/api/tickets/:id/tags", function() {
         var self = this;
         return this.agent
             .post("/api/tickets/" + this.otherTicket.get("id") + "/tags")
-            .send({ tag: "status:barstatus" })
+            .send({ tag: "bartag" })
             .promise()
             .then(function(res) {
                 assert.equal(200, res.status);
-                assert.equal("status:barstatus", res.body.tag);
+                assert.equal("bartag", res.body.tag);
 
                 return self.agent.get("/api/tickets").promise();
             })
@@ -69,8 +69,8 @@ describe("/api/tickets/:id/tags", function() {
                 });
                 assert(ticket);
                 assert(
-                    _.findWhere(ticket.tags, { tag: "status:foostatus" }),
-                    "has 'status:foostatus' tag"
+                    _.findWhere(ticket.tags, { tag: "footag" }),
+                    "footag"
                 );
 
 
@@ -79,8 +79,8 @@ describe("/api/tickets/:id/tags", function() {
                 });
                 assert(otherTicket);
                 assert(
-                    _.findWhere(otherTicket.tags, { tag: "status:barstatus" }),
-                    "has 'status:barstatus' tag"
+                    _.findWhere(otherTicket.tags, { tag: "bartag" }),
+                    "bartag"
                 );
 
             });
