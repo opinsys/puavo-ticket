@@ -12,7 +12,6 @@ var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
 var TicketList = require("./components/TicketList");
 var SideInfo = require("./components/SideInfo");
-var SimilarTickets = require("./components/SimilarTickets");
 
 var navigation = require("./components/navigation");
 var route = navigation.route;
@@ -153,9 +152,6 @@ var Main = React.createClass({
                     </div>
                         <div className="sidebar">
                            <SideInfo>
-                                {this.state.ticket && this.state.ticket.isNew() &&
-                                  <SimilarTickets ticketModel={this.state.ticket} />
-                                }
                             </SideInfo>
                         </div>
                 </div>
