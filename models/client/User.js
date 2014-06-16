@@ -17,6 +17,17 @@ var UserMixin = require("../UserMixin");
  */
 var User = Base.extend({
 
+    /**
+     * Return true if the user a manager
+     *
+     * @method isManager
+     * @return {Boolean}
+     */
+    isManager: function() {
+        return !!this.get("isManager");
+    }
+
+
 }, {
 
     search: function(keywords) {

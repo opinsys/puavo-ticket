@@ -41,6 +41,12 @@ var User = Base.extend({
         return this.getOrganisationDomain() === config.managerOrganisationDomain;
     },
 
+    toJSON: function() {
+        var json = Base.prototype.toJSON.apply(this, arguments);
+        json.isManager = this.isManager();
+        return json;
+    }
+
 }, {
 
     /**

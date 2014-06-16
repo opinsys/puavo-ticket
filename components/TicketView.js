@@ -160,7 +160,9 @@ var TicketView = React.createClass({
                         <ToggleStatusButton ticket={this.props.ticket} user={this.props.user} />
                     }
 
-                    <button onClick={this.handleAddHandler} >Lisää käsittelijä</button>
+                    {this.props.user.isManager() &&
+                        <button onClick={this.handleAddHandler} >Lisää käsittelijä</button>
+                    }
                 </div>
 
 
