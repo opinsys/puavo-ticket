@@ -65,6 +65,16 @@ var Ticket = Base.extend({
         });
     },
 
+    /**
+     * Returns true after Ticket#fetch() has loaded ticket data
+     *
+     * @method hasData
+     * @return {Boolean}
+     */
+    hasData: function() {
+        return !!this.get("title");
+    },
+
     tagHistory: function() {
         var self = this;
         return this.get("tagHistory").map(function(data) {

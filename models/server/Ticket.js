@@ -414,15 +414,12 @@ var Ticket = Base.extend({
     markAsRead: function(user) {
         var self = this;
 
-        console.log("Mark ticket as read: " + this.get("title"));
-
         return ReadTicket.forge({
             ticket_id: self.get("id"),
             readById: Base.toId(user)
         })
         .fetch()
         .then(function(readTicket) {
-            console.log(readTicket);
             if(readTicket) {
                 readTicket.set({
                     readAt: new Date(),
@@ -448,8 +445,6 @@ var Ticket = Base.extend({
      */
     markAsUnread: function(model) {
         var self = this;
-        console.log("Mark ticket as unread: " + self.get("title"));
-        console.log(model);
 
         return ReadTicket.collection()
             .query("where", "ticket_id", "=", self.get("id"))

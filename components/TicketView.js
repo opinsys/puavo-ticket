@@ -98,26 +98,25 @@ var TicketView = React.createClass({
     },
 
     handleOnFocus: function() {
-        console.log("on focus");
         this.markAsRead();
     },
 
     markAsRead: function() {
-        if (this.props.ticket.get("title")) {
-            this.props.ticket.markAsRead();
-        } else {
-            setTimeout(this.markAsRead, 500);
+        this.props.ticket.markAsRead();
+    },
+
+    componentWillReceiveProps: function(nextProps) {
+        if (!this.initialReadMark && nextProps.ticket.hasData()) {
+            this.initialReadMark = true;
+            setTimeout(this.markAsRead, 0);
         }
     },
 
     componentDidMount: function() {
-        console.log("ADD LISTENER");
         window.addEventListener("focus", this.handleOnFocus);
-        this.markAsRead();
     },
 
     componentWillUnmount: function() {
-        console.log("REMOVE LISTENER");
         window.removeEventListener("focus", this.handleOnFocus);
     },
 
