@@ -334,19 +334,23 @@ var Ticket = Base.extend({
     },
 
     /**
+     * Returns true if the user is handler for this ticket
+     *
+     * 'handlerUsers' relation must be loaded with 'withRelated' in fetch or
+     * with Ticket#load("handlerUsers")
+     *
      * @method isHandler
      * @param {models.server.User|Number}
-     * @return {Bluebird.Promise} with Boolean
+     * @return {Boolean}
      */
     isHandler: function(user){
-        return this.handlerUsers()
-            .query(function(qb) {
-                qb.where({ "users.id": Base.toId(user) });
-            })
-            .fetch()
-            .then(function(users) {
-                return !!users.findWhere({ id: Base.toId(user) });
-            });
+        if (!this.relations.handlerUsers) {
+            throw new Error("'handlerUsers' relation not loaded");
+        }
+
+        return this.relations.handlerUsers.some(function(handlerUser) {
+            return handlerUser.get("id") === Base.toId(user);
+        });
     },
 
     /**

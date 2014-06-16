@@ -64,14 +64,13 @@ describe("Ticket handlers", function() {
 
     it("returns true (promise) from Ticket#isHandler(user) for handlers", function() {
         var self = this;
-        return User.byExternalId(helpers.user.teacher.id)
-            .fetch({ require: true })
-            .then(function(user) {
-                return self.ticket.isHandler(user);
-            })
-            .then(function(isHandler) {
-                assert(isHandler);
-            });
+        return Promise.all([
+            User.byExternalId(helpers.user.teacher.id).fetch({ require: true }),
+            self.ticket.load("handlerUsers")
+        ])
+        .spread(function(user) {
+            assert(self.ticket.isHandler(user) === true);
+        });
     });
 
     it("only managers can add handlers", function() {

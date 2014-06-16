@@ -58,13 +58,13 @@ var Tag = Base.extend({
     _assertOnlyHandlerCanChangeStatus: function(options) {
         if (!this.isStatusTag()) return;
         if (options && options.force) return;
-        return this.ticket().fetch({ require: true })
+        return this.ticket().fetch({
+                require: true,
+                withRelated: "handlerUsers"
+            })
             .bind(this)
             .then(function(ticket) {
-                return ticket.isHandler(this.get("created_by"));
-            })
-            .then(function(isHandler) {
-                if (!isHandler) {
+                if (!ticket.isHandler(this.get("created_by"))) {
                     throw new Error("Only handlers can change status");
                 }
             });
