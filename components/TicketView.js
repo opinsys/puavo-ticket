@@ -8,7 +8,6 @@ var Loading = require("./Loading");
 var Handler = require("../models/client/Handler");
 var Base = require("../models/client/Base");
 var Lightbox = require("./Lightbox");
-var AddDevice = require("./AddDevice");
 var SelectUsers = require("./SelectUsers");
 
 
@@ -68,11 +67,6 @@ var TicketView = React.createClass({
     },
 
 
-    handleAddDevice: function(e) {
-        Lightbox.displayComponent(
-            <AddDevice ticketModel={this.props.ticket} />
-        );
-    },
 
     handleAddHandler: function() {
         var self = this;
@@ -160,7 +154,6 @@ var TicketView = React.createClass({
                     <button
                         onClick={this.saveComment}
                         disabled={this.props.ticket.isOperating() || !this.hasUnsavedComment()} >Lähetä</button>
-                    <button onClick={this.handleAddDevice} >Lisää laite</button>
 
 
                     {this.props.ticket.isHandler(this.props.user) &&
