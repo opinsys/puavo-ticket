@@ -13,10 +13,10 @@ describe("Ticket model", function() {
             title: title,
             description: "It just doesn't",
             readTickets: [ { ticket_id: 487,
-                              readBy: 323,
+                              readById: 323,
                               id: 60,
                               readAt: '2014-06-10T08:04:55.249Z',
-                              unread: null,
+                              unread: false,
                               unique_id: 'readTickets:60',
                               type: 'readTickets' } ]
         });
