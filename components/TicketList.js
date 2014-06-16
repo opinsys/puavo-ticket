@@ -96,7 +96,7 @@ var TicketList = React.createClass({
 
         return (
             <div>
-                <p>ticket count: {this.state.ticketCollection.size()}</p>
+                {/* <p>ticket count: {this.state.ticketCollection.size()}</p> */}
                 {this.state.ticketCollection.fetching && <p>Ladataan...</p>}
 
                 {handledByCurrentUser.length > 0 && <div>
