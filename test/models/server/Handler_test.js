@@ -85,7 +85,7 @@ describe("Ticket handlers", function() {
                     })
                     .then(function(err) {
                         assert(err instanceof Error, "must have error");
-                        assert.equal("Only managers can add handlers", err.message);
+                        assert.equal("Only managers or owners can add handlers", err.message);
                     });
             });
     });
