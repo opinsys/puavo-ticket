@@ -106,14 +106,14 @@ var TicketList = React.createClass({
                         tickets={handledByCurrentUser} />
                 </div>}
 
-                <h2>Avoimet tukipyynnöt</h2>
+                <h2>Käsittelyssä olevat tukipyynnöt</h2>
                 <List onSelect={this.props.onSelect}
                     user={this.props.user}
                     tickets={this.state.ticketCollection
                     .filter(isOpen)
                     .filter(notIn.bind(null, handledByCurrentUser))} />
 
-                <h2>Suljetut tukipyynnöt</h2>
+                <h2>Ratkaistut tukipyynnöt</h2>
                 <List onSelect={this.props.onSelect}
                     user={this.props.user}
                     tickets={this.state.ticketCollection.filter(isClosed)} />
