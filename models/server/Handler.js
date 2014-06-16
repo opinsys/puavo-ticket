@@ -3,8 +3,11 @@
 
 require("../../db");
 
+var Promise = require("bluebird");
+
 var Base = require("./Base");
 var User = require("./User");
+
 
 /**
  * Handler for {{#crossLink "models.server.Ticket"}}{{/crossLink}}
@@ -18,17 +21,19 @@ var Handler = Base.extend({
     tableName: "handlers",
 
     initialize: function() {
-        this.on("creating", this._assertCreatorIsManager.bind(this));
+        this.on("creating", this._assertCreatorIsManagerOrOwner.bind(this));
     },
 
-    _assertCreatorIsManager: function() {
-        return User.byId(this.get("created_by"))
-            .fetch({ require: true })
-            .then(function(user) {
-                if (!user.isManager()) {
-                    throw new Error("Only managers can add handlers");
-                }
-            });
+    _assertCreatorIsManagerOrOwner: function() {
+        return Promise.all([
+            User.byId(this.get("created_by")).fetch({ require: true }),
+            this.ticket().fetch({ require: true })      
+        ])
+        .spread(function(user, ticket){
+            if (user.isManager()) return;
+            if (ticket.get("created_by") === user.get("id")) return;
+            throw new Error("Only managers or owners can add handlers");
+        });
     },
 
     defaults: function() {
@@ -41,6 +46,11 @@ var Handler = Base.extend({
     handler: function() {
         return this.belongsTo(User, "handler");
     },
+    
+    ticket: function() {
+        var Ticket = require("./Ticket");
+        return this.belongsTo(Ticket, "ticket_id");
+    },    
 
     createdBy: function() {
         return this.belongsTo(User, "created_by");
