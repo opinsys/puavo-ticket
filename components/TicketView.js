@@ -161,7 +161,12 @@ var TicketView = React.createClass({
                         onClick={this.saveComment}
                         disabled={this.props.ticket.isOperating() || !this.hasUnsavedComment()} >Lähetä</button>
                     <button onClick={this.handleAddDevice} >Lisää laite</button>
-                    <ToggleStatusButton ticket={this.props.ticket} user={this.props.user} />
+
+
+                    {this.props.ticket.isHandler(this.props.user) &&
+                        <ToggleStatusButton ticket={this.props.ticket} user={this.props.user} />
+                    }
+
                     <button onClick={this.handleAddHandler} >Lisää käsittelijä</button>
                 </div>
 

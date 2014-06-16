@@ -173,6 +173,18 @@ var Ticket = Base.extend({
         });
     },
 
+
+    /**
+     * @method isHandler
+     * @param {models.client.User|Number}
+     * @return {Boolean}
+     */
+    isHandler: function(user) {
+        return this.handlers().some(function(handler) {
+            return handler.getHandlerUser().isSame(user);
+        });
+    },
+
     /**
      * Get ticket status using the updates relation. Ticket updates must be
      * fetched with `this.updates().fetch() for this to work.
