@@ -65,7 +65,7 @@ describe("/api/tickets", function() {
             });
     });
 
-    it("other users cannot see the ticket", function() {
+    it("other users cannot see the ticket on /api/tickets", function() {
         return helpers.loginAsUser(helpers.user.teacher2)
             .then(function(agent) {
                 return agent.get("/api/tickets").promise();
@@ -73,6 +73,18 @@ describe("/api/tickets", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(0, res.body.length);
+            });
+    });
+
+    it("or on /api/tickets/:id", function() {
+        var self = this;
+        return helpers.loginAsUser(helpers.user.teacher2)
+            .then(function(agent) {
+                return agent.get("/api/tickets/" + self.ticket.id).promise();
+            })
+            .then(function(res) {
+                assert.equal(404, res.status);
+                assert.deepEqual({error: "not found"}, res.body);
             });
     });
 

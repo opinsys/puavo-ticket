@@ -4,6 +4,7 @@
  */
 
 var express = require("express");
+var DB = require("../db");
 
 var Ticket = require("../models/server/Ticket");
 
@@ -49,8 +50,13 @@ app.get("/api/tickets", function(req, res, next) {
  * @apiSuccess {String} description Description of the ticket
  */
 app.get("/api/tickets/:id", function(req, res, next) {
-    // TODO: assert visibilities!
-    Ticket.forge({ id: req.params.id }).fetch({
+    var collection;
+
+    if (req.user.isManager()) collection = Ticket.collection();
+    else collection = Ticket.byVisibilities(req.user.getVisibilities());
+
+    collection.query({ where: { "tickets.id": req.params.id }})
+    .fetch({
         withRelated: [
             "createdBy",
             "comments.createdBy",
@@ -66,7 +72,11 @@ app.get("/api/tickets/:id", function(req, res, next) {
         require: true
     })
     .then(function(ticket) {
-        res.json(ticket);
+        res.json(ticket.first());
+    })
+    .catch(DB.EmptyError, function(err) {
+        res.status(404);
+        res.json({ error: "not found" });
     })
     .catch(next);
 });
