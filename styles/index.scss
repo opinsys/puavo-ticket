@@ -7,7 +7,7 @@ body, html {
 }
 
 a:visited {
-    color: brown;
+    color: #722e04;
 }
 
 a:hover{
@@ -64,9 +64,9 @@ table td {
     padding: 1em;
     word-wrap:break-word;
     ul li{
-        list-style-type: none;
+        list-style-type: square;
         border-top: 1px solid lightgrey;
-        padding: 15px 0 15px 0;
+        padding: 10px 0 10px 0;
     } 
     ul li:first-child{
         border-top: 0;
@@ -84,8 +84,12 @@ table td {
     background-color: white;
     }
     a:hover {
-    background-color: lightgrey;
+    background-color: #ffe7be;
     }
+}
+
+.ticketlist{
+        padding: 10px 0 -5px 0;
 }
 
 .sidebar {
@@ -160,6 +164,7 @@ table td {
     textarea {
     height: 20em;
     max-width: 100%;
+    margin: 3px;
     }
 
     .button, input, textarea {
@@ -343,6 +348,36 @@ height: 800px;
     min-height: 640px;
 }
 
+.ei{
+    height:20px;
+    width: 20px;
+    color: red;
+}
+
+.unread{
+    color:#ff0000;
+    }  
+
+.read {
+    color: #39bc32;
+}
+
+
+.unread{
+    font-size: 36px;
+    span {
+        font-size: 16px;
+    }
+}  
+
+.read{
+    font-size: 36px;
+    margin: -10px 0 -10px 0;
+    span {
+        font-size: 16px;
+    }
+} 
+  
 @media screen and (max-height: 900px) {
     .selectuser{
         min-height: 500px;
@@ -397,6 +432,3 @@ height: 800px;
     }
 }
 
-.unread {
-    border: 1px solid red;
-}

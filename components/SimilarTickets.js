@@ -21,9 +21,6 @@ var SimilarTickets = React.createClass({
                         <a href="#">milloin tulee trusty</a>
                     </li>
                 </ul>
-                <p>
-                    Ethän avaa toista tukipyyntöä samasta aiheesta. Kiitos.
-                </p>
             </div>
         );
     },

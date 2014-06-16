@@ -50,19 +50,21 @@ var List = React.createClass({
         var self = this;
 
         return (
+        <div className="ticketlist">
             <ul ref="list">
                 {this.props.tickets.map(function(ticket) {
                     return (
-                            <li key={ticket.get("id")} className={ self.getTitleClass(ticket, self.props.user.get("id")) }>
+                            <li key={ticket.get("id")} className={ self.getTitleClass(ticket, self.props.user.get("id")) }><span>
                             <TicketViewLink
                                 id={ticket.get("id")}
                                 onClick={self.props.onSelect.bind(null, ticket)} >
                             {ticket.get("title")}
                             </TicketViewLink>
-                        </li>
+                        </span></li>
                     );
                 })}
             </ul>
+            </div>
         );
     }
 });
