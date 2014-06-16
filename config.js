@@ -15,7 +15,8 @@ var config = {
     },
     puavo: {},
     directory: "./migrations",
-    tableName: "migrations"
+    tableName: "migrations",
+    redis: {}
 };
 
 if (process.env.NODE_ENV === "test") {

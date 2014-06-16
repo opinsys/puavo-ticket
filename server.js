@@ -42,7 +42,7 @@ app.use(cookieParser());
 
 
 app.use(session({
-    store: new RedisStore(),
+    store: new RedisStore(config.redis),
     secret: "keyboard cat", // XXX
 }));
 
