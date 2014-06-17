@@ -104,8 +104,8 @@ var Ticket = Base.extend({
                 force: true
             });
             var hasNoHandlersTag = ticket.addTag("nohandlers", user);
-            var creatorCanView = ticket.addVisibility(
-                user.getPersonalVisibility(),
+            var creatorCanView = ticket.addHandler(
+                user,
                 user
             );
             var organisationAdminCanView = ticket.addVisibility(
