@@ -3,6 +3,7 @@
 var React = require("react/addons");
 var _ = require("lodash");
 var Promise = require("bluebird");
+var Backbone = require("backbone");
 
 var Loading = require("./Loading");
 var Handler = require("../models/client/Handler");
@@ -38,13 +39,21 @@ var TicketView = React.createClass({
         this.setState({ comment: e.target.value });
     },
 
+    /**
+     * Save comment handler. Reports any unhandled errors to the global error
+     * handler
+     *
+     * @method saveComment
+     */
     saveComment: function() {
         if (!this.hasUnsavedComment()) return;
 
         this.props.ticket.addComment(this.state.comment, this.props.user)
         .then(function() {
             window.scrollTo(0, document.body.scrollHeight);
-        });
+        })
+        .catch(Backbone.trigger.bind(Backbone, "error"));
+
         this.setState({ comment: "" });
         this.refs.comment.getDOMNode().focus();
     },
@@ -83,7 +92,8 @@ var TicketView = React.createClass({
                     Promise.all(_.invoke(handlers, "save"))
                     .then(function() {
                         return self.props.ticket.fetch();
-                    });
+                    })
+                    .catch(Backbone.trigger.bind(Backbone, "error"));
 
 
                     Lightbox.removeCurrentComponent();
@@ -96,7 +106,8 @@ var TicketView = React.createClass({
     },
 
     markAsRead: function() {
-        this.props.ticket.markAsRead();
+        this.props.ticket.markAsRead()
+        .catch(Backbone.trigger.bind(Backbone, "error"));
     },
 
     componentWillReceiveProps: function(nextProps) {

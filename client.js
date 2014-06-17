@@ -3,6 +3,7 @@
 require("./client_setup");
 
 var React = require("react/addons");
+var Backbone = require("backbone");
 
 var UpdateMixin = require("./components/UpdateMixin");
 var User = require("./models/client/User");
@@ -13,6 +14,8 @@ var TicketView = require("./components/TicketView");
 var TicketList = require("./components/TicketList");
 var SideInfo = require("./components/SideInfo");
 var SimilarTickets = require("./components/SimilarTickets");
+var ErrorMessage = require("./components/ErrorMessage");
+var Lightbox = require("./components/Lightbox");
 
 var navigation = require("./components/navigation");
 var route = navigation.route;
@@ -106,7 +109,9 @@ var Main = React.createClass({
 
     setTicket: function(ticket) {
         if (typeof ticket.get !== "function") throw new Error("Bad ticket");
-        if (ticket.get("id")) ticket.fetch();
+        if (ticket.get("id")){
+            ticket.fetch().catch(Backbone.trigger.bind(Backbone, "error"));
+        }
         this.setState({ ticket: ticket });
     },
 
@@ -165,5 +170,16 @@ var Main = React.createClass({
 
 });
 
-
 React.renderComponent(<Main />, document.getElementById("app"));
+
+Backbone.on("error", function(error) {
+    console.error("Unhandled error", error);
+    Lightbox.displayComponent(<ErrorMessage error={error} />);
+});
+
+window.onerror = function(message, url, linenum) {
+    Lightbox.displayComponent(<ErrorMessage error={{
+        message: message + " on " + url + ":" + linenum
+    }} />);
+};
+

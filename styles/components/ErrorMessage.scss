@@ -1,0 +1,13 @@
+
+.ErrorMessage {
+    text-align: left;
+
+    pre {
+        overflow: auto;
+        word-wrap: normal;
+        white-space: pre;
+        font-size: 8pt;
+        margin: 1em;
+        padding: 1em;
+    }
+}
