@@ -81,12 +81,20 @@ var Ticket = Base.extend({
                 user
             );
 
-            return Promise.all([
-                isOpen,
-                creatorCanView,
-                hasNoHandlersTag,
-                organisationAdminCanView
-            ]);
+            return User.ensureUserByUsername("admin", user.get("external_data").organisation_domain)
+                .then(function(supportUser) {
+                    var defaultResponseComment = ticket.addComment(
+                        "Olemme vastaanottaneet tukipyyntösi. Voit täydentää sitä halutessasi.",
+                        supportUser);
+
+                    return Promise.all([
+                        isOpen,
+                        creatorCanView,
+                        hasNoHandlersTag,
+                        organisationAdminCanView,
+                        defaultResponseComment
+                    ]);
+                });
         });
     },
 
