@@ -5,6 +5,7 @@ var Handler = require("./Handler");
 var Comment = require("./Comment");
 var Tag = require("./Tag");
 var ReadTicket = require("./ReadTicket");
+var User = require("./User");
 var _ = require("lodash");
 
 /**
@@ -209,6 +210,10 @@ var Ticket = Base.extend({
         var model = new ReadTicket({}, { parent: this });
         return model.save();
     },
+
+    createdBy: function() {
+        return new User(this.get("createdBy"));
+    }
 
 
 }, {

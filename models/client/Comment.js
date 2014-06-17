@@ -1,5 +1,6 @@
 "use strict";
 var Base = require("./Base");
+var User = require("./User");
 
 
 /**
@@ -21,7 +22,13 @@ var Comment = Base.extend({
 
     url: function() {
         return this.parent.url() + "/comments";
+    },
+
+
+    createdBy: function() {
+        return new User(this.get("createdBy"));
     }
+
 
 });
 
