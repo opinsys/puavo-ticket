@@ -4,6 +4,7 @@ var Cocktail = require("backbone.cocktail");
 
 var Base = require("./Base");
 var TagMixin = require("../TagMixin");
+var User = require("./User");
 
 /**
  * Client Tag model
@@ -24,6 +25,10 @@ var Tag = Base.extend({
 
     url: function() {
         return this.parent.url() + "/tags";
+    },
+
+    createdBy: function() {
+        return new User(this.get("createdBy"));
     }
 
 });
