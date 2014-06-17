@@ -130,7 +130,7 @@ var TicketView = React.createClass({
 
                 <div className="ticket-title ticket-updates">
                     <div className="image">
-                    <img src={this.props.user.getProfileImage()} />
+                    <img src={this.props.ticket.createdBy().getProfileImage()} />
                     </div>
                     <div className="message">
                          <span>
