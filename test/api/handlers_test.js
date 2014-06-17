@@ -78,10 +78,11 @@ describe("/api/tickets/:id/handlers", function() {
                 var ticket = _.find(res.body, { id: self.ticket.get("id")});
                 assert(ticket);
                 assert(ticket.handlers, "has handlers array in the response");
-                assert.equal(
-                    "matti.meikalainen",
-                    ticket.handlers[0].handler.external_data.username
-                );
+
+                assert(ticket.handlers.some(function(h) {
+                    return h.handler.external_data.username === "matti.meikalainen";
+                }), "has matti.meikalainen as a handler");
+
             });
     });
 
@@ -96,16 +97,16 @@ describe("/api/tickets/:id/handlers", function() {
                 var ticket = res.body;
                 assert(ticket);
                 assert(ticket.handlers, "has handlers array in the response");
-                assert.equal(
-                    "matti.meikalainen",
-                    ticket.handlers[0].handler.external_data.username
-                );
-                assert.equal(
-                    "pointyhair",
-                    ticket.handlers[0].createdBy.external_data.username
-                );
+
+                assert(ticket.handlers.some(function(h) {
+                    return h.handler.external_data.username === "matti.meikalainen";
+                }), "has matti.meikalainen as a handler");
+
+                assert(ticket.handlers.some(function(h) {
+                    return h.createdBy.external_data.username === "pointyhair";
+                }), "has pointyhair as the handler relation creator");
+
             });
     });
-
 
 });
