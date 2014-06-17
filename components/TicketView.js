@@ -259,18 +259,28 @@ var VIEW_TYPES = {
  */
 var ToggleStatusButton = React.createClass({
 
+    handleOpenTicket: function() {
+        this.props.ticket.setOpen(this.props.user)
+        .catch(Backbone.trigger.bind(Backbone, "error"));
+    },
+
+    handleCloseTicket: function() {
+        this.props.ticket.setClosed(this.props.user)
+        .catch(Backbone.trigger.bind(Backbone, "error"));
+    },
+
     render: function() {
         var ticket = this.props.ticket;
         var status = ticket.getCurrentStatus();
 
         if (!status) return (
-            <button disabled={true} >loading...</button>
+            <button disabled >loading...</button>
         );
 
         if (status === "open") return (
             <button
                 disabled={ticket.isOperating()}
-                onClick={ticket.setClosed.bind(ticket, this.props.user)} >
+                onClick={this.handleCloseTicket} >
                 Aseta ratkaistuksi
             </button>
         );
@@ -278,7 +288,7 @@ var ToggleStatusButton = React.createClass({
         return (
             <button
                 disabled={ticket.isOperating()}
-                onClick={ticket.setOpen.bind(ticket, this.props.user)} >
+                onClick={this.handleOpenTicket} >
                 Avaa uudelleen
             </button>
         );
