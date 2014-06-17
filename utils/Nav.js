@@ -5,6 +5,7 @@ var createRouter = require("routes");
 var xtend = require("xtend");
 var Backbone = require("backbone");
 var _ = require("lodash");
+var debug = require("debug")("utils/Nav");
 
 function noop() { }
 
@@ -94,12 +95,15 @@ function updateRoutes() {
  * @param {String} url
  */
 Nav.go = function(url) {
+    debug("navigating to " + url);
     history.pushState({}, "", Nav.mountPoint + url);
-    console.log("navigate!", url);
     updateRoutes();
 };
 
-window.addEventListener("popstate", updateRoutes);
+window.addEventListener("popstate", function() {
+    debug("navigating from popstate " + window.location.pathname);
+    updateRoutes();
+});
 
 /**
  * Return the current browser url

@@ -1,4 +1,5 @@
 "use strict";
+var debug = require("debug")("puavo-ticket:resources/puavo_api_proxy");
 var url = require("url");
 var express = require("express");
 var request = require("request");
@@ -41,7 +42,7 @@ app.use(function(req, res, next) {
         search: u.search
     });
 
-    console.log("Proxying request to", req.method, puavoUrl);
+    debug("Proxying request to %s %s", req.method, puavoUrl);
 
     promisePipe(
         request({

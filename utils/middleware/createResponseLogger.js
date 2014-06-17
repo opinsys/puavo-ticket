@@ -1,5 +1,7 @@
 "use strict";
 
+var debug = require("debug")("puavo-ticket:utils/middleware/createResponseLogger");
+
 function noop() {}
 
 /**
@@ -26,7 +28,7 @@ function createResponseLogger(){
     res.writeHead = function(){
       var duration = Date.now() - start;
       res.setHeader('X-Response-Time', duration + 'ms');
-      console.log(req.method, reqUrl, duration + 'ms');
+      debug(req.method + " " + reqUrl + " " + duration + 'ms');
       writeHead.apply(res, arguments);
     };
     next();

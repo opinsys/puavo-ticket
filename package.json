@@ -39,6 +39,7 @@
     "knex": "~0.6.15",
     "bookshelf": "~0.7.2",
     "connect-redis": "~2.0.0",
+    "debug": "~1.0.2",
     "nodemailer": "~0.6.5"
   },
   "devDependencies": {

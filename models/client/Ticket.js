@@ -1,4 +1,5 @@
 "use strict";
+var debug = require("debug")("puavo-ticket:models/client/Ticket");
 var Base = require("./Base");
 var Tag = require("./Tag");
 var Handler = require("./Handler");
@@ -227,7 +228,7 @@ var Ticket = Base.extend({
      * @return {Bluebird.Promise}
      */
     markAsRead: function() {
-        console.log("Mark ticket as read: " + this.get("title"));
+        debug("Mark ticket as read: " + this.get("title"));
         var model = new ReadTicket({}, { parent: this });
         return model.save();
     },

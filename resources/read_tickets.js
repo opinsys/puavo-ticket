@@ -3,10 +3,10 @@
  * REST resources documented with http://apidocjs.com/
  */
 
+var debug = require("debug")("puavo-ticket:resources/read_tickets");
 var express = require("express");
 
 var Ticket = require("../models/server/Ticket");
-
 var app = express.Router();
 
 
@@ -16,6 +16,12 @@ var app = express.Router();
  * @apiGroup readTickets
  */
 app.post("/api/tickets/:id/read", function(req, res, next) {
+    debug(
+        "Marking ticket %s as read for %s",
+        req.params.id,
+        req.user.get("external_data").domain_username
+    );
+
     Ticket.forge({ id: req.params.id })
     .fetch()
     .then(function(ticket) {

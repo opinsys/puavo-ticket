@@ -1,5 +1,7 @@
 "use strict";
 
+var debug = require("debug")("components/UpdateMixin");
+
 var Nav = require("../utils/Nav");
 var Base = require("../models/client/Base");
 
@@ -15,6 +17,7 @@ var UpdateMixin = {
     },
 
     onBackboneUpdate: function(eventName) {
+        debug("force update from Backbone event: " + eventName);
         this.forceUpdate();
     },
 

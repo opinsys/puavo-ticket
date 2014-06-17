@@ -229,6 +229,29 @@ Set `SQL` environment variable to `1` or `true`
 
 Example: `SQL=1 make test-server` or `SQL=1 node server.js`
 
+## Debug logging
+
+We are using the [debug](https://github.com/visionmedia/debug) module. For each
+.js file create own debug instance with a name `puavo-ticket:<path>` where the
+`<path>` is the path for the .js file.
+
+Example:
+
+```javascript
+var debug = require("debug")("puavo-ticket:resources/tickets");
+```
+
+Using the `puavo-ticket:` prefix we can enable debug logging for puavo-ticket
+server with a `DEBUG` environment variable:
+
+    DEBUG=puavo-ticket:* node server.js
+
+or for the browser using a Javascript console:
+
+```javascript
+debug.enable("puavo-ticket:*");
+```
+
 ## puavo-ticket API documentation
 
 The Javascript API documentation is generated with [YUIDoc][] and is available
