@@ -105,7 +105,10 @@ var UserMixin = {
      * @return {String} url to the profile image
      */
     getProfileImage: function() {
-         return "/api/puavo/v3/users/" + this.get("external_data").username + "/profile.jpg";
+        // FIXME: call getProfileImagen after ticket loading (TicketView:133)
+        if (this.get("external_data")) {
+            return "/api/puavo/v3/users/" + this.get("external_data").username + "/profile.jpg";
+        }
     },
 
 };
