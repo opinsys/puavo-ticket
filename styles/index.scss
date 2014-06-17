@@ -164,6 +164,10 @@ table td {
 }
 
 .ticket-form {
+    input[type=text] {
+        margin-top: 10px;
+    }
+
     textarea {
     height: 20em;
     max-width: 100%;
@@ -374,6 +378,31 @@ height: 800px;
 .comments, .tags{
     margin: 10px 0 -5px 0;
 
+}
+
+.ticket-updates {
+    clear: both;
+
+    img {
+        height: 40px;
+    }
+
+    .image {
+        float: left;
+    }
+
+    span {
+    }
+
+    .message {
+        margin-left: 50px;
+    }
+}
+
+.comments {
+    img {
+        height: 40px;
+    }
 }
   
 @media screen and (max-height: 900px) {
