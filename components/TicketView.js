@@ -137,29 +137,39 @@ var TicketView = React.createClass({
 
                 {this.isOperating() && <Loading />}
 
-                <h2>
-                    {this.props.ticket.get("title") + " "}
-                    <span>
-                        ({this.props.ticket.getCurrentStatus()})
-                    </span>
-                </h2>
 
-                <p>{this.props.ticket.get("description")}</p>
+                <div className="ticket-title ticket-updates">
+                    <div className="image">
+                    <img src={this.props.user.getProfileImage()} />
+                    </div>
+                    <div className="message">
+                         <span>
+                            <b>
+                                {this.props.ticket.createdBy().getName() + " "}
+                            </b>
+                        </span><br />
+                        <span>
+                            <b>
+                                {this.props.ticket.get("title") + " "} {/* ({this.props.ticket.getCurrentStatus()}) */}
+                            </b>
+                        </span><br />
+                        <span>
+                            {this.props.ticket.get("description")}
+                        </span>
+                    </div>
+                </div>
 
-                <div>
-                    <ul>
                         {this.props.ticket.updates().map(function(update) {
                             var view = VIEW_TYPES[update.get("type")];
                             return (
-                                <li key={update.get("unique_id")}>
+                                <span key={update.get("unique_id")}>
                                     {view ?  view({ update: update })
                                           : "Unknown update type: " + update.get("type")
                                     }
-                                </li>
+                                </span>
                             );
 
                         })}
-                    </ul>
                     <input
                         ref="comment"
                         type="text"
@@ -180,7 +190,6 @@ var TicketView = React.createClass({
                     {this.props.user.isManager() &&
                         <button onClick={this.handleAddHandler} >Lisää käsittelijä</button>
                     }
-                </div>
 
 
             </div>
@@ -195,9 +204,12 @@ var UpdateMixin = {
     },
 
     getCreatorName: function() {
-        var createdBy = this.props.update.get("createdBy");
-        if (!createdBy) return "Unknown";
-        return createdBy.external_data.username;
+        if (this.props.update.createdBy) {
+            var createdBy = this.props.update.createdBy();
+            if (!createdBy) return "Unknown";
+            return createdBy.getName();
+        }
+        return "Unknown";
     },
 };
 
@@ -214,9 +226,14 @@ var VIEW_TYPES = {
         mixins: [UpdateMixin],
         render: function() {
             return (
-                <div className="comments">
-                    <i>{this.getCreatorName()}: </i>
-                    <span>{this.props.update.get("comment")}</span>
+                <div className="ticket-updates comments">
+                    <div className="image">
+                        <img src={this.props.update.createdBy().getProfileImage()} />
+                    </div>
+                    <div className="message">
+                        <b>{this.props.update.createdBy().getName()} </b>
+                        <span>{this.props.update.get("comment")}</span>
+                    </div>
                     {this.props.update.isNew() && <Loading />}
                 </div>
             );

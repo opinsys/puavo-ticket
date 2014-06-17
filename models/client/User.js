@@ -28,6 +28,12 @@ var User = Base.extend({
     }
 
 
+    getName: function() {
+        if (this.get("external_data")) {
+            return this.get("external_data").first_name + " " + this.get("external_data").last_name;
+        }
+    }
+
 }, {
 
     search: function(keywords) {
