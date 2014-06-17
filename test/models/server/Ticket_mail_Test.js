@@ -17,11 +17,13 @@ describe("Ticket email notifications", function() {
         return helpers.clearTestDatabase()
             .then(function() {
                 return Promise.all([
+                    User.ensureUserFromJWTToken(helpers.user.manager),
                     User.ensureUserFromJWTToken(helpers.user.teacher),
                     User.ensureUserFromJWTToken(helpers.user.teacher2)
                 ]);
             })
-            .spread(function(user, otherUser) {
+            .spread(function(manager, user, otherUser) {
+                self.manager = manager;
                 self.user = user;
                 self.otherUser = otherUser;
             });
@@ -42,7 +44,7 @@ describe("Ticket email notifications", function() {
             })
             .save()
             .then(function(ticket) {
-                return ticket.addComment("foo", self.user);
+                return ticket.addComment("foo", self.otherUser);
             })
             .then(function() {
 
@@ -79,18 +81,29 @@ describe("Ticket email notifications", function() {
             })
             .save()
             .then(function(ticket) {
-                return ticket.addHandler(self.otherUser, self.user)
+                return ticket.addHandler(self.otherUser, self.manager)
                     .then(function() { return ticket; });
             })
             .then(function(ticket) {
-                return ticket.addComment("bar", self.user);
+                return ticket.addComment("bar", self.manager)
+                .then(function(){
+                    return ticket;
+                });
             })
-            .then(function() {
+            .then(function(ticket) {
                 assert.equal(
                     2, spy.callCount,
                     "sendMail must be called twice for each handler"
                 );
-
+                assert.equal(
+                    spy.args[0][0].subject, "Tiketti " + ticket.get("id") + ": Computer does not work", 
+                    "title is not correct"
+                );  
+                assert.equal
+                    (spy.args[0][0].text, 
+                    "It just doesn't"
+                );
+                
                 // TODO: assert email addresses from spy.lastCall.args
             });
     });

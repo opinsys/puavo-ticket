@@ -15,7 +15,6 @@ var Device = require("./Device");
 var User = require("./User");
 var ReadTicket = require("./ReadTicket");
 
-
 /**
  * Knex query helpers
  *
@@ -82,10 +81,20 @@ var Ticket = Base.extend({
     initialize: function(attrs, options) {
         if (options && options.emailTransport) {
             this.emailTransport = options.emailTransport;
+            
         }
+        
+        /**
+         * See nodemailer module docs
+         * 
+         * @method sendMailPromise
+         * @param {Object} options
+         * @return {Bluebird.Promise}
+         * */
+        this.sendMailPromise = Promise.promisify(this.emailTransport.sendMail.bind(this));
 
         this.on("created", this._setInitialTicketState.bind(this));
-        this.on("update", this.markAsUnread, this);
+        this.on("update", this.onTicketUpdate.bind(this));
 
     },
 
@@ -485,6 +494,41 @@ var Ticket = Base.extend({
                     })
                 );
             });
+    },
+
+    sendEmail: function(model){
+        var self = this;
+        return this.handlers().fetch({
+            withRelated: "handler"
+        }).then(function(handlers){
+            var emailAddresses = handlers.map(function(handler) { return handler.related("handler").getEmail(); });
+            var emailAddress;
+            var a = [];
+            for (var i = 0; i < emailAddresses.length; i++) {
+                emailAddress = (emailAddresses[i]);
+                var mailOptions = {
+                    from: "Opinsys support <noreply@opinsys.net>", 
+                    to: emailAddress, 
+                    subject: "Tiketti " + self.get("id") + ": " + self.get("title"),
+                    text: self.get("description"), // TODO Newest comment on the top. Older under that.
+                };
+                var operation = self.sendMailPromise(mailOptions);
+                a.push(operation);
+                
+            }
+            
+            return Promise.all(a);
+        });
+
+
+               
+    },
+    
+    onTicketUpdate: function(e){
+        return Promise.all([
+            this.markAsUnread(e.model),
+            this.sendEmail(e.model),
+        ]);
     }
 
 });
