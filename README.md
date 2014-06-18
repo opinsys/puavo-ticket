@@ -260,6 +260,17 @@ or for the browser using a Javascript console:
 debug.enable("puavo-ticket:*");
 ```
 
+## Styles
+
+We are using Bootstrap, Flat UI and React Bootstrap. See documentation in:
+
+  - http://getbootstrap.com/
+  - http://designmodo.github.io/Flat-UI/
+  - http://react-bootstrap.github.io/
+
+Every component should have a class by its name and a corresponding style file
+in `styles/components/`.
+
 ## puavo-ticket API documentation
 
 The Javascript API documentation is generated with [YUIDoc][] and is available
