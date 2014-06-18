@@ -133,8 +133,15 @@ var Main = React.createClass({
         TicketViewLink.go({ id: ticket.get("id") });
     },
 
-    renderInLightbox: function(fn) {
-        this.setState({ renderLightboxContent: fn });
+    /**
+     * @method renderInLightbox
+     * @param {Function} renderLightboxContent
+     *      Function returning a React component
+     * @param {Function} renderLightboxContent.close
+     *      Call this function to close the Lightbox
+     */
+    renderInLightbox: function(renderLightboxContent) {
+        this.setState({ renderLightboxContent: renderLightboxContent });
     },
 
     closeLightbox: function() {
