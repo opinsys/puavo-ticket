@@ -159,6 +159,17 @@ var TicketView = React.createClass({
                     </div>
                 </div>
 
+                <div className="ticket-updates">
+                    <div className="image">
+                    <img src={this.props.ticket.createdBy().getProfileImage()} />
+                    </div>
+                    <div className="message">
+                        <b>Opinsys tuki </b>
+                        <span>Olemme vastaanottaneet tukipyyntösi. Voit täydentää sitä halutessasi.</span>
+                    </div>
+                </div>
+
+
                         {this.props.ticket.updates().map(function(update) {
                             var view = VIEW_TYPES[update.get("type")];
                             return (
