@@ -70,6 +70,20 @@ var Main = React.createClass({
         };
     },
 
+    componentDidMount: function() {
+        Backbone.on("error", this.handleUnhandledError);
+    },
+
+    componentWillUnmount: function() {
+        Backbone.off("error", this.handleUnhandledError);
+    },
+
+    handleUnhandledError: function(error) {
+        this.renderInLightbox(function(){
+            return <ErrorMessage error={error} />;
+        });
+    },
+
     /**
      * Return true if the current ticket has the id
      *
@@ -119,10 +133,23 @@ var Main = React.createClass({
         TicketViewLink.go({ id: ticket.get("id") });
     },
 
+    renderInLightbox: function(fn) {
+        this.setState({ renderLightboxContent: fn });
+    },
+
+    closeLightbox: function() {
+        this.setState({ renderLightboxContent: null });
+    },
 
     render: function() {
         return (
             <div>
+                {this.state.renderLightboxContent &&
+                    <Lightbox close={this.closeLightbox}>
+                        {this.state.renderLightboxContent(this.closeLightbox)}
+                    </Lightbox>
+                }
+
                 <div className="topmenu">
                     <button onClick={NewTicketLink.go} className="top-button" >Uusi tukipyyntö</button>
                     <button onClick={RootLink.go} className="top-button" >Omat tukipyynnöt</button>
@@ -149,16 +176,17 @@ var Main = React.createClass({
 
                         {route.ticket.existing.isMatch() &&
                             <TicketView
+                                renderInLightbox={this.renderInLightbox}
                                 ticket={this.state.ticket}
                                 user={this.state.user}
                             />
                         }
 
                     </div>
-                        <div className="sidebar">
-                           <SideInfo>
-                            </SideInfo>
-                        </div>
+                    <div className="sidebar">
+                       <SideInfo>
+                        </SideInfo>
+                    </div>
                 </div>
             </div>
         );
@@ -166,16 +194,10 @@ var Main = React.createClass({
 
 });
 
-React.renderComponent(<Main />, document.getElementById("app"));
-
-Backbone.on("error", function(error) {
-    console.error("Unhandled error", error);
-    Lightbox.displayComponent(<ErrorMessage error={error} />);
-});
+React.renderComponent(<Main />, document.body);
 
 window.onerror = function(message, url, linenum) {
-    Lightbox.displayComponent(<ErrorMessage error={{
-        message: message + " on " + url + ":" + linenum
-    }} />);
+    var msg = "Unhandled client Javascript error: '" + message + "' on " + url + ":" + linenum;
+    Backbone.trigger("error", new Error(msg));
 };
 

@@ -8,7 +8,6 @@ var Backbone = require("backbone");
 var Loading = require("./Loading");
 var Handler = require("../models/client/Handler");
 var Base = require("../models/client/Base");
-var Lightbox = require("./Lightbox");
 var SelectUsers = require("./SelectUsers");
 
 
@@ -79,26 +78,26 @@ var TicketView = React.createClass({
 
     handleAddHandler: function() {
         var self = this;
-        Lightbox.displayComponent(
-            <SelectUsers
-                currentHandlers={_.invoke(this.props.ticket.handlers(), "getHandlerUser")}
-                onSelect={function(users) {
+        self.props.renderInLightbox(function(close){
+            return (
+                <SelectUsers
+                    currentHandlers={_.invoke(self.props.ticket.handlers(), "getHandlerUser")}
+                    onSelect={function(users) {
 
-                    var handlers = users.map(function(user) {
-                        return new Handler({ handler: user.toJSON() }, { parent: self.props.ticket });
-                    });
-
-
-                    Promise.all(_.invoke(handlers, "save"))
-                    .then(function() {
-                        return self.props.ticket.fetch();
-                    })
-                    .catch(Backbone.trigger.bind(Backbone, "error"));
+                        var handlers = users.map(function(user) {
+                            return new Handler({ handler: user.toJSON() }, { parent: self.props.ticket });
+                        });
 
 
-                    Lightbox.removeCurrentComponent();
-            }}/>
-        );
+                        Promise.all(_.invoke(handlers, "save"))
+                        .then(function() {
+                            return self.props.ticket.fetch();
+                        })
+                        .catch(Backbone.trigger.bind(Backbone, "error"));
+                        close();
+                }}/>
+            );
+        });
     },
 
     handleOnFocus: function() {
