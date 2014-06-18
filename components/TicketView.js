@@ -112,7 +112,7 @@ var TicketView = React.createClass({
     componentWillReceiveProps: function(nextProps) {
         if (!this.initialReadMark && nextProps.ticket.hasData()) {
             // Usually we would use the component state for this but because it
-            // is asynchornous it causes multiple unwanted markAsRead calls.
+            // is asynchronous it causes multiple unwanted markAsRead calls.
             // So use a plain component property to workaround it.
             this.initialReadMark = true;
 
