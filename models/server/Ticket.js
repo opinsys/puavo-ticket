@@ -1,6 +1,7 @@
 "use strict";
 var _ = require("lodash");
 var Promise = require("bluebird");
+var Moment = require("moment");
 
 var config = require("../../config");
 var Base = require("./Base");
@@ -498,8 +499,10 @@ var Ticket = Base.extend({
 
     sendEmail: function(model){
         var self = this;
-        return this.handlers().fetch({
-            withRelated: "handler"
+        
+        return model.load("createdBy").then(function(){
+            return self.handlers().fetch({ withRelated: "handler"  });
+            
         }).then(function(handlers){
             var emailAddresses = handlers.map(function(handler) { return handler.related("handler").getEmail(); });
             var emailAddress;
@@ -510,7 +513,17 @@ var Ticket = Base.extend({
                     from: "Opinsys support <noreply@opinsys.net>", 
                     to: emailAddress, 
                     subject: "Tiketti " + self.get("id") + ": " + self.get("title"),
-                    text: self.get("description"), // TODO Newest comment on the top. Older under that.
+                    text: "Tukipyyntöä (" + self.get("id") +
+                     ") on päivitetty. Pääset katselemaan ja päivittämään sitä tästä linkistä: " +
+                      "https://staging-support.opinsys.fi/tickets/" + self.get("id") + 
+                      "\n\n" + 
+                      model.relations.createdBy.get("external_data").first_name +
+                      " " +
+                      model.relations.createdBy.get("external_data").last_name +
+                      ":"+ 
+                      "\n" + 
+                      self.get("description") + 
+                      "\n\n" + Moment().format('MMM Do H:mm') // TODO Newest comment on the top. Older under that.
                 };
                 var operation = self.sendMailPromise(mailOptions);
                 a.push(operation);

@@ -42,7 +42,8 @@
     "debug": "~1.0.2",
     "nodemailer": "~0.6.5",
     "react-bootstrap": "~0.10.2",
-    "flat-ui": "~2.1.1"
+    "flat-ui": "~2.1.1",
+    "moment": "~2.7.0"
   },
   "devDependencies": {
     "jshint": "~2.5.1",

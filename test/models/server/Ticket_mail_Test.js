@@ -2,6 +2,7 @@
 var Promise = require("bluebird");
 var nodemailer = require("nodemailer");
 var sinon = require("sinon");
+var Moment = require("moment");
 
 var helpers = require("../../helpers");
 
@@ -101,7 +102,18 @@ describe("Ticket email notifications", function() {
                 );  
                 assert.equal
                     (spy.args[0][0].text, 
-                    "It just doesn't"
+                    "Tukipyyntöä (" +
+                    ticket.get("id") +
+                    ") on päivitetty. Pääset katselemaan ja päivittämään sitä tästä linkistä: https://staging-support.opinsys.fi/tickets/" +
+                    ticket.get("id") +
+                    "\n\n" +
+                    self.manager.get("external_data").first_name +
+                    " " +
+                    self.manager.get("external_data").last_name +
+                    ":"+
+                    "\n" +
+                    "It just doesn't" +
+                    "\n\n" + Moment().format('MMM Do H:mm')
                 );
                 
                 // TODO: assert email addresses from spy.lastCall.args
