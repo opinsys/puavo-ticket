@@ -176,7 +176,7 @@ var TicketView = React.createClass({
                         onChange={this.handleCommentChange}
                         onKeyUp={this.handleCommentKeyUp}
                         value={this.state.comment}
-                        placeholder="Halutessasi voit lisätä kommentteja tähän."
+                        placeholder="Kirjoita kommentti..."
                     />
                     <button
                         onClick={this.saveComment}
