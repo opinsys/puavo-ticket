@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
+var Button = require("react-bootstrap/Button");
 
 
 /**
@@ -47,9 +48,10 @@ var TicketForm = React.createClass({
 
     render: function() {
         return (
-            <div className="ticket-form">
+            <div className="ticket-form form-group">
 
                 <input
+                    className="form-control"
                     disabled={this.props.ticket.isOperating()}
                     autoFocus
                     ref="title"
@@ -60,6 +62,7 @@ var TicketForm = React.createClass({
 
 
                 <textarea
+                    className="form-control"
                     disabled={this.props.ticket.isOperating()}
                     ref="description"
                     placeholder="Tarkka kuvaus tuen tarpeesta."
@@ -68,10 +71,10 @@ var TicketForm = React.createClass({
                 />
 
                 <div className="button-wrap">
-                    <button
+                    <Button
                         className="button save-button"
                         disabled={this.props.ticket.isOperating() || !this.isFormOk()}
-                        onClick={this.handleSave} >Lähetä</button>
+                        onClick={this.handleSave} >Lähetä</Button>
                 </div>
 
             </div>

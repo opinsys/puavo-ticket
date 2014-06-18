@@ -1,0 +1,27 @@
+
+.btn-default {
+    cursor: pointer;
+}
+
+h2 {
+    font-size: 30px;
+}
+
+
+.btn-default {
+    background-color: $input-color;
+
+    &:hover:not([disabled]) {
+        background-color: $active-input-color;
+    }
+
+    &:disabled:hover {
+        cursor: not-allowed;
+    }
+}
+
+
+.form-control:focus {
+    border-color: $active-input-color;
+}
+

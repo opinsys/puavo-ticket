@@ -5,10 +5,13 @@ var _ = require("lodash");
 var Promise = require("bluebird");
 var Backbone = require("backbone");
 
+var Button = require("react-bootstrap/Button");
+
 var Loading = require("./Loading");
 var Handler = require("../models/client/Handler");
 var Base = require("../models/client/Base");
 var SelectUsers = require("./SelectUsers");
+
 
 
 
@@ -184,6 +187,7 @@ var TicketView = React.createClass({
 
                         })}
                     <input
+                        className="form-control"
                         ref="comment"
                         type="text"
                         onChange={this.handleCommentChange}
@@ -191,9 +195,9 @@ var TicketView = React.createClass({
                         value={this.state.comment}
                         placeholder="Kirjoita kommentti..."
                     />
-                    <button
+                    <Button
                         onClick={this.saveComment}
-                        disabled={this.props.ticket.isOperating() || !this.hasUnsavedComment()} >Lähetä</button>
+                        disabled={this.props.ticket.isOperating() || !this.hasUnsavedComment()} >Lähetä</Button>
 
 
                     {this.props.ticket.isHandler(this.props.user) &&
@@ -201,7 +205,7 @@ var TicketView = React.createClass({
                     }
 
                     {this.props.user.isManager() &&
-                        <button onClick={this.handleAddHandler} >Lisää käsittelijä</button>
+                        <Button onClick={this.handleAddHandler} >Lisää käsittelijä</Button>
                     }
 
 
@@ -304,23 +308,23 @@ var ToggleStatusButton = React.createClass({
         var status = ticket.getCurrentStatus();
 
         if (!status) return (
-            <button disabled >loading...</button>
+            <Button disabled >loading...</Button>
         );
 
         if (status === "open") return (
-            <button
+            <Button
                 disabled={ticket.isOperating()}
                 onClick={this.handleCloseTicket} >
                 Aseta ratkaistuksi
-            </button>
+            </Button>
         );
 
         return (
-            <button
+            <Button
                 disabled={ticket.isOperating()}
                 onClick={this.handleOpenTicket} >
                 Avaa uudelleen
-            </button>
+            </Button>
         );
 
     }

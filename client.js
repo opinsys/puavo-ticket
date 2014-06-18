@@ -15,41 +15,17 @@ var TicketList = require("./components/TicketList");
 var SideInfo = require("./components/SideInfo");
 var ErrorMessage = require("./components/ErrorMessage");
 var Lightbox = require("./components/Lightbox");
+var UserInformation = require("./components/UserInformation");
+
+var Button = require("react-bootstrap/Button");
 
 var navigation = require("./components/navigation");
 var route = navigation.route;
 
-var LogoutLink = navigation.link.LogoutLink;
 var RootLink = navigation.link.RootLink;
 var NewTicketLink = navigation.link.NewTicketLink;
 var TicketViewLink = navigation.link.TicketViewLink;
 
-
-/**
- * User information and logout
- *
- * @namespace components
- * @class UserInformation
- */
-var UserInformation = React.createClass({
-    render: function() {
-        return (
-            <div className="user">
-                <ul>
-                    <li>
-                        {this.props.user.get("external_data").first_name} {this.props.user.get("external_data").last_name}
-                    </li>
-                    <li>
-                        <img src={this.props.user.getProfileImage()} />
-                    </li>
-                    <li>
-                        <LogoutLink pushState={false}>Kirjaudu ulos</LogoutLink>
-                    </li>
-                </ul>
-            </div>
-        );
-    }
-});
 
 
 /**
@@ -151,6 +127,7 @@ var Main = React.createClass({
     render: function() {
         return (
             <div>
+
                 {this.state.renderLightboxContent &&
                     <Lightbox close={this.closeLightbox}>
                         {this.state.renderLightboxContent(this.closeLightbox)}
@@ -158,8 +135,8 @@ var Main = React.createClass({
                 }
 
                 <div className="topmenu">
-                    <button onClick={NewTicketLink.go} className="top-button" >Uusi tukipyyntö</button>
-                    <button onClick={RootLink.go} className="top-button" >Omat tukipyynnöt</button>
+                    <Button onClick={NewTicketLink.go} className="top-button" >Uusi tukipyyntö</Button>
+                    <Button onClick={RootLink.go} className="top-button" >Omat tukipyynnöt</Button>
 
                     <UserInformation user={this.state.user} />
                 </div>
