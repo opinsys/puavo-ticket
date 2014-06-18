@@ -5,6 +5,8 @@ var _ = require("lodash");
 var React = require("react/addons");
 var Promise = require("bluebird");
 
+var Button = require("react-bootstrap/Button");
+
 var User = require("../models/client/User");
 var Base = require("../models/client/Base");
 var UpdateMixin = require("./UpdateMixin");
@@ -31,16 +33,18 @@ var UserItem = React.createClass({
     },
 
     render: function() {
+        var id = _.uniqueId("checkbox");
         return (
-            <label>
+            <label className="UserItem" for={id}>
                 <input
+                    id={id}
                     type="checkbox"
                     checked={this.props.checked}
                     disabled={this.props.disabled}
                     onChange={this.handleOnChange}
                     ref="checkbox" />
                 <span className="first-name" >{this.props.user.get("external_data").first_name + " "}</span>
-                <span className="last-name" >{this.props.user.get("external_data").last_name + " "}</span>      
+                <span className="last-name" >{this.props.user.get("external_data").last_name + " "}</span>
                 <span className="username" >({this.props.user.get("external_data").username})</span>
             </label>
         );
@@ -152,21 +156,19 @@ var SelectUsers = React.createClass({
     render: function() {
         var self = this;
         return (
-            <form>
+            <div className="SelectUsers">
                 {self.renderSearchError()}
-                    <h2>Lisää käsittelijä</h2>
-                    
-<a href="#" className="tooltip" title=""><span title="Aloita kirjoittamaan käsittelijän nimeä">
-                    
-                <input
-                    ref="search"
-                    value={self.state.searchString}
-                    onChange={self.handleSearchStringChange} />
-                    
-</span></a>
-                    
-                <div className="selectuser">
 
+                <div className="search-input-wrap">
+                    <input
+                        className="form-control search-input"
+                        ref="search"
+                        placeholder="Aloita kirjoittamaan käsittelijän nimeä"
+                        value={self.state.searchString}
+                        onChange={self.handleSearchStringChange} />
+                </div>
+
+                <div className="selectuser">
                     <ul>
                         {self.state.users.map(function(user) {
                             return (
@@ -181,10 +183,12 @@ var SelectUsers = React.createClass({
                             );
                         })}
                     </ul>
-                    
-                    {self.state.selectedUsers.length > 0 && <h2>    
-                        Valitut
-                    </h2>}
+
+                    {self.state.selectedUsers.length > 0 &&
+                        <h2>
+                            Valitut
+                        </h2>
+                    }
 
                     <ul>
                         {self.state.selectedUsers.map(function(user) {
@@ -200,15 +204,20 @@ var SelectUsers = React.createClass({
                             );
                         })}
                     </ul>
-                
+
                 </div>
 
-                <button
-                    className="button" 
-                    onClick={self.handleOk}>ok
-                </button>
-                
-            </form>
+                <div className="modal-footer">
+                    <Button onClick={self.handleOk}>
+                        Lisää käsittelijät
+                    </Button>
+
+                    <Button bsStyle="danger" onClick={self.handleOk}>
+                        Peruuta
+                    </Button>
+                </div>
+
+            </div>
         );
     },
 
