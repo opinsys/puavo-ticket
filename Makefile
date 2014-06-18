@@ -119,7 +119,7 @@ install-dirs:
 
 install: install-dirs
 	npm prune --production
-	cp -r *.js *.json node_modules components resources utils models views styles $(DESTDIR)$(prefix)/lib/node_modules/puavo-ticket
+	cp -r *.js *.json node_modules components resources utils models views styles public $(DESTDIR)$(prefix)/lib/node_modules/puavo-ticket
 	ln -fs /etc/puavo-ticket/config.json $(DESTDIR)$(prefix)/lib/node_modules/puavo-ticket/_config.json
 
 install-git-hooks:
