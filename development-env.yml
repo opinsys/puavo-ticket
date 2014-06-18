@@ -34,11 +34,15 @@
       - name: install postgresql
         apt: pkg=postgresql-9.3 state=present force=yes update_cache=yes
 
-      - name: Install git
-        apt: pkg=git state=present force=yes
-
-      - name: Install tmux
-        apt: pkg=tmux state=present force=yes
+      - name: Install devtools
+        action: apt pkg={{item}} state=present force=yes
+        with_items:
+          - tmux
+          - git
+          - wget
+          - curl
+          - bash-completion
+          - vim-nox
 
       - name: Install browsers
         action: apt pkg={{item}} state=present
