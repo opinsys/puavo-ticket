@@ -6,7 +6,7 @@ Cool new ticketing system with deep puavo integration.
 
 - [puavo-ticket](#user-content-puavo-ticket)
 	- [Roles](#user-content-roles)
-	- [Ticket hanlders](#user-content-ticket-hanlders)
+	- [Ticket handler](#user-content-ticket-handler)
 	- [Visibilities](#user-content-visibilities)
 - [Development Documentation](#user-content-development-documentation)
 	- [Project structure](#user-content-project-structure)
@@ -19,9 +19,9 @@ Cool new ticketing system with deep puavo integration.
 	- [Debug server Javascript](#user-content-debug-server-javascript)
 	- [Debug server tests](#user-content-debug-server-tests)
 	- [Debug SQL](#user-content-debug-sql)
+	- [Debug logging](#user-content-debug-logging)
 	- [puavo-ticket API documentation](#user-content-puavo-ticket-api-documentation)
 		- [External documentation](#user-content-external-documentation)
-
 ## Roles
 
 The system has currently only to types of users. Managers (Opinsys staff in our
@@ -228,6 +228,29 @@ If you like GUIs the server can be debugged with
 Set `SQL` environment variable to `1` or `true`
 
 Example: `SQL=1 make test-server` or `SQL=1 node server.js`
+
+## Debug logging
+
+We are using the [debug](https://github.com/visionmedia/debug) module. For each
+.js file create own debug instance with a name `puavo-ticket:<path>` where the
+`<path>` is the path for the .js file.
+
+Example:
+
+```javascript
+var debug = require("debug")("puavo-ticket:resources/tickets");
+```
+
+Using the `puavo-ticket:` prefix we can enable debug logging for puavo-ticket
+server with a `DEBUG` environment variable:
+
+    DEBUG=puavo-ticket:* node server.js
+
+or for the browser using a Javascript console:
+
+```javascript
+debug.enable("puavo-ticket:*");
+```
 
 ## puavo-ticket API documentation
 

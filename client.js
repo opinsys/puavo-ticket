@@ -13,7 +13,6 @@ var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
 var TicketList = require("./components/TicketList");
 var SideInfo = require("./components/SideInfo");
-var SimilarTickets = require("./components/SimilarTickets");
 var ErrorMessage = require("./components/ErrorMessage");
 var Lightbox = require("./components/Lightbox");
 
@@ -134,7 +133,7 @@ var Main = React.createClass({
                 <div className="main-wrap clearfix" >
                     <div className="main">
 
-                        <h1>Tukipalvelu</h1>
+            {/*<h1>Tukipalvelu</h1>*/}
 
                         {route.root.isMatch() &&
                             <TicketList
@@ -158,9 +157,6 @@ var Main = React.createClass({
                     </div>
                         <div className="sidebar">
                            <SideInfo>
-                                {this.state.ticket && this.state.ticket.isNew() &&
-                                  <SimilarTickets ticketModel={this.state.ticket} />
-                                }
                             </SideInfo>
                         </div>
                 </div>

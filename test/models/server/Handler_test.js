@@ -2,9 +2,11 @@
 
 var assert = require("assert");
 var Promise = require("bluebird");
+var _ = require("lodash");
 
 var helpers = require("../../helpers");
 var User = require("../../../models/server/User");
+var Ticket = require("../../../models/server/Ticket");
 
 describe("Ticket handlers", function() {
 
@@ -22,11 +24,15 @@ describe("Ticket handlers", function() {
                 self.manager = manager;
                 self.user = user;
                 self.otherUser = otherUser;
-                return helpers.insertTestTickets(manager);
+
+                return Ticket.forge({
+                    title: "Handler test ticket",
+                    description: "foobar",
+                    created_by: self.user.get("id")
+                }).save();
             })
-            .then(function(tickets) {
-                self.ticket = tickets.ticket;
-                self.otherTicket = tickets.otherTicket;
+            .then(function(ticket) {
+                self.ticket = ticket;
             });
     });
 
@@ -40,11 +46,7 @@ describe("Ticket handlers", function() {
     it("can be added from a ticket", function() {
         var self = this;
 
-        return User.byExternalId(helpers.user.teacher.id)
-            .fetch({ require: true })
-            .then(function(user) {
-                return self.ticket.addHandler(user, self.manager);
-            })
+            return self.ticket.addHandler(self.otherUser, self.manager)
             .then(function() {
                 return self.ticket.handlers().fetch({
                         withRelated: [ "handler" ]
@@ -52,13 +54,20 @@ describe("Ticket handlers", function() {
             })
             .then(function(handlers) {
                 handlers = handlers.toJSON();
-                assert.equal(1, handlers.length, "has one handler");
-                assert.equal(self.manager.id, handlers[0].created_by);
-                assert.equal(self.user.id, handlers[0].handler.id);
+
+                var handler = _.find(handlers, function(h) {
+                    return h.handler.id === self.otherUser.id;
+                });
+
+                assert(handler, "has the other user as handler");
+
                 assert.equal(
-                    "olli.opettaja",
-                    handlers[0].handler.external_data.username
+                    handler.created_by,
+                    self.manager.get("id"),
+                    "manager is the creator"
                 );
+
+
             });
     });
 
@@ -76,7 +85,7 @@ describe("Ticket handlers", function() {
     it("only managers can add handlers", function() {
         var self = this;
 
-        return User.ensureUserFromJWTToken(helpers.user.teacher)
+        return User.ensureUserFromJWTToken(helpers.user.teacher3)
             .then(function(normalUser) {
                 return self.ticket.addHandler(normalUser, normalUser)
                     .catch(function(err) {

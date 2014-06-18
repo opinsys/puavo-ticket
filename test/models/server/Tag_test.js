@@ -143,10 +143,6 @@ describe("Tag model", function() {
         var self = this;
         return Ticket.byId(this.ticketId).fetch()
             .then(function(ticket) {
-                return ticket.addHandler(self.user, self.manager)
-                    .then(function() { return ticket; });
-            })
-            .then(function(ticket) {
                 return ticket.setStatus("inprogress", self.user)
                     .then(function() { return ticket; });
             })

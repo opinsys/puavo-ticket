@@ -31,7 +31,6 @@ function fixMap(map) {
 
 function createSassMiddleware(opts) {
     return function(req, res, next) {
-        console.log("req.url", req.url, opts.url);
 
         if (opts.url === req.url) {
             return renderSass(opts)
