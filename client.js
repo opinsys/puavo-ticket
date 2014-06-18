@@ -167,8 +167,6 @@ var Main = React.createClass({
                 <div className="main-wrap clearfix" >
                     <div className="main">
 
-            {/*<h1>Tukipalvelu</h1>*/}
-
                         {route.root.isMatch() &&
                             <TicketList
                                 user={this.state.user}
