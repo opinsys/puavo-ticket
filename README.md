@@ -140,6 +140,23 @@ and start the server with
 
     node server.js
 
+### or configure full development machine with Ansible
+
+..or install puavo-ticket with puavo-web and puavo-rest (ansible)
+
+```bash
+sudo apt-get install -y python-software-properties git
+sudo apt-add-repository ppa:rquillo/ansible --yes
+sudo apt-get update
+sudo apt-get install -y ansible
+
+
+git clone https://github.com/opinsys/puavo-ticket.git
+cd puavo-ticket
+sudo ansible-playbook development-env.yml --extra-vars dev_user=$USER --extra-vars code_dest=$HOME
+```
+
+
 ## Development tools
 
 First install the local git pre-commit hooks
@@ -150,15 +167,6 @@ This will prevent you from committing broken or trivially bad Javascript. It
 uses [JSHint][] to automatically validate the staged Javascript files when you
 try to commit them.
 
-..or install puavo-ticket with puavo-web and puavo-rest (ansible)
-
-```bash
-sudo apt-get install git build-essential
-git clone https://github.com/opinsys/puavo-ticket.git
-cd puavo-ticket
-sudo make install-ansible
-sudo ansible-playbook development-env.yml --extra-vars dev_user=$USER --extra-vars code_dest=$HOME
-```
 
 and start puavo-web and puavo-rest
 
