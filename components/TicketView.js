@@ -159,9 +159,9 @@ var TicketView = React.createClass({
                     </div>
                 </div>
 
-                <div className="ticket-updates">
+                <div className="ticket-updates comments">
                     <div className="image">
-                    <img src={this.props.ticket.createdBy().getProfileImage()} />
+                    <img src="/images/support_person.png" />
                     </div>
                     <div className="message">
                         <b>Opinsys tuki </b>
