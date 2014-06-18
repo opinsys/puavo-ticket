@@ -25,8 +25,7 @@ var User = Base.extend({
      */
     isManager: function() {
         return !!this.get("isManager");
-    }
-
+    },
 
     getName: function() {
         if (this.get("external_data")) {
