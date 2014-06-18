@@ -102,6 +102,9 @@ var TicketView = React.createClass({
 
     handleOnFocus: function() {
         this.markAsRead();
+
+        this.props.ticket.fetch()
+        .catch(Backbone.trigger.bind(Backbone, "error"));
     },
 
     markAsRead: function() {
