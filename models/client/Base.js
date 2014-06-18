@@ -112,6 +112,11 @@ var Base = Backbone.Model.extend({
         proxyToBase.call(this);
     },
 
+    createdBy: function() {
+        var User = require("./User");
+        return new User(this.get("createdBy"));
+    },
+
 
     push: function(attr, value) {
         var array = this.get(attr);
