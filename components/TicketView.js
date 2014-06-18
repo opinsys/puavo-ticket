@@ -81,10 +81,11 @@ var TicketView = React.createClass({
 
     handleAddHandler: function() {
         var self = this;
-        self.props.renderInLightbox(function(close){
+        self.props.renderInModal("Käsittelijät", function(close){
             return (
                 <SelectUsers
                     currentHandlers={_.invoke(self.props.ticket.handlers(), "getHandlerUser")}
+                    onCancel={close}
                     onSelect={function(users) {
 
                         var handlers = users.map(function(user) {
@@ -195,18 +196,21 @@ var TicketView = React.createClass({
                         value={this.state.comment}
                         placeholder="Kirjoita kommentti..."
                     />
-                    <Button
-                        onClick={this.saveComment}
-                        disabled={this.props.ticket.isOperating() || !this.hasUnsavedComment()} >Lähetä</Button>
+
+                    <div className="ticket-update-buttons">
+                        <Button
+                            onClick={this.saveComment}
+                            disabled={this.props.ticket.isOperating() || !this.hasUnsavedComment()} >Lähetä</Button>
 
 
-                    {this.props.ticket.isHandler(this.props.user) &&
-                        <ToggleStatusButton ticket={this.props.ticket} user={this.props.user} />
-                    }
+                        {this.props.ticket.isHandler(this.props.user) &&
+                            <ToggleStatusButton ticket={this.props.ticket} user={this.props.user} />
+                        }
 
-                    {this.props.user.isManager() &&
-                        <Button onClick={this.handleAddHandler} >Lisää käsittelijä</Button>
-                    }
+                        {this.props.user.isManager() &&
+                            <Button onClick={this.handleAddHandler} >Lisää käsittelijä</Button>
+                        }
+                    </div>
 
 
             </div>

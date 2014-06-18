@@ -3,8 +3,8 @@
 
 @import "./bootstrap-overrides";
 @import "./components/ErrorMessage";
-@import "./components/Lightbox";
 @import "./components/UserInformation";
+@import "./components/SelectUsers";
 
 body, html {
     font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -121,7 +121,6 @@ table td {
 
 .topmenu {
     background-color: #FAB32E;
-    min-width: 330px;
 }
 
 
@@ -149,6 +148,10 @@ table td {
       padding: 10px;
     }
 
+}
+
+.ticket-update-buttons button {
+    margin-right: 2px;
 }
 
 .tags {

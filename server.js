@@ -75,6 +75,7 @@ app.use(require("./utils/middleware/createSassMiddleware")({
     file: __dirname + "/styles/index.scss"
 }));
 app.use("/styles", serveStatic(__dirname + "/styles"));
+app.use("/bootstrap", serveStatic(__dirname + "/node_modules/bootstrap"));
 app.use("/flat-ui", serveStatic(__dirname + "/node_modules/flat-ui"));
 app.use(serveStatic(__dirname + "/public"));
 app.use("/doc", serveStatic(__dirname + "/doc"));

@@ -14,10 +14,10 @@ var TicketView = require("./components/TicketView");
 var TicketList = require("./components/TicketList");
 var SideInfo = require("./components/SideInfo");
 var ErrorMessage = require("./components/ErrorMessage");
-var Lightbox = require("./components/Lightbox");
 var UserInformation = require("./components/UserInformation");
 
 var Button = require("react-bootstrap/Button");
+var Modal = require("react-bootstrap/Modal");
 
 var navigation = require("./components/navigation");
 var route = navigation.route;
@@ -55,7 +55,7 @@ var Main = React.createClass({
     },
 
     handleUnhandledError: function(error) {
-        this.renderInLightbox(function(){
+        this.renderInModal(function(){
             return <ErrorMessage error={error} />;
         });
     },
@@ -110,35 +110,39 @@ var Main = React.createClass({
     },
 
     /**
-     * @method renderInLightbox
-     * @param {Function} renderLightboxContent
+     * @method renderInModal
+     * @param {String} title
+     * @param {Function} renderModalContent
      *      Function returning a React component
-     * @param {Function} renderLightboxContent.close
-     *      Call this function to close the Lightbox
+     * @param {Function} renderModalContent.close
+     *      Call this function to close the modal window
      */
-    renderInLightbox: function(renderLightboxContent) {
-        this.setState({ renderLightboxContent: renderLightboxContent });
+    renderInModal: function(title, render) {
+        var self = this;
+        this.setState({ renderModalContent: function() {
+            return (
+                <Modal title={title} onRequestHide={self.closeModal}>
+                    {render(self.closeModal)}
+                </Modal>
+            );
+        } });
     },
 
-    closeLightbox: function() {
-        this.setState({ renderLightboxContent: null });
+    closeModal: function() {
+        this.setState({ renderModalContent: null });
     },
 
     render: function() {
         return (
             <div>
 
-                {this.state.renderLightboxContent &&
-                    <Lightbox close={this.closeLightbox}>
-                        {this.state.renderLightboxContent(this.closeLightbox)}
-                    </Lightbox>
-                }
+                {this.state.renderModalContent && this.state.renderModalContent()}
 
                 <div className="topmenu">
                     <Button onClick={NewTicketLink.go} className="top-button" >Uusi tukipyyntö</Button>
                     <Button onClick={RootLink.go} className="top-button" >Omat tukipyynnöt</Button>
-
                     <UserInformation user={this.state.user} />
+                    <div className="clearfix"></div>
                 </div>
 
                 <div className="main-wrap clearfix" >
@@ -158,7 +162,7 @@ var Main = React.createClass({
 
                         {route.ticket.existing.isMatch() &&
                             <TicketView
-                                renderInLightbox={this.renderInLightbox}
+                                renderInModal={this.renderInModal}
                                 ticket={this.state.ticket}
                                 user={this.state.user}
                             />
