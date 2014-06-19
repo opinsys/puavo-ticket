@@ -1,0 +1,17 @@
+.SelectUsers {
+    .search-input-wrap {
+        margin: 1em;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    .UserItem input {
+        margin-right: 1em;
+    }
+
+    .list-group-item.selected {
+        border-color: orange;
+    }
+}
