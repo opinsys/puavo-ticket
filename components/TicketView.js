@@ -6,6 +6,7 @@ var Promise = require("bluebird");
 var Backbone = require("backbone");
 
 var Button = require("react-bootstrap/Button");
+var Badge = require("react-bootstrap/Badge");
 
 var Loading = require("./Loading");
 var Handler = require("../models/client/Handler");
@@ -137,6 +138,16 @@ var TicketView = React.createClass({
         window.removeEventListener("focus", this.handleOnFocus);
     },
 
+    renderBadge: function() {
+        var status = this.props.ticket.getCurrentStatus();
+        switch (status) {
+            case "open":
+                return <Badge className={status}>Ratkaisematon</Badge>;
+            case "closed":
+                return <Badge className={status}>Ratkaistu</Badge>;
+        }
+    },
+
     render: function() {
         return (
             <div className="ticket-form">
@@ -158,6 +169,7 @@ var TicketView = React.createClass({
                             <b>
                                 {this.props.ticket.get("title") + " "} {/* ({this.props.ticket.getCurrentStatus()}) */}
                             </b>
+                            {this.renderBadge()}
                         </span><br />
                         <span>
                             {this.props.ticket.get("description")}
