@@ -10,6 +10,7 @@ body, html {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #FEFBF5;
 }
 
 
@@ -30,7 +31,6 @@ table td {
 .main-wrap {
     max-width: 54em;
     margin: 0 auto;
-    margin-top: 1em;
     min-width: 330px;
     position: relative;
 }
@@ -47,9 +47,12 @@ table td {
 }
 
 .main {
+    border-left: 1px solid #FEEBC8;
+    border-right: 1px solid #FEEBC8;
+    background-color: white;
     float: left;
-    margin: 1em 0 1em 1em ;
-    padding: 1em;
+    margin: 0 0 1em 1em;
+    padding: 2em 1em 1em 1em;
     word-wrap:break-word;
     ul li {
         list-style-type: none;
@@ -86,7 +89,7 @@ table td {
 .sidebar {
     margin: 1em 1em 1em 0;
     padding: 1em;
-    float: right;
+    float: left;
     width: 20%;
     word-wrap:break-word;
     ul li {
@@ -248,23 +251,24 @@ table td {
 
     .main-wrap {
         max-width: 600px;
-        margin: 1em auto;
+        margin: 0px auto;
     }
 
     .main {
-        margin: 1em;
         padding: 1em;
         float: none;
         width: 85%;
-        margin: 1em auto;
+        margin: 0px auto;
     }
 
     .sidebar {
+        border-left: 1px solid #FEF3DE;
+        border-right: 1px solid #FEF3DE;
         float: none;
-        margin: 1em;
+
         padding: 1em;
         width: 85%;
-        margin: 10px auto;
+        margin: 0px auto;
     }
 }
 
