@@ -13,10 +13,6 @@ var ErrorMessage = React.createClass({
     render: function() {
         return (
             <div className="ErrorMessage">
-                <h1>
-                    Uups. Jotain odottamatonta tapahtui
-                </h1>
-
                 <p>
                     Lataa sivu uusiksi ja yritä uudelleen. Jos ongelma ei poistu
                     ota yhteyttä puhelimitse tukeen.

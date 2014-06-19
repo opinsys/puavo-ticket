@@ -55,7 +55,7 @@ var Main = React.createClass({
     },
 
     handleUnhandledError: function(error) {
-        this.renderInModal(function(){
+        this.renderInModal("Uups. Jotain odottamatonta tapahtui", function(){
             return <ErrorMessage error={error} />;
         });
     },
