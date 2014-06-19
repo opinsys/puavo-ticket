@@ -81,7 +81,7 @@ var TicketView = React.createClass({
 
     handleAddHandler: function() {
         var self = this;
-        self.props.renderInModal("Käsittelijät", function(close){
+        self.props.renderInModal("Lisää käsittelijöitä", function(close){
             return (
                 <SelectUsers
                     currentHandlers={_.invoke(self.props.ticket.handlers(), "getHandlerUser")}

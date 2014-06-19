@@ -45,7 +45,7 @@ var UserItem = React.createClass({
                     ref="checkbox" />
                 <span className="first-name" >{this.props.user.get("external_data").first_name + " "}</span>
                 <span className="last-name" >{this.props.user.get("external_data").last_name + " "}</span>
-                <span className="username" >({this.props.user.get("external_data").username})</span>
+                <span className="badge" >{this.props.user.getUsername()}</span>
             </label>
         );
     }
@@ -169,10 +169,10 @@ var SelectUsers = React.createClass({
                 </div>
 
                 <div className="selectuser">
-                    <ul>
+                    <ul className="list-group" >
                         {self.state.users.map(function(user) {
                             return (
-                                <li key={user.get("external_id")} >
+                                <li key={user.get("external_id")} className="list-group-item" >
                                     <UserItem
                                         user={user}
                                         disabled={self.isSaved(user)}
@@ -190,10 +190,10 @@ var SelectUsers = React.createClass({
                         </h2>
                     }
 
-                    <ul>
+                    <ul className="list-group" >
                         {self.state.selectedUsers.map(function(user) {
                             return (
-                                <li key={user.get("external_id")} >
+                                <li key={user.get("external_id")} className="list-group-item selected" >
                                     <UserItem
                                         user={user}
                                         checked={self.isSelected(user)}
