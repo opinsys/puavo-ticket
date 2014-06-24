@@ -49,7 +49,9 @@ var TicketForm = React.createClass({
     render: function() {
         return (
             <div className="ticket-form form-group">
-
+                <div className="header">
+                    <b>Uusi tukipyyntö</b><br/>
+                </div>
                 <input
                     className="form-control"
                     disabled={this.props.ticket.isOperating()}

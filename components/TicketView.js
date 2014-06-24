@@ -156,6 +156,16 @@ var TicketView = React.createClass({
 
 
                 <div className="ticket-title ticket-updates">
+                    <div className="header">
+                        <span>
+                            <b>
+                                {this.props.ticket.get("title") + " "} {/* ({this.props.ticket.getCurrentStatus()}) */}
+                            </b>
+
+                            {this.renderBadge()}
+
+                        </span><br />
+                    </div>    
                     <div className="image">
                     <img src={this.props.ticket.createdBy().getProfileImage()} />
                     </div>
@@ -164,12 +174,6 @@ var TicketView = React.createClass({
                             <b>
                                 {this.props.ticket.createdBy().getName() + " "}
                             </b>
-                        </span><br />
-                        <span>
-                            <b>
-                                {this.props.ticket.get("title") + " "} {/* ({this.props.ticket.getCurrentStatus()}) */}
-                            </b>
-                            {this.renderBadge()}
                         </span><br />
                         <span>
                             {this.props.ticket.get("description")}

@@ -17,7 +17,7 @@ var TicketForm = React.createClass({
         return (
             <div>
             <div className="contact">
-                <p>Kiireellisissä tapauksissa soita tukinumeroomme 014-4591625</p>
+                <p>Kiireellisissä tapauksissa soita tukinumeroomme <b>014-4591625</b></p>
             </div>
                         
             <div className="checklist">

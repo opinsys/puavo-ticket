@@ -100,20 +100,20 @@ var TicketList = React.createClass({
                 {this.state.ticketCollection.fetching && <p>Ladataan...</p>}
 
                 {handledByCurrentUser.length > 0 && <div>
-                    <h2>Minulle osoitetut avoimet tukipyynnöt</h2>
+                    <div className="header"><b>Minulle osoitetut avoimet tukipyynnöt</b><br/></div>
                     <List user={this.props.user}
                         onSelect={this.props.onSelect}
                         tickets={handledByCurrentUser} />
                 </div>}
 
-                <h2>Käsittelyssä olevat tukipyynnöt</h2>
+                <div className="header"><b>Käsittelyssä olevat tukipyynnöt</b><br/></div>
                 <List onSelect={this.props.onSelect}
                     user={this.props.user}
                     tickets={this.state.ticketCollection
                     .filter(isOpen)
                     .filter(notIn.bind(null, handledByCurrentUser))} />
 
-                <h2>Ratkaistut tukipyynnöt</h2>
+                <div className="header"><b>Ratkaistut tukipyynnöt</b><br/></div>
                 <List onSelect={this.props.onSelect}
                     user={this.props.user}
                     tickets={this.state.ticketCollection.filter(isClosed)} />
