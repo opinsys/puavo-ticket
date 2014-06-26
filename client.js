@@ -135,14 +135,12 @@ var Main = React.createClass({
     render: function() {
         return (
             <div>
-
+                <h1>Opinsys tukipalvelu</h1>
                 {this.state.renderModalContent && this.state.renderModalContent()}
-
                 <div className="topmenu">
+                    <UserInformation user={this.state.user} />
                     <Button onClick={NewTicketLink.go} className="top-button" >Uusi tukipyyntö</Button>
                     <Button onClick={RootLink.go} className="top-button" >Omat tukipyynnöt</Button>
-                    <UserInformation user={this.state.user} />
-                    <div className="clearfix"></div>
                 </div>
 
                 <div className="main-wrap clearfix" >

@@ -21,7 +21,7 @@ var TicketForm = React.createClass({
             </div>
                         
             <div className="checklist">
-                <h2>Muistathan ilmoittaa nämä asiat tukipyyntöä tehdessä</h2>
+                <p><b>Ilmoita nämä asiat tukipyynnössä</b></p>
                 <ul>
                     <li>tarkka kuvaus tuen tarpeesta</li>
                     <li>laite</li>

@@ -156,16 +156,25 @@ var TicketView = React.createClass({
 
 
                 <div className="ticket-title ticket-updates">
-                    <div className="header">
+                    <div className="update-buttons">
+                        {this.props.ticket.isHandler(this.props.user) &&
+                            <ToggleStatusButton ticket={this.props.ticket} user={this.props.user} />
+                        }
+
+                        {this.props.user.isManager() &&
+                            <Button onClick={this.handleAddHandler} ><img src="/images/add_user.png"/><br/>Lisää käsittelijä</Button>
+                        }
+                    <br />
+                    </div>
+                    <div className="header ticket-header">
                         <span>
                             <b>
                                 {this.props.ticket.get("title") + " "} {/* ({this.props.ticket.getCurrentStatus()}) */}
                             </b>
 
                             {this.renderBadge()}
-
-                        </span><br />
-                    </div>    
+                        </span>
+                     </div>   
                     <div className="image">
                     <img src={this.props.ticket.createdBy().getProfileImage()} />
                     </div>
@@ -217,18 +226,7 @@ var TicketView = React.createClass({
                         <Button
                             onClick={this.saveComment}
                             disabled={this.props.ticket.isOperating() || !this.hasUnsavedComment()} >Lähetä</Button>
-
-
-                        {this.props.ticket.isHandler(this.props.user) &&
-                            <ToggleStatusButton ticket={this.props.ticket} user={this.props.user} />
-                        }
-
-                        {this.props.user.isManager() &&
-                            <Button onClick={this.handleAddHandler} >Lisää käsittelijä</Button>
-                        }
                     </div>
-
-
             </div>
         );
     },
@@ -334,7 +332,7 @@ var ToggleStatusButton = React.createClass({
         if (status === "open") return (
             <Button
                 disabled={ticket.isOperating()}
-                onClick={this.handleCloseTicket} >
+                onClick={this.handleCloseTicket} ><img src="/images/solve_ticket.png"/><br/>
                 Aseta ratkaistuksi
             </Button>
         );
@@ -342,7 +340,7 @@ var ToggleStatusButton = React.createClass({
         return (
             <Button
                 disabled={ticket.isOperating()}
-                onClick={this.handleOpenTicket} >
+                onClick={this.handleOpenTicket} ><img src="/images/reopen_ticket.png"/><br/>
                 Avaa uudelleen
             </Button>
         );
