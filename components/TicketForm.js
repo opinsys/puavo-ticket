@@ -2,7 +2,7 @@
 "use strict";
 var React = require("react/addons");
 var Button = require("react-bootstrap/Button");
-
+var SideInfo = require("./SideInfo");
 
 /**
  * Edit form for a ticket
@@ -48,37 +48,42 @@ var TicketForm = React.createClass({
 
     render: function() {
         return (
-            <div className="ticket-form form-group">
-                <div className="header">
-                    <b>Uusi tukipyyntö</b><br/>
+            <div>
+                <div className="ticket-form form-group">
+                    <div className="header">
+                        <b>Uusi tukipyyntö</b><br/>
+                    </div>
+                    <input
+                        className="form-control"
+                        disabled={this.props.ticket.isOperating()}
+                        autoFocus
+                        ref="title"
+                        type="text"
+                        onChange={this.handleChange}
+                        value={this.props.ticket.get("title")}
+                        placeholder="Tukipyyntöä kuvaava otsikko" />
+
+
+                    <textarea
+                        className="form-control"
+                        disabled={this.props.ticket.isOperating()}
+                        ref="description"
+                        placeholder="Tarkka kuvaus tuen tarpeesta."
+                        value={this.props.ticket.get("description")}
+                        onChange={this.handleChange}
+                    />
+
+                    <div className="button-wrap">
+                        <Button
+                            className="button save-button"
+                            disabled={this.props.ticket.isOperating() || !this.isFormOk()}
+                            onClick={this.handleSave} >Lähetä</Button>
+                    </div>
                 </div>
-                <input
-                    className="form-control"
-                    disabled={this.props.ticket.isOperating()}
-                    autoFocus
-                    ref="title"
-                    type="text"
-                    onChange={this.handleChange}
-                    value={this.props.ticket.get("title")}
-                    placeholder="Tukipyyntöä kuvaava otsikko" />
-
-
-                <textarea
-                    className="form-control"
-                    disabled={this.props.ticket.isOperating()}
-                    ref="description"
-                    placeholder="Tarkka kuvaus tuen tarpeesta."
-                    value={this.props.ticket.get("description")}
-                    onChange={this.handleChange}
-                />
-
-                <div className="button-wrap">
-                    <Button
-                        className="button save-button"
-                        disabled={this.props.ticket.isOperating() || !this.isFormOk()}
-                        onClick={this.handleSave} >Lähetä</Button>
+                <div className="sidebar">
+                           <SideInfo>
+                            </SideInfo>
                 </div>
-
             </div>
         );
     },

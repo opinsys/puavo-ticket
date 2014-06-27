@@ -12,7 +12,6 @@ var Ticket = require("./models/client/Ticket");
 var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
 var TicketList = require("./components/TicketList");
-var SideInfo = require("./components/SideInfo");
 var ErrorMessage = require("./components/ErrorMessage");
 var UserInformation = require("./components/UserInformation");
 
@@ -167,10 +166,7 @@ var Main = React.createClass({
                         }
 
                     </div>
-                    <div className="sidebar">
-                       <SideInfo>
-                        </SideInfo>
-                    </div>
+
                 </div>
             </div>
         );

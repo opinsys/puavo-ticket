@@ -50,20 +50,20 @@ var List = React.createClass({
         var self = this;
 
         return (
-        <div className="ticketlist">
-            <ul ref="list">
-                {this.props.tickets.map(function(ticket) {
-                    return (
-                            <li key={ticket.get("id")} className={ self.getTitleClass(ticket, self.props.user.get("id")) }><span>
-                            <TicketViewLink
-                                id={ticket.get("id")}
-                                onClick={self.props.onSelect.bind(null, ticket)} >
-                            {ticket.get("title")}
-                            </TicketViewLink>
-                        </span></li>
-                    );
-                })}
-            </ul>
+            <div className="ticketlist">
+                <ul ref="list">
+                    {this.props.tickets.map(function(ticket) {
+                        return (
+                                <li key={ticket.get("id")} className={ self.getTitleClass(ticket, self.props.user.get("id")) }><span>
+                                <TicketViewLink
+                                    id={ticket.get("id")}
+                                    onClick={self.props.onSelect.bind(null, ticket)} >
+                                {"#" + ticket.get("id") + " " + ticket.get("title")}
+                                </TicketViewLink>
+                            </span></li>
+                        );
+                    })}
+                </ul>
             </div>
         );
     }
@@ -95,28 +95,33 @@ var TicketList = React.createClass({
           .filter(isHandledBy.bind(null, this.props.user));
 
         return (
-            <div>
+            <div className="ticket-wrap">
                 {/* <p>ticket count: {this.state.ticketCollection.size()}</p> */}
-                {this.state.ticketCollection.fetching && <p>Ladataan...</p>}
-
-                {handledByCurrentUser.length > 0 && <div>
+                
+                <div className="ticket-division">
+                    {this.state.ticketCollection.fetching && <p>Ladataan...</p>}
+                    {handledByCurrentUser.length > 0 && <div>
                     <div className="header"><b>Minulle osoitetut avoimet tukipyynnöt</b><br/></div>
-                    <List user={this.props.user}
-                        onSelect={this.props.onSelect}
-                        tickets={handledByCurrentUser} />
-                </div>}
+                        <List user={this.props.user}
+                            onSelect={this.props.onSelect}
+                            tickets={handledByCurrentUser} />
+                    </div>}
+                </div>
+                <div className="ticket-division">
 
-                <div className="header"><b>Käsittelyssä olevat tukipyynnöt</b><br/></div>
-                <List onSelect={this.props.onSelect}
-                    user={this.props.user}
-                    tickets={this.state.ticketCollection
-                    .filter(isOpen)
-                    .filter(notIn.bind(null, handledByCurrentUser))} />
-
-                <div className="header"><b>Ratkaistut tukipyynnöt</b><br/></div>
-                <List onSelect={this.props.onSelect}
-                    user={this.props.user}
-                    tickets={this.state.ticketCollection.filter(isClosed)} />
+                    <div className="header"><b>Käsittelyssä olevat tukipyynnöt</b><br/></div>
+                    <List onSelect={this.props.onSelect}
+                        user={this.props.user}
+                        tickets={this.state.ticketCollection
+                        .filter(isOpen)
+                        .filter(notIn.bind(null, handledByCurrentUser))} />
+                </div>
+                <div className="ticket-division">
+                    <div className="header"><b>Ratkaistut tukipyynnöt</b><br/></div>
+                    <List onSelect={this.props.onSelect}
+                        user={this.props.user}
+                        tickets={this.state.ticketCollection.filter(isClosed)} />
+                </div>
             </div>
         );
     }

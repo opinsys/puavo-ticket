@@ -12,6 +12,7 @@ var Loading = require("./Loading");
 var Handler = require("../models/client/Handler");
 var Base = require("../models/client/Base");
 var SelectUsers = require("./SelectUsers");
+var SideInfo = require("./SideInfo");
 
 
 
@@ -76,9 +77,16 @@ var TicketView = React.createClass({
 
     isOperating: function() {
         return this.props.ticket.isOperating();
+    },    
+    
+    
+    showTags: function() {
+        return(document.getElementById('tag1').style.display = 'inline');
+    }, 
+
+    hideTags: function() {
+        return(document.getElementById('tag1').style.display = 'none');
     },
-
-
 
     handleAddHandler: function() {
         var self = this;
@@ -150,83 +158,94 @@ var TicketView = React.createClass({
 
     render: function() {
         return (
-            <div className="ticket-form">
+            <div>
+                <div className="ticket-view">
 
-                {this.isOperating() && <Loading />}
+                    {this.isOperating() && <Loading />}
 
-
-                <div className="ticket-title ticket-updates">
-                    <div className="update-buttons">
-                        {this.props.ticket.isHandler(this.props.user) &&
-                            <ToggleStatusButton ticket={this.props.ticket} user={this.props.user} />
-                        }
-
-                        {this.props.user.isManager() &&
-                            <Button onClick={this.handleAddHandler} ><img src="/images/add_user.png"/><br/>Lisää käsittelijä</Button>
-                        }
-                    <br />
+                    <div className="ticket-title ticket-updates">
+                        <div className="update-buttons-wrap">
+                            <div className="update-buttons">
+                                {this.props.user.isManager() &&
+                                    <Button onClick={this.handleAddHandler} ><img src="/images/add_user.png"/><br/>Lisää käsittelijä</Button>
+                                }
+                                {this.props.user.isManager() &&
+                                    <Button onClick={this.showTags}><img src="/images/knotes.png"/><br/>Näytä tapahtumat</Button> 
+                                }
+                                {this.props.ticket.isHandler(this.props.user) &&
+                                    <ToggleStatusButton ticket={this.props.ticket} user={this.props.user} />
+                                }
+                            </div>
+                            <div className="badges">
+                                {this.renderBadge()}
+                            </div>
+                            <br />
+                        </div>
+                        <div className="header ticket-header">
+                            <span>
+                                <b>
+                                    {"#" + this.props.ticket.get("id") + " " + this.props.ticket.get("title") + " "} {/* ({this.props.ticket.getCurrentStatus()}) */}
+                                </b>
+                            </span>
+                        </div>   
+                        <div className="image">
+                            <img src={this.props.ticket.createdBy().getProfileImage()} />
+                        </div>
+                        <div className="message">
+                             <span>
+                                <b>
+                                    {this.props.ticket.createdBy().getName() + " "}
+                                </b>
+                            </span><br />
+                            <span>
+                                {this.props.ticket.get("description")}
+                            </span>
+                        </div>
                     </div>
-                    <div className="header ticket-header">
-                        <span>
-                            <b>
-                                {this.props.ticket.get("title") + " "} {/* ({this.props.ticket.getCurrentStatus()}) */}
-                            </b>
 
-                            {this.renderBadge()}
-                        </span>
-                     </div>   
-                    <div className="image">
-                    <img src={this.props.ticket.createdBy().getProfileImage()} />
+                    <div className="ticket-updates comments">
+                        <div className="image">
+                            <img src="/images/support_person.png" />
+                        </div>
+                        <div className="message">
+                            <b>Opinsys tuki </b>
+                            <span>Olemme vastaanottaneet tukipyyntösi. Voit halutessasi täydentää sitä.</span>
+                        </div>
                     </div>
-                    <div className="message">
-                         <span>
-                            <b>
-                                {this.props.ticket.createdBy().getName() + " "}
-                            </b>
-                        </span><br />
-                        <span>
-                            {this.props.ticket.get("description")}
-                        </span>
-                    </div>
-                </div>
+                    <div id="tag1">
+                    {this.props.ticket.updates().map(function(update) {
+                        var view = VIEW_TYPES[update.get("type")];
+                        return (
+                            
+                            <span key={update.get("unique_id")}>
+                                {view ?  view({ update: update })
+                                      : "Unknown update type: " + update.get("type")
+                                }
+                            </span>
+                            
+                        );
 
-                <div className="ticket-updates comments">
-                    <div className="image">
-                    <img src="/images/support_person.png" />
-                    </div>
-                    <div className="message">
-                        <b>Opinsys tuki </b>
-                        <span>Olemme vastaanottaneet tukipyyntösi. Voit täydentää sitä halutessasi.</span>
-                    </div>
-                </div>
-
-
-                        {this.props.ticket.updates().map(function(update) {
-                            var view = VIEW_TYPES[update.get("type")];
-                            return (
-                                <span key={update.get("unique_id")}>
-                                    {view ?  view({ update: update })
-                                          : "Unknown update type: " + update.get("type")
-                                    }
-                                </span>
-                            );
-
-                        })}
-                    <input
-                        className="form-control"
-                        ref="comment"
-                        type="text"
-                        onChange={this.handleCommentChange}
-                        onKeyUp={this.handleCommentKeyUp}
-                        value={this.state.comment}
-                        placeholder="Kirjoita kommentti..."
-                    />
-
+                    })}</div>
+                        <textarea
+                            className="form-control"
+                            ref="comment"
+                            type="text"
+                            onChange={this.handleCommentChange}
+                            onKeyUp={this.handleCommentKeyUp}
+                            value={this.state.comment}
+                            placeholder="Kirjoita kommentti..."
+                        />
                     <div className="ticket-update-buttons">
                         <Button
                             onClick={this.saveComment}
-                            disabled={this.props.ticket.isOperating() || !this.hasUnsavedComment()} >Lähetä</Button>
+                            disabled={this.props.ticket.isOperating() || !this.hasUnsavedComment()} >Lähetä
+                        </Button>
                     </div>
+                </div>
+                <div className="sidebar">
+                    <SideInfo>
+                    </SideInfo>
+                </div>
             </div>
         );
     },
@@ -348,4 +367,22 @@ var ToggleStatusButton = React.createClass({
     }
 });
 
+/**var ToggleTagsButton = React.createClass({
+*
+*    render: function() {
+*       
+*       if (!document.getElementById('tag1').style.display) return (
+*           <Button disabled >loading...</Button>
+*       );
+*
+*       if (document.getElementById('tag1').style.display === "none") return (
+*        <Button onClick={this.showTags}><img src="/images/knotes.png"/><br/>Näytä tapahtumat</Button>
+*       );
+*
+*       return (
+*           <Button onClick={this.hideTags}><img src="/images/knotes.png"/><br/>Piilota tapahtumat</Button>
+*       );
+*   }
+*});
+**/
 module.exports = TicketView;
