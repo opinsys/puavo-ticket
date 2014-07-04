@@ -8,6 +8,7 @@
 
 body, html {
     font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 100%;
     margin: 0;
     padding: 0;
     background-color: #efeee7;
@@ -52,20 +53,52 @@ table td {
 }
 
 .main {
-    border: 1px solid #ead9bb;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    background-color: white;
+    background-color: #f0eee1;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(240, 238, 225)), to(rgb(230, 228, 215)));
+    background-image: -webkit-linear-gradient(top, rgb(240, 238, 225), rgb(230, 228, 215));
+    background-image: -moz-linear-gradient(top, rgb(240, 238, 225), rgb(230, 228, 215));
+    background-image: -ms-linear-gradient(top, rgb(240, 238, 225), rgb(230, 228, 215));
+    background-image: -o-linear-gradient(top, rgb(240, 238, 225), rgb(230, 228, 215));
+    background-image: linear-gradient(top, rgb(240, 238, 225), rgb(230, 228, 215));
+    background-clip:padding-box;
+    border: 5px solid #ed7113;
+    border: 5px solid rgba(237,113,19,0.5);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow:
+    2px -2px 2px rgba(0, 0, 0, 0.5), -2px 2px 2px rgba(0,0,0,0.5), inset 0 5px 100px rgba(65, 120, 107, 0.2);
+    -moz-box-shadow:
+    2px -2px 2px rgba(0, 0, 0, 0.5), -2px 2px 2px rgba(0,0,0,0.5), inset 0 5px 100px rgba(65, 120, 107, 0.2);
+    box-shadow:
+    2px -2px 2px rgba(0, 0, 0, 0.5), -2px 2px 2px rgba(0,0,0,0.5), inset 0 5px 100px rgba(65, 120, 107, 0.2);
     float: left;
-    margin: 1em 1em 1em 1em;
-    padding: 1em 1em 1em 1em;
-    word-wrap:break-word;
+    margin: 1em;
+    padding: 2%;
+    position: relative;
+    text-align: center;
+    word-wrap: break-word;
     width: 97%;
+    z-index: 0;
+
+    &:before{
+      border: 1px dashed #ccc;
+      bottom: 5px;
+      -moz-box-shadow: 0 0 0 1px #fff;
+      -webkit-box-shadow: 0 0 0 1px #fff;
+      box-shadow: 0 0 0 1px #fff;
+      content: '';
+      left: 5px;
+      position: absolute;
+      z-index: -1;
+      top: 5px;
+      right: 5px;
+    }
+
     ul{
         list-style-type: none;
     }
     ul li {
-        border-top: 1px solid lightgrey;
         padding: 5px 0 15px 0;
     }
     ul li:first-child{
@@ -96,7 +129,6 @@ table td {
 }
 .ticket-division{
     .header{
-        border-left: 1px solid lightgrey; 
         padding-left: 10px;
     }
     ul{
@@ -170,13 +202,12 @@ table td {
     background-color: #e3decd;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    margin: 0 30px 0 30px;
+    margin: 0 1rem;
+    padding: 0.5rem;
     img {
         float:top;
         height: 50px;
     }
-    min-height: 70px;
-    max-height: 210px;
 }
 
 .button, .top-button {
@@ -354,9 +385,7 @@ table td {
         min-height: 540px;
     }
     .main-wrap {
-        max-width: 600px;
         margin: 0 auto;
-   //     margin: -3px 40px 0 10px;
     }
 
     .ticket-form, .ticket-view{

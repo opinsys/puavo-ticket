@@ -138,7 +138,7 @@ var Main = React.createClass({
                 {this.state.renderModalContent && this.state.renderModalContent()}
                 <div className="topmenu">
                     <UserInformation user={this.state.user} />
-                    <Button onClick={NewTicketLink.go} className="top-button" >Uusi tukipyyntö</Button>
+                    <Button onClick={NewTicketLink.go} className="pure-button pure-button-primary top-button" >Uusi tukipyyntö</Button>
                     <Button onClick={RootLink.go} className="top-button" >Omat tukipyynnöt</Button>
                 </div>
 
