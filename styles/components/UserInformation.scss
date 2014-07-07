@@ -1,13 +1,9 @@
 .UserInformation {
-    float: right;
-    font-size: 8pt;
-    margin: 1em;
-
+   text-align: right;
     img {
-        height: 60px;
-        display: block;
+        height: 40px;
         margin-right: 1em;
-        float: left;
+        width: 40px;
     }
 
     ul {
@@ -16,5 +12,12 @@
         padding: 0;
         margin: 0;
     }
+}
 
+@media screen and (max-width:680px){
+    .UserInformation{
+	.btn{
+	    padding: 1rem;
+	}
+     }
 }

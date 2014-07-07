@@ -1,6 +1,18 @@
 
+
 .btn-default {
     cursor: pointer;
+    position: relative;
+    &:before{
+	border: 1px solid rgba(110,110,110,0.2);
+	border-radius: 4px;
+	bottom: 0;
+	content: '';
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+    }
 }
 
 h2 {
@@ -23,5 +35,10 @@ h2 {
 
 .form-control:focus {
     border-color: $active-input-color;
+}
+@media screen and (max-width: 680px) {
+     .pull-right{
+	float: none !important;
+    }
 }
 

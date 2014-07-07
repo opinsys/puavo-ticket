@@ -34,7 +34,7 @@ table td {
     text-overflow: none;
 }
 
-.main-wrap, .ticket-wrap {
+.wrapper {
     margin: 0 auto;
     min-width: 330px;
     position: relative;
@@ -51,7 +51,15 @@ table td {
         clear: both;
     }
 }
+.box-shadow{
+    -webkit-box-shadow: 2px -2px 2px rgba(0, 0, 0, 0.5), -2px 2px 2px rgba(0,0,0,0.5), inset 0 5px 100px rgba(65, 120, 107, 0.2);
+    -moz-box-shadow: 2px -2px 2px rgba(0, 0, 0, 0.5), -2px 2px 2px rgba(0,0,0,0.5), inset 0 5px 100px rgba(65, 120, 107, 0.2);
+    box-shadow: 2px -2px 2px rgba(0, 0, 0, 0.5), -2px 2px 2px rgba(0,0,0,0.5), inset 0 5px 100px rgba(65, 120, 107, 0.2);
 
+}
+.site-header{
+    display: inline-block;
+}
 .main {
     background-color: #f0eee1;
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(240, 238, 225)), to(rgb(230, 228, 215)));
@@ -66,19 +74,12 @@ table td {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
-    -webkit-box-shadow:
-    2px -2px 2px rgba(0, 0, 0, 0.5), -2px 2px 2px rgba(0,0,0,0.5), inset 0 5px 100px rgba(65, 120, 107, 0.2);
-    -moz-box-shadow:
-    2px -2px 2px rgba(0, 0, 0, 0.5), -2px 2px 2px rgba(0,0,0,0.5), inset 0 5px 100px rgba(65, 120, 107, 0.2);
-    box-shadow:
-    2px -2px 2px rgba(0, 0, 0, 0.5), -2px 2px 2px rgba(0,0,0,0.5), inset 0 5px 100px rgba(65, 120, 107, 0.2);
-    float: left;
-    margin: 1em;
-    padding: 2%;
+    margin: 1rem 0;
+    padding: 2rem;
     position: relative;
     text-align: center;
     word-wrap: break-word;
-    width: 97%;
+    width: 100%;
     z-index: 0;
 
     &:before{
@@ -115,9 +116,6 @@ table td {
 
 .header {
     margin: -10px 0 10px 0;
-    b{
-        font-size: 1.4em;
-    }
 }
 
 .ticketlist{
@@ -130,32 +128,29 @@ table td {
 .ticket-division{
     .header{
         padding-left: 10px;
+    	h3{
+            font-size: 120%;
+    	}
     }
     ul{
         margin-left: -20px;
     }
-    width: 31%;
-    float: left;
-    margin: 1%;
 }
 
 
 .sidebar {
     border-left: 1px solid lightgrey;
-    padding-left: 20px;
-    margin: 1em 0 1em 1em;
-    float: right;
-    width: 22%;
-    word-wrap:break-word;
+    text-align: left;
+    word-break: break-word;
     ul{
-        list-style-image: url('../public/images/bullet.png')
+	list-style-type: disc;
     }
     ul li {
         margin-left: -20px;
         margin-right: -15px;
     }
     p {
-        margin-bottom: 1em;
+        margin-bottom: 0;
         padding: 5px;
     }
     h2 {
@@ -169,13 +164,15 @@ table td {
 
 .contact, .checklist{
     background-color: white;
-    //border: 1px solid #ead9bb;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    word-wrap: normal;
-    padding: 5px 5px 0 5px;
+    margin: 0 0 0.5rem;
+    padding: 0.5rem;
     ul li{
     padding: 5px 0 5px 0;
+    }
+    b{
+	display:block;
     }
 }
 
@@ -202,23 +199,18 @@ table td {
     background-color: #e3decd;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    margin: 0 1rem;
-    padding: 0.5rem;
-    img {
-        float:top;
-        height: 50px;
-    }
+    margin: 0;
+    padding: 1rem;
 }
 
-.button, .top-button {
-    cursor: pointer;
-    font-size: 13pt;
-    margin-right: 12pt;
-}
 
 .top-button {
     font-weight: bold;
-    margin: 0.8em 0 0.8em 0.8em ;
+    margin: 0 0 0 0.8rem ;
+    &:first-of-type{
+        margin: 0;
+     }
+
 }
 
 .ticket-view{
@@ -233,9 +225,6 @@ table td {
     }
 }
 .ticket-form, .ticket-view {
-    margin-left:8%;
-    width: 60%;
-    float: left;
     input[type=text] {
         margin-top: 25px;
     }
@@ -267,8 +256,9 @@ table td {
 
 .update-buttons-wrap{
     float: right;
-    width: 100%;
     border-bottom: 1px solid lightgrey;
+    padding: 0 0 0.5rem;
+    width: 100%;
 }
 
 .update-buttons{
@@ -278,7 +268,8 @@ table td {
 .update-buttons-wrap button{
     background-color: transparent;
     color:black;
-    font-size: 10px;
+    font-size: 80%;
+    margin: 0 0 0 0.5rem;
 }
 
 .tags {
@@ -389,13 +380,8 @@ table td {
     }
 
     .ticket-form, .ticket-view{
-        float: none;
-        width: 90%;
-        margin: 0px auto;
-        padding-bottom: 20px;
-        border-bottom: 1px solid lightgrey;
-        ul li{
-        }
+        margin: 0;
+        padding-bottom: 1rem;
     }
     
     .ticket-updates{
@@ -403,15 +389,10 @@ table td {
     }
 
     .sidebar {
-        border: none;
-        float: none;
-        width: 85%;
-        margin: 1em auto;
-        margin-top: 10px;
-        margin-left: 25px;
-    }
+	border:none;
+	margin: 1rem 0 0;}
     .main{
-        width: 94%;
+        width: 100%;
     }
 }
 
@@ -424,14 +405,22 @@ table td {
     }
 }
 
-@media screen and (max-width: 650px) {
 
+@media screen and (max-width: 680px) {
+    .wrapper{
+	padding: 0;
+    }
+    .topmenu, .main{
+	margin: 0;
+    }
     .top-button {
         padding: 2px;
-        margin-top: 0px;
-        margin: 3px auto;
-        margin-left: 2%;
-        width: 96%;
+        margin: 0.8rem 0 0 0;
+	padding: 0.5rem;
+        width: 100%;
+	&:first-of-type{
+	    margin: 0.8rem 0 0 0;
+	}
     }
 }
 
