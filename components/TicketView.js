@@ -158,8 +158,8 @@ var TicketView = React.createClass({
 
     render: function() {
         return (
-            <div>
-                <div className="ticket-view">
+            <div className="row">
+                <div className="ticket-view col-md-8">
 
                     {this.isOperating() && <Loading />}
 
@@ -242,7 +242,7 @@ var TicketView = React.createClass({
                         </Button>
                     </div>
                 </div>
-                <div className="sidebar">
+                <div className="sidebar col-md-4">
                     <SideInfo>
                     </SideInfo>
                 </div>

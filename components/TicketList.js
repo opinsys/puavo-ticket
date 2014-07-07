@@ -48,7 +48,6 @@ var List = React.createClass({
 
     render: function() {
         var self = this;
-
         return (
             <div className="ticketlist">
                 <ul ref="list">
@@ -95,29 +94,38 @@ var TicketList = React.createClass({
           .filter(isHandledBy.bind(null, this.props.user));
 
         return (
-            <div className="ticket-wrap">
+            <div className="ticket-wrap row">
                 {/* <p>ticket count: {this.state.ticketCollection.size()}</p> */}
                 
-                <div className="ticket-division">
+                <div className="ticket-division col-md-4">
                     {this.state.ticketCollection.fetching && <p>Ladataan...</p>}
                     {handledByCurrentUser.length > 0 && <div>
-                    <div className="header"><b>Minulle osoitetut avoimet tukipyynnöt</b><br/></div>
+                    <div className="header">
+			<h3>Avoimet tukipyynnöt</h3>
+			<p className="numberOfTickets">{handledByCurrentUser.length}</p>
+		    </div>
                         <List user={this.props.user}
                             onSelect={this.props.onSelect}
                             tickets={handledByCurrentUser} />
                     </div>}
                 </div>
-                <div className="ticket-division">
+                <div className="ticket-division col-md-4">
 
-                    <div className="header"><b>Käsittelyssä olevat tukipyynnöt</b><br/></div>
+                    <div className="header">
+			<h3>Käsittelyssä olevat tukipyynnöt</h3>
+            	        <p className="numberOfTickets">{this.state.ticketCollection.filter(isOpen).filter(notIn.bind(null, handledByCurrentUser)).length}</p>
+		    </div>
                     <List onSelect={this.props.onSelect}
                         user={this.props.user}
                         tickets={this.state.ticketCollection
                         .filter(isOpen)
                         .filter(notIn.bind(null, handledByCurrentUser))} />
                 </div>
-                <div className="ticket-division">
-                    <div className="header"><b>Ratkaistut tukipyynnöt</b><br/></div>
+                <div className="ticket-division col-md-4">
+                    <div className="header">
+			<h3>Ratkaistut tukipyynnöt</h3>
+               	        <p className="numberOfTickets">{this.state.ticketCollection.filter(isClosed).length}</p>
+		    </div>
                     <List onSelect={this.props.onSelect}
                         user={this.props.user}
                         tickets={this.state.ticketCollection.filter(isClosed)} />

@@ -133,17 +133,21 @@ var Main = React.createClass({
 
     render: function() {
         return (
-            <div>
-                <h1>Opinsys tukipalvelu</h1>
+            <div className="wrapper container-fluid">
+               <a href="/"> <h1 className="site-header">Opinsys tukipalvelu</h1></a>
                 {this.state.renderModalContent && this.state.renderModalContent()}
-                <div className="topmenu">
-                    <UserInformation user={this.state.user} />
-                    <Button onClick={NewTicketLink.go} className="pure-button pure-button-primary top-button" >Uusi tukipyyntö</Button>
-                    <Button onClick={RootLink.go} className="top-button" >Omat tukipyynnöt</Button>
+                <div className="topmenu row">
+                    <div className="col-md-6 pull-right">
+                        <UserInformation user={this.state.user} />
+		    </div>
+		    <div className="col-md-6">
+                	<Button onClick={NewTicketLink.go} className="top-button" >Uusi tukipyyntö</Button>
+                   	<Button onClick={RootLink.go} className="top-button" >Omat tukipyynnöt</Button>
+		    </div>
                 </div>
 
                 <div className="main-wrap clearfix" >
-                    <div className="main">
+                    <div className="main box-shadow">
 
                         {route.root.isMatch() &&
                             <TicketList
