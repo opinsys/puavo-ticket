@@ -44,6 +44,17 @@ var List = React.createClass({
         }
         return "unread";
     },
+    renderTicketMetaInfo: function(ticket) {
+	// TODO error checks etc.
+	var ticketCreator = "", firstname = ticket.get("handlers")[0]["handler"]["external_data"]["first_name"], lastname = ticket.get("handlers")[0]["handler"]["external_data"]["last_name"];
+	ticketCreator = firstname + " " + lastname;
+	console.log(ticket.get("handlers")[0]["handler"]["external_data"]);
+	return(
+	    <span className="ticket-creator">
+		 - {ticketCreator}
+	    </span>
+	);
+    },
 
 
     render: function() {
@@ -53,13 +64,16 @@ var List = React.createClass({
                 <ul ref="list">
                     {this.props.tickets.map(function(ticket) {
                         return (
-                                <li key={ticket.get("id")} className={ self.getTitleClass(ticket, self.props.user.get("id")) }><span>
+                                <li key={ticket.get("id")} className={ self.getTitleClass(ticket, self.props.user.get("id")) }>
+				<span>
                                 <TicketViewLink
                                     id={ticket.get("id")}
                                     onClick={self.props.onSelect.bind(null, ticket)} >
                                 {"#" + ticket.get("id") + " " + ticket.get("title")}
                                 </TicketViewLink>
-                            </span></li>
+                            	</span>
+				 {self.renderTicketMetaInfo(ticket)}
+				</li>
                         );
                     })}
                 </ul>
