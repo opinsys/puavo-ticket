@@ -48,8 +48,8 @@ var TicketForm = React.createClass({
 
     render: function() {
         return (
-            <div>
-                <div className="ticket-form form-group">
+            <div className="row">
+               <div className="ticket-form form-group col-md-8">
                     <div className="header">
                         <b>Uusi tukipyyntö</b><br/>
                     </div>
@@ -80,7 +80,7 @@ var TicketForm = React.createClass({
                             onClick={this.handleSave} >Lähetä</Button>
                     </div>
                 </div>
-                <div className="sidebar">
+                <div className="sidebar col-md-4">
                            <SideInfo>
                             </SideInfo>
                 </div>
