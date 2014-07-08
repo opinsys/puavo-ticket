@@ -137,12 +137,16 @@ var Main = React.createClass({
                <a href="/"> <h1 className="site-header">Opinsys tukipalvelu</h1></a>
                 {this.state.renderModalContent && this.state.renderModalContent()}
                 <div className="topmenu row">
-                    <div className="col-md-6 pull-right">
+                    <div className="user-info col-md-6 pull-right">
                         <UserInformation user={this.state.user} />
 		    </div>
-		    <div className="col-md-6">
-                	<Button onClick={NewTicketLink.go} className="top-button" >Uusi tukipyyntö</Button>
-                   	<Button onClick={RootLink.go} className="top-button" >Omat tukipyynnöt</Button>
+		    <div className="top-buttons col-md-6">
+                	<Button onClick={NewTicketLink.go} className="top-button" >
+			<i className="fa fa-pencil-square-o"></i> Uusi tukipyyntö
+			</Button>
+                   	<Button onClick={RootLink.go} className="top-button" >
+			<i className="fa fa-home"></i> Omat tukipyynnöt
+			</Button>
 		    </div>
                 </div>
 
