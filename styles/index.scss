@@ -77,7 +77,6 @@ table td {
     margin: 1rem 0;
     padding: 2rem;
     position: relative;
-    text-align: center;
     word-wrap: break-word;
     width: 100%;
     z-index: 0;
@@ -115,7 +114,7 @@ table td {
 }
 
 .header {
-    margin: -10px 0 10px 0;
+    margin: 0;
 }
 
 .ticketlist{
@@ -126,6 +125,7 @@ table td {
     }
 }
 .ticket-division{
+    text-align: center;
     .header{
         padding-left: 10px;
     	h3{
@@ -206,7 +206,6 @@ table td {
 
 .top-button {
     font-weight: bold;
-    margin: 0 0 0 0.8rem ;
     &:first-of-type{
         margin: 0;
      }
@@ -214,8 +213,17 @@ table td {
 }
 
 .ticket-view{
+    .ticket-header{
+	margin: 0.5rem 0;
+	h3{
+	    font-size: 130%;
+	    font-weight: 800;
+	    margin: 0;
+	}
+    }
     textarea {
-        min-height: 3em;
+        margin: 0.5rem 0;
+	min-height: 3em;
     }
 }
 
@@ -224,7 +232,7 @@ table td {
         height: 20em;
     }
 }
-.ticket-form, .ticket-view {
+.ticket-form {
     input[type=text] {
         margin-top: 25px;
     }
@@ -250,27 +258,24 @@ table td {
     padding-bottom: 20px;
 }
 
-.ticket-update-buttons button {
-    width: 100%;
+.ticket-update-buttons{
+    button {
+	margin: 0;
+	width: 100%;
+    }
 }
 
 .update-buttons-wrap{
-    float: right;
-    border-bottom: 1px solid lightgrey;
     padding: 0 0 0.5rem;
-    width: 100%;
+    .update-buttons{
+	text-align: right;
+	button{
+	    font-size: 80%;
+	}
+    }  
 }
 
-.update-buttons{
-    float: right;
-}
     
-.update-buttons-wrap button{
-    background-color: transparent;
-    color:black;
-    font-size: 80%;
-    margin: 0 0 0 0.5rem;
-}
 
 .tags {
     color: gray;
@@ -281,6 +286,7 @@ table td {
 
 #tag1{
     display: none;
+    text-align: left;
 }
 
 .similar-tickets * {
@@ -314,7 +320,6 @@ table td {
 }
 
 .ticket-updates {
-    clear: both;
 
     img {
         height: 40px;
@@ -326,7 +331,6 @@ table td {
 
     .message {
         margin-left: 50px;
-        font-size:12pt;
     }
 }
 
@@ -338,31 +342,35 @@ table td {
 
 
 .ticket-update-item {
-    font-size: 10pt;
+    font-size: 75%;
 }
 
 .badges{
-    float: left;
-    margin-top: 5px;
-}
-
-.badge.open {
-    margin-left: 10px;
-//    padding-top: 17px;
-//    line-height: 17px;
-    background-color: #ff7100;
-}
-
-.badge.closed {
-    margin-left: 10px;
-//    padding-top: 17px;
-    background-color:  rgb(0, 201, 0);
-    p{
-        margin: 0 0 1em 0 ;
+    .closed {
+	background-color:  #13B458;
+	p{
+            margin: 0 0 1em 0 ;
+	}
+    }
+    .open {
+	background-color: #FF4700;
     }
 }
 
-@media screen and (max-width: 900px) {
+
+
+@media screen and (max-width: 992px) {
+    .update-buttons-wrap{
+	.update-buttons{ 
+	    margin: 0.5rem 0 0;
+	    text-align: left;
+	    button{
+		&:first-of-type{
+		    margin: 0;
+		}
+	    }
+	}  
+    }
     .ticket-division{
         float: none;
         width: 85%;
@@ -413,16 +421,32 @@ table td {
     .topmenu, .main{
 	margin: 0;
     }
-    .top-button {
-        padding: 2px;
-        margin: 0.8rem 0 0 0;
-	padding: 0.5rem;
-        width: 100%;
-	&:first-of-type{
-	    margin: 0.8rem 0 0 0;
-	}
+    .top-buttons{
+	margin: 0.5rem 0 0;
     }
+    .top-button {
+        width: 49%;
+    }
+    .update-buttons-wrap{
+	 .update-buttons{
+	     button{
+		width: 32%
+	    }
+	}
+    }	
 }
 
 
+@media screen and (max-width: 560px) {
+    .top-button {
+        width: 100%;
+    }
+    .update-buttons-wrap{
+	 .update-buttons{
+	     button{
+		width: 100%
+	    }
+	}
+    }	
+}
 
