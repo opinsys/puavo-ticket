@@ -155,6 +155,15 @@ var TicketView = React.createClass({
                 return <Badge className={status}>Ratkaistu</Badge>;
         }
     },
+    renderDate: function() {
+        var datestring = this.props.ticket.get("created_at"),
+	options={weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "numeric", minute:"numeric"};
+	return(    
+	    <span className="badge-text">
+		<time dateTime={'"' + datestring + '"'} />{" " + new Date(Date.parse(datestring)).toLocaleString('fi', options)}
+	    </span>
+	);
+    },
 
     render: function() {
         return (
@@ -164,38 +173,43 @@ var TicketView = React.createClass({
                     {this.isOperating() && <Loading />}
 
                     <div className="ticket-title ticket-updates">
-                        <div className="update-buttons-wrap">
-                            <div className="update-buttons">
+                        <div className="update-buttons-wrap row">
+                            <div className="badges col-md-3">
+				<span className="badge-text">
+				{"Tiketti #" + this.props.ticket.get("id") + " "}
+				</span>
+				{this.renderBadge()}
+                            </div>
+                            <div className="update-buttons col-md-9">
                                 {this.props.user.isManager() &&
-                                    <Button onClick={this.handleAddHandler} ><img src="/images/add_user.png"/><br/>Lisää käsittelijä</Button>
+                                    <Button bsStyle="success" onClick={this.handleAddHandler} >
+					<i className="fa fa-user"></i> Lisää käsittelijä
+				    </Button>
                                 }
                                 {this.props.user.isManager() &&
-                                    <Button onClick={this.showTags}><img src="/images/knotes.png"/><br/>Näytä tapahtumat</Button> 
+                                    <Button bsStyle="success" className="btn-success" onClick={this.showTags}>
+					<i className="fa fa-comments-o"></i> Näytä tapahtumat
+				    </Button> 
                                 }
                                 {this.props.ticket.isHandler(this.props.user) &&
                                     <ToggleStatusButton ticket={this.props.ticket} user={this.props.user} />
                                 }
                             </div>
-                            <div className="badges">
-                                {this.renderBadge()}
-                            </div>
-                            <br />
                         </div>
                         <div className="header ticket-header">
-                            <span>
-                                <b>
-                                    {"#" + this.props.ticket.get("id") + " " + this.props.ticket.get("title") + " "} {/* ({this.props.ticket.getCurrentStatus()}) */}
-                                </b>
-                            </span>
+                                <h3>
+                                    {this.props.ticket.get("title") + " "} {/* ({this.props.ticket.getCurrentStatus()}) */}
+                                </h3>
+				{this.renderDate()}
                         </div>   
                         <div className="image">
                             <img src={this.props.ticket.createdBy().getProfileImage()} />
                         </div>
                         <div className="message">
                              <span>
-                                <b>
+                                <strong>
                                     {this.props.ticket.createdBy().getName() + " "}
-                                </b>
+                                </strong>
                             </span><br />
                             <span>
                                 {this.props.ticket.get("description")}
@@ -208,7 +222,7 @@ var TicketView = React.createClass({
                             <img src="/images/support_person.png" />
                         </div>
                         <div className="message">
-                            <b>Opinsys tuki </b>
+                            <strong>Opinsys tuki </strong>
                             <span>Olemme vastaanottaneet tukipyyntösi. Voit halutessasi täydentää sitä.</span>
                         </div>
                     </div>
@@ -285,7 +299,7 @@ var VIEW_TYPES = {
                         <img src={this.props.update.createdBy().getProfileImage()} />
                     </div>
                     <div className="message">
-                        <b>{this.props.update.createdBy().getName()} </b>
+                        <strong>{this.props.update.createdBy().getName()} </strong>
                         <span>{this.props.update.get("comment")}</span>
                     </div>
                     {this.props.update.isNew() && <Loading />}
@@ -350,18 +364,20 @@ var ToggleStatusButton = React.createClass({
 
         if (status === "open") return (
             <Button
+		bsStyle="success"
+		className="close-ticket"
                 disabled={ticket.isOperating()}
-                onClick={this.handleCloseTicket} ><img src="/images/solve_ticket.png"/><br/>
-                Aseta ratkaistuksi
-            </Button>
+                onClick={this.handleCloseTicket} >
+                <i className="fa fa-check"></i> Aseta ratkaistuksi </Button>
         );
 
         return (
             <Button
+		bsStyle="warning"
+		className="reopen-ticket"
                 disabled={ticket.isOperating()}
-                onClick={this.handleOpenTicket} ><img src="/images/reopen_ticket.png"/><br/>
-                Avaa uudelleen
-            </Button>
+                onClick={this.handleOpenTicket} >
+                <i className="fa fa-refresh"></i>  Avaa uudelleeni</Button>
         );
 
     }
