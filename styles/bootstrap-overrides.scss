@@ -1,6 +1,6 @@
 
 
-.btn-default {
+.btn {
     cursor: pointer;
     position: relative;
     &:before{
@@ -21,7 +21,7 @@ h2 {
 
 
 .btn-default {
-    background-color: $input-color;
+   background-color: $input-color;
 
     &:hover:not([disabled]) {
         background-color: $active-input-color;
@@ -31,14 +31,71 @@ h2 {
         cursor: not-allowed;
     }
 }
-
+.btn{
+    font-size: 80%;
+    font-weight: 800;
+    height: 40px;
+    margin: 0 0 0 0.5rem;
+    padding: 0.5rem;
+}
+.btn-success {
+    background-color: #109A4C;
+    &:hover{
+	background-color: #13B458;
+    }
+}
+.btn-warning{
+    background-color: $input-color;
+    &:hover{
+	background-color: $active-input-color;
+    }
+}
 
 .form-control:focus {
     border-color: $active-input-color;
 }
+.badge {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    background-color: #999;
+    border-radius: 10px;
+}
+.badge-text{
+
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    &:after{
+	content: '';
+	display: block;
+    }
+}
+@media screen and (max-width: 992px) {
+    .badge-text{
+	&:after{
+	    display:inline;
+	}
+    }
+}
 @media screen and (max-width: 680px) {
+    .btn{
+	height: 50px;
+	padding: 0.5rem;
+    }
      .pull-right{
 	float: none !important;
     }
 }
 
+@media screen and (max-width: 560px) {
+    .btn{
+	margin: 0.5rem 0 0 0;
+    }
+     .pull-right{
+	float: none !important;
+    }
+}
