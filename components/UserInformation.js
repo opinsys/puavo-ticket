@@ -33,11 +33,11 @@ var UserInformation = React.createClass({
 
                     {/* TODO: redirect to puavo profile edit */}
                     <MenuItem onClick={alert.bind(null, "todo")}>
-                        Muokkaa profiiliasi
+                        <i className="fa fa-cog"></i> Muokkaa profiiliasi
                     </MenuItem>
 
                     <MenuItem onClick={this.handleLogout}>
-                        Kirjaudu ulos
+                        <i className="fa fa-sign-out"></i> Kirjaudu ulos
                     </MenuItem>
 
                 </DropdownButton>
