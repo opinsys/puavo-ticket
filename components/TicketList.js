@@ -46,9 +46,8 @@ var List = React.createClass({
     },
     renderTicketMetaInfo: function(ticket) {
 	// TODO error checks etc.
-	var ticketCreator = "", firstname = ticket.get("handlers")[0]["handler"]["external_data"]["first_name"], lastname = ticket.get("handlers")[0]["handler"]["external_data"]["last_name"];
+	var ticketCreator = "", firstname = ticket.get("handlers")[0].handler.external_data.first_name, lastname = ticket.get("handlers")[0].handler.external_data.last_name;
 	ticketCreator = firstname + " " + lastname;
-	console.log(ticket.get("handlers")[0]["handler"]["external_data"]);
 	return(
 	    <span className="ticket-creator">
 		 - {ticketCreator}
