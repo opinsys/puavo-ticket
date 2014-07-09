@@ -45,8 +45,9 @@ var List = React.createClass({
         return "unread";
     },
     renderTicketMetaInfo: function(ticket) {
-	// TODO error checks etc.
-	var ticketCreator = "", firstname = ticket.get("handlers")[0].handler.external_data.first_name, lastname = ticket.get("handlers")[0].handler.external_data.last_name;
+	// TODO get all necessary data, error checks etc.
+	// get first handler, assumed that it's the ticket creator
+	var ticketCreator, firstname = ticket.get("handlers")[0].handler.external_data.first_name, lastname = ticket.get("handlers")[0].handler.external_data.last_name;
 	ticketCreator = firstname + " " + lastname;
 	return(
 	    <span className="ticket-creator">
@@ -71,7 +72,7 @@ var List = React.createClass({
                                 {"#" + ticket.get("id") + " " + ticket.get("title")}
                                 </TicketViewLink>
                             	</span>
-				 {self.renderTicketMetaInfo(ticket)}
+				 {/*self.renderTicketMetaInfo(ticket)*/}
 				</li>
                         );
                     })}
