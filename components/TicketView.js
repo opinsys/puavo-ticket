@@ -377,7 +377,7 @@ var ToggleStatusButton = React.createClass({
 		className="reopen-ticket"
                 disabled={ticket.isOperating()}
                 onClick={this.handleOpenTicket} >
-                <i className="fa fa-refresh"></i>  Avaa uudelleeni</Button>
+                <i className="fa fa-refresh"></i>  Avaa uudelleen</Button>
         );
 
     }
