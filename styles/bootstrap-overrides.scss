@@ -1,3 +1,22 @@
+.table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th{
+    background-color: #E4DDD4;
+}
+.table{
+    thead{
+	tr{
+	    th{
+		max-width: 400px;
+	    }
+	}
+    }
+    tbody{
+	tr{
+	    td{
+		padding: 0.75rem;
+	    }
+	}
+    }
+}
 .dropdown-menu{
     text-align: left;
 }
@@ -25,7 +44,7 @@ h2 {
 .btn-default {
    background-color: $input-color;
 
-    &:hover:not([disabled]) {
+    &:hover:not([disabled]), &:focus:not([disabled]), &:active:not([disabled]) {
         background-color: $active-input-color;
     }
 
@@ -41,14 +60,14 @@ h2 {
     padding: 0.5rem;
 }
 .btn-success {
-    background-color: #109A4C;
-    &:hover{
-	background-color: #13B458;
+    background-color: $green-active-color;
+    &:hover, &:focus, &:active{
+	background-color: $green-active-hover-color;
     }
 }
 .btn-warning{
     background-color: $input-color;
-    &:hover{
+    &:hover, &:focus, &:active{
 	background-color: $active-input-color;
     }
 }
@@ -81,6 +100,12 @@ h2 {
 	&:after{
 	    display:inline;
 	}
+    }
+}
+@media (max-width: 767px){
+    .table-responsive{
+	display: block;
+	overflow-x: auto;
     }
 }
 @media screen and (max-width: 680px) {
