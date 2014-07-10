@@ -183,12 +183,12 @@ var TicketView = React.createClass({
                             <div className="update-buttons col-md-9">
                                 {this.props.user.isManager() &&
                                     <Button bsStyle="success" onClick={this.handleAddHandler} >
-					<i className="fa fa-user"></i> Lisää käsittelijä
+					<i className="fa fa-user"></i>Lisää käsittelijä
 				    </Button>
                                 }
                                 {this.props.user.isManager() &&
                                     <Button bsStyle="success" className="btn-success" onClick={this.showTags}>
-					<i className="fa fa-comments-o"></i> Näytä tapahtumat
+					<i className="fa fa-comments-o"></i>Näytä tapahtumat
 				    </Button> 
                                 }
                                 {this.props.ticket.isHandler(this.props.user) &&
@@ -368,7 +368,7 @@ var ToggleStatusButton = React.createClass({
 		className="close-ticket"
                 disabled={ticket.isOperating()}
                 onClick={this.handleCloseTicket} >
-                <i className="fa fa-check"></i> Aseta ratkaistuksi </Button>
+                <i className="fa fa-check"></i>Aseta ratkaistuksi</Button>
         );
 
         return (
@@ -377,7 +377,7 @@ var ToggleStatusButton = React.createClass({
 		className="reopen-ticket"
                 disabled={ticket.isOperating()}
                 onClick={this.handleOpenTicket} >
-                <i className="fa fa-refresh"></i>  Avaa uudelleen</Button>
+                <i className="fa fa-refresh"></i>Avaa uudelleen</Button>
         );
 
     }
