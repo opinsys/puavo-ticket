@@ -183,8 +183,10 @@ table td {
     ul li{
     padding: 5px 0 5px 0;
     }
-    b{
+    strong{
+	font-size: 150%;
 	display:block;
+	margin: .5rem 0 0;
     }
 }
 
@@ -283,6 +285,7 @@ table td {
 	text-align: right;
 	button{
 	    font-size: 80%;
+	    font-weight: 400;
 	}
     }  
 }
@@ -291,7 +294,7 @@ table td {
 
 .tags {
     color: gray;
-    font-size: 9pt;
+    font-size: 80%;
     margin-left: 50px;
     margin-bottom: 1px;
 }
@@ -334,8 +337,6 @@ table td {
     }
     a{
 	display: block;
-    }
-    a:hover{
     }
 }
 
@@ -393,7 +394,23 @@ table td {
     }
 }
 
-
+.badge-text{
+    font-size: 100%;
+    font-weight: bold;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    &:after{
+	content: '';
+	display: block;
+    }
+}
+.btn{
+    i{
+	margin: 0 0.3rem 0 0;
+    }
+}
 
 @media screen and (max-width: 992px) {
     .update-buttons-wrap{

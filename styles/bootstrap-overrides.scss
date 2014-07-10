@@ -82,19 +82,6 @@ h2 {
     background-color: #999;
     border-radius: 10px;
 }
-.badge-text{
-
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    &:after{
-	content: '';
-	display: block;
-    }
-}
 @media screen and (max-width: 992px) {
     .badge-text{
 	&:after{
