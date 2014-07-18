@@ -15,6 +15,9 @@ var Request = require("superagent").Request;
  *
  * Call .promise() to return promise for the request
  *
+ * This is pretty much shit. The superagent version must be kept in sync with
+ * node_modules/supertest/package.json
+ *
  * @method promise
  * @return {Bluebird.Promise}
  */
