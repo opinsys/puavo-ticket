@@ -27,6 +27,7 @@ var TicketView = React.createClass({
 
     getInitialState: function() {
         return {
+            showTags: true,
             comment: "",
         };
     },
@@ -80,12 +81,10 @@ var TicketView = React.createClass({
     },
 
 
-    showTags: function() {
-        return(document.getElementById('tag1').style.display = 'inline');
-    },
-
-    hideTags: function() {
-        return(document.getElementById('tag1').style.display = 'none');
+    toggleTags: function() {
+        this.setState({
+            showTags: !this.state.showTags
+        });
     },
 
     handleAddHandler: function() {
@@ -166,6 +165,7 @@ var TicketView = React.createClass({
     },
 
     render: function() {
+        var self = this;
         return (
             <div className="row">
                 <div className="ticket-view col-md-8">
@@ -187,9 +187,7 @@ var TicketView = React.createClass({
                                     </Button>
                                 }
                                 {this.props.user.isManager() &&
-                                    <Button bsStyle="success" className="btn-success" onClick={this.showTags}>
-                                        <i className="fa fa-comments-o"></i>Näytä tapahtumat
-                                    </Button>
+                                    <ToggleTagsButton active={this.state.showTags} onClick={this.toggleTags} />
                                 }
                                 {this.props.ticket.isHandler(this.props.user) &&
                                     <ToggleStatusButton ticket={this.props.ticket} user={this.props.user} />
@@ -226,19 +224,24 @@ var TicketView = React.createClass({
                             <span>Olemme vastaanottaneet tukipyyntösi. Voit halutessasi täydentää sitä.</span>
                         </div>
                     </div>
-                    <div id="tag1">
-                    {this.props.ticket.updates().map(function(update) {
-                        var view = VIEW_TYPES[update.get("type")];
-                        return (
-                            <span key={update.get("unique_id")}>
-                                {view ?  view({ update: update })
-                                      : "Unknown update type: " + update.get("type")
-                                }
-                            </span>
+                    <div>
+                    {this.props.ticket.updates()
+                        .filter(function(update) {
+                            if (self.state.showTags && update.get("type") === "tags") {
+                                return false;
+                            }
 
-                        );
-
-                    })}
+                            return true;
+                        })
+                        .map(function(update) {
+                            var view = VIEW_TYPES[update.get("type")];
+                            return (
+                                <span key={update.get("unique_id")}>
+                                    {view ?  view({ update: update })
+                                          : "Unknown update type: " + update.get("type")
+                                    }
+                                </span>
+                        );})}
                     </div>
                         <textarea
                             className="form-control"
@@ -265,6 +268,34 @@ var TicketView = React.createClass({
     },
 
 });
+
+
+/**
+ * ToggleTagsButton
+ *
+ * @namespace components
+ * @class ToggleTagsButton
+ */
+var ToggleTagsButton = React.createClass({
+
+    propTypes: {
+        active: React.PropTypes.bool.isRequired,
+        onClick: React.PropTypes.func
+    },
+
+    render: function() {
+        var text = "Näytä tapahtumat";
+        if (this.props.active) {
+            text = "Piilota tapahtumat";
+        }
+        return (
+            <Button bsStyle="success" className="btn-success" onClick={this.props.onClick}>
+                <i className="fa fa-comments-o"></i>{text}
+            </Button>
+        );
+    }
+});
+
 
 var UpdateMixin = {
     propTypes: {
@@ -382,23 +413,4 @@ var ToggleStatusButton = React.createClass({
 
     }
 });
-
-/**var ToggleTagsButton = React.createClass({
-*
-*    render: function() {
-*
-*       if (!document.getElementById('tag1').style.display) return (
-*           <Button disabled >loading...</Button>
-*       );
-*
-*       if (document.getElementById('tag1').style.display === "none") return (
-*        <Button onClick={this.showTags}><img src="/images/knotes.png"/><br/>Näytä tapahtumat</Button>
-*       );
-*
-*       return (
-*           <Button onClick={this.hideTags}><img src="/images/knotes.png"/><br/>Piilota tapahtumat</Button>
-*       );
-*   }
-*});
-**/
 module.exports = TicketView;
