@@ -23,8 +23,8 @@ h1 {
 a {
     color: $link-color;
     &:hover, &:focus{
-	color: $link-hover-color;
-	text-decoration: underline;
+        color: $link-hover-color;
+        text-decoration: underline;
     }
 }
 
@@ -39,19 +39,19 @@ table td {
 
 .table{
     tbody{
-	tr.unread{
-	    td{
-		background-color: $input-color;
-		background-color: $orange-alpha;
-	    }
-	}
+        tr.unread{
+            td{
+                background-color: $input-color;
+                background-color: $orange-alpha;
+            }
+        }
     }
 }
 .wrapper {
     margin: 0 auto;
     min-width: 330px;
     position: relative;
-    max-width: 1200px; 
+    max-width: 1200px;
 }
 
 .clearfix{
@@ -133,18 +133,18 @@ table td {
     }
 }
 .ticket-division{
-    .header{
+    .header {
         padding-left: 10px;
-    	h3{
+        h3 {
             font-size: 150%;
-	    display:inline-block;
-    	}
-	.numberOfTickets{
-	    font-weight: 800;
-	    margin: 0 0 0 0.5rem;
-	}
+            display:inline-block;
+        }
+        .numberOfTickets {
+            font-weight: 800;
+            margin: 0 0 0 0.5rem;
+        }
     }
-    ul{
+    ul {
         margin-left: -20px;
     }
 }
@@ -154,8 +154,8 @@ table td {
     border-left: 1px solid lightgrey;
     text-align: left;
     word-break: break-word;
-    ul{
-	list-style-type: disc;
+    ul {
+        list-style-type: disc;
     }
     ul li {
         margin-left: -20px;
@@ -174,37 +174,37 @@ table td {
     }
 }
 
-.contact, .checklist{
+.contact, .checklist {
     background-color: white;
     -webkit-border-radius: 5px;
     border-radius: 5px;
     margin: 0 0 0.5rem;
     padding: 0.5rem;
-    ul li{
+    ul li {
     padding: 5px 0 5px 0;
     }
-    strong{
-	font-size: 150%;
-	display:block;
-	margin: .5rem 0 0;
+    strong {
+        font-size: 150%;
+        display:block;
+        margin: .5rem 0 0;
     }
 }
 
-.contact{
-    p{
+.contact {
+    p {
         line-height: 1.3;
     }
 }
 
-.checklist{
+.checklist {
     line-height: 1.2;
-    ul{
+    ul {
         margin-top: -15px;
     }
     ul li {
         margin-right: 5px;
     }
-    p{
+    p {
         line-height: 1.2;
     }
 }
@@ -226,22 +226,22 @@ table td {
 
 }
 
-.ticket-view{
-    .ticket-header{
-	margin: 0.5rem 0;
-	h3{
-	    font-size: 130%;
-	    font-weight: 800;
-	    margin: 0;
-	}
+.ticket-view {
+    .ticket-header {
+        margin: 0.5rem 0;
+        h3 {
+            font-size: 130%;
+            font-weight: 800;
+            margin: 0;
+        }
     }
     textarea {
         margin: 0.5rem 0;
-	min-height: 3em;
+        min-height: 3em;
     }
 }
 
-.ticket-form{
+.ticket-form {
     textarea {
         height: 20em;
     }
@@ -274,23 +274,23 @@ table td {
 
 .ticket-update-buttons{
     button {
-	margin: 0;
-	width: 100%;
+        margin: 0;
+        width: 100%;
     }
 }
 
 .update-buttons-wrap{
     padding: 0 0 0.5rem;
     .update-buttons{
-	text-align: right;
-	button{
-	    font-size: 80%;
-	    font-weight: 400;
-	}
-    }  
+        text-align: right;
+        button{
+            font-size: 80%;
+            font-weight: 400;
+        }
+    }
 }
 
-    
+
 
 .tags {
     color: gray;
@@ -317,14 +317,14 @@ table td {
 
 
 .unread {
-    .unread-comments{
-	background-color: $green-active-color;
-	display: inline-block;
+    .unread-comments {
+        background-color: $green-active-color;
+        display: inline-block;
     }
 }
 .read{
-    .unread-comments{
-	display:none;
+    .unread-comments {
+        display:none;
     }
 }
 .read, .unread{
@@ -332,28 +332,28 @@ table td {
         margin: 0;
     }
     .unread-comments{
-	float: right;
-	margin: 0 0 0 0.5rem;
+        float: right;
+        margin: 0 0 0 0.5rem;
     }
     a{
-	display: block;
+        display: block;
     }
 }
 
-.ticket-division{
+.ticket-division {
     border-bottom: 2px solid rgba(90, 90, 90, 0.25);
     padding-bottom: 1rem;
-    &:last-of-type{
-	border: none;
+    &:last-of-type {
+        border: none;
     }
-    .ticket-handlers span{
-	margin: 0 0.5rem 0 0;
-	&:after{
-	    content: ', ';
-	}
- 	&:last-of-type:after{
-	    content: '';
-	}
+    .ticket-handlers span {
+        margin: 0 0.5rem 0 0;
+        &:after{
+            content: ', ';
+        }
+        &:last-of-type:after{
+            content: '';
+        }
     }
  }
 .ticket-updates {
@@ -382,47 +382,47 @@ table td {
     font-size: 75%;
 }
 
-.badges{
+.badges {
     .closed {
-	background-color:  #13B458;
-	p{
+        background-color:  #13B458;
+        p {
             margin: 0 0 1em 0 ;
-	}
+        }
     }
     .open {
-	background-color: #FF4700;
+        background-color: #FF4700;
     }
 }
 
-.badge-text{
+.badge-text {
     font-size: 100%;
     font-weight: bold;
     line-height: 1;
     text-align: center;
     white-space: nowrap;
     vertical-align: baseline;
-    &:after{
-	content: '';
-	display: block;
+    &:after {
+        content: '';
+        display: block;
     }
 }
 .btn{
-    i{
-	margin: 0 0.3rem 0 0;
+    i {
+        margin: 0 0.3rem 0 0;
     }
 }
 
 @media screen and (max-width: 992px) {
-    .update-buttons-wrap{
-	.update-buttons{ 
-	    margin: 0.5rem 0 0;
-	    text-align: left;
-	    button{
-		&:first-of-type{
-		    margin: 0;
-		}
-	    }
-	}  
+    .update-buttons-wrap {
+        .update-buttons {
+            margin: 0.5rem 0 0;
+            text-align: left;
+            button {
+                &:first-of-type {
+                    margin: 0;
+                }
+            }
+        }
     }
     .ticket-division{
     }
@@ -440,15 +440,16 @@ table td {
         margin: 0;
         padding-bottom: 1rem;
     }
-    
-    .ticket-updates{
-    margin-left: 10px;
+
+    .ticket-updates {
+        margin-left: 10px;
     }
 
     .sidebar {
-	border:none;
-	margin: 1rem 0 0;}
-    .main{
+        border:none;
+        margin: 1rem 0 0;
+    }
+    .main {
         width: 100%;
     }
 }
@@ -464,26 +465,26 @@ table td {
 
 
 @media screen and (max-width: 680px) {
-    .wrapper{
-	padding: 0;
+    .wrapper {
+        padding: 0;
     }
-    .topmenu, .main{
-	margin: 0;
-	padding: 1rem;
+    .topmenu, .main {
+        margin: 0;
+        padding: 1rem;
     }
     .top-buttons{
-	margin: 0.5rem 0 0;
+        margin: 0.5rem 0 0;
     }
     .top-button {
         width: 49%;
     }
-    .update-buttons-wrap{
-	 .update-buttons{
-	     button{
-		width: 32%
-	    }
-	}
-    }	
+    .update-buttons-wrap {
+         .update-buttons {
+             button{
+            width: 32%
+            }
+        }
+    }
 }
 
 
@@ -491,12 +492,12 @@ table td {
     .top-button {
         width: 100%;
     }
-    .update-buttons-wrap{
-	 .update-buttons{
-	     button{
-		width: 100%
-	    }
-	}
-    }	
+    .update-buttons-wrap {
+         .update-buttons {
+            button {
+                width: 100%
+            }
+        }
+    }
 }
 
