@@ -77,12 +77,12 @@ var TicketView = React.createClass({
 
     isOperating: function() {
         return this.props.ticket.isOperating();
-    },    
-    
-    
+    },
+
+
     showTags: function() {
         return(document.getElementById('tag1').style.display = 'inline');
-    }, 
+    },
 
     hideTags: function() {
         return(document.getElementById('tag1').style.display = 'none');
@@ -157,12 +157,12 @@ var TicketView = React.createClass({
     },
     renderDate: function() {
         var datestring = this.props.ticket.get("created_at"),
-	options={weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "numeric", minute:"numeric"};
-	return(    
-	    <span className="badge-text">
-		<time dateTime={'"' + datestring + '"'} />{" " + new Date(Date.parse(datestring)).toLocaleString('fi', options)}
-	    </span>
-	);
+        options={weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "numeric", minute:"numeric"};
+        return(
+            <span className="badge-text">
+                <time dateTime={'"' + datestring + '"'} />{" " + new Date(Date.parse(datestring)).toLocaleString('fi', options)}
+            </span>
+        );
     },
 
     render: function() {
@@ -175,21 +175,21 @@ var TicketView = React.createClass({
                     <div className="ticket-title ticket-updates">
                         <div className="update-buttons-wrap row">
                             <div className="badges col-md-3">
-				<span className="badge-text">
-				{"Tiketti #" + this.props.ticket.get("id") + " "}
-				</span>
-				{this.renderBadge()}
+                                <span className="badge-text">
+                                {"Tiketti #" + this.props.ticket.get("id") + " "}
+                                </span>
+                                {this.renderBadge()}
                             </div>
                             <div className="update-buttons col-md-9">
                                 {this.props.user.isManager() &&
                                     <Button bsStyle="success" onClick={this.handleAddHandler} >
-					<i className="fa fa-user"></i>Lisää käsittelijä
-				    </Button>
+                                        <i className="fa fa-user"></i>Lisää käsittelijä
+                                    </Button>
                                 }
                                 {this.props.user.isManager() &&
                                     <Button bsStyle="success" className="btn-success" onClick={this.showTags}>
-					<i className="fa fa-comments-o"></i>Näytä tapahtumat
-				    </Button> 
+                                        <i className="fa fa-comments-o"></i>Näytä tapahtumat
+                                    </Button>
                                 }
                                 {this.props.ticket.isHandler(this.props.user) &&
                                     <ToggleStatusButton ticket={this.props.ticket} user={this.props.user} />
@@ -197,11 +197,11 @@ var TicketView = React.createClass({
                             </div>
                         </div>
                         <div className="header ticket-header">
-                                <h3>
-                                    {this.props.ticket.get("title") + " "} {/* ({this.props.ticket.getCurrentStatus()}) */}
-                                </h3>
-				{this.renderDate()}
-                        </div>   
+                            <h3>
+                                {this.props.ticket.get("title") + " "} {/* ({this.props.ticket.getCurrentStatus()}) */}
+                            </h3>
+                            {this.renderDate()}
+                        </div>
                         <div className="image">
                             <img src={this.props.ticket.createdBy().getProfileImage()} />
                         </div>
@@ -230,16 +230,16 @@ var TicketView = React.createClass({
                     {this.props.ticket.updates().map(function(update) {
                         var view = VIEW_TYPES[update.get("type")];
                         return (
-                            
                             <span key={update.get("unique_id")}>
                                 {view ?  view({ update: update })
                                       : "Unknown update type: " + update.get("type")
                                 }
                             </span>
-                            
+
                         );
 
-                    })}</div>
+                    })}
+                    </div>
                         <textarea
                             className="form-control"
                             ref="comment"
@@ -364,8 +364,8 @@ var ToggleStatusButton = React.createClass({
 
         if (status === "open") return (
             <Button
-		bsStyle="success"
-		className="close-ticket"
+                bsStyle="success"
+                className="close-ticket"
                 disabled={ticket.isOperating()}
                 onClick={this.handleCloseTicket} >
                 <i className="fa fa-check"></i>Aseta ratkaistuksi</Button>
@@ -373,8 +373,8 @@ var ToggleStatusButton = React.createClass({
 
         return (
             <Button
-		bsStyle="warning"
-		className="reopen-ticket"
+                bsStyle="warning"
+                className="reopen-ticket"
                 disabled={ticket.isOperating()}
                 onClick={this.handleOpenTicket} >
                 <i className="fa fa-refresh"></i>Avaa uudelleen</Button>
@@ -386,7 +386,7 @@ var ToggleStatusButton = React.createClass({
 /**var ToggleTagsButton = React.createClass({
 *
 *    render: function() {
-*       
+*
 *       if (!document.getElementById('tag1').style.display) return (
 *           <Button disabled >loading...</Button>
 *       );
