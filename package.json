@@ -4,6 +4,9 @@
   "description": "",
   "author": "",
   "license": "GPLv2",
+  "scripts": {
+    "postinstall": "ln -sf .. node_modules/puavo-ticket"
+  },
   "dependencies": {
     "apidoc": "~0.6.0",
     "backbone": "~1.1.2",
