@@ -139,15 +139,15 @@ var Main = React.createClass({
                 <div className="topmenu row">
                     <div className="user-info col-md-6 pull-right">
                         <UserInformation user={this.state.user} />
-		    </div>
-		    <div className="top-buttons col-md-6">
-                	<Button onClick={NewTicketLink.go} className="top-button" >
-			<i className="fa fa-pencil-square-o"></i>Uusi tukipyyntö
-			</Button>
-                   	<Button onClick={RootLink.go} className="top-button" >
-			<i className="fa fa-home"></i>Omat tukipyynnöt
-			</Button>
-		    </div>
+                    </div>
+                    <div className="top-buttons col-md-6">
+                        <Button onClick={NewTicketLink.go} className="top-button" >
+                            <i className="fa fa-pencil-square-o"></i>Uusi tukipyyntö
+                        </Button>
+                       <Button onClick={RootLink.go} className="top-button" >
+                            <i className="fa fa-home"></i>Omat tukipyynnöt
+                        </Button>
+                    </div>
                 </div>
 
                 <div className="main-wrap clearfix" >
