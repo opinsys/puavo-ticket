@@ -66,7 +66,9 @@ var TicketView = React.createClass({
     },
 
     handleCommentKeyUp: function(e) {
-        if (e.key === "Enter") this.saveComment();
+        if (e.key === "Enter" && !e.shiftKey) {
+            this.saveComment();
+        }
     },
 
     hasUnsavedComment: function() {
@@ -307,7 +309,11 @@ var VIEW_TYPES = {
                     </div>
                     <div className="message">
                         <strong>{this.props.update.createdBy().getName()} </strong>
-                        <span>{this.props.update.get("comment")}</span>
+                        <span>
+                            {this.props.update.get("comment").trim().split("\n").map(function(line) {
+                                return <span>{line}<br /></span>;
+                            })}
+                        </span>
                     </div>
                     {this.props.update.isNew() && <Loading />}
                 </div>
