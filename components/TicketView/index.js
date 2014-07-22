@@ -72,7 +72,7 @@ var TicketView = React.createClass({
     },
 
     hasUnsavedComment: function() {
-        return !!this.state.comment;
+        return !!this.state.comment.trim();
     },
 
 
