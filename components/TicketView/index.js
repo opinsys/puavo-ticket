@@ -8,11 +8,13 @@ var Backbone = require("backbone");
 var Button = require("react-bootstrap/Button");
 var Badge = require("react-bootstrap/Badge");
 
-var Loading = require("./Loading");
-var Handler = require("../models/client/Handler");
-var Base = require("../models/client/Base");
-var SelectUsers = require("./SelectUsers");
-var SideInfo = require("./SideInfo");
+var Loading = require("../Loading");
+var Handler = require("puavo-ticket//models/client/Handler");
+var Base = require("puavo-ticket/models/client/Base");
+var SelectUsers = require("../SelectUsers");
+var SideInfo = require("../SideInfo");
+var ToggleTagsButton = require("./ToggleTagsButton");
+var ToggleStatusButton = require("./ToggleStatusButton");
 
 
 
@@ -227,7 +229,7 @@ var TicketView = React.createClass({
                     <div>
                     {this.props.ticket.updates()
                         .filter(function(update) {
-                            if (self.state.showTags && update.get("type") === "tags") {
+                            if (!self.state.showTags && update.get("type") === "tags") {
                                 return false;
                             }
 
@@ -269,32 +271,6 @@ var TicketView = React.createClass({
 
 });
 
-
-/**
- * ToggleTagsButton
- *
- * @namespace components
- * @class ToggleTagsButton
- */
-var ToggleTagsButton = React.createClass({
-
-    propTypes: {
-        active: React.PropTypes.bool.isRequired,
-        onClick: React.PropTypes.func
-    },
-
-    render: function() {
-        var text = "Näytä tapahtumat";
-        if (this.props.active) {
-            text = "Piilota tapahtumat";
-        }
-        return (
-            <Button bsStyle="success" className="btn-success" onClick={this.props.onClick}>
-                <i className="fa fa-comments-o"></i>{text}
-            </Button>
-        );
-    }
-});
 
 
 var UpdateMixin = {
@@ -366,51 +342,4 @@ var VIEW_TYPES = {
 };
 
 
-/**
- * ToggleStatusButton
- *
- * @namespace components
- * @private
- * @class TicketView.ToggleStatusButton
- */
-var ToggleStatusButton = React.createClass({
-
-    handleOpenTicket: function() {
-        this.props.ticket.setOpen(this.props.user)
-        .catch(Backbone.trigger.bind(Backbone, "error"));
-    },
-
-    handleCloseTicket: function() {
-        this.props.ticket.setClosed(this.props.user)
-        .catch(Backbone.trigger.bind(Backbone, "error"));
-    },
-
-    render: function() {
-        var ticket = this.props.ticket;
-        var status = ticket.getCurrentStatus();
-
-        if (!status) return (
-            <Button disabled >loading...</Button>
-        );
-
-        if (status === "open") return (
-            <Button
-                bsStyle="success"
-                className="close-ticket"
-                disabled={ticket.isOperating()}
-                onClick={this.handleCloseTicket} >
-                <i className="fa fa-check"></i>Aseta ratkaistuksi</Button>
-        );
-
-        return (
-            <Button
-                bsStyle="warning"
-                className="reopen-ticket"
-                disabled={ticket.isOperating()}
-                onClick={this.handleOpenTicket} >
-                <i className="fa fa-refresh"></i>Avaa uudelleen</Button>
-        );
-
-    }
-});
 module.exports = TicketView;
