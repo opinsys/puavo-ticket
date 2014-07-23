@@ -45,38 +45,38 @@ var List = React.createClass({
         return "unread";
     },
     renderTicketMetaInfo: function(ticket) {
-	// TODO error checks at least
-	var ticketCreator, firstname = ticket.get("createdBy").external_data.first_name, lastname = ticket.get("createdBy").external_data.last_name, latestUpdate = ticket.get("updated_at"), handlers = ticket.get("handlers"), options={weekday: "short", month: "long", day: "numeric"}, firstNames, lastNames;
-	ticketCreator = firstname + " " + lastname;
-	// TODO not sure if this is the best way to do this at all...
-	firstNames = _.chain(handlers)
-	    .map(function(items){return items.handler.external_data;})
-	    .mapValues('first_name')
-	    .toArray()
-	    .value();
-	lastNames = _.chain(handlers)
-	    .map(function(items){return items.handler.external_data;})
-	    .mapValues('last_name')
-	    .toArray()
-	    .value();
-	
-	return(
-	    <span>
-	    <td className="ticket-creator">
-		 {ticketCreator}
-	    </td>
-	    <td className="ticket-updated">
-		<time dateTime={'"' + latestUpdate + '"'} />{" " + new Date(Date.parse(latestUpdate)).toLocaleString('fi', options)}
-	    </td>
-	    <td className="ticket-handlers">
-		{
-		    _.map(_.zipObject(firstNames, lastNames), function(item, key){
-			return key + " " + item;
-	            })
-		}
-	    </td>
-	    </span>
-	);
+        // TODO error checks at least
+        var ticketCreator, firstname = ticket.get("createdBy").external_data.first_name, lastname = ticket.get("createdBy").external_data.last_name, latestUpdate = ticket.get("updated_at"), handlers = ticket.get("handlers"), options={weekday: "short", month: "long", day: "numeric"}, firstNames, lastNames;
+        ticketCreator = firstname + " " + lastname;
+        // TODO not sure if this is the best way to do this at all...
+        firstNames = _.chain(handlers)
+            .map(function(items){return items.handler.external_data;})
+            .mapValues('first_name')
+            .toArray()
+            .value();
+        lastNames = _.chain(handlers)
+            .map(function(items){return items.handler.external_data;})
+            .mapValues('last_name')
+            .toArray()
+            .value();
+
+        return(
+            <span>
+            <td className="ticket-creator">
+                {ticketCreator}
+            </td>
+            <td className="ticket-updated">
+                <time dateTime={'"' + latestUpdate + '"'} />{" " + new Date(Date.parse(latestUpdate)).toLocaleString('fi', options)}
+            </td>
+            <td className="ticket-handlers">
+                {
+                    _.map(_.zipObject(firstNames, lastNames), function(item, key){
+                        return key + " " + item;
+                    })
+                }
+            </td>
+            </span>
+        );
     },
 
 
@@ -85,34 +85,34 @@ var List = React.createClass({
         return (
             <div className="ticketlist">
                 <table ref="list" className="table table-striped table-responsive">
-		    <thead>
-			<tr>
-			<th data-column-id="id">ID</th>
-			<th data-column-id="subject">Aihe</th>
-			<th data-column-id="creator">Lähettäjä</th>
-			<th data-column-id="updated">Viimeisin päivitys</th>
-			<th data-column-id="handlers">Käsittelijä(t)</th>
-			</tr>
-		    </thead>
-		    <tbody>
+                    <thead>
+                        <tr>
+                        <th data-column-id="id">ID</th>
+                        <th data-column-id="subject">Aihe</th>
+                        <th data-column-id="creator">Lähettäjä</th>
+                        <th data-column-id="updated">Viimeisin päivitys</th>
+                        <th data-column-id="handlers">Käsittelijä(t)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {this.props.tickets.map(function(ticket) {
                         return (
-			    <tr key={ticket.get("id")} className={ self.getTitleClass(ticket, self.props.user.get("id")) }>
+                            <tr key={ticket.get("id")} className={ self.getTitleClass(ticket, self.props.user.get("id")) }>
                                 <td>#{ticket.get("id")}</td>
-				<td>
-				{/** TODO click row to open ticket */}
+                                <td>
+                                {/** TODO click row to open ticket */}
                                 <TicketViewLink
                                     id={ticket.get("id")}
                                     onClick={self.props.onSelect.bind(null, ticket)} >
                                 {ticket.get("title")}
-				<span className="badge unread-comments" title="Uusia kommentteja"><i className="fa fa-comment-o"></i></span>
+                                <span className="badge unread-comments" title="Uusia kommentteja"><i className="fa fa-comment-o"></i></span>
                                 </TicketViewLink>
-				</td>
-				 {self.renderTicketMetaInfo(ticket)}
-			    </tr>
+                                </td>
+                                 {self.renderTicketMetaInfo(ticket)}
+                            </tr>
                         );
                     })}
-		    </tbody>
+                    </tbody>
                 </table>
             </div>
         );
@@ -147,14 +147,14 @@ var TicketList = React.createClass({
         return (
             <div className="ticket-wrap row">
                 {/* <p>ticket count: {this.state.ticketCollection.size()}</p> */}
-                
+
                 <div className="ticket-division col-md-12">
                     {this.state.ticketCollection.fetching && <p>Ladataan...</p>}
                     {handledByCurrentUser.length > 0 && <div>
                     <div className="header">
-			<h3>Avoimet tukipyynnöt</h3>
-			<span className="numberOfTickets">({handledByCurrentUser.length})</span>
-		    </div>
+                        <h3>Avoimet tukipyynnöt</h3>
+                        <span className="numberOfTickets">({handledByCurrentUser.length})</span>
+                    </div>
                         <List user={this.props.user}
                             onSelect={this.props.onSelect}
                             tickets={handledByCurrentUser} />
@@ -163,9 +163,9 @@ var TicketList = React.createClass({
                 <div className="ticket-division col-md-12">
 
                     <div className="header">
-			<h3>Käsittelyssä olevat tukipyynnöt</h3>
-            	        <span className="numberOfTickets">({this.state.ticketCollection.filter(isOpen).filter(notIn.bind(null, handledByCurrentUser)).length})</span>
-		    </div>
+                        <h3>Käsittelyssä olevat tukipyynnöt</h3>
+                        <span className="numberOfTickets">({this.state.ticketCollection.filter(isOpen).filter(notIn.bind(null, handledByCurrentUser)).length})</span>
+                    </div>
                     <List onSelect={this.props.onSelect}
                         user={this.props.user}
                         tickets={this.state.ticketCollection
@@ -174,9 +174,9 @@ var TicketList = React.createClass({
                 </div>
                 <div className="ticket-division col-md-12">
                     <div className="header">
-			<h3>Ratkaistut tukipyynnöt</h3>
-               	        <span className="numberOfTickets">({this.state.ticketCollection.filter(isClosed).length})</span>
-		    </div>
+                        <h3>Ratkaistut tukipyynnöt</h3>
+                        <span className="numberOfTickets">({this.state.ticketCollection.filter(isClosed).length})</span>
+                    </div>
                     <List onSelect={this.props.onSelect}
                         user={this.props.user}
                         tickets={this.state.ticketCollection.filter(isClosed)} />
