@@ -9,7 +9,6 @@ var Button = require("react-bootstrap/Button");
 
 var User = require("../models/client/User");
 var Base = require("../models/client/Base");
-var UpdateMixin = require("./UpdateMixin");
 
 
 /**
@@ -54,11 +53,6 @@ var UserItem = React.createClass({
 
 var SelectUsers = React.createClass({
 
-    mixins: [UpdateMixin],
-
-    onNavigate: function() {
-        this.forceUpdate();
-    },
 
     doSearch: function(searchString) {
         var self = this;

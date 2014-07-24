@@ -4,10 +4,11 @@ require("./client_setup");
 
 var React = require("react/addons");
 var Backbone = require("backbone");
+var Route = require('react-nested-router').Route;
+var Link = require('react-nested-router').Link;
 
-var UpdateMixin = require("./components/UpdateMixin");
+var BackboneMixin = require("./components/BackboneMixin");
 var User = require("./models/client/User");
-var Ticket = require("./models/client/Ticket");
 
 var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
@@ -15,15 +16,7 @@ var TicketList = require("./components/TicketList");
 var ErrorMessage = require("./components/ErrorMessage");
 var UserInformation = require("./components/UserInformation");
 
-var Button = require("react-bootstrap/Button");
 var Modal = require("react-bootstrap/Modal");
-
-var navigation = require("./components/navigation");
-var route = navigation.route;
-
-var RootLink = navigation.link.RootLink;
-var NewTicketLink = navigation.link.NewTicketLink;
-var TicketViewLink = navigation.link.TicketViewLink;
 
 
 
@@ -36,7 +29,7 @@ var TicketViewLink = navigation.link.TicketViewLink;
  */
 var Main = React.createClass({
 
-    mixins: [UpdateMixin],
+    mixins: [BackboneMixin],
 
     getInitialState: function() {
         return {
@@ -53,60 +46,13 @@ var Main = React.createClass({
         Backbone.off("error", this.handleUnhandledError);
     },
 
-    handleUnhandledError: function(error) {
+    handleUnhandledError: function(error, customMessage) {
+        console.error("Unhandled error", customMessage, error);
         this.renderInModal("Uups. Jotain odottamatonta tapahtui", function(){
-            return <ErrorMessage error={error} />;
+            return <ErrorMessage error={error} customMessage={customMessage} />;
         });
     },
 
-    /**
-     * Return true if the current ticket has the id
-     *
-     * @method
-     * @param {String} id
-     * @return {Boolean}
-     */
-    hasTicket: function(id) {
-        if (!this.state.ticket) return false;
-        return String(this.state.ticket.get("id")) === String(id);
-    },
-
-    onNavigate: function() {
-        var existing = route.ticket.existing;
-
-        if (route.root.isMatch()) {
-            this.setState({ ticket: null });
-            return;
-        }
-
-        if (route.ticket.newForm.isMatch()) {
-            this.setTicket(new Ticket());
-            return;
-        }
-
-        if (existing.isMatch()) {
-            var id = existing.get("id");
-            if (!this.hasTicket(id)) {
-                this.setTicket(new Ticket({ id: id }));
-                return;
-            }
-        }
-
-        this.forceUpdate();
-    },
-
-    setTicket: function(ticket) {
-        if (typeof ticket.get !== "function") throw new Error("Bad ticket");
-        if (ticket.get("id")){
-            ticket.fetch().catch(Backbone.trigger.bind(Backbone, "error"));
-        }
-        this.setState({ ticket: ticket });
-    },
-
-    handleSelectTicket: function(ticket) {
-        this.setTicket(ticket);
-        TicketViewLink.go({ id: ticket.get("id") });
-    },
 
     /**
      * @method renderInModal
@@ -134,44 +80,29 @@ var Main = React.createClass({
     render: function() {
         return (
             <div className="wrapper container-fluid">
-               <a href="/"> <h1 className="site-header">Opinsys tukipalvelu</h1></a>
+                <h1 className="site-header">Opinsys tukipalvelu</h1>
                 {this.state.renderModalContent && this.state.renderModalContent()}
                 <div className="topmenu row">
                     <div className="user-info col-md-6 pull-right">
                         <UserInformation user={this.state.user} />
                     </div>
                     <div className="top-buttons col-md-6">
-                        <Button onClick={NewTicketLink.go} className="top-button" >
+
+                        <Link className="btn btn-default top-button" to="new">
                             <i className="fa fa-pencil-square-o"></i>Uusi tukipyyntö
-                        </Button>
-                       <Button onClick={RootLink.go} className="top-button" >
+                        </Link>
+
+                        <Link className="btn btn-default top-button" to="tickets">
                             <i className="fa fa-home"></i>Omat tukipyynnöt
-                        </Button>
+                        </Link>
+
                     </div>
                 </div>
 
                 <div className="main-wrap clearfix" >
                     <div className="main box-shadow">
 
-                        {route.root.isMatch() &&
-                            <TicketList
-                                user={this.state.user}
-                                onSelect={this.handleSelectTicket} />
-                        }
-
-                        {route.ticket.newForm.isMatch() &&
-                            <TicketForm
-                                onSaved={this.handleSelectTicket}
-                                ticket={this.state.ticket} />
-                        }
-
-                        {route.ticket.existing.isMatch() &&
-                            <TicketView
-                                renderInModal={this.renderInModal}
-                                ticket={this.state.ticket}
-                                user={this.state.user}
-                            />
-                        }
+                        <this.props.activeRouteHandler user={this.state.user} />
 
                     </div>
 
@@ -182,7 +113,12 @@ var Main = React.createClass({
 
 });
 
-React.renderComponent(<Main />, document.body);
+React.renderComponent(
+    <Route handler={Main}>
+        <Route name="new" handler={TicketForm} />
+        <Route name="tickets" handler={TicketList} />
+        <Route name="ticket" path="/tickets/:id" handler={TicketView} />
+    </Route>, document.body);
 
 window.onerror = function(message, url, linenum) {
     var msg = "Unhandled client Javascript error: '" + message + "' on " + url + ":" + linenum;

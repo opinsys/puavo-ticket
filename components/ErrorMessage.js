@@ -60,6 +60,9 @@ var ErrorMessage = React.createClass({
     render: function() {
         return (
             <div className="ErrorMessage">
+
+                {this.props.customMessage && <h3>{this.props.customMessage}</h3>}
+
                 <p>
                     Lataa sivu uusiksi ja yritä uudelleen. Jos ongelma ei poistu
                     ota yhteyttä puhelimitse tukeen tai lähetä tämä virheviesti
@@ -68,7 +71,7 @@ var ErrorMessage = React.createClass({
                     </a>.
                 </p>
 
-                <h2>Virheviesti</h2>
+                <h3>Virheviesti</h3>
 
                 <pre>{this.formatError()}</pre>
 

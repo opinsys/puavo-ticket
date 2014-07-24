@@ -46,7 +46,8 @@
     "uglify-js": "~2.4.15",
     "underscore": "~1.6.0",
     "watchify": "~0.10.2",
-    "xtend": "~3.0.0"
+    "xtend": "~3.0.0",
+    "react-nested-router": "rpflorence/react-router"
   },
   "devDependencies": {
     "jshint": "~2.5.2",

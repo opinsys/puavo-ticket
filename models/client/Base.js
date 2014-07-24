@@ -4,94 +4,50 @@
 "use strict";
 var Backbone = require("backbone");
 var _ = require("lodash");
+var $ = require("jquery");
 var Promise = require("bluebird");
 var Cocktail = require("backbone.cocktail");
 
 var BaseMixin = require("../BaseMixin");
 
-function proxyToBase() {
-    /*jshint validthis:true */
-    this.on("all", function(eventName) {
-        Base.trigger(eventName);
-    });
-}
 
-/**
- * Decorate method execution with `<eventName>:start` and `<eventName>:end`
- * events and wrap output to a bluebird promise. During promise resolution the
- * promise is available in `this[eventName]`.
- *
- *
- * @method promiseWrap
- * @static
- * @for models.client.Base
- * @param {String} eventName
- * @param {Function} method
- */
-function promiseWrap(eventName, method) {
-    return function() {
-        var self = this;
-        self.trigger(eventName + ":start");
+function createReplaceMixin(parentPrototype) {
+    return {
 
-        self[eventName] = Promise.cast(method.apply(self, arguments))
-        .then(function(res) {
-            self[eventName] = null;
-            self.trigger(eventName + ":end");
-            return res;
-        })
-        .catch(function(err) {
-            // jQuery returns an xhr object as the error object. Convert it to
-            // a proper error object
-            if (err && err.responseText !== undefined) {
-                var xhr = err;
-                err = new Error("Bad request " + xhr.status + ": " + xhr.responseText);
-                err.xhr = xhr;
+        /**
+         * Fetch model state from the server
+         * http://backbonejs.org/#Model-fetch
+         *
+         * @method fetch
+         * @return {Bluebird.Promise}
+         */
+        fetch: function() {
+            if (this.parent) throw new Error("Models with parents are fetched by parents");
+
+            if (this._type === "model" && !this.get("id")) {
+                throw new Error("fetch() without id makes no sense on a model");
             }
 
-            // Emit event after this catch clause has been executed. This
-            // ensures that the promise is actually rejected when a render
-            // occurs
-            process.nextTick(function(err) {
-                self.trigger(eventName + ":error", err);
-            });
+            console.log("real fetch", this.cid);
+            return Promise.cast(parentPrototype.fetch.apply(this, arguments));
+        },
 
-            throw err;
-        });
+        replaceFetch: function() {
+            console.log("replaceFetch", this.cid);
+            if (this.parent) {
+                this.parent.replaceFetch();
+                return;
+            }
 
-        return self[eventName];
+            var replaceModel = this.clone();
+            var op = replaceModel.fetch()
+                .then(function() { return replaceModel; });
+
+            this.trigger("replace", op);
+            return op;
+        },
     };
 }
-
-/**
- * @class PromiseWrapMixin
- */
-var PromiseWrapMixin = {
-
-    /**
-     * Return true when the model is fetching or saving data
-     *
-     * @method isOperating
-     * @return {Boolean}
-     */
-    isOperating: function() {
-        return !!(this.saving || this.fetching);
-    },
-
-    /**
-     *
-     * Returns an error object if .fetch() or .save() has been failed.
-     *
-     * @method getError
-     * @return {Error|Undefined}
-     */
-    getError: function() {
-        var promise = this.saving || this.fetching;
-        if (promise && promise.isRejected()) {
-            return promise.reason();
-        }
-    }
-
-};
 
 
 /**
@@ -101,22 +57,27 @@ var PromiseWrapMixin = {
  *
  * @class Base
  * @extends Backbone.Model
- * @uses models.client.PromiseWrapMixin
+ * @uses models.client.ReplaceMixin
  * @uses models.BaseMixin
  * @see http://backbonejs.org/#Model
  */
 var Base = Backbone.Model.extend({
 
+    _type: "model",
+
     initialize: function(attrs, options) {
         this.parent = options && options.parent;
-        proxyToBase.call(this);
+    },
+
+    isOperating: function() {
+        console.error("Deprecated isOperating() call");
+        return false;
     },
 
     createdBy: function() {
         var User = require("./User");
         return new User(this.get("createdBy"));
     },
-
 
     push: function(attr, value) {
         var array = this.get(attr);
@@ -139,23 +100,7 @@ var Base = Backbone.Model.extend({
      */
     idAttribute: "unique_id",
 
-    /**
-     * Fetch model state from the server
-     * http://backbonejs.org/#Model-fetch
-     *
-     * @method fetch
-     * @return {Bluebird.Promise}
-     */
-    fetch: promiseWrap("fetching", Backbone.Model.prototype.fetch),
 
-    /**
-     * Promise of the fetching operation instantiated by Base#fetch().
-     * Available only when the operation is ongoing.
-     *
-     * @property fetching
-     * @type Bluebird.Promise|null
-     */
-    fetching: null,
 
     /**
      * Save module to server
@@ -164,7 +109,24 @@ var Base = Backbone.Model.extend({
      * @method save
      * @return {Bluebird.Promise}
      */
-    save: promiseWrap("saving", Backbone.Model.prototype.save),
+    save: function(opts) {
+        if (!this.isNew()) throw new Error("Only new models can be saved with save() Use replaceSave() or setSave()");
+        return this.replaceSave(this.toJSON(), opts);
+    },
+
+    setSave: function(attrs, opts) {
+        return this.replaceSave(_.extend({}, this.toJSON(), attrs), opts);
+    },
+
+    replaceSave: function(attrs, opts) {
+        opts = opts || {};
+        return Promise.cast($.post(_.result(this, "url"), attrs))
+            .bind(this)
+            .then(function(res) {
+                return new this.constructor(res);
+            });
+    },
+
 
     /**
      * Promise of the saving operation instantiated by Base#save().  Available
@@ -203,7 +165,6 @@ var Base = Backbone.Model.extend({
         return new Klass(models, options);
     },
 
-    promiseWrap: promiseWrap
 });
 
 /**
@@ -213,11 +174,11 @@ var Base = Backbone.Model.extend({
  *
  * @class Base.Collection
  * @extends Backbone.Collection
- * @uses models.client.PromiseWrapMixin
+ * @uses models.client.ReplaceMixin
  */
 Base.Collection = Backbone.Collection.extend({
 
-    initialize: proxyToBase,
+    _type: "collection",
 
     /**
      * http://backbonejs.org/#Collection-model
@@ -234,33 +195,15 @@ Base.Collection = Backbone.Collection.extend({
      * @method fetch
      * @return {Bluebird.Promise}
      */
-    fetch: promiseWrap("fetching", Backbone.Collection.prototype.fetch),
+    fetch: function() {
+        return Promise.cast(Backbone.Collection.prototype.fetch.apply(this, arguments));
+    },
 
-    /**
-     * Promise of the fetching operation instantiated by
-     * Base.Collection#fetch(). Available only when the operation is ongoing.
-     *
-     * @property fetching
-     * @type Bluebird.Promise|null
-     */
-    fetching: null,
-
-    /**
-     * Call when not using this Collection anymore. Unbinds all event
-     * listeners.
-     *
-     * @method dispose
-     */
-    dispose: function() {
-        this.off();
-    }
 });
 
 
-
-
 Cocktail.mixin(Base, BaseMixin);
-Cocktail.mixin(Base, PromiseWrapMixin);
-Cocktail.mixin(Base.Collection, PromiseWrapMixin);
+Cocktail.mixin(Base, createReplaceMixin(Backbone.Model.prototype));
+Cocktail.mixin(Base.Collection, createReplaceMixin(Backbone.Collection.prototype));
 _.extend(Base, Backbone.Events);
 module.exports = Base;

@@ -6,8 +6,6 @@ var React = require("react/addons");
 var DropdownButton = require("react-bootstrap/DropdownButton");
 var MenuItem = require("react-bootstrap/MenuItem");
 
-var navigation = require("./navigation");
-var LogoutLink = navigation.link.LogoutLink;
 
 /**
  * User information and logout
@@ -22,7 +20,8 @@ var UserInformation = React.createClass({
     },
 
     handleLogout: function() {
-        window.location = LogoutLink.renderHref();
+        alert("todo");
+        // window.location = LogoutLink.renderHref();
     },
 
     render: function() {

@@ -3,11 +3,13 @@
 var React = require("react/addons");
 var _ = require("lodash");
 var Promise = require("bluebird");
-var Backbone = require("backbone");
 
 var Button = require("react-bootstrap/Button");
 var Badge = require("react-bootstrap/Badge");
 
+var captureError = require("puavo-ticket/utils/captureError");
+var BackboneMixin = require("puavo-ticket/components/BackboneMixin");
+var Ticket = require("puavo-ticket/models/client/Ticket");
 var Loading = require("../Loading");
 var Handler = require("puavo-ticket//models/client/Handler");
 var Base = require("puavo-ticket/models/client/Base");
@@ -27,18 +29,16 @@ var ToggleStatusButton = require("./ToggleStatusButton");
  */
 var TicketView = React.createClass({
 
+    mixins: [BackboneMixin],
+
     getInitialState: function() {
         return {
+            ticket: new Ticket({ id: this.props.params.id }),
+            fetching: true,
+            saving: false,
             showTags: true,
             comment: "",
         };
-    },
-
-    handleChange: function() {
-        this.props.ticket.set({
-            description: this.refs.description.getDOMNode().value,
-            title: this.refs.title.getDOMNode().value,
-        });
     },
 
 
@@ -54,12 +54,19 @@ var TicketView = React.createClass({
      */
     saveComment: function() {
         if (!this.hasUnsavedComment()) return;
+        this.setState({ saving: true });
 
-        this.props.ticket.addComment(this.state.comment, this.props.user)
+        this.state.ticket.addComment(this.state.comment, this.props.user)
+        .catch(captureError("Kommentin tallennus epäonnistui"))
+        .bind(this)
         .then(function() {
-            window.scrollTo(0, document.body.scrollHeight);
+            return this.markAsRead();
         })
-        .catch(Backbone.trigger.bind(Backbone, "error"));
+        .then(function() {
+            if (!this.isMounted()) return;
+            this.setState({ saving: false });
+            window.scrollTo(0, document.body.scrollHeight);
+        });
 
         this.setState({ comment: "" });
         this.refs.comment.getDOMNode().focus();
@@ -77,11 +84,11 @@ var TicketView = React.createClass({
 
 
     handleClose: function() {
-        this.props.ticket.close();
+        this.state.ticket.close();
     },
 
     isOperating: function() {
-        return this.props.ticket.isOperating();
+        return this.state.fetching || this.state.saving;
     },
 
 
@@ -96,20 +103,20 @@ var TicketView = React.createClass({
         self.props.renderInModal("Lisää käsittelijöitä", function(close){
             return (
                 <SelectUsers
-                    currentHandlers={_.invoke(self.props.ticket.handlers(), "getHandlerUser")}
+                    currentHandlers={_.invoke(self.state.ticket.handlers(), "getHandlerUser")}
                     onCancel={close}
                     onSelect={function(users) {
 
                         var handlers = users.map(function(user) {
-                            return new Handler({ handler: user.toJSON() }, { parent: self.props.ticket });
+                            return new Handler({ handler: user.toJSON() }, { parent: self.state.ticket });
                         });
 
 
                         Promise.all(_.invoke(handlers, "save"))
                         .then(function() {
-                            return self.props.ticket.fetch();
+                            return self.state.ticket.fetch();
                         })
-                        .catch(Backbone.trigger.bind(Backbone, "error"));
+                        .catch(captureError("Käsittelijöiden lisääminen epäonnistui"));
                         close();
                 }}/>
             );
@@ -118,30 +125,26 @@ var TicketView = React.createClass({
 
     handleOnFocus: function() {
         this.markAsRead();
-
-        this.props.ticket.fetch()
-        .catch(Backbone.trigger.bind(Backbone, "error"));
     },
 
     markAsRead: function() {
-        this.props.ticket.markAsRead()
-        .catch(Backbone.trigger.bind(Backbone, "error"));
+        if (!this.isMounted()) return;
+
+        this.setState({ fetching: true });
+        return this.state.ticket.markAsRead()
+            .bind(this)
+            .then(function() {
+                return this.state.ticket.replaceFetch();
+            })
+            .then(function() {
+                if (this.isMounted()) this.setState({ fetching: false });
+            })
+            .catch(captureError("Tukipyynnön merkkaaminen luetuksi epäonnistui"));
     },
 
-    componentWillReceiveProps: function(nextProps) {
-        if (!this.initialReadMark && nextProps.ticket.hasData()) {
-            // Usually we would use the component state for this but because it
-            // is asynchronous it causes multiple unwanted markAsRead calls.
-            // So use a plain component property to workaround it.
-            this.initialReadMark = true;
-
-            // It seems that updates uppon receiving props is illegal. Mark on
-            // next event loop tick.
-            setTimeout(this.markAsRead, 0);
-        }
-    },
 
     componentDidMount: function() {
+        this.markAsRead();
         window.addEventListener("focus", this.handleOnFocus);
     },
 
@@ -150,7 +153,7 @@ var TicketView = React.createClass({
     },
 
     renderBadge: function() {
-        var status = this.props.ticket.getCurrentStatus();
+        var status = this.state.ticket.getCurrentStatus();
         switch (status) {
             case "open":
                 return <Badge className={status}>Ratkaisematon</Badge>;
@@ -158,8 +161,9 @@ var TicketView = React.createClass({
                 return <Badge className={status}>Ratkaistu</Badge>;
         }
     },
+
     renderDate: function() {
-        var datestring = this.props.ticket.get("created_at"),
+        var datestring = this.state.ticket.get("created_at"),
         options={weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "numeric", minute:"numeric"};
         return(
             <span className="badge-text">
@@ -171,16 +175,16 @@ var TicketView = React.createClass({
     render: function() {
         var self = this;
         return (
-            <div className="row">
+            <div className="row TicketView">
                 <div className="ticket-view col-md-8">
 
-                    {this.isOperating() && <Loading />}
+                    <Loading visible={this.state.fetching} />
 
                     <div className="ticket-title ticket-updates">
                         <div className="update-buttons-wrap row">
                             <div className="badges col-md-3">
                                 <span className="badge-text">
-                                {"Tiketti #" + this.props.ticket.get("id") + " "}
+                                {"Tiketti #" + this.state.ticket.get("id") + " "}
                                 </span>
                                 {this.renderBadge()}
                             </div>
@@ -193,28 +197,28 @@ var TicketView = React.createClass({
                                 {this.props.user.isManager() &&
                                     <ToggleTagsButton active={this.state.showTags} onClick={this.toggleTags} />
                                 }
-                                {this.props.ticket.isHandler(this.props.user) &&
-                                    <ToggleStatusButton ticket={this.props.ticket} user={this.props.user} />
+                                {this.state.ticket.isHandler(this.props.user) &&
+                                    <ToggleStatusButton ticket={this.state.ticket} user={this.props.user} />
                                 }
                             </div>
                         </div>
                         <div className="header ticket-header">
                             <h3>
-                                {this.props.ticket.get("title") + " "} {/* ({this.props.ticket.getCurrentStatus()}) */}
+                                {this.state.ticket.get("title") + " "} {/* ({this.state.ticket.getCurrentStatus()}) */}
                             </h3>
                             {this.renderDate()}
                         </div>
                         <div className="image">
-                            <img src={this.props.ticket.createdBy().getProfileImage()} />
+                            <img src={this.state.ticket.createdBy().getProfileImage()} />
                         </div>
                         <div className="message">
                              <span>
                                 <strong>
-                                    {this.props.ticket.createdBy().getName() + " "}
+                                    {this.state.ticket.createdBy().getName() + " "}
                                 </strong>
                             </span><br />
                             <span>
-                                {this.props.ticket.get("description")}
+                                {this.state.ticket.get("description")}
                             </span>
                         </div>
                     </div>
@@ -229,7 +233,7 @@ var TicketView = React.createClass({
                         </div>
                     </div>
                     <div>
-                    {this.props.ticket.updates()
+                    {this.state.ticket.updates()
                         .filter(function(update) {
                             if (!self.state.showTags && update.get("type") === "tags") {
                                 return false;
@@ -247,6 +251,7 @@ var TicketView = React.createClass({
                                 </span>
                         );})}
                     </div>
+                        <Loading visible={this.state.saving} className="saving" />
                         <textarea
                             className="form-control"
                             ref="comment"
@@ -259,13 +264,12 @@ var TicketView = React.createClass({
                     <div className="ticket-update-buttons">
                         <Button
                             onClick={this.saveComment}
-                            disabled={this.props.ticket.isOperating() || !this.hasUnsavedComment()} >Lähetä
+                            disabled={this.isOperating() || !this.hasUnsavedComment()} >Lähetä
                         </Button>
                     </div>
                 </div>
                 <div className="sidebar col-md-4">
-                    <SideInfo>
-                    </SideInfo>
+                    <SideInfo />
                 </div>
             </div>
         );

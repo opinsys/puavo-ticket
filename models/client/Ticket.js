@@ -104,12 +104,7 @@ var Ticket = Base.extend({
             createdBy: createdBy.toJSON()
         }, { parent: this });
 
-        this.push("comments", model.toJSON());
-
-        return model.save().bind(this).then(function() {
-            this.fetch();
-        });
-
+        return model.save();
     },
 
 
@@ -124,8 +119,7 @@ var Ticket = Base.extend({
             tag: tagName,
             createdBy: createdBy.toJSON()
         }, { parent: this });
-        this.push("tags", model.toJSON());
-        return model.save().then(this.fetch.bind(this, null));
+        return model.save();
     },
 
     /**

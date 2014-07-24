@@ -2,10 +2,11 @@
 "use strict";
 var React = require("react/addons");
 var _ = require("lodash");
+var Link = require('react-nested-router').Link;
 
+var captureError = require("puavo-ticket/utils/captureError");
 var Ticket = require("../models/client/Ticket");
-var navigation = require("./navigation");
-var TicketViewLink = navigation.link.TicketViewLink;
+var BackboneMixin = require("./BackboneMixin");
 
 function isClosed(ticket) {
     return ticket.getCurrentStatus() === "closed";
@@ -85,34 +86,33 @@ var List = React.createClass({
         return (
             <div className="ticketlist">
                 <table ref="list" className="table table-striped table-responsive">
-                    <thead>
-                        <tr>
+                    <tbody>
+                    <tr>
                         <th data-column-id="id">ID</th>
                         <th data-column-id="subject">Aihe</th>
                         <th data-column-id="creator">Lähettäjä</th>
                         <th data-column-id="updated">Viimeisin päivitys</th>
                         <th data-column-id="handlers">Käsittelijä(t)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                    </tr>
+
                     {this.props.tickets.map(function(ticket) {
                         return (
                             <tr key={ticket.get("id")} className={ self.getTitleClass(ticket, self.props.user.get("id")) }>
                                 <td>#{ticket.get("id")}</td>
                                 <td>
-                                {/** TODO click row to open ticket */}
-                                <TicketViewLink
-                                    id={ticket.get("id")}
-                                    onClick={self.props.onSelect.bind(null, ticket)} >
-                                {ticket.get("title")}
-                                <span className="badge unread-comments" title="Uusia kommentteja"><i className="fa fa-comment-o"></i></span>
-                                </TicketViewLink>
+                                    <Link to="ticket" id={ticket.get("id")}>
+                                        {ticket.get("title")}
+                                        <span className="badge unread-comments" title="Uusia kommentteja">
+                                            <i className="fa fa-comment-o"></i>
+                                        </span>
+                                    </Link>
                                 </td>
                                  {self.renderTicketMetaInfo(ticket)}
                             </tr>
                         );
                     })}
-                    </tbody>
+                </tbody>
+
                 </table>
             </div>
         );
@@ -128,6 +128,7 @@ var List = React.createClass({
  */
 var TicketList = React.createClass({
 
+    mixins: [BackboneMixin],
 
     getInitialState: function() {
         return {
@@ -136,7 +137,8 @@ var TicketList = React.createClass({
     },
 
     componentDidMount: function() {
-        this.state.ticketCollection.fetch();
+        this.state.ticketCollection.replaceFetch()
+        .catch(captureError("Tukipyyntö listauksen haku epäonnistui"));
     },
 
     render: function() {
@@ -149,14 +151,12 @@ var TicketList = React.createClass({
                 {/* <p>ticket count: {this.state.ticketCollection.size()}</p> */}
 
                 <div className="ticket-division col-md-12">
-                    {this.state.ticketCollection.fetching && <p>Ladataan...</p>}
                     {handledByCurrentUser.length > 0 && <div>
                     <div className="header">
                         <h3>Avoimet tukipyynnöt</h3>
                         <span className="numberOfTickets">({handledByCurrentUser.length})</span>
                     </div>
                         <List user={this.props.user}
-                            onSelect={this.props.onSelect}
                             tickets={handledByCurrentUser} />
                     </div>}
                 </div>
@@ -166,7 +166,7 @@ var TicketList = React.createClass({
                         <h3>Käsittelyssä olevat tukipyynnöt</h3>
                         <span className="numberOfTickets">({this.state.ticketCollection.filter(isOpen).filter(notIn.bind(null, handledByCurrentUser)).length})</span>
                     </div>
-                    <List onSelect={this.props.onSelect}
+                    <List 
                         user={this.props.user}
                         tickets={this.state.ticketCollection
                         .filter(isOpen)
@@ -177,7 +177,7 @@ var TicketList = React.createClass({
                         <h3>Ratkaistut tukipyynnöt</h3>
                         <span className="numberOfTickets">({this.state.ticketCollection.filter(isClosed).length})</span>
                     </div>
-                    <List onSelect={this.props.onSelect}
+                    <List 
                         user={this.props.user}
                         tickets={this.state.ticketCollection.filter(isClosed)} />
                 </div>
