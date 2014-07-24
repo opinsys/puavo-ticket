@@ -5,7 +5,7 @@
   "author": "",
   "license": "GPLv2",
   "scripts": {
-    "postinstall": "ln -sf .. node_modules/puavo-ticket"
+    "postinstall": "rm -f node_modules/puavo-ticket && ln -sf .. node_modules/puavo-ticket"
   },
   "dependencies": {
     "apidoc": "~0.6.0",
