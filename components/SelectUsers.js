@@ -3,12 +3,12 @@
 
 var _ = require("lodash");
 var React = require("react/addons");
+var iUpdate = React.addons.update;
 var Promise = require("bluebird");
 
 var Button = require("react-bootstrap/Button");
 
 var User = require("../models/client/User");
-var Base = require("../models/client/Base");
 
 
 /**
@@ -60,7 +60,7 @@ var SelectUsers = React.createClass({
 
         var searchOp = User.search(searchString)
         .then(function(users) {
-            self.setState({ users: users });
+            self.setState({ searchedUsers: users });
         })
         .catch(Promise.CancellationError, function() {
             // cancel is ok
@@ -104,8 +104,8 @@ var SelectUsers = React.createClass({
             error: null,
             searchString: "",
             searchOp: null,
-            users: new Base.Collection(),
-            selectedUsers: new Base.Collection(this.props.currentHandlers),
+            searchedUsers: [],
+            selectedUsers: this.props.currentHandlers
         };
     },
 
@@ -115,13 +115,22 @@ var SelectUsers = React.createClass({
     },
 
     handleSelectUser: function(user) {
-        this.state.selectedUsers.add(user);
         this.refs.search.getDOMNode().focus();
+        if (this.isSelected(user)) return;
+
+        this.setState({
+            selectedUsers: this.state.selectedUsers.concat(user)
+        });
+
     },
 
     handleRemoveUser: function(user) {
-        this.state.selectedUsers.remove(user);
         this.refs.search.getDOMNode().focus();
+        this.setState({
+            selectedUsers: this.state.selectedUsers.filter(function(selectedUser) {
+                return selectedUser.getExternalId() !== user.getExternalId();
+            })
+        });
     },
 
     /**
@@ -164,7 +173,7 @@ var SelectUsers = React.createClass({
 
                 <div className="selectuser">
                     <ul className="list-group" >
-                        {self.state.users.map(function(user) {
+                        {self.state.searchedUsers.map(function(user) {
                             return (
                                 <li key={user.get("external_id")} className="list-group-item" >
                                     <UserItem

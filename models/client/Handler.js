@@ -19,6 +19,10 @@ var Handler = Base.extend({
         };
     },
 
+    url: function() {
+        return this.parent.url() + "/handlers";
+    },
+
     /**
      * Return the handler user object
      *
@@ -30,16 +34,10 @@ var Handler = Base.extend({
     },
 
     save: function() {
-        throw new Error("Fix handler save...");
-        // var self = this;
-
-        // return Promise.cast($.post(this.parent.url() + "/handlers", {
-        //         username: this.getHandlerUser().get("external_data").username,
-        //         organisation_domain: this.getHandlerUser().get("external_data").organisation_domain
-        //     }))
-        //     .then(function(res) {
-        //         self.set(res);
-        //     });
+        return this.replaceSave({
+            username: this.getHandlerUser().get("external_data").username,
+            organisation_domain: this.getHandlerUser().get("external_data").organisation_domain
+        });
     },
 
 });

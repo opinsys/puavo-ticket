@@ -1,6 +1,11 @@
 .table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th{
     background-color: #E4DDD4;
 }
+
+.modal {
+    position: absolute;
+}
+
 .table{
     thead{
 	tr{

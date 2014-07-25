@@ -106,18 +106,22 @@ var TicketView = React.createClass({
                     currentHandlers={_.invoke(self.state.ticket.handlers(), "getHandlerUser")}
                     onCancel={close}
                     onSelect={function(users) {
+                        close();
+                        if (self.isMounted()) self.setState({ fetching: true });
 
                         var handlers = users.map(function(user) {
                             return new Handler({ handler: user.toJSON() }, { parent: self.state.ticket });
                         });
 
-
                         Promise.all(_.invoke(handlers, "save"))
+                        .catch(captureError("Käsittelijöiden lisääminen epäonnistui"))
                         .then(function() {
-                            return self.state.ticket.fetch();
+                            return self.state.ticket.replaceFetch();
                         })
-                        .catch(captureError("Käsittelijöiden lisääminen epäonnistui"));
-                        close();
+                        .then(function() {
+                            if (self.isMounted()) self.setState({ fetching: false });
+                        })
+                        .catch(captureError("Tietojen päivitys epäonnistui"));
                 }}/>
             );
         });
