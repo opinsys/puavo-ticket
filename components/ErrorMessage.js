@@ -2,6 +2,7 @@
 "use strict";
 
 var React = require("react/addons");
+var _ = require("lodash");
 
 function mailtoEscape(value) {
     // borrowed from https://github.com/oncletom/mailto/blob/02aa8796cf6e2a0d66276693bab57e892dd0f7c1/lib/mailto.js#L120
@@ -13,6 +14,10 @@ function objToBody(ob) {
     return Object.keys(ob).map(function(key) {
         return key + ":\n\n" + ob[key] + "\n\n";
     }).join("").trim();
+}
+
+function isjQueryAjaxError(err) {
+    return err && typeof err.pipe === "function";
 }
 
 /**
@@ -29,12 +34,25 @@ var ErrorMessage = React.createClass({
     },
 
     formatError: function() {
-        return objToBody({
-            "Virhe": this.props.error.message,
-            "Stack": this.props.error.stack,
+        var ob = {
             "Selain": window.navigator.userAgent,
             "URL": window.location.toString()
-        });
+        };
+
+        if (isjQueryAjaxError(this.props.error)) {
+             _.extend(ob, {
+                "Server error": this.props.error.responseText,
+                "Status": this.props.error.status,
+                "Status code": this.props.error.statusCode()
+            });
+        } else {
+            _.extend(ob, {
+                "Virhe": this.props.error.message,
+                "Stack": this.props.error.stack
+            });
+        }
+
+        return objToBody(ob);
     },
 
     getMailBody: function() {
