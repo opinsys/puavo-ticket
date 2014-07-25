@@ -1,4 +1,4 @@
-.table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th{
+.table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th {
     background-color: #E4DDD4;
 }
 
@@ -6,38 +6,38 @@
     position: absolute;
 }
 
-.table{
-    thead{
-	tr{
-	    th{
-		max-width: 400px;
-	    }
-	}
+.table {
+    thead {
+        tr {
+            th {
+                max-width: 400px;
+            }
+        }
     }
-    tbody{
-	tr{
-	    td{
-		padding: 0.75rem;
-	    }
-	}
+    tbody {
+        tr {
+            td {
+                padding: 0.75rem;
+            }
+        }
     }
 }
-.dropdown-menu{
+.dropdown-menu {
     text-align: left;
 }
 
 .btn {
     cursor: pointer;
     position: relative;
-    &:before{
-	border: 1px solid rgba(110,110,110,0.2);
-	border-radius: 4px;
-	bottom: 0;
-	content: '';
-	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
+    &:before {
+        border: 1px solid rgba(110,110,110,0.2);
+        border-radius: 4px;
+        bottom: 0;
+        content: '';
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
     }
 }
 
@@ -57,7 +57,7 @@ h2 {
         cursor: not-allowed;
     }
 }
-.btn{
+.btn {
     font-size: 80%;
     font-weight: 800;
     height: 40px;
@@ -67,13 +67,13 @@ h2 {
 .btn-success {
     background-color: $green-active-color;
     &:hover, &:focus, &:active{
-	background-color: $green-active-hover-color;
+        background-color: $green-active-hover-color;
     }
 }
-.btn-warning{
+.btn-warning {
     background-color: $input-color;
-    &:hover, &:focus, &:active{
-	background-color: $active-input-color;
+    &:hover, &:focus, &:active {
+        background-color: $active-input-color;
     }
 }
 
@@ -88,33 +88,33 @@ h2 {
     border-radius: 10px;
 }
 @media screen and (max-width: 992px) {
-    .badge-text{
-	&:after{
-	    display:inline;
-	}
+    .badge-text {
+        &:after{
+            display:inline;
+        }
     }
 }
-@media (max-width: 767px){
-    .table-responsive{
-	display: block;
-	overflow-x: auto;
+@media (max-width: 767px) {
+    .table-responsive {
+        display: block;
+        overflow-x: auto;
     }
 }
 @media screen and (max-width: 680px) {
-    .btn{
-	height: 50px;
-	padding: 0.5rem;
+    .btn {
+        height: 50px;
+        padding: 0.5rem;
     }
-     .pull-right{
-	float: none !important;
+     .pull-right {
+        float: none !important;
     }
 }
 
 @media screen and (max-width: 560px) {
-    .btn{
-	margin: 0.5rem 0 0 0;
+    .btn {
+        margin: 0.5rem 0 0 0;
     }
-     .pull-right{
-	float: none !important;
+     .pull-right {
+        float: none !important;
     }
 }
