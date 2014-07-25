@@ -137,7 +137,7 @@ var TicketList = React.createClass({
     },
 
     componentDidMount: function() {
-        this.state.ticketCollection.replaceFetch()
+        this.state.ticketCollection.fetch()
         .catch(captureError("Tukipyyntö listauksen haku epäonnistui"));
     },
 

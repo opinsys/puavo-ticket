@@ -109,14 +109,16 @@ var TicketView = React.createClass({
                         close();
                         if (self.isMounted()) self.setState({ fetching: true });
 
-                        var handlers = users.map(function(user) {
-                            return new Handler({ handler: user.toJSON() }, { parent: self.state.ticket });
-                        });
-
-                        Promise.all(_.invoke(handlers, "save"))
+                        Promise.all(users.map(function(user) {
+                            var h = new Handler({}, { parent: self.state.ticket });
+                            return h.save({
+                                username: user.getUsername(),
+                                organisation_domain: user.getOrganisationDomain()
+                            });
+                        }))
                         .catch(captureError("Käsittelijöiden lisääminen epäonnistui"))
                         .then(function() {
-                            return self.state.ticket.replaceFetch();
+                            return self.state.ticket.fetch();
                         })
                         .then(function() {
                             if (self.isMounted()) self.setState({ fetching: false });
@@ -138,7 +140,7 @@ var TicketView = React.createClass({
         return this.state.ticket.markAsRead()
             .bind(this)
             .then(function() {
-                return this.state.ticket.replaceFetch();
+                return this.state.ticket.fetch();
             })
             .then(function() {
                 if (this.isMounted()) this.setState({ fetching: false });

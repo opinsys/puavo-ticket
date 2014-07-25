@@ -33,13 +33,6 @@ var Handler = Base.extend({
         return new User(this.get("handler"));
     },
 
-    save: function() {
-        return this.replaceSave({
-            username: this.getHandlerUser().get("external_data").username,
-            organisation_domain: this.getHandlerUser().get("external_data").organisation_domain
-        });
-    },
-
 });
 
 module.exports = Handler;

@@ -39,12 +39,6 @@ var User = Base.extend({
         return Promise.cast($.get("/api/puavo/v3/users/_search", {
                 q: keywords
             })).cancellable()
-            .catch(function convertJQueryAjaxObjectoToError(err) {
-                if (!err.responseText) throw err;
-                var ajaxErr = new Error("Ajax error: " + err.responseText);
-                ajaxErr.jquery = err;
-                throw ajaxErr;
-            })
             .then(function(data) {
                 var users =  data.map(function(userData) {
                     return new User({
@@ -52,7 +46,7 @@ var User = Base.extend({
                     });
                 });
 
-                return new Base.Collection(users);
+                return users;
             });
     },
 });

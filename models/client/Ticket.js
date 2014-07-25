@@ -99,12 +99,11 @@ var Ticket = Base.extend({
      * @return {Bluebird.Promise}
      */
     addComment: function(comment, createdBy){
-        var model = new Comment({
+        var model = new Comment({}, { parent: this });
+        return model.save({
             comment: comment,
             createdBy: createdBy.toJSON()
-        }, { parent: this });
-
-        return model.save();
+        });
     },
 
 
@@ -224,7 +223,7 @@ var Ticket = Base.extend({
     markAsRead: function() {
         debug("Mark ticket as read: " + this.get("title"));
         var model = new ReadTicket({}, { parent: this });
-        return model.save();
+        return model.save({ dummy: 1 });
     }
 
 

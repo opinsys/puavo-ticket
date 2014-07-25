@@ -22,30 +22,34 @@ function createReplaceMixin(parentPrototype) {
          * @return {Bluebird.Promise}
          */
         fetch: function() {
-            if (this.parent) throw new Error("Models with parents are fetched by parents");
+            if (this.parent) {
+                throw new Error("This is a child model. Use fetchParent() to get new parent");
+            }
 
             if (this._type === "model" && !this.get("id")) {
                 throw new Error("fetch() without id makes no sense on a model");
             }
 
-            console.log("real fetch", this.cid);
-            return Promise.cast(parentPrototype.fetch.apply(this, arguments));
-        },
-
-        replaceFetch: function() {
-            console.log("replaceFetch", this.cid);
-            if (this.parent) {
-                this.parent.replaceFetch();
-                return;
-            }
-
-            var replaceModel = this.clone();
-            var op = replaceModel.fetch()
-                .then(function() { return replaceModel; });
+            var op = Promise.cast($.get(_.result(this, "url")))
+            .bind(this)
+            .then(function(res) {
+                return new this.constructor(res);
+            });
 
             this.trigger("replace", op);
             return op;
         },
+
+        fetchParent: function() {
+            if (this.parent) return this.parent.fetchParent();
+            return this.fetch();
+        },
+
+        replaceFetch: function(a, b) {
+            console.error("deprecated replaceFetch");
+            return this.fetch(a, b);
+        },
+
     };
 }
 
@@ -65,9 +69,23 @@ var Base = Backbone.Model.extend({
 
     _type: "model",
 
-    initialize: function(attrs, options) {
-        this.parent = options && options.parent;
+    constructor: function(attrs, opts) {
+        this.parent = opts && opts.parent;
+        Backbone.Model.apply(this, arguments);
+        this._freeze();
     },
+
+    _freeze: function() {
+        this._set = this.set;
+        this.set = function() {
+            throw new Error("Do not mutate models");
+        };
+    },
+
+    _unfreeze: function() {
+        this.set = this._set;
+    },
+
 
     isOperating: function() {
         console.error("Deprecated isOperating() call");
@@ -109,22 +127,24 @@ var Base = Backbone.Model.extend({
      * @method save
      * @return {Bluebird.Promise}
      */
-    save: function(opts) {
-        if (!this.isNew()) throw new Error("Only new models can be saved with save() Use replaceSave() or setSave()");
-        return this.replaceSave(this.toJSON(), opts);
-    },
+    save: function(attrs, opts) {
+        if (!attrs || _.isEmpty(attrs)) throw new Error("Missing attrs!");
 
-    setSave: function(attrs, opts) {
-        return this.replaceSave(_.extend({}, this.toJSON(), attrs), opts);
-    },
 
-    replaceSave: function(attrs, opts) {
-        opts = opts || {};
+        // XXX does this make sense?
+        if (!this.isNew()) throw new Error("Only new models can be saved!");
+
         return Promise.cast($.post(_.result(this, "url"), attrs))
             .bind(this)
             .then(function(res) {
                 return new this.constructor(res);
             });
+
+    },
+
+    replaceSave: function(attrs, opts) {
+        console.error("deprecated replaceSave");
+        return this.save(attrs, opts);
     },
 
 
@@ -186,24 +206,14 @@ Base.Collection = Backbone.Collection.extend({
      * @property model
      * @type models.client.Base
      */
-    model: Base,
+    model: Base
 
-    /**
-     * Fetch models from the server
-     * http://backbonejs.org/#Collection-fetch
-     *
-     * @method fetch
-     * @return {Bluebird.Promise}
-     */
-    fetch: function() {
-        return Promise.cast(Backbone.Collection.prototype.fetch.apply(this, arguments));
-    },
 
 });
 
 
 Cocktail.mixin(Base, BaseMixin);
-Cocktail.mixin(Base, createReplaceMixin(Backbone.Model.prototype));
-Cocktail.mixin(Base.Collection, createReplaceMixin(Backbone.Collection.prototype));
+_.extend(Base.prototype, createReplaceMixin(Backbone.Model.prototype));
+_.extend(Base.Collection.prototype, createReplaceMixin(Backbone.Collection.prototype));
 _.extend(Base, Backbone.Events);
 module.exports = Base;

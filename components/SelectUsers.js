@@ -3,7 +3,6 @@
 
 var _ = require("lodash");
 var React = require("react/addons");
-var iUpdate = React.addons.update;
 var Promise = require("bluebird");
 
 var Button = require("react-bootstrap/Button");

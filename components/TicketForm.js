@@ -44,7 +44,7 @@ var TicketForm = React.createClass({
         this.state.ticket.replaceSave({
             title: this.state.title,
             description: this.state.description
-        }, { fetch: false }).then(function(savedTicket) {
+        }).then(function(savedTicket) {
             Router.transitionTo("ticket", { id: savedTicket.get("id") });
         })
         .catch(captureError("Tukipyynnön tallennus epäonnistui"));
