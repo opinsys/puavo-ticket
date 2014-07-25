@@ -44,7 +44,7 @@ var Tag = Base.extend({
                     if (tagModel.isStatusTag()) {
                         return Tag.softDeleteStatusTagsFor(
                             tagModel.get("ticket_id"),
-                            tagModel.get("created_by")
+                            tagModel.get("createdById")
                         );
                     }
                 })
@@ -64,7 +64,7 @@ var Tag = Base.extend({
             })
             .bind(this)
             .then(function(ticket) {
-                if (!ticket.isHandler(this.get("created_by"))) {
+                if (!ticket.isHandler(this.get("createdById"))) {
                     throw new Error("Only handlers can change status");
                 }
             });
@@ -95,7 +95,7 @@ var Tag = Base.extend({
     },
 
     createdBy: function() {
-        return this.belongsTo(User, "created_by");
+        return this.belongsTo(User, "createdById");
     }
 
 

@@ -51,7 +51,7 @@ describe("/api/tickets/:id/comments", function() {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.comment, "another test comment");
                 assert.equal(res.body.ticket_id, ticket.get("id"));
-                assert.equal(res.body.created_by, self.user.id);
+                assert.equal(res.body.createdById, self.user.id);
             });
     });
 

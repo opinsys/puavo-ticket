@@ -1,7 +1,7 @@
 "use strict";
 
 function addLifecycleColumns(table) {
-    table.integer("created_by")
+    table.integer("createdById")
         .notNullable()
         .references("id")
         .inTable("users");

@@ -173,7 +173,7 @@ var Ticket = Base.extend({
                     ticket_id: self.get("id"),
                     entity: visibility,
                     comment: comment,
-                    created_by: Base.toId(addedBy)
+                    createdById: Base.toId(addedBy)
                 }).save();
             });
     },
@@ -192,7 +192,7 @@ var Ticket = Base.extend({
         return Comment.forge({
             ticket_id: this.get("id"),
             comment: comment,
-            created_by: Base.toId(user)
+            createdById: Base.toId(user)
         }).save()
         .then(function(comment) {
             return self.triggerThen("update", { model: comment })
@@ -211,7 +211,7 @@ var Ticket = Base.extend({
     addTag: function(tag, user, options) {
         return Tag.forge({
             tag: tag,
-            created_by: Base.toId(user),
+            createdById: Base.toId(user),
             ticket_id: this.get("id")
         }, options).save();
     },
@@ -332,7 +332,7 @@ var Ticket = Base.extend({
 
                 Handler.forge({
                     ticket_id: self.get("id"),
-                    created_by: Base.toId(addedBy),
+                    createdById: Base.toId(addedBy),
                     handler: Base.toId(handler)
                 }).save(),
 
@@ -395,7 +395,7 @@ var Ticket = Base.extend({
     addDevice: function(device, addedBy){
         return Device.forge({
                 ticket_id: this.get("id"),
-                created_by: Base.toId(addedBy),
+                createdById: Base.toId(addedBy),
                 hostname: Base.toAttr(device, "hostname")
             })
             .save();
@@ -421,7 +421,7 @@ var Ticket = Base.extend({
     addRelatedUser: function(user, addedBy){
         return RelatedUser.forge({
             ticket_id: this.get("id"),
-            created_by: Base.toId(addedBy),
+            createdById: Base.toId(addedBy),
             user: Base.toId(user)
         }).save();
     },
@@ -436,7 +436,7 @@ var Ticket = Base.extend({
     },
 
     createdBy: function() {
-        return this.belongsTo(User, "created_by");
+        return this.belongsTo(User, "createdById");
     },
 
     /**

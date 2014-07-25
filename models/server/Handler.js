@@ -26,12 +26,12 @@ var Handler = Base.extend({
 
     _assertCreatorIsManagerOrOwner: function() {
         return Promise.all([
-            User.byId(this.get("created_by")).fetch({ require: true }),
+            User.byId(this.get("createdById")).fetch({ require: true }),
             this.ticket().fetch({ require: true })      
         ])
         .spread(function(user, ticket){
             if (user.isManager()) return;
-            if (ticket.get("created_by") === user.get("id")) return;
+            if (ticket.get("createdById") === user.get("id")) return;
             throw new Error("Only managers or owners can add handlers");
         });
     },
@@ -53,7 +53,7 @@ var Handler = Base.extend({
     },    
 
     createdBy: function() {
-        return this.belongsTo(User, "created_by");
+        return this.belongsTo(User, "createdById");
     }
 
 });

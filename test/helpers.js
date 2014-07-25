@@ -88,7 +88,7 @@ function loginAsUser(userData){
  */
 function insertTestTickets(user) {
     var ticket = Ticket.forge({
-        created_by: user.get("id"),
+        createdById: user.get("id"),
         title: "Test ticket",
         description: "Test ticket with comments, related users etc."
     });
@@ -96,7 +96,7 @@ function insertTestTickets(user) {
     return ticket.save()
         .then(function addComment() {
             return Comment.forge({
-                created_by: user.get("id"),
+                createdById: user.get("id"),
                 ticket_id: ticket.id,
                 updated_at: new Date(),
                 comment: "First comment to test ticket"
@@ -105,7 +105,7 @@ function insertTestTickets(user) {
         })
         .then(function addAnotherComment() {
             return Comment.forge({
-                created_by: user.get("id"),
+                createdById: user.get("id"),
                 ticket_id: ticket.id,
                 updated_at: new Date(),
                 comment: "Second comment to test ticket"
@@ -114,14 +114,14 @@ function insertTestTickets(user) {
         })
         .then(function addAnotherTicket() {
             return Ticket.forge({
-                created_by: user.get("id"),
+                createdById: user.get("id"),
                 title: "Other test ticket",
                 description: "Other test tickets"
             }).save();
         })
         .then(function addCommentToAnotherTicket(otherTicket) {
             return Comment.forge({
-                created_by: user.get("id"),
+                createdById: user.get("id"),
                 ticket_id: otherTicket.id,
                 comment: "First comment to the other ticket"
             })

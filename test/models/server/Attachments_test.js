@@ -38,7 +38,7 @@ describe("Attachment model", function() {
 
         return Attachment.forge({
                 ticket_id: self.ticket.id,
-                created_by: self.user.id,
+                createdById: self.user.id,
                 filename: "test.jpg",
                 data: fileData
             })

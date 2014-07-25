@@ -67,7 +67,7 @@ describe("/api/tickets/:id/related_users", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.ticket_id, self.ticket.get("id"));
-                assert.equal(res.body.created_by, self.user.id);
+                assert.equal(res.body.createdById, self.user.id);
             })
             .then(function() {
                 return User.forge({ external_id: "1432" }).fetch();
@@ -108,7 +108,7 @@ describe("/api/tickets/:id/related_users", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.ticket_id, self.otherTicket.get("id"));
-                assert.equal(res.body.created_by, self.user.id);
+                assert.equal(res.body.createdById, self.user.id);
             })
             .then(function() {
                 return User.forge({ external_id: "1432" }).fetch();

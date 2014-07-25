@@ -49,7 +49,7 @@ describe("/api/tickets/:id/devices", function() {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.hostname, "fatclient-01");
                 assert.equal(res.body.ticket_id, ticket.get("id"));
-                assert.equal(res.body.created_by, self.user.id);
+                assert.equal(res.body.createdById, self.user.id);
             });
     });
 

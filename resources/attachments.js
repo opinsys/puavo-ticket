@@ -30,7 +30,7 @@ app.post("/api/tickets/:id/attachments", function(req, res, next) {
             data_type: req.files.attachment[0].headers["content-type"],
             data: data,
             filename: req.files.attachment[0].originalFilename,
-            created_by: req.user.id,
+            createdById: req.user.id,
             ticket_id: ticket.id
         })
         .save();

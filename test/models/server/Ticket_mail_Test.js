@@ -39,7 +39,7 @@ describe("Ticket email notifications", function() {
         return Ticket.forge({
                 title: "Computer does not work",
                 description: "It just doesn't",
-                created_by: self.user.get("id")
+                createdById: self.user.get("id")
             }, {
                 emailTransport: stubTransport
             })
@@ -76,7 +76,7 @@ describe("Ticket email notifications", function() {
         return Ticket.forge({
                 title: "Computer does not work",
                 description: "It just doesn't",
-                created_by: self.user.get("id")
+                createdById: self.user.get("id")
             }, {
                 emailTransport: stubTransport
             })

@@ -16,7 +16,7 @@ var Visibility = Base.extend({
     },
 
     createdBy: function() {
-        return this.belongsTo(User, "created_by");
+        return this.belongsTo(User, "createdById");
     }
 
 }, {
