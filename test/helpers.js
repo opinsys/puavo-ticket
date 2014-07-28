@@ -98,7 +98,7 @@ function insertTestTickets(user) {
             return Comment.forge({
                 createdById: user.get("id"),
                 ticket_id: ticket.id,
-                updated_at: new Date(),
+                updatedAt: new Date(),
                 comment: "First comment to test ticket"
             })
             .save();
@@ -107,7 +107,7 @@ function insertTestTickets(user) {
             return Comment.forge({
                 createdById: user.get("id"),
                 ticket_id: ticket.id,
-                updated_at: new Date(),
+                updatedAt: new Date(),
                 comment: "Second comment to test ticket"
             })
             .save();

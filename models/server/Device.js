@@ -19,7 +19,7 @@ var Device = Base.extend({
   defaults: function() {
       return {
           createdAt: new Date(),
-          updated_at: new Date()
+          updatedAt: new Date()
       };
   },
 

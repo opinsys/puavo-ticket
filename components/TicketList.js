@@ -47,7 +47,7 @@ var List = React.createClass({
     },
     renderTicketMetaInfo: function(ticket) {
         // TODO error checks at least
-        var ticketCreator, firstname = ticket.get("createdBy").external_data.first_name, lastname = ticket.get("createdBy").external_data.last_name, latestUpdate = ticket.get("updated_at"), handlers = ticket.get("handlers"), options={weekday: "short", month: "long", day: "numeric"}, firstNames, lastNames;
+        var ticketCreator, firstname = ticket.get("createdBy").external_data.first_name, lastname = ticket.get("createdBy").external_data.last_name, latestUpdate = ticket.get("updatedAt"), handlers = ticket.get("handlers"), options={weekday: "short", month: "long", day: "numeric"}, firstNames, lastNames;
         ticketCreator = firstname + " " + lastname;
         // TODO not sure if this is the best way to do this at all...
         firstNames = _.chain(handlers)

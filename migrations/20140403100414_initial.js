@@ -11,7 +11,7 @@ function addLifecycleColumns(table) {
         .inTable("users");
 
     table.dateTime("createdAt").notNullable();
-    table.dateTime("updated_at").notNullable();
+    table.dateTime("updatedAt").notNullable();
     table.dateTime("deleted_at");
 
     // A helper column for the uniqueForTicket constraints. Null value
@@ -42,7 +42,7 @@ exports.up = function(knex, Promise) {
         table.string("external_id").notNullable().unique();
         table.json("external_data").notNullable();
         table.dateTime("createdAt").notNullable();
-        table.dateTime("updated_at").notNullable();
+        table.dateTime("updatedAt").notNullable();
     })
     .then(function createTicketsTable() {
         return knex.schema.createTable("tickets", function(table) {
