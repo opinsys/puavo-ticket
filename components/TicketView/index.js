@@ -6,6 +6,9 @@ var Promise = require("bluebird");
 
 var Button = require("react-bootstrap/Button");
 var Badge = require("react-bootstrap/Badge");
+var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
+var Tooltip = require("react-bootstrap/Tooltip");
+var Label = require("react-bootstrap/Label");
 
 var captureError = require("puavo-ticket/utils/captureError");
 var BackboneMixin = require("puavo-ticket/components/BackboneMixin");
@@ -214,6 +217,24 @@ var TicketView = React.createClass({
         );
     },
 
+    renderLinemodeTip: function() {
+        var title = "Yksirivitila";
+        var desc = "Enter-näppäin lähettää kommentin. Paina Shift+enter siirtyäksesi monirivitilaan.";
+        var bsStyle = "default";
+
+        if (this.isMultilineMode()) {
+            title = "Monirivitila";
+            desc = "Enter-näppäin lisää rivin vaihdon. Paina Ctrl+Enter lähettääksesi kommentin.";
+            bsStyle = "success";
+        }
+
+        return (
+            <OverlayTrigger placement="left" overlay={<Tooltip>{desc}</Tooltip>}>
+                <Label bsStyle={bsStyle} className="linemode-tooltip">{title}</Label>
+            </OverlayTrigger>
+        );
+    },
+
     render: function() {
         var self = this;
         return (
@@ -293,7 +314,10 @@ var TicketView = React.createClass({
                                 </span>
                         );})}
                     </div>
-                        <Loading visible={this.state.saving} className="saving" />
+
+
+                        {this.renderLinemodeTip()}
+
                         <ElasticTextarea
                             className="form-control"
                             ref="comment"
