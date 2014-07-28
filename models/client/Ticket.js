@@ -33,7 +33,7 @@ var Ticket = Base.extend({
             tagHistory: [],
             comments: [],
             handlers: [],
-            created_at: new Date().toString()
+            createdAt: new Date().toString()
         };
     },
 
@@ -51,8 +51,8 @@ var Ticket = Base.extend({
         .concat(this.comments())
         ;
         updates.sort(function(a, b) {
-            if (a.get("created_at") > b.get("created_at")) return 1;
-            if (a.get("created_at") < b.get("created_at")) return -1;
+            if (a.get("createdAt") > b.get("createdAt")) return 1;
+            if (a.get("createdAt") < b.get("createdAt")) return -1;
             return 0;
         });
 

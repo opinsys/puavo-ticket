@@ -22,7 +22,7 @@ var User = Base.extend({
 
     defaults: function() {
         return {
-            created_at: new Date(),
+            createdAt: new Date(),
             updated_at: new Date()
         };
     },

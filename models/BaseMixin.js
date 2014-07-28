@@ -14,7 +14,7 @@ var BaseMixin = {
      * @return {Date}
      */
     createdAt: function() {
-        return new Date(this.get("created_at"));
+        return new Date(this.get("createdAt"));
     },
 
     /**

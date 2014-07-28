@@ -10,7 +10,7 @@ function addLifecycleColumns(table) {
         .references("id")
         .inTable("users");
 
-    table.dateTime("created_at").notNullable();
+    table.dateTime("createdAt").notNullable();
     table.dateTime("updated_at").notNullable();
     table.dateTime("deleted_at");
 
@@ -41,7 +41,7 @@ exports.up = function(knex, Promise) {
         table.increments("id");
         table.string("external_id").notNullable().unique();
         table.json("external_data").notNullable();
-        table.dateTime("created_at").notNullable();
+        table.dateTime("createdAt").notNullable();
         table.dateTime("updated_at").notNullable();
     })
     .then(function createTicketsTable() {
