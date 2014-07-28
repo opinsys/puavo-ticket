@@ -28,10 +28,9 @@ var BackboneMixin = {
             var currentModel = self.state[stateKey];
             if (currentModel) currentModel.off();
 
-            console.log("Making", newModel.cid, "replaceable");
             newModel.once("replace", function(op) {
-                console.log("replacing", newModel.cid);
                 Promise.cast(op).then(function(replaceModel) {
+                    if (!self.isMounted()) return;
                     var o = {};
                     o[stateKey] = replaceModel;
                     setTimeout(self.setBackbone.bind(self, o), 0);
