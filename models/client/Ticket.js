@@ -99,11 +99,11 @@ var Ticket = Base.extend({
      * @return {Bluebird.Promise}
      */
     addComment: function(comment, createdBy){
-        var model = new Comment({}, { parent: this });
-        return model.save({
+        var model = new Comment({
             comment: comment,
             createdBy: createdBy.toJSON()
-        });
+        }, { parent: this });
+        return model.save();
     },
 
 
@@ -119,6 +119,20 @@ var Ticket = Base.extend({
             createdBy: createdBy.toJSON()
         }, { parent: this });
         return model.save();
+    },
+
+    /**
+     * Add handler for the ticket
+     *
+     * @method addHandler
+     * @param {models.client.User} handler
+     */
+    addHandler: function(user){
+        var h = new Handler({
+            username: user.getUsername(),
+            organisation_domain: user.getOrganisationDomain()
+        }, { parent: this });
+        return h.save();
     },
 
     /**

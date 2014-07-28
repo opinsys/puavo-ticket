@@ -23,7 +23,7 @@ function createReplaceMixin(parentPrototype) {
          */
         fetch: function() {
             if (this.parent) {
-                throw new Error("This is a child model. Use fetchParent() to get new parent");
+                throw new Error("This is a child model. Use fetchParent() to get a new parent");
             }
 
             if (this._type === "model" && !this.get("id")) {
@@ -45,11 +45,13 @@ function createReplaceMixin(parentPrototype) {
             return this.fetch();
         },
 
-        replaceFetch: function(a, b) {
-            console.error("deprecated replaceFetch");
-            return this.fetch(a, b);
-        },
+    };
+}
 
+function disabledMethod(name) {
+    /*jshint validthis:true */
+    this[name] = function() {
+        throw new Error("Do not mutate existing instances. Create new instances if you need to mutate anything.");
     };
 }
 
@@ -72,20 +74,8 @@ var Base = Backbone.Model.extend({
     constructor: function(attrs, opts) {
         this.parent = opts && opts.parent;
         Backbone.Model.apply(this, arguments);
-        this._freeze();
+        ["set", "clear", "unset"].forEach(disabledMethod.bind(this));
     },
-
-    _freeze: function() {
-        this._set = this.set;
-        this.set = function() {
-            throw new Error("Do not mutate models");
-        };
-    },
-
-    _unfreeze: function() {
-        this.set = this._set;
-    },
-
 
     isOperating: function() {
         console.error("Deprecated isOperating() call");
@@ -121,30 +111,21 @@ var Base = Backbone.Model.extend({
 
 
     /**
-     * Save module to server
+     * Save model to server
      * http://backbonejs.org/#Model-save
      *
      * @method save
-     * @return {Bluebird.Promise}
+     * @return {Bluebird.Promise} with the new saved model
      */
-    save: function(attrs, opts) {
-        if (!attrs || _.isEmpty(attrs)) throw new Error("Missing attrs!");
-
-
-        // XXX does this make sense?
+    save: function() {
         if (!this.isNew()) throw new Error("Only new models can be saved!");
 
-        return Promise.cast($.post(_.result(this, "url"), attrs))
+        return Promise.cast($.post(_.result(this, "url"), this.toJSON()))
             .bind(this)
             .then(function(res) {
                 return new this.constructor(res);
             });
 
-    },
-
-    replaceSave: function(attrs, opts) {
-        console.error("deprecated replaceSave");
-        return this.save(attrs, opts);
     },
 
 
@@ -199,6 +180,19 @@ var Base = Backbone.Model.extend({
 Base.Collection = Backbone.Collection.extend({
 
     _type: "collection",
+
+    constructor: function() {
+        Backbone.Collection.apply(this, arguments);
+        [
+            "add",
+            "remove",
+            "push",
+            "pop",
+            "sort",
+            "unshift",
+            "shift"
+        ].forEach(disabledMethod.bind(this));
+    },
 
     /**
      * http://backbonejs.org/#Collection-model
