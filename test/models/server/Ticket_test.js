@@ -28,11 +28,10 @@ describe("Ticket model", function() {
 
     it("can be instantiated", function() {
         var self = this;
-        var title = "Computer does not work :(";
+        var description = "Computer does not work :(";
 
         return Ticket.forge({
-                title: title,
-                description: "It just doesn't",
+                description: description,
                 createdById: self.user.get("id")
             })
             .save()
@@ -40,12 +39,11 @@ describe("Ticket model", function() {
                 return Ticket.forge({ id: ticket.get("id") }).fetch();
             })
             .then(function(ticket) {
-                 assert.equal(title, ticket.get("title"), "the ticket can be fetched");
+                assert.equal(description, ticket.get("description"), "the ticket can be fetched");
             })
             .then(function() {
                 return Ticket.forge({
-                        title: "Other ticket",
-                        description: "by other user",
+                        description: "Other ticket, by other user",
                         createdById: self.otherUser.get("id")
                 }).save();
             });
@@ -63,7 +61,7 @@ describe("Ticket model", function() {
         return Ticket.byVisibilities([this.user.getPersonalVisibility()])
             .fetch()
             .then(function(coll) {
-                assert(coll.findWhere({ title: "Computer does not work :(" }));
+                assert(coll.findWhere({ description: "Computer does not work :(" }));
                 assert.equal(1, coll.size(), "does not list other tickets by other users");
             });
     });
@@ -72,8 +70,8 @@ describe("Ticket model", function() {
         return Ticket.byVisibilities([this.user.getOrganisationAdminVisibility()])
             .fetch()
             .then(function(coll) {
-                assert(coll.findWhere({ title: "Computer does not work :(" }));
-                assert(coll.findWhere({ title: "Other ticket" }));
+                assert(coll.findWhere({ description: "Computer does not work :(" }));
+                assert(coll.findWhere({ description: "Other ticket, by other user" }));
                 assert.equal(2, coll.size(), "does list all tickets in the organisation");
             });
     });
@@ -101,8 +99,7 @@ describe("Ticket model", function() {
     it("can have comments", function() {
         var self = this;
         var ticketId = Ticket.forge({
-            title: "computer does not work",
-            description: "It just doesn't",
+            description: "computer does not work",
             createdById: self.user.id
         })
         .save()
@@ -135,14 +132,14 @@ describe("Ticket model", function() {
             .then(function(coll) {
                 var ticket = coll.first();
                 id = ticket.get("id");
-                ticket.set("title", "new title");
+                ticket.set("description", "new description");
                 return ticket.save();
             })
             .then(function() {
                 return Ticket.forge({ id: id }).fetch();
             })
             .then(function(ticket) {
-                assert.equal(ticket.get("title"), "new title");
+                assert.equal(ticket.get("description"), "new description");
             });
     });
 
@@ -152,8 +149,7 @@ describe("Ticket model", function() {
         var testTicket = null;
 
         return Ticket.forge({
-                title: "Will be read",
-                description: "foo",
+                description: "Will be read",
                 createdById: self.user.id
             })
             .save()

@@ -91,7 +91,6 @@ app.get("/api/tickets/:id", function(req, res, next) {
  */
 app.post("/api/tickets", function(req, res, next) {
     Ticket.forge({
-        title: req.body.title,
         description: req.body.description,
         createdById: req.user.id
     })

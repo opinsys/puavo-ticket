@@ -26,8 +26,7 @@ describe("Ticket handlers", function() {
                 self.otherUser = otherUser;
 
                 return Ticket.forge({
-                    title: "Handler test ticket",
-                    description: "foobar",
+                    description: "Handler test ticket",
                     createdById: self.user.get("id")
                 }).save();
             })

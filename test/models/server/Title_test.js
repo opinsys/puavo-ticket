@@ -25,7 +25,6 @@ describe("Title model", function() {
     it("instance can be created from Ticket", function() {
         var self = this;
         return Ticket.forge({
-                title: "Computer does not work",
                 description: "It just doesn't",
                 createdById: self.user.get("id")
             })

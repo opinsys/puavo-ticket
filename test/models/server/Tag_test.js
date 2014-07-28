@@ -26,7 +26,6 @@ describe("Tag model", function() {
 
                 return Ticket.forge({
                         createdById: self.user.get("id"),
-                        title: "Tag test ticket",
                         description: "This ticket has some tags"
                     }).save();
             })
@@ -90,7 +89,6 @@ describe("Tag model", function() {
         var self = this;
         return Ticket.forge({
                 createdById: self.user.get("id"),
-                title: "Other tag test ticket",
                 description: "This ticket also has some tags"
             })
             .save()

@@ -65,7 +65,7 @@ describe("/api/tickets/:id/tags", function() {
                 assert.equal(2, res.body.length);
 
                 var ticket = _.findWhere(res.body, {
-                    title: self.ticket.get("title")
+                    description: self.ticket.get("description")
                 });
                 assert(ticket);
                 assert(
@@ -75,7 +75,7 @@ describe("/api/tickets/:id/tags", function() {
 
 
                 var otherTicket = _.findWhere(res.body, {
-                    title: self.otherTicket.get("title")
+                    description: self.otherTicket.get("description")
                 });
                 assert(otherTicket);
                 assert(

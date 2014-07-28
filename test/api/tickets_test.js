@@ -33,13 +33,12 @@ describe("/api/tickets", function() {
         return this.agent
             .post("/api/tickets")
             .send({
-                title: "Computer does not work",
-                description: "It just doesnt"
+                description: "Computer does not work"
             })
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.equal(res.body.title, "Computer does not work");
+                assert.equal(res.body.description, "Computer does not work");
                 assert.equal(res.body.createdById, self.user.get("id"));
                 assert(res.body.id, "has id");
                 self.ticket = res.body;
@@ -56,7 +55,7 @@ describe("/api/tickets", function() {
                 assert.equal(res.status, 200);
                 assert.equal(1, res.body.length);
                 assert.equal(self.ticket.id, res.body[0].id);
-                assert.equal("Computer does not work", res.body[0].title);
+                assert.equal("Computer does not work", res.body[0].description);
                 assert.equal(self.ticket.id, res.body[0].id);
                 assert(
                     _.findWhere(res.body[0].tags, { tag: "status:open" }),
@@ -96,7 +95,7 @@ describe("/api/tickets", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(1, res.body.length);
-                assert.equal("Computer does not work", res.body[0].title);
+                assert.equal("Computer does not work", res.body[0].description);
             });
     });
 
@@ -120,7 +119,7 @@ describe("/api/tickets", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(1, res.body.length);
-                assert.equal("Computer does not work", res.body[0].title);
+                assert.equal("Computer does not work", res.body[0].description);
             });
     });
 
@@ -132,7 +131,7 @@ describe("/api/tickets", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(self.ticket.id, res.body.id);
-                assert.equal("Computer does not work", res.body.title);
+                assert.equal("Computer does not work", res.body.description);
                 assert(
                     _.findWhere(res.body.tags, { tag: "status:open" }),
                     "has status:open tag"
@@ -145,14 +144,13 @@ describe("/api/tickets", function() {
         return this.agent
             .put("/api/tickets/" + self.ticket.id)
             .send({
-                title: "updated ticket",
-                description: "It just doesnt"
+                description: "updated ticket"
             })
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(
-                    res.body.title,
+                    res.body.description,
                     "updated ticket",
                     "Responds with updated ticket data"
                 );
@@ -168,7 +166,7 @@ describe("/api/tickets", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(self.ticket.id, res.body.id);
-                assert.equal("updated ticket", res.body.title);
+                assert.equal("updated ticket", res.body.description);
             });
     });
 
