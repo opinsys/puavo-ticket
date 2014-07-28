@@ -15,6 +15,7 @@ var Handler = require("./Handler");
 var Device = require("./Device");
 var User = require("./User");
 var ReadTicket = require("./ReadTicket");
+var Title = require("./Title");
 
 /**
  * Knex query helpers
@@ -132,6 +133,14 @@ var Ticket = Base.extend({
         return this.hasMany(Comment, "ticketId");
     },
 
+    /**
+     *
+     * @method titles
+     * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket title models
+     */
+    titles: function() {
+        return this.hasMany(Title, "ticketId");
+    },
 
     /**
      * @method visibilities
@@ -197,6 +206,29 @@ var Ticket = Base.extend({
         .then(function(comment) {
             return self.triggerThen("update", { model: comment })
                 .then(function() { return comment; });
+        });
+    },
+
+
+    /**
+     * Add title to the ticket
+     *
+     * @method addTitle
+     * @param {String} title
+     * @param {models.server.User|Number} user Creator of the tag
+     * @return {Bluebird.Promise} with models.server.Title
+     */
+    addTitle: function(title, user) {
+        var self = this;
+
+        return Title.forge({
+            ticketId: this.get("id"),
+            title: title,
+            createdById: Base.toId(user)
+        }).save()
+        .then(function(title) {
+            return self.triggerThen("update", { model: title })
+                .then(function() { return title; });
         });
     },
 
