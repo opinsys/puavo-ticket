@@ -140,6 +140,10 @@ var TicketList = React.createClass({
 
     componentDidMount: function() {
         this.state.ticketCollection.fetch()
+        .bind(this)
+        .then(function() {
+            if (this.isMounted()) this.setState({ fetching: false });
+        })
         .catch(captureError("Tukipyyntö listauksen haku epäonnistui"));
     },
 
@@ -155,7 +159,10 @@ var TicketList = React.createClass({
                 <div className="ticket-division col-md-12">
                     {handledByCurrentUser.length > 0 && <div>
                     <div className="header">
-                        <h3>Avoimet tukipyynnöt<Loading.Spinner visible={this.state.fetching} /></h3>
+                        <h3>
+                            Avoimet tukipyynnöt
+                            {this.state.fetching && <Loading.Spinner />}
+                        </h3>
                         <span className="numberOfTickets">({handledByCurrentUser.length})</span>
                     </div>
                         <List user={this.props.user}
