@@ -3,6 +3,7 @@
 var React = require("react/addons");
 var _ = require("lodash");
 var Link = require("react-router").Link;
+var Loading = require("./Loading");
 
 var captureError = require("puavo-ticket/utils/captureError");
 var Ticket = require("../models/client/Ticket");
@@ -133,6 +134,7 @@ var TicketList = React.createClass({
     getInitialState: function() {
         return {
             ticketCollection: Ticket.collection(),
+            fetching: true
         };
     },
 
@@ -148,12 +150,12 @@ var TicketList = React.createClass({
 
         return (
             <div className="ticket-wrap row">
-                {/* <p>ticket count: {this.state.ticketCollection.size()}</p> */}
+                
 
                 <div className="ticket-division col-md-12">
                     {handledByCurrentUser.length > 0 && <div>
                     <div className="header">
-                        <h3>Avoimet tukipyynnöt</h3>
+                        <h3>Avoimet tukipyynnöt<Loading.Spinner visible={this.state.fetching} /></h3>
                         <span className="numberOfTickets">({handledByCurrentUser.length})</span>
                     </div>
                         <List user={this.props.user}
