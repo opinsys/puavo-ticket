@@ -40,7 +40,7 @@ exports.up = function(knex, Promise) {
     return knex.schema.createTable("users", function(table) {
         table.increments("id");
         table.string("externalId").notNullable().unique();
-        table.json("external_data").notNullable();
+        table.json("externalData").notNullable();
         table.dateTime("createdAt").notNullable();
         table.dateTime("updatedAt").notNullable();
     })

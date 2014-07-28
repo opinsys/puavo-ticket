@@ -41,8 +41,8 @@ var UserItem = React.createClass({
                     disabled={this.props.disabled}
                     onChange={this.handleOnChange}
                     ref="checkbox" />
-                <span className="first-name" >{this.props.user.get("external_data").first_name + " "}</span>
-                <span className="last-name" >{this.props.user.get("external_data").last_name + " "}</span>
+                <span className="first-name" >{this.props.user.get("externalData").first_name + " "}</span>
+                <span className="last-name" >{this.props.user.get("externalData").last_name + " "}</span>
                 <span className="badge" >{this.props.user.getUsername()}</span>
             </label>
         );

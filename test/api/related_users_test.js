@@ -73,7 +73,7 @@ describe("/api/tickets/:id/related_users", function() {
                 return User.forge({ externalId: "1432" }).fetch();
             })
             .then(function(related_user) {
-                assert.equal(related_user.get("external_data").username, "joe.bloggs");
+                assert.equal(related_user.get("externalData").username, "joe.bloggs");
             });
     });
 
@@ -87,8 +87,8 @@ describe("/api/tickets/:id/related_users", function() {
                 assert.equal(200, res.status);
                 assert(res.body.relatedUsers, "response has a relatedUsers attr");
                 var relatedUser = res.body.relatedUsers[0];
-                assert(relatedUser.user.external_data, "user relation is present");
-                assert.equal("joe.bloggs", relatedUser.user.external_data.username);
+                assert(relatedUser.user.externalData, "user relation is present");
+                assert.equal("joe.bloggs", relatedUser.user.externalData.username);
                 assert(relatedUser.createdBy, "createdBy relation is present");
             });
     });
@@ -114,7 +114,7 @@ describe("/api/tickets/:id/related_users", function() {
                 return User.forge({ externalId: "1432" }).fetch();
             })
             .then(function(related_user) {
-                assert.equal(related_user.get("external_data").username, "joe.bloggs");
+                assert.equal(related_user.get("externalData").username, "joe.bloggs");
             });
     });
 

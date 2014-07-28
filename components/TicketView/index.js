@@ -350,7 +350,7 @@ var VIEW_TYPES = {
             return (
                 <div className="tags">
                     <i>{this.getCreatorName()} lisäsi käsittelijäksi käyttäjän </i>
-                    <span>{this.props.update.get("handler").external_data.username}</span>
+                    <span>{this.props.update.get("handler").externalData.username}</span>
                 </div>
             );
         },

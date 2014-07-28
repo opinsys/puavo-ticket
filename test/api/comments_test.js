@@ -65,7 +65,7 @@ describe("/api/tickets/:id/comments", function() {
                 var comment = _.findWhere(res.body.comments, { comment: "another test comment" });
                 assert(comment);
                 assert(comment.createdBy);
-                assert.equal("olli.opettaja", comment.createdBy.external_data.username);
+                assert.equal("olli.opettaja", comment.createdBy.externalData.username);
             });
     });
 

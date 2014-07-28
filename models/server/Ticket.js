@@ -517,9 +517,9 @@ var Ticket = Base.extend({
                      ") on päivitetty. Pääset katselemaan ja päivittämään sitä tästä linkistä: " +
                       "https://staging-support.opinsys.fi/tickets/" + self.get("id") + 
                       "\n\n" + 
-                      model.relations.createdBy.get("external_data").first_name +
+                      model.relations.createdBy.get("externalData").first_name +
                       " " +
-                      model.relations.createdBy.get("external_data").last_name +
+                      model.relations.createdBy.get("externalData").last_name +
                       ":"+ 
                       "\n" + 
                       self.get("description") + 

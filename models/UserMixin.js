@@ -72,7 +72,7 @@ var UserMixin = {
      * @return {String}
      */
     getOrganisationDomain: function(){
-        return this.get("external_data").organisation_domain;
+        return this.get("externalData").organisation_domain;
     },
 
     /**
@@ -81,7 +81,7 @@ var UserMixin = {
      * @return {String}
      */
     getUsername: function(){
-        return this.get("external_data").username;
+        return this.get("externalData").username;
     },
 
     /**
@@ -89,7 +89,7 @@ var UserMixin = {
      * @return {String}
      */
     getExternalId: function() {
-        return String(this.get("external_data").id);
+        return String(this.get("externalData").id);
     },
 
     /**
@@ -97,7 +97,7 @@ var UserMixin = {
      * @return {String}
      */
     getEmail: function(){
-        return this.get("external_data").email;
+        return this.get("externalData").email;
     },
 
     /**
@@ -106,8 +106,8 @@ var UserMixin = {
      */
     getProfileImage: function() {
         // FIXME: call getProfileImagen after ticket loading (TicketView:133)
-        if (this.get("external_data")) {
-            return "/api/puavo/v3/users/" + this.get("external_data").username + "/profile.jpg";
+        if (this.get("externalData")) {
+            return "/api/puavo/v3/users/" + this.get("externalData").username + "/profile.jpg";
         }
     },
 

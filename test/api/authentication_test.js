@@ -17,7 +17,7 @@ describe("Authentication", function() {
             })
             .then(function(user) {
                 assert.equal(user.get("externalId"), "9324");
-                assert.deepEqual(user.get("external_data"), helpers.user.teacher);
+                assert.deepEqual(user.get("externalData"), helpers.user.teacher);
             });
     });
 
@@ -33,7 +33,7 @@ describe("Authentication", function() {
                 return helpers.fetchTestUser();
             })
             .then(function(user) {
-                assert.deepEqual(user.get("external_data"), updatedUser);
+                assert.deepEqual(user.get("externalData"), updatedUser);
             });
     });
 });

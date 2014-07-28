@@ -49,13 +49,13 @@ describe("/api/tickets/:id/handlers", function() {
         nock("https://testing.opinsys.fi")
         .get("/v3/users/matti.meikalainen")
         .matchHeader("Authorization", 'Basic cHVhdm8tdGlja2V0OnBhc3N3b3Jk')
-        .reply(200, self.otherUser.get("external_data"));
+        .reply(200, self.otherUser.get("externalData"));
 
         return this.agent
             .post("/api/tickets/" + self.ticket.get("id") + "/handlers")
             .send({
-                username: self.otherUser.get("external_data").username,
-                organisation_domain: self.otherUser.get("external_data").organisation_domain
+                username: self.otherUser.get("externalData").username,
+                organisation_domain: self.otherUser.get("externalData").organisation_domain
             })
             .promise()
             .then(function(res) {
@@ -80,7 +80,7 @@ describe("/api/tickets/:id/handlers", function() {
                 assert(ticket.handlers, "has handlers array in the response");
 
                 assert(ticket.handlers.some(function(h) {
-                    return h.handler.external_data.username === "matti.meikalainen";
+                    return h.handler.externalData.username === "matti.meikalainen";
                 }), "has matti.meikalainen as a handler");
 
             });
@@ -99,11 +99,11 @@ describe("/api/tickets/:id/handlers", function() {
                 assert(ticket.handlers, "has handlers array in the response");
 
                 assert(ticket.handlers.some(function(h) {
-                    return h.handler.external_data.username === "matti.meikalainen";
+                    return h.handler.externalData.username === "matti.meikalainen";
                 }), "has matti.meikalainen as a handler");
 
                 assert(ticket.handlers.some(function(h) {
-                    return h.createdBy.external_data.username === "pointyhair";
+                    return h.createdBy.externalData.username === "pointyhair";
                 }), "has pointyhair as the handler relation creator");
 
             });

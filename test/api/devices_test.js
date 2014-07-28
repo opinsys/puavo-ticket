@@ -74,7 +74,7 @@ describe("/api/tickets/:id/devices", function() {
                     "device has createdBy property"
                 );
 
-                assert.equal("olli.opettaja", deviceEntry[0].createdBy.external_data.username);
+                assert.equal("olli.opettaja", deviceEntry[0].createdBy.externalData.username);
 
             });
     });
