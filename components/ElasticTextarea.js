@@ -26,7 +26,7 @@ var ElasticTextarea = React.createClass({
 
         var el = this.refs.textarea.getDOMNode();
 
-        if (el.value.trim() === "") {
+        if (el.value === "") {
             el.rows = parseInt(this.props.minRows, 10);
             return;
         }
