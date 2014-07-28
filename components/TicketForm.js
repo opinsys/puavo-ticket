@@ -2,7 +2,7 @@
 "use strict";
 var React = require("react/addons");
 var Button = require("react-bootstrap/Button");
-var Router = require('react-nested-router');
+var Router = require("react-router");
 
 var captureError = require("puavo-ticket/utils/captureError");
 var SideInfo = require("./SideInfo");

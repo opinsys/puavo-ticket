@@ -4,8 +4,9 @@ require("./client_setup");
 
 var React = require("react/addons");
 var Backbone = require("backbone");
-var Route = require('react-nested-router').Route;
-var Link = require('react-nested-router').Link;
+var Route = require("react-router").Route;
+var Link = require("react-router").Link;
+var Routes = require("react-router").Routes;
 
 var BackboneMixin = require("./components/BackboneMixin");
 var User = require("./models/client/User");
@@ -116,11 +117,13 @@ var Main = React.createClass({
 });
 
 React.renderComponent(
-    <Route handler={Main}>
-        <Route name="new" handler={TicketForm} />
-        <Route name="tickets" handler={TicketList} />
-        <Route name="ticket" path="/tickets/:id" handler={TicketView} />
-    </Route>, document.body);
+    <Routes>
+        <Route handler={Main}>
+            <Route name="new" handler={TicketForm} />
+            <Route name="tickets" handler={TicketList} />
+            <Route name="ticket" path="/tickets/:id" handler={TicketView} />
+        </Route>
+    </Routes>, document.body);
 
 window.onerror = function(message, url, linenum) {
     var msg = "Unhandled client Javascript error: '" + message + "' on " + url + ":" + linenum;

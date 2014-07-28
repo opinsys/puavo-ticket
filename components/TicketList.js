@@ -2,7 +2,7 @@
 "use strict";
 var React = require("react/addons");
 var _ = require("lodash");
-var Link = require('react-nested-router').Link;
+var Link = require("react-router").Link;
 
 var captureError = require("puavo-ticket/utils/captureError");
 var Ticket = require("../models/client/Ticket");
