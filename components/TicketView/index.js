@@ -20,6 +20,10 @@ var ToggleStatusButton = require("./ToggleStatusButton");
 
 
 
+function scrollToBottom() {
+    window.scrollTo(0, document.body.scrollHeight);
+}
+
 
 /**
  * TicketView
@@ -65,7 +69,7 @@ var TicketView = React.createClass({
         .then(function() {
             if (!this.isMounted()) return;
             this.setState({ saving: false });
-            window.scrollTo(0, document.body.scrollHeight);
+            scrollToBottom();
         });
 
         this.setState({ comment: "" });
