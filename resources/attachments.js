@@ -27,7 +27,7 @@ app.post("/api/tickets/:id/attachments", function(req, res, next) {
     .spread(function(data, ticket){
         if (!ticket) return res.json(404, { error: "no such ticket" });
         return Attachment.forge({
-            data_type: req.files.attachment[0].headers["content-type"],
+            dataType: req.files.attachment[0].headers["content-type"],
             data: data,
             filename: req.files.attachment[0].originalFilename,
             createdById: req.user.id,

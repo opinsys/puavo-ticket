@@ -113,7 +113,7 @@ exports.up = function(knex, Promise) {
 
                 table.increments("id");
                 table.binary("data").notNullable();
-                table.string("data_type");
+                table.string("dataType");
                 table.string("filename");
             }),
 

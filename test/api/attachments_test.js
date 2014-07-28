@@ -54,7 +54,7 @@ describe("/api/tickets/:id/attachments", function() {
         return ticket.attachments().fetch()
             .then(function(attachments) {
                 assert.equal(attachments.first().get("filename"), "test.jpg");
-                assert.equal(attachments.first().get("data_type"), "image/jpeg");
+                assert.equal(attachments.first().get("dataType"), "image/jpeg");
                 assert.equal('7d6f499f5ee89eb34535aa291c69b4ed05ebcffb',
                              crypto
                              .createHash('sha1')
