@@ -64,7 +64,6 @@ var TicketView = React.createClass({
         this.setState({ saving: true });
 
         this.state.ticket.addComment(this.state.comment, this.props.user)
-        .catch(captureError("Kommentin tallennus epäonnistui"))
         .bind(this)
         .then(function() {
             return this.markAsRead();
@@ -73,7 +72,8 @@ var TicketView = React.createClass({
             if (!this.isMounted()) return;
             this.setState({ saving: false });
             scrollToBottom();
-        });
+        })
+        .catch(captureError("Kommentin tallennus epäonnistui"));
 
         this.setState({ comment: "" });
         this.refs.comment.getDOMNode().focus();
@@ -130,10 +130,6 @@ var TicketView = React.createClass({
         this.state.ticket.close();
     },
 
-    isOperating: function() {
-        return this.state.fetching || this.state.saving;
-    },
-
 
     toggleTags: function() {
         this.setState({
@@ -155,14 +151,10 @@ var TicketView = React.createClass({
                         Promise.all(users.map(function(user) {
                             return self.state.ticket.addHandler(user);
                         }))
-                        .catch(captureError("Käsittelijöiden lisääminen epäonnistui"))
                         .then(function() {
-                            return self.state.ticket.fetch();
+                            return this.fetchTicket();
                         })
-                        .then(function() {
-                            if (self.isMounted()) self.setState({ fetching: false });
-                        })
-                        .catch(captureError("Tietojen päivitys epäonnistui"));
+                        .catch(captureError("Käsittelijöiden lisääminen epäonnistui"));
                 }}/>
             );
         });
@@ -179,12 +171,20 @@ var TicketView = React.createClass({
         return this.state.ticket.markAsRead()
             .bind(this)
             .then(function() {
-                return this.state.ticket.fetch();
+                return this.fetchTicket();
             })
+            .catch(captureError("Tukipyynnön merkkaaminen luetuksi epäonnistui"));
+    },
+
+    fetchTicket: function() {
+        if (!this.isMounted()) return;
+
+        this.setState({ fetching: true });
+        return this.state.ticket.fetch()
             .then(function() {
                 if (this.isMounted()) this.setState({ fetching: false });
             })
-            .catch(captureError("Tukipyynnön merkkaaminen luetuksi epäonnistui"));
+            .catch(captureError("Tukipyynnön tilan päivitys epäonnistui"));
     },
 
 
@@ -331,7 +331,8 @@ var TicketView = React.createClass({
                     <div className="ticket-update-buttons">
                         <Button
                             onClick={this.saveComment}
-                            disabled={this.isOperating() || !this.hasUnsavedComment()} >Lähetä
+                            disabled={this.state.saving || !this.hasUnsavedComment()} >
+                            Lähetä {this.state.saving && <Loading.Spinner />}
                         </Button>
                     </div>
                 </div>
@@ -386,7 +387,6 @@ var VIEW_TYPES = {
                             })}
                         </span>
                     </div>
-                    {this.props.update.isNew() && <Loading />}
                 </div>
             );
         },
@@ -399,7 +399,6 @@ var VIEW_TYPES = {
                 <div className="tags">
                     <i>{this.getCreatorName()} lisäsi tagin: </i>
                     <span>{this.props.update.get("tag")}</span>
-                    {this.props.update.isNew() && <Loading />}
                 </div>
             );
         },
