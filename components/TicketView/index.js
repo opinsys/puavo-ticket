@@ -36,6 +36,8 @@ var TicketView = React.createClass({
 
     getInitialState: function() {
         return {
+            doGrow: false,
+            commentRows: 1,
             ticket: new Ticket({ id: this.props.params.id }),
             fetching: true,
             saving: false,
@@ -46,7 +48,10 @@ var TicketView = React.createClass({
 
 
     handleCommentChange: function(e) {
-        this.setState({ comment: e.target.value });
+        this.setState({
+            comment: e.target.value,
+            commentRows: 1
+        });
     },
 
     /**
@@ -79,6 +84,20 @@ var TicketView = React.createClass({
         if (e.key === "Enter" && !e.shiftKey) {
             this.saveComment();
         }
+    },
+
+    growCommentBox: function() {
+        var el = this.refs.comment.getDOMNode();
+
+        if (el.scrollHeight > el.clientHeight) {
+            this.setState({
+                commentRows: this.state.commentRows+1
+            }, scrollToBottom);
+        }
+    },
+
+    componentDidUpdate: function() {
+        this.growCommentBox();
     },
 
     hasUnsavedComment: function() {
@@ -258,6 +277,7 @@ var TicketView = React.createClass({
                     </div>
                         <Loading visible={this.state.saving} className="saving" />
                         <textarea
+                            rows={this.state.commentRows}
                             className="form-control"
                             ref="comment"
                             type="text"
