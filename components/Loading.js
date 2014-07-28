@@ -1,4 +1,5 @@
 /** @jsx React.DOM */
+
 "use strict";
 var React = require("react/addons");
 
@@ -9,6 +10,7 @@ var React = require("react/addons");
  *
  * @namespace components
  * @class Loading
+ * @extends React.ReactComponent
  */
 var Loading = React.createClass({
 
@@ -26,13 +28,26 @@ var Loading = React.createClass({
 
     render: function() {
         return (
-            <div className={"Loading spinner " + this.props.className}
-                style={this.getStyles()}>
+            <div className={"Loading spinner " + this.props.className} style={this.getStyles()}>
               <div className="bounce1"></div>
               <div className="bounce2"></div>
               <div className="bounce3"></div>
             </div>
         );
+    }
+});
+
+/**
+ * Font awesome spinner icon
+ *
+ * http://fortawesome.github.io/Font-Awesome/examples/#spinning
+ *
+ * @class Loading.Spinner
+ * @extends React.ReactComponent
+ */
+Loading.Spinner = React.createClass({
+    render: function() {
+        return this.transferPropsTo(<i className="fa fa-spinner fa-spin" />);
     }
 });
 
