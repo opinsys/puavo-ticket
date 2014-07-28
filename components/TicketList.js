@@ -150,7 +150,7 @@ var TicketList = React.createClass({
 
         return (
             <div className="ticket-wrap row">
-                
+
 
                 <div className="ticket-division col-md-12">
                     {handledByCurrentUser.length > 0 && <div>
@@ -168,7 +168,7 @@ var TicketList = React.createClass({
                         <h3>Käsittelyssä olevat tukipyynnöt</h3>
                         <span className="numberOfTickets">({this.state.ticketCollection.filter(isOpen).filter(notIn.bind(null, handledByCurrentUser)).length})</span>
                     </div>
-                    <List 
+                    <List
                         user={this.props.user}
                         tickets={this.state.ticketCollection
                         .filter(isOpen)
@@ -179,7 +179,7 @@ var TicketList = React.createClass({
                         <h3>Ratkaistut tukipyynnöt</h3>
                         <span className="numberOfTickets">({this.state.ticketCollection.filter(isClosed).length})</span>
                     </div>
-                    <List 
+                    <List
                         user={this.props.user}
                         tickets={this.state.ticketCollection.filter(isClosed)} />
                 </div>
