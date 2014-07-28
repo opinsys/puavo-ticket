@@ -45,6 +45,10 @@ var ElasticTextarea = React.createClass({
         window.scrollTo.apply(window, scrollPosition);
     },
 
+    componentWillReceiveProps: function(nextProps) {
+        this._didChange = nextProps.value !== this.props.value;
+    },
+
     componentDidMount: function() {
         this._resizeTextarea = _.throttle(this._resizeTextarea, 100);
         window.addEventListener("resize", this._resizeTextarea);
