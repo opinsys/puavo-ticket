@@ -1,43 +1,65 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
-var Backbone = require("backbone");
 
 var Button = require("react-bootstrap/Button");
+
+
+var Spinner = require("../Loading").Spinner;
+var captureError = require("puavo-ticket/utils/captureError");
 
 /**
  * ToggleStatusButton
  *
  * @namespace components
- * @private
  * @class TicketView.ToggleStatusButton
+ * @extends React.ReactComponent
  */
 var ToggleStatusButton = React.createClass({
 
-    handleOpenTicket: function() {
-        this.props.ticket.setOpen(this.props.user)
-        .catch(Backbone.trigger.bind(Backbone, "error"));
+    getInitialState: function() {
+        return {
+            saving: false
+        };
     },
 
-    handleCloseTicket: function() {
-        this.props.ticket.setClosed(this.props.user)
-        .catch(Backbone.trigger.bind(Backbone, "error"));
+
+    handleChangeState: function() {
+        this.setState({ saving: true });
+        var op;
+        if (this.getTicketStatus() === "open") {
+            op = this.props.ticket.setClosed(this.props.user);
+        } else {
+            op = this.props.ticket.setOpen(this.props.user);
+        }
+
+        op.bind(this)
+        .then(function() {
+            return this.props.ticket.fetch();
+        })
+        .then(function() {
+            if (this.isMounted()) this.setState({ saving: false });
+        })
+        .catch(captureError("Tukipyynnön tilan muuttaminen epäonnistui"));
+    },
+
+    getTicketStatus: function() {
+        return this.props.ticket.getCurrentStatus() || "open";
     },
 
     render: function() {
-        var ticket = this.props.ticket;
-        var status = ticket.getCurrentStatus();
 
-        if (!status) return (
-            <Button disabled >loading...</Button>
+        if (this.state.saving) return (
+            <Button disabled >
+                <Spinner /> Tallennetaan...
+            </Button>
         );
 
-        if (status === "open") return (
+        if (this.getTicketStatus() === "open") return (
             <Button
                 bsStyle="success"
                 className="close-ticket"
-                disabled={ticket.isOperating()}
-                onClick={this.handleCloseTicket} >
+                onClick={this.handleChangeState} >
                 <i className="fa fa-check"></i>Aseta ratkaistuksi</Button>
         );
 
@@ -45,8 +67,7 @@ var ToggleStatusButton = React.createClass({
             <Button
                 bsStyle="warning"
                 className="reopen-ticket"
-                disabled={ticket.isOperating()}
-                onClick={this.handleOpenTicket} >
+                onClick={this.handleChangeState} >
                 <i className="fa fa-refresh"></i>Avaa uudelleen</Button>
         );
 
