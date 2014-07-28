@@ -7,6 +7,7 @@ var Backbone = require("backbone");
 var Route = require("react-router").Route;
 var Link = require("react-router").Link;
 var Routes = require("react-router").Routes;
+var transitionTo = require("react-router").transitionTo;
 
 var BackboneMixin = require("./components/BackboneMixin");
 var User = require("./models/client/User");
@@ -129,6 +130,10 @@ React.renderComponent(
             <Route name="ticket" path="/tickets/:id" handler={TicketView} />
         </Route>
     </Routes>, document.body);
+
+if (window.location.pathname === "/") {
+    transitionTo("tickets");
+}
 
 window.onerror = function(message, url, linenum) {
     var msg = "Unhandled client Javascript error: '" + message + "' on " + url + ":" + linenum;
