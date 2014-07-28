@@ -49,7 +49,7 @@ var Handler = Base.extend({
     
     ticket: function() {
         var Ticket = require("./Ticket");
-        return this.belongsTo(Ticket, "ticket_id");
+        return this.belongsTo(Ticket, "ticketId");
     },    
 
     createdBy: function() {

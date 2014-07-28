@@ -165,7 +165,7 @@ describe("Ticket model", function() {
                 testTicket = ticket;
 
                 return ReadTicket.forge({
-                    ticket_id: ticket.get("id")
+                    ticketId: ticket.get("id")
                 }).fetch({ require: true });
             })
             .then(function(read) {
@@ -183,7 +183,7 @@ describe("Ticket model", function() {
             })
             .then(function(ticket) {
                 return ReadTicket.forge({
-                    ticket_id: ticket.get("id")
+                    ticketId: ticket.get("id")
                 }).fetch({ require: true });
             })
             .then(function(read) {

@@ -33,7 +33,7 @@ describe("ReadTicket model", function() {
         var self = this;
 
         return ReadTicket.forge({
-                ticket_id: self.ticket.id,
+                ticketId: self.ticket.id,
                 readById: self.user.id,
                 readAt: new Date('2013', '01', '01'),
                 unread: true

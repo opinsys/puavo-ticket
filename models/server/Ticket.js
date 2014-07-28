@@ -129,7 +129,7 @@ var Ticket = Base.extend({
      * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket comment models
      */
     comments: function() {
-        return this.hasMany(Comment, "ticket_id");
+        return this.hasMany(Comment, "ticketId");
     },
 
 
@@ -138,11 +138,11 @@ var Ticket = Base.extend({
      * @return {models.server.Visibility}
      */
     visibilities: function() {
-        return this.hasMany(Visibility, "ticket_id");
+        return this.hasMany(Visibility, "ticketId");
     },
 
     readTickets: function() {
-        return this.hasMany(ReadTicket, "ticket_id");
+        return this.hasMany(ReadTicket, "ticketId");
     },
 
     /**
@@ -164,13 +164,13 @@ var Ticket = Base.extend({
         }
 
         return Visibility.forge({
-                ticket_id: self.get("id"),
+                ticketId: self.get("id"),
                 entity: visibility,
             }).fetch()
             .then(function(existingVisibility) {
                 if (existingVisibility) return existingVisibility;
                 return Visibility.forge({
-                    ticket_id: self.get("id"),
+                    ticketId: self.get("id"),
                     entity: visibility,
                     comment: comment,
                     createdById: Base.toId(addedBy)
@@ -190,7 +190,7 @@ var Ticket = Base.extend({
         var self = this;
 
         return Comment.forge({
-            ticket_id: this.get("id"),
+            ticketId: this.get("id"),
             comment: comment,
             createdById: Base.toId(user)
         }).save()
@@ -212,7 +212,7 @@ var Ticket = Base.extend({
         return Tag.forge({
             tag: tag,
             createdById: Base.toId(user),
-            ticket_id: this.get("id")
+            ticketId: this.get("id")
         }, options).save();
     },
 
@@ -234,7 +234,7 @@ var Ticket = Base.extend({
             .query(function(qb) {
                 qb.where({
                     tag: tag,
-                    ticket_id: self.get("id"),
+                    ticketId: self.get("id"),
                 });
             })
             .fetch()
@@ -253,11 +253,11 @@ var Ticket = Base.extend({
      * @return {Bookshelf.Collection} Bookshelf.Collection of tag models
      */
     tags: function(){
-        return this.hasMany(Tag, "ticket_id").query(queries.notSoftDeleted);
+        return this.hasMany(Tag, "ticketId").query(queries.notSoftDeleted);
     },
 
     tagHistory: function() {
-        return this.hasMany(Tag, "ticket_id").query(queries.softDeleted);
+        return this.hasMany(Tag, "ticketId").query(queries.softDeleted);
     },
 
     /**
@@ -297,7 +297,7 @@ var Ticket = Base.extend({
      * @return {Bookshelf.Collection} Bookshelf.Collection of Attachment models
      */
     attachments: function() {
-        return this.hasMany(Attachment, "ticket_id").query(queries.notSoftDeleted);
+        return this.hasMany(Attachment, "ticketId").query(queries.notSoftDeleted);
     },
 
     /**
@@ -309,7 +309,7 @@ var Ticket = Base.extend({
      */
     addFollower: function(follower) {
         follower = _.clone(follower);
-        follower.ticket_id = this.get("id");
+        follower.ticketId = this.get("id");
         return Follower.forge(follower).save();
     },
 
@@ -331,7 +331,7 @@ var Ticket = Base.extend({
             return Promise.all([
 
                 Handler.forge({
-                    ticket_id: self.get("id"),
+                    ticketId: self.get("id"),
                     createdById: Base.toId(addedBy),
                     handler: Base.toId(handler)
                 }).save(),
@@ -357,11 +357,11 @@ var Ticket = Base.extend({
      * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket handlers
      */
     handlers: function() {
-        return this.hasMany(Handler, "ticket_id");
+        return this.hasMany(Handler, "ticketId");
     },
 
     handlerUsers: function() {
-        return this.belongsToMany(User, "handlers", "ticket_id", "handler");
+        return this.belongsToMany(User, "handlers", "ticketId", "handler");
     },
 
     /**
@@ -394,7 +394,7 @@ var Ticket = Base.extend({
      */
     addDevice: function(device, addedBy){
         return Device.forge({
-                ticket_id: this.get("id"),
+                ticketId: this.get("id"),
                 createdById: Base.toId(addedBy),
                 hostname: Base.toAttr(device, "hostname")
             })
@@ -407,7 +407,7 @@ var Ticket = Base.extend({
      * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket devices
      */
     devices: function() {
-        return this.hasMany(Device, "ticket_id");
+        return this.hasMany(Device, "ticketId");
     },
 
     /**
@@ -420,7 +420,7 @@ var Ticket = Base.extend({
      */
     addRelatedUser: function(user, addedBy){
         return RelatedUser.forge({
-            ticket_id: this.get("id"),
+            ticketId: this.get("id"),
             createdById: Base.toId(addedBy),
             user: Base.toId(user)
         }).save();
@@ -432,7 +432,7 @@ var Ticket = Base.extend({
      * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket related users
      */
     relatedUsers: function() {
-        return this.hasMany(RelatedUser, "ticket_id");
+        return this.hasMany(RelatedUser, "ticketId");
     },
 
     createdBy: function() {
@@ -450,7 +450,7 @@ var Ticket = Base.extend({
         var self = this;
 
         return ReadTicket.forge({
-            ticket_id: self.get("id"),
+            ticketId: self.get("id"),
             readById: Base.toId(user)
         })
         .fetch()
@@ -463,7 +463,7 @@ var Ticket = Base.extend({
             }
 
             return ReadTicket.forge({
-                ticket_id: self.get("id"),
+                ticketId: self.get("id"),
                 readById: Base.toId(user),
                 readAt: new Date(),
                 unread: false
@@ -482,7 +482,7 @@ var Ticket = Base.extend({
         var self = this;
 
         return ReadTicket.collection()
-            .query("where", "ticket_id", "=", self.get("id"))
+            .query("where", "ticketId", "=", self.get("id"))
             .fetch()
             .then(function(readTickets) {
                 return Promise.all(
@@ -562,7 +562,7 @@ Ticket.byVisibilities = function(visibilities) {
         .collection()
         .query(function(queryBuilder) {
             queryBuilder
-            .join("visibilities", "tickets.id", "=", "visibilities.ticket_id")
+            .join("visibilities", "tickets.id", "=", "visibilities.ticketId")
             .whereIn("visibilities.entity", visibilities)
             .whereNull("visibilities.deletedAt");
         });

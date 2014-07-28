@@ -26,11 +26,11 @@ function addLifecycleColumns(table) {
 }
 
 function uniqueForTicket(table, columnName) {
-    table.unique(["ticket_id", "deleted"].concat(columnName));
+    table.unique(["ticketId", "deleted"].concat(columnName));
 }
 
 function addTicketRelation(table) {
-    return table.integer("ticket_id")
+    return table.integer("ticketId")
         .notNullable()
         .references("id")
         .inTable("tickets");

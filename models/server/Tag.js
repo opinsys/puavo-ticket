@@ -43,7 +43,7 @@ var Tag = Base.extend({
                 .then(function deletePreviousStatustags() {
                     if (tagModel.isStatusTag()) {
                         return Tag.softDeleteStatusTagsFor(
-                            tagModel.get("ticket_id"),
+                            tagModel.get("ticketId"),
                             tagModel.get("createdById")
                         );
                     }
@@ -84,14 +84,14 @@ var Tag = Base.extend({
                 .whereNull("deletedAt")
                 .andWhere({
                     tag: self.get("tag"),
-                    ticket_id: self.get("ticket_id")
+                    ticketId: self.get("ticketId")
                 });
             });
     },
 
     ticket: function() {
         var Ticket = require("./Ticket");
-        return this.belongsTo(Ticket, "ticket_id");
+        return this.belongsTo(Ticket, "ticketId");
     },
 
     createdBy: function() {
@@ -131,7 +131,7 @@ var Tag = Base.extend({
             .query(function(qb) {
                 qb
                 .whereNull("deletedAt")
-                .andWhere({ ticket_id: ticketId })
+                .andWhere({ ticketId: ticketId })
                 .andWhere("tag", "like", "status:%");
             });
     }

@@ -50,7 +50,7 @@ describe("/api/tickets/:id/comments", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.comment, "another test comment");
-                assert.equal(res.body.ticket_id, ticket.get("id"));
+                assert.equal(res.body.ticketId, ticket.get("id"));
                 assert.equal(res.body.createdById, self.user.id);
             });
     });
