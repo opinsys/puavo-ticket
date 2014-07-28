@@ -11,7 +11,6 @@ var captureError = require("puavo-ticket/utils/captureError");
 var BackboneMixin = require("puavo-ticket/components/BackboneMixin");
 var Ticket = require("puavo-ticket/models/client/Ticket");
 var Loading = require("../Loading");
-var Handler = require("puavo-ticket//models/client/Handler");
 var Base = require("puavo-ticket/models/client/Base");
 var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
@@ -114,11 +113,7 @@ var TicketView = React.createClass({
                         if (self.isMounted()) self.setState({ fetching: true });
 
                         Promise.all(users.map(function(user) {
-                            var h = new Handler({}, { parent: self.state.ticket });
-                            return h.save({
-                                username: user.getUsername(),
-                                organisation_domain: user.getOrganisationDomain()
-                            });
+                            return self.state.ticket.addHandler(user);
                         }))
                         .catch(captureError("Käsittelijöiden lisääminen epäonnistui"))
                         .then(function() {
