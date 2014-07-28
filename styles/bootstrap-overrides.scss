@@ -4,6 +4,12 @@
 
 .modal {
     position: absolute;
+    overflow-y:auto;
+    max-height:90%;
+}
+
+.modal-title {
+    font-size: 11pt;
 }
 
 .table {

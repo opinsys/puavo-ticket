@@ -48,9 +48,12 @@ var Main = React.createClass({
     },
 
     handleUnhandledError: function(error, customMessage) {
-        console.error("Unhandled error", customMessage, error);
-        this.renderInModal("Uups. Jotain odottamatonta tapahtui", function(){
+        console.error(customMessage + ":", error.message);
+        if (error.stack) console.error(error.stack);
+        this.renderInModal("Uups! Jotain odottamatonta tapahtui :(", function(){
             return <ErrorMessage error={error} customMessage={customMessage} />;
+        }, function() {
+            window.scrollTo(0, 0);
         });
     },
 
@@ -63,18 +66,20 @@ var Main = React.createClass({
      * @param {Function} renderModalContent.close
      *      Call this function to close the modal window
      */
-    renderInModal: function(title, render) {
+    renderInModal: function(title, render, cb) {
         var self = this;
         this.setState({ renderModalContent: function() {
             return (
-                <Modal title={title} onRequestHide={self.closeModal}>
+                <Modal
+                    onRequestHide={function(){}}
+                    title={title} >
                     {render(self.closeModal)}
                 </Modal>
             );
-        } });
+        } }, cb);
     },
 
-    closeModal: function() {
+    closeModal: function(e) {
         this.setState({ renderModalContent: null });
     },
 
