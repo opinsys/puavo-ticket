@@ -152,7 +152,7 @@ var TicketView = React.createClass({
                             return self.state.ticket.addHandler(user);
                         }))
                         .then(function() {
-                            return this.fetchTicket();
+                            return self.fetchTicket();
                         })
                         .catch(captureError("Käsittelijöiden lisääminen epäonnistui"));
                 }}/>
@@ -181,6 +181,7 @@ var TicketView = React.createClass({
 
         this.setState({ fetching: true });
         return this.state.ticket.fetch()
+            .bind(this)
             .then(function() {
                 if (this.isMounted()) this.setState({ fetching: false });
             })
