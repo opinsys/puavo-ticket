@@ -66,7 +66,7 @@ var Base = Bookshelf.DB.Model.extend({
             throw new Error("softDelete requires a byUser argument");
         }
         this.set({
-            deleted_by: Base.toId(byUser),
+            deletedById: Base.toId(byUser),
             deleted_at: new Date(),
             deleted: this.get("id")
         });

@@ -6,7 +6,7 @@ function addLifecycleColumns(table) {
         .references("id")
         .inTable("users");
 
-    table.integer("deleted_by")
+    table.integer("deletedById")
         .references("id")
         .inTable("users");
 
