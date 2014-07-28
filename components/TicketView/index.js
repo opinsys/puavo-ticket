@@ -80,10 +80,43 @@ var TicketView = React.createClass({
         this.refs.comment.getDOMNode().focus();
     },
 
+    /**
+     * If the comment field has multiple line breaks it is considered to be in
+     * multiline mode.
+     *
+     * @method isMultilineMode
+     * @return {Booleann}
+     */
+    isMultilineMode: function() {
+        return this.state.comment.split("\n").length > 1;
+    },
+
+    /**
+     * When in multiline mode:
+     *
+     *   - Enter key adds an additional line break
+     *   - Ctrl+Enter submits the comment
+     *
+     * When not in multiline mode
+     *
+     *   - Enter key submits the comment
+     *   - Shift+Enter forces a line break and enables the multiline mode
+     *
+     * @method handleKeyDown
+     */
     handleKeyDown: function(e) {
-        if (e.key === "Enter" && !e.shiftKey) {
+        if (e.key !== "Enter") return;
+
+        // Ctrl+Enter always saves the comment
+        if (e.ctrlKey) {
             this.saveComment();
+            return;
         }
+
+        // Shift+Enter or plain enter in multiline mode inserts a line break
+        if (e.shiftKey || this.isMultilineMode()) return;
+
+        this.saveComment();
     },
 
 
