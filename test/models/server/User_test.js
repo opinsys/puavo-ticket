@@ -20,7 +20,7 @@ describe("User model", function() {
         };
 
         return User.forge({
-                external_id: 1,
+                externalId: 1,
                 external_data: testUser
             })
             .save()
@@ -42,14 +42,14 @@ describe("UserMixin", function() {
     before(function() {
         this.user = new User({
             id: 1,
-            external_id: helpers.user.teacher.id,
+            externalId: helpers.user.teacher.id,
             external_data: helpers.user.teacher
         });
     });
 
     it("has user visibility", function() {
         //
-        // Use now external_id but should be use id from users table
+        // Use now externalId but should be use id from users table
         //
         //assert(this.user.getVisibilities().indexOf("user:9324") !== -1);
     });

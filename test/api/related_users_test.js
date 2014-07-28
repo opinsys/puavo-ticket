@@ -59,7 +59,7 @@ describe("/api/tickets/:id/related_users", function() {
         return this.agent
             .post("/api/tickets/" + self.ticket.get("id") + "/related_users")
             .send({
-                external_id: "1432",
+                externalId: "1432",
                 username: "joe.bloggs",
                 domain: "testing.opinsys.fi"
             })
@@ -70,7 +70,7 @@ describe("/api/tickets/:id/related_users", function() {
                 assert.equal(res.body.createdById, self.user.id);
             })
             .then(function() {
-                return User.forge({ external_id: "1432" }).fetch();
+                return User.forge({ externalId: "1432" }).fetch();
             })
             .then(function(related_user) {
                 assert.equal(related_user.get("external_data").username, "joe.bloggs");
@@ -100,7 +100,7 @@ describe("/api/tickets/:id/related_users", function() {
         return this.agent
             .post("/api/tickets/" + self.otherTicket.get("id") + "/related_users")
             .send({
-                external_id: "1432",
+                externalId: "1432",
                 username: "joe.bloggs",
                 domain: "testing.opinsys.fi"
             })
@@ -111,7 +111,7 @@ describe("/api/tickets/:id/related_users", function() {
                 assert.equal(res.body.createdById, self.user.id);
             })
             .then(function() {
-                return User.forge({ external_id: "1432" }).fetch();
+                return User.forge({ externalId: "1432" }).fetch();
             })
             .then(function(related_user) {
                 assert.equal(related_user.get("external_data").username, "joe.bloggs");

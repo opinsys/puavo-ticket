@@ -39,7 +39,7 @@ function addTicketRelation(table) {
 exports.up = function(knex, Promise) {
     return knex.schema.createTable("users", function(table) {
         table.increments("id");
-        table.string("external_id").notNullable().unique();
+        table.string("externalId").notNullable().unique();
         table.json("external_data").notNullable();
         table.dateTime("createdAt").notNullable();
         table.dateTime("updatedAt").notNullable();
@@ -104,7 +104,7 @@ exports.up = function(knex, Promise) {
 
                 table.increments("id");
                 table.string("hostname").notNullable();
-                table.string("external_id");
+                table.string("externalId");
             }),
 
             knex.schema.createTable("attachments", function(table) {

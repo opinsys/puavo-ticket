@@ -176,7 +176,7 @@ function clearTestDatabase() {
  */
 function fetchTestUser() {
     return User.collection()
-        .query('where', 'external_id', '=', testUser.teacher.id)
+        .query('where', 'externalId', '=', testUser.teacher.id)
         .fetchOne();
 }
 

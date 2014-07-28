@@ -63,7 +63,7 @@ var User = Base.extend({
             .then(function(user) {
                 if (!user) {
                     return User.forge({
-                            external_id: token.id,
+                            externalId: token.id,
                             external_data: token
                         }).save();
                 }
@@ -76,14 +76,14 @@ var User = Base.extend({
     },
 
     /**
-     * Shortcut for getting user models by the external_id
+     * Shortcut for getting user models by the externalId
      *
      * @static
      * @method byExternalId
      * @return {models.server.User}
      */
     byExternalId: function(id) {
-        return this.forge({ external_id: id });
+        return this.forge({ externalId: id });
     },
 
     /**

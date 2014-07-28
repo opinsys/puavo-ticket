@@ -16,7 +16,7 @@ describe("Authentication", function() {
                 return helpers.fetchTestUser();
             })
             .then(function(user) {
-                assert.equal(user.get("external_id"), "9324");
+                assert.equal(user.get("externalId"), "9324");
                 assert.deepEqual(user.get("external_data"), helpers.user.teacher);
             });
     });
