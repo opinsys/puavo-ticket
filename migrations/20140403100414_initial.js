@@ -72,7 +72,7 @@ exports.up = function(knex, Promise) {
                 uniqueForTicket(table, "entity");
             }),
 
-            knex.schema.createTable("related_users", function(table) {
+            knex.schema.createTable("relatedUsers", function(table) {
                 addLifecycleColumns(table);
                 addTicketRelation(table);
 
@@ -155,7 +155,7 @@ exports.down = function(knex, Promise) {
     return Promise.all([
         knex.schema.dropTableIfExists("comments"),
         knex.schema.dropTableIfExists("visibilities"),
-        knex.schema.dropTableIfExists("related_users"),
+        knex.schema.dropTableIfExists("relatedUsers"),
         knex.schema.dropTableIfExists("devices"),
         knex.schema.dropTableIfExists("attachments"),
         knex.schema.dropTableIfExists("followers"),

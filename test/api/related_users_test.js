@@ -22,7 +22,7 @@ function mockJoeBloggsAPI() {
     });
 }
 
-describe("/api/tickets/:id/related_users", function() {
+describe("/api/tickets/:id/relatedUsers", function() {
 
     before(function() {
         var self = this;
@@ -57,7 +57,7 @@ describe("/api/tickets/:id/related_users", function() {
         mockJoeBloggsAPI();
 
         return this.agent
-            .post("/api/tickets/" + self.ticket.get("id") + "/related_users")
+            .post("/api/tickets/" + self.ticket.get("id") + "/relatedUsers")
             .send({
                 externalId: "1432",
                 username: "joe.bloggs",
@@ -98,7 +98,7 @@ describe("/api/tickets/:id/related_users", function() {
         var self = this;
 
         return this.agent
-            .post("/api/tickets/" + self.otherTicket.get("id") + "/related_users")
+            .post("/api/tickets/" + self.otherTicket.get("id") + "/relatedUsers")
             .send({
                 externalId: "1432",
                 username: "joe.bloggs",

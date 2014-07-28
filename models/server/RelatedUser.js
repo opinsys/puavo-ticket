@@ -13,7 +13,7 @@ var User = require("./User");
  */
 var RelatedUsers = Base.extend({
 
-    tableName: "related_users",
+    tableName: "relatedUsers",
 
     defaults: function() {
         return {

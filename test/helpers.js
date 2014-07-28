@@ -146,7 +146,7 @@ function clearTestDatabase() {
     var tables = [
         'comments',
         'visibilities',
-        'related_users',
+        'relatedUsers',
         'devices',
         'attachments',
         'followers',
