@@ -47,7 +47,7 @@ var Loading = React.createClass({
  */
 Loading.Spinner = React.createClass({
     render: function() {
-        return this.transferPropsTo(<i className="fa fa-spinner fa-spin" />);
+        return this.transferPropsTo(<i className="Spinner fa fa-spinner fa-spin" />);
     }
 });
 

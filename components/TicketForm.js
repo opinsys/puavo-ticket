@@ -6,6 +6,8 @@ var Router = require("react-router");
 
 var captureError = require("puavo-ticket/utils/captureError");
 var SideInfo = require("./SideInfo");
+var Loading = require("./Loading");
+
 var BackboneMixin = require("puavo-ticket/components/BackboneMixin");
 var Ticket = require("puavo-ticket/models/client/Ticket");
 
