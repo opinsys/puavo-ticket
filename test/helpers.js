@@ -88,7 +88,7 @@ function loginAsUser(userData){
  */
 function insertTestTickets(user) {
     var ticket = Ticket.forge({
-        created_by: user.get("id"),
+        createdById: user.get("id"),
         title: "Test ticket",
         description: "Test ticket with comments, related users etc."
     });
@@ -96,33 +96,33 @@ function insertTestTickets(user) {
     return ticket.save()
         .then(function addComment() {
             return Comment.forge({
-                created_by: user.get("id"),
-                ticket_id: ticket.id,
-                updated_at: new Date(),
+                createdById: user.get("id"),
+                ticketId: ticket.id,
+                updatedAt: new Date(),
                 comment: "First comment to test ticket"
             })
             .save();
         })
         .then(function addAnotherComment() {
             return Comment.forge({
-                created_by: user.get("id"),
-                ticket_id: ticket.id,
-                updated_at: new Date(),
+                createdById: user.get("id"),
+                ticketId: ticket.id,
+                updatedAt: new Date(),
                 comment: "Second comment to test ticket"
             })
             .save();
         })
         .then(function addAnotherTicket() {
             return Ticket.forge({
-                created_by: user.get("id"),
+                createdById: user.get("id"),
                 title: "Other test ticket",
                 description: "Other test tickets"
             }).save();
         })
         .then(function addCommentToAnotherTicket(otherTicket) {
             return Comment.forge({
-                created_by: user.get("id"),
-                ticket_id: otherTicket.id,
+                createdById: user.get("id"),
+                ticketId: otherTicket.id,
                 comment: "First comment to the other ticket"
             })
             .save()
@@ -146,7 +146,7 @@ function clearTestDatabase() {
     var tables = [
         'comments',
         'visibilities',
-        'related_users',
+        'relatedUsers',
         'devices',
         'attachments',
         'followers',
@@ -176,7 +176,7 @@ function clearTestDatabase() {
  */
 function fetchTestUser() {
     return User.collection()
-        .query('where', 'external_id', '=', testUser.teacher.id)
+        .query('where', 'externalId', '=', testUser.teacher.id)
         .fetchOne();
 }
 

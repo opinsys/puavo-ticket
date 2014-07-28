@@ -20,19 +20,19 @@ describe("User model", function() {
         };
 
         return User.forge({
-                external_id: 1,
-                external_data: testUser
+                externalId: 1,
+                externalData: testUser
             })
             .save()
             .then(function(user) {
                 return User.forge({ id: user.get("id") }).fetch();
             })
             .then(function(user) {
-                assert.equal("testuser", user.get("external_data").username);
-                assert.equal("joe.bloggs@testdomain.com", user.get("external_data").email);
-                assert.equal("Joe", user.get("external_data").first_name);
-                assert.equal("Bloggs", user.get("external_data").last_name);
-                assert.equal("test.testdomain.com", user.get("external_data").organisation_domain);
+                assert.equal("testuser", user.get("externalData").username);
+                assert.equal("joe.bloggs@testdomain.com", user.get("externalData").email);
+                assert.equal("Joe", user.get("externalData").first_name);
+                assert.equal("Bloggs", user.get("externalData").last_name);
+                assert.equal("test.testdomain.com", user.get("externalData").organisation_domain);
             });
     });
 
@@ -42,14 +42,14 @@ describe("UserMixin", function() {
     before(function() {
         this.user = new User({
             id: 1,
-            external_id: helpers.user.teacher.id,
-            external_data: helpers.user.teacher
+            externalId: helpers.user.teacher.id,
+            externalData: helpers.user.teacher
         });
     });
 
     it("has user visibility", function() {
         //
-        // Use now external_id but should be use id from users table
+        // Use now externalId but should be use id from users table
         //
         //assert(this.user.getVisibilities().indexOf("user:9324") !== -1);
     });

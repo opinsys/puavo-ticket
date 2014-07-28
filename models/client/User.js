@@ -28,8 +28,8 @@ var User = Base.extend({
     },
 
     getName: function() {
-        if (this.get("external_data")) {
-            return this.get("external_data").first_name + " " + this.get("external_data").last_name;
+        if (this.get("externalData")) {
+            return this.get("externalData").first_name + " " + this.get("externalData").last_name;
         }
     }
 
@@ -42,7 +42,7 @@ var User = Base.extend({
             .then(function(data) {
                 var users =  data.map(function(userData) {
                     return new User({
-                        external_data: userData
+                        externalData: userData
                     });
                 });
 

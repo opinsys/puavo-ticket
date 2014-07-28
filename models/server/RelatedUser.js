@@ -13,12 +13,12 @@ var User = require("./User");
  */
 var RelatedUsers = Base.extend({
 
-    tableName: "related_users",
+    tableName: "relatedUsers",
 
     defaults: function() {
         return {
-            created_at: new Date(),
-            updated_at: new Date()
+            createdAt: new Date(),
+            updatedAt: new Date()
         };
     },
 
@@ -27,7 +27,7 @@ var RelatedUsers = Base.extend({
     },
 
     createdBy: function() {
-        return this.belongsTo(User, "created_by");
+        return this.belongsTo(User, "createdById");
     }
 
 });

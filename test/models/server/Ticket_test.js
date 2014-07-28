@@ -33,7 +33,7 @@ describe("Ticket model", function() {
         return Ticket.forge({
                 title: title,
                 description: "It just doesn't",
-                created_by: self.user.get("id")
+                createdById: self.user.get("id")
             })
             .save()
             .then(function(ticket) {
@@ -46,7 +46,7 @@ describe("Ticket model", function() {
                 return Ticket.forge({
                         title: "Other ticket",
                         description: "by other user",
-                        created_by: self.otherUser.get("id")
+                        createdById: self.otherUser.get("id")
                 }).save();
             });
     });
@@ -103,7 +103,7 @@ describe("Ticket model", function() {
         var ticketId = Ticket.forge({
             title: "computer does not work",
             description: "It just doesn't",
-            created_by: self.user.id
+            createdById: self.user.id
         })
         .save()
         .then(function(ticket) {
@@ -154,7 +154,7 @@ describe("Ticket model", function() {
         return Ticket.forge({
                 title: "Will be read",
                 description: "foo",
-                created_by: self.user.id
+                createdById: self.user.id
             })
             .save()
             .then(function(ticket) {
@@ -165,7 +165,7 @@ describe("Ticket model", function() {
                 testTicket = ticket;
 
                 return ReadTicket.forge({
-                    ticket_id: ticket.get("id")
+                    ticketId: ticket.get("id")
                 }).fetch({ require: true });
             })
             .then(function(read) {
@@ -183,7 +183,7 @@ describe("Ticket model", function() {
             })
             .then(function(ticket) {
                 return ReadTicket.forge({
-                    ticket_id: ticket.get("id")
+                    ticketId: ticket.get("id")
                 }).fetch({ require: true });
             })
             .then(function(read) {

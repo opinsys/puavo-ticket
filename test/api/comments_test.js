@@ -50,8 +50,8 @@ describe("/api/tickets/:id/comments", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.comment, "another test comment");
-                assert.equal(res.body.ticket_id, ticket.get("id"));
-                assert.equal(res.body.created_by, self.user.id);
+                assert.equal(res.body.ticketId, ticket.get("id"));
+                assert.equal(res.body.createdById, self.user.id);
             });
     });
 
@@ -65,7 +65,7 @@ describe("/api/tickets/:id/comments", function() {
                 var comment = _.findWhere(res.body.comments, { comment: "another test comment" });
                 assert(comment);
                 assert(comment.createdBy);
-                assert.equal("olli.opettaja", comment.createdBy.external_data.username);
+                assert.equal("olli.opettaja", comment.createdBy.externalData.username);
             });
     });
 

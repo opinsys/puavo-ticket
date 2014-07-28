@@ -39,7 +39,7 @@ describe("Ticket email notifications", function() {
         return Ticket.forge({
                 title: "Computer does not work",
                 description: "It just doesn't",
-                created_by: self.user.get("id")
+                createdById: self.user.get("id")
             }, {
                 emailTransport: stubTransport
             })
@@ -76,7 +76,7 @@ describe("Ticket email notifications", function() {
         return Ticket.forge({
                 title: "Computer does not work",
                 description: "It just doesn't",
-                created_by: self.user.get("id")
+                createdById: self.user.get("id")
             }, {
                 emailTransport: stubTransport
             })
@@ -107,9 +107,9 @@ describe("Ticket email notifications", function() {
                     ") on päivitetty. Pääset katselemaan ja päivittämään sitä tästä linkistä: https://staging-support.opinsys.fi/tickets/" +
                     ticket.get("id") +
                     "\n\n" +
-                    self.manager.get("external_data").first_name +
+                    self.manager.get("externalData").first_name +
                     " " +
-                    self.manager.get("external_data").last_name +
+                    self.manager.get("externalData").last_name +
                     ":"+
                     "\n" +
                     "It just doesn't" +

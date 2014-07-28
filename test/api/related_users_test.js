@@ -22,7 +22,7 @@ function mockJoeBloggsAPI() {
     });
 }
 
-describe("/api/tickets/:id/related_users", function() {
+describe("/api/tickets/:id/relatedUsers", function() {
 
     before(function() {
         var self = this;
@@ -57,23 +57,23 @@ describe("/api/tickets/:id/related_users", function() {
         mockJoeBloggsAPI();
 
         return this.agent
-            .post("/api/tickets/" + self.ticket.get("id") + "/related_users")
+            .post("/api/tickets/" + self.ticket.get("id") + "/relatedUsers")
             .send({
-                external_id: "1432",
+                externalId: "1432",
                 username: "joe.bloggs",
                 domain: "testing.opinsys.fi"
             })
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.equal(res.body.ticket_id, self.ticket.get("id"));
-                assert.equal(res.body.created_by, self.user.id);
+                assert.equal(res.body.ticketId, self.ticket.get("id"));
+                assert.equal(res.body.createdById, self.user.id);
             })
             .then(function() {
-                return User.forge({ external_id: "1432" }).fetch();
+                return User.forge({ externalId: "1432" }).fetch();
             })
             .then(function(related_user) {
-                assert.equal(related_user.get("external_data").username, "joe.bloggs");
+                assert.equal(related_user.get("externalData").username, "joe.bloggs");
             });
     });
 
@@ -87,8 +87,8 @@ describe("/api/tickets/:id/related_users", function() {
                 assert.equal(200, res.status);
                 assert(res.body.relatedUsers, "response has a relatedUsers attr");
                 var relatedUser = res.body.relatedUsers[0];
-                assert(relatedUser.user.external_data, "user relation is present");
-                assert.equal("joe.bloggs", relatedUser.user.external_data.username);
+                assert(relatedUser.user.externalData, "user relation is present");
+                assert.equal("joe.bloggs", relatedUser.user.externalData.username);
                 assert(relatedUser.createdBy, "createdBy relation is present");
             });
     });
@@ -98,23 +98,23 @@ describe("/api/tickets/:id/related_users", function() {
         var self = this;
 
         return this.agent
-            .post("/api/tickets/" + self.otherTicket.get("id") + "/related_users")
+            .post("/api/tickets/" + self.otherTicket.get("id") + "/relatedUsers")
             .send({
-                external_id: "1432",
+                externalId: "1432",
                 username: "joe.bloggs",
                 domain: "testing.opinsys.fi"
             })
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.equal(res.body.ticket_id, self.otherTicket.get("id"));
-                assert.equal(res.body.created_by, self.user.id);
+                assert.equal(res.body.ticketId, self.otherTicket.get("id"));
+                assert.equal(res.body.createdById, self.user.id);
             })
             .then(function() {
-                return User.forge({ external_id: "1432" }).fetch();
+                return User.forge({ externalId: "1432" }).fetch();
             })
             .then(function(related_user) {
-                assert.equal(related_user.get("external_data").username, "joe.bloggs");
+                assert.equal(related_user.get("externalData").username, "joe.bloggs");
             });
     });
 

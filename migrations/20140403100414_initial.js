@@ -1,18 +1,18 @@
 "use strict";
 
 function addLifecycleColumns(table) {
-    table.integer("created_by")
+    table.integer("createdById")
         .notNullable()
         .references("id")
         .inTable("users");
 
-    table.integer("deleted_by")
+    table.integer("deletedById")
         .references("id")
         .inTable("users");
 
-    table.dateTime("created_at").notNullable();
-    table.dateTime("updated_at").notNullable();
-    table.dateTime("deleted_at");
+    table.dateTime("createdAt").notNullable();
+    table.dateTime("updatedAt").notNullable();
+    table.dateTime("deletedAt");
 
     // A helper column for the uniqueForTicket constraints. Null value
     // in the delete_at field won't work as one would expect.
@@ -26,11 +26,11 @@ function addLifecycleColumns(table) {
 }
 
 function uniqueForTicket(table, columnName) {
-    table.unique(["ticket_id", "deleted"].concat(columnName));
+    table.unique(["ticketId", "deleted"].concat(columnName));
 }
 
 function addTicketRelation(table) {
-    return table.integer("ticket_id")
+    return table.integer("ticketId")
         .notNullable()
         .references("id")
         .inTable("tickets");
@@ -39,10 +39,10 @@ function addTicketRelation(table) {
 exports.up = function(knex, Promise) {
     return knex.schema.createTable("users", function(table) {
         table.increments("id");
-        table.string("external_id").notNullable().unique();
-        table.json("external_data").notNullable();
-        table.dateTime("created_at").notNullable();
-        table.dateTime("updated_at").notNullable();
+        table.string("externalId").notNullable().unique();
+        table.json("externalData").notNullable();
+        table.dateTime("createdAt").notNullable();
+        table.dateTime("updatedAt").notNullable();
     })
     .then(function createTicketsTable() {
         return knex.schema.createTable("tickets", function(table) {
@@ -72,7 +72,7 @@ exports.up = function(knex, Promise) {
                 uniqueForTicket(table, "entity");
             }),
 
-            knex.schema.createTable("related_users", function(table) {
+            knex.schema.createTable("relatedUsers", function(table) {
                 addLifecycleColumns(table);
                 addTicketRelation(table);
 
@@ -104,7 +104,7 @@ exports.up = function(knex, Promise) {
 
                 table.increments("id");
                 table.string("hostname").notNullable();
-                table.string("external_id");
+                table.string("externalId");
             }),
 
             knex.schema.createTable("attachments", function(table) {
@@ -113,7 +113,7 @@ exports.up = function(knex, Promise) {
 
                 table.increments("id");
                 table.binary("data").notNullable();
-                table.string("data_type");
+                table.string("dataType");
                 table.string("filename");
             }),
 
@@ -155,7 +155,7 @@ exports.down = function(knex, Promise) {
     return Promise.all([
         knex.schema.dropTableIfExists("comments"),
         knex.schema.dropTableIfExists("visibilities"),
-        knex.schema.dropTableIfExists("related_users"),
+        knex.schema.dropTableIfExists("relatedUsers"),
         knex.schema.dropTableIfExists("devices"),
         knex.schema.dropTableIfExists("attachments"),
         knex.schema.dropTableIfExists("followers"),

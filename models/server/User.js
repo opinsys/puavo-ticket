@@ -22,8 +22,8 @@ var User = Base.extend({
 
     defaults: function() {
         return {
-            created_at: new Date(),
-            updated_at: new Date()
+            createdAt: new Date(),
+            updatedAt: new Date()
         };
     },
 
@@ -63,12 +63,12 @@ var User = Base.extend({
             .then(function(user) {
                 if (!user) {
                     return User.forge({
-                            external_id: token.id,
-                            external_data: token
+                            externalId: token.id,
+                            externalData: token
                         }).save();
                 }
                 else {
-                    user.set("external_data", token);
+                    user.set("externalData", token);
                     return user.save();
                 }
 
@@ -76,14 +76,14 @@ var User = Base.extend({
     },
 
     /**
-     * Shortcut for getting user models by the external_id
+     * Shortcut for getting user models by the externalId
      *
      * @static
      * @method byExternalId
      * @return {models.server.User}
      */
     byExternalId: function(id) {
-        return this.forge({ external_id: id });
+        return this.forge({ externalId: id });
     },
 
     /**
@@ -107,7 +107,7 @@ var User = Base.extend({
     },
 
     /**
-     * Shortcut for getting user model by the username (external_data)
+     * Shortcut for getting user model by the username (externalData)
      *
      * @static
      * @method byUsername
@@ -116,7 +116,7 @@ var User = Base.extend({
     byUsername: function(username) {
         return User.forge()
             .query(function(qb) {
-                qb.where( Bookshelf.DB.knex.raw( "external_data->>'username' = ?",  [username] ) );
+                qb.where( Bookshelf.DB.knex.raw( "externalData->>'username' = ?",  [username] ) );
             });
     }
 

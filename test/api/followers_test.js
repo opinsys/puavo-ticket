@@ -45,8 +45,8 @@ describe("/api/tickets/:id/followers", function() {
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.equal(res.body.ticket_id, ticket.get("id"));
-                assert.equal(res.body.created_by, self.user.id);
+                assert.equal(res.body.ticketId, ticket.get("id"));
+                assert.equal(res.body.createdById, self.user.id);
             });
     });
 

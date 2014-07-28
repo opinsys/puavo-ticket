@@ -48,7 +48,7 @@ app.use(function(req, res, next) {
         request({
             method: "GET",
             headers: _.extend({}, req.headers, {
-                host: req.user.get("external_data").organisation_domain
+                host: req.user.get("externalData").organisation_domain
             }),
             url: puavoUrl,
             pool: {},

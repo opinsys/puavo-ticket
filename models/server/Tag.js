@@ -25,8 +25,8 @@ var Tag = Base.extend({
 
     defaults: function() {
       return {
-          created_at: new Date(),
-          updated_at: new Date()
+          createdAt: new Date(),
+          updatedAt: new Date()
       };
     },
 
@@ -43,8 +43,8 @@ var Tag = Base.extend({
                 .then(function deletePreviousStatustags() {
                     if (tagModel.isStatusTag()) {
                         return Tag.softDeleteStatusTagsFor(
-                            tagModel.get("ticket_id"),
-                            tagModel.get("created_by")
+                            tagModel.get("ticketId"),
+                            tagModel.get("createdById")
                         );
                     }
                 })
@@ -64,7 +64,7 @@ var Tag = Base.extend({
             })
             .bind(this)
             .then(function(ticket) {
-                if (!ticket.isHandler(this.get("created_by"))) {
+                if (!ticket.isHandler(this.get("createdById"))) {
                     throw new Error("Only handlers can change status");
                 }
             });
@@ -81,21 +81,21 @@ var Tag = Base.extend({
         return Tag.collection()
             .query(function(qb) {
                 qb
-                .whereNull("deleted_at")
+                .whereNull("deletedAt")
                 .andWhere({
                     tag: self.get("tag"),
-                    ticket_id: self.get("ticket_id")
+                    ticketId: self.get("ticketId")
                 });
             });
     },
 
     ticket: function() {
         var Ticket = require("./Ticket");
-        return this.belongsTo(Ticket, "ticket_id");
+        return this.belongsTo(Ticket, "ticketId");
     },
 
     createdBy: function() {
-        return this.belongsTo(User, "created_by");
+        return this.belongsTo(User, "createdById");
     }
 
 
@@ -130,8 +130,8 @@ var Tag = Base.extend({
         return Tag.collection()
             .query(function(qb) {
                 qb
-                .whereNull("deleted_at")
-                .andWhere({ ticket_id: ticketId })
+                .whereNull("deletedAt")
+                .andWhere({ ticketId: ticketId })
                 .andWhere("tag", "like", "status:%");
             });
     }

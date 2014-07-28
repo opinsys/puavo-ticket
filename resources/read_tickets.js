@@ -19,7 +19,7 @@ app.post("/api/tickets/:id/read", function(req, res, next) {
     debug(
         "Marking ticket %s as read for %s",
         req.params.id,
-        req.user.get("external_data").domain_username
+        req.user.get("externalData").domain_username
     );
 
     Ticket.forge({ id: req.params.id })

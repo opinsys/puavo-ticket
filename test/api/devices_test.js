@@ -48,8 +48,8 @@ describe("/api/tickets/:id/devices", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.hostname, "fatclient-01");
-                assert.equal(res.body.ticket_id, ticket.get("id"));
-                assert.equal(res.body.created_by, self.user.id);
+                assert.equal(res.body.ticketId, ticket.get("id"));
+                assert.equal(res.body.createdById, self.user.id);
             });
     });
 
@@ -74,7 +74,7 @@ describe("/api/tickets/:id/devices", function() {
                     "device has createdBy property"
                 );
 
-                assert.equal("olli.opettaja", deviceEntry[0].createdBy.external_data.username);
+                assert.equal("olli.opettaja", deviceEntry[0].createdBy.externalData.username);
 
             });
     });

@@ -16,7 +16,7 @@ var MenuItem = require("react-bootstrap/MenuItem");
 var UserInformation = React.createClass({
 
     getFullname: function() {
-        return this.props.user.get("external_data").first_name + " " + this.props.user.get("external_data").last_name;
+        return this.props.user.get("externalData").first_name + " " + this.props.user.get("externalData").last_name;
     },
 
     handleLogout: function() {

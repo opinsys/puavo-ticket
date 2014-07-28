@@ -18,13 +18,13 @@ var Device = Base.extend({
 
   defaults: function() {
       return {
-          created_at: new Date(),
-          updated_at: new Date()
+          createdAt: new Date(),
+          updatedAt: new Date()
       };
   },
 
   createdBy: function() {
-      return this.belongsTo(User, "created_by");
+      return this.belongsTo(User, "createdById");
   }
 
 });

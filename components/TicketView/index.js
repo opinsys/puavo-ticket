@@ -209,7 +209,7 @@ var TicketView = React.createClass({
     },
 
     renderDate: function() {
-        var datestring = this.state.ticket.get("created_at"),
+        var datestring = this.state.ticket.get("createdAt"),
         options={weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "numeric", minute:"numeric"};
         return(
             <span className="badge-text">
@@ -411,7 +411,7 @@ var VIEW_TYPES = {
             return (
                 <div className="tags">
                     <i>{this.getCreatorName()} lisäsi käsittelijäksi käyttäjän </i>
-                    <span>{this.props.update.get("handler").external_data.username}</span>
+                    <span>{this.props.update.get("handler").externalData.username}</span>
                 </div>
             );
         },

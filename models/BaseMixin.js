@@ -14,7 +14,7 @@ var BaseMixin = {
      * @return {Date}
      */
     createdAt: function() {
-        return new Date(this.get("created_at"));
+        return new Date(this.get("createdAt"));
     },
 
     /**
@@ -22,7 +22,7 @@ var BaseMixin = {
      * @return {Boolean}
      */
     isSoftDeleted: function() {
-        return !!this.get("deleted_at");
+        return !!this.get("deletedAt");
     },
 
     /**
@@ -31,7 +31,7 @@ var BaseMixin = {
      */
     deletedAt: function() {
         if (this.isSoftDeleted()) {
-            return new Date(this.get("deleted_at"));
+            return new Date(this.get("deletedAt"));
         }
 
         return null;

@@ -12,7 +12,7 @@ describe("Ticket model", function() {
         var ticket = new Ticket({
             title: title,
             description: "It just doesn't",
-            readTickets: [ { ticket_id: 487,
+            readTickets: [ { ticketId: 487,
                               readById: 323,
                               id: 60,
                               readAt: '2014-06-10T08:04:55.249Z',

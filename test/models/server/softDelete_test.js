@@ -19,7 +19,7 @@ describe("Base#softDelete()", function() {
                 return Ticket.forge({
                     title: "Title",
                     description: "Desc",
-                    created_by: user.get("id")
+                    createdById: user.get("id")
                 }).save();
             })
             .then(function(ticket) {

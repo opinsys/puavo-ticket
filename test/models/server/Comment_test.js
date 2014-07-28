@@ -28,7 +28,7 @@ describe("Comment model", function() {
         return Ticket.forge({
                 title: "Computer does not work",
                 description: "It just doesn't",
-                created_by: self.user.get("id")
+                createdById: self.user.get("id")
             })
             .save()
             .then(function(ticket) {
@@ -42,7 +42,7 @@ describe("Comment model", function() {
             })
             .then(function(comments) {
                 var commentCreator = comments.first().related("createdBy");
-                assert.equal("Olli", commentCreator.get("external_data").first_name);
+                assert.equal("Olli", commentCreator.get("externalData").first_name);
             });
     });
 

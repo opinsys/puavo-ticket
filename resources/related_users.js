@@ -15,14 +15,14 @@ var app = express.Router();
 
 
 /**
- * @api {post} /api/tickets/:id/related_users Add related user to ticket
+ * @api {post} /api/tickets/:id/relatedUsers Add related user to ticket
  * @apiName CreateRelatedUser
- * @apiGroup related_users
+ * @apiGroup relatedUsers
  *
  * @apiParam {String} username
  * @apiParam {String} domain
  */
-app.post("/api/tickets/:id/related_users", function(req, res, next) {
+app.post("/api/tickets/:id/relatedUsers", function(req, res, next) {
     Promise.all([
         Ticket.byId(req.params.id).fetch({ require: true }),
         User.ensureUserByUsername(req.body.username, req.body.domain)
@@ -37,15 +37,15 @@ app.post("/api/tickets/:id/related_users", function(req, res, next) {
 });
 
 /**
- * @api {get} /api/tickets/:id/related_users Get related users for a ticket
+ * @api {get} /api/tickets/:id/relatedUsers Get related users for a ticket
  * @apiName GetRelatedUsers
- * @apiGroup related_users
+ * @apiGroup relatedUsers
  *
  * @apiSuccess {Object[]} . List of related users
  */
-app.get("/api/tickets/:id/related_users", function(req, res, next) {
+app.get("/api/tickets/:id/relatedUsers", function(req, res, next) {
     RelatedUser.collection()
-    .query('where', 'ticket_id', '=', req.params.id)
+    .query('where', 'ticketId', '=', req.params.id)
     .fetch()
     .then(function(collection) {
         res.json(collection.toJSON());

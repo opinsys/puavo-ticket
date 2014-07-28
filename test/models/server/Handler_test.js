@@ -28,7 +28,7 @@ describe("Ticket handlers", function() {
                 return Ticket.forge({
                     title: "Handler test ticket",
                     description: "foobar",
-                    created_by: self.user.get("id")
+                    createdById: self.user.get("id")
                 }).save();
             })
             .then(function(ticket) {
@@ -62,7 +62,7 @@ describe("Ticket handlers", function() {
                 assert(handler, "has the other user as handler");
 
                 assert.equal(
-                    handler.created_by,
+                    handler.createdById,
                     self.manager.get("id"),
                     "manager is the creator"
                 );

@@ -39,7 +39,7 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
  */
 app.get("/api/tickets/:id/comments", function(req, res, next) {
     Comment.collection()
-    .query('where', 'ticket_id', '=', req.params.id)
+    .query('where', 'ticketId', '=', req.params.id)
     .fetch()
     .then(function(collection) {
         res.json(collection.toJSON());

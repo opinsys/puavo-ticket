@@ -52,7 +52,7 @@ describe("/api/tickets/:id/read", function() {
                 return ReadTicket.forge({ readById: self.user.id }).fetch();
             })
             .then(function(readTicket) {
-                assert.equal(readTicket.get("ticket_id"), ticket.get("id"));
+                assert.equal(readTicket.get("ticketId"), ticket.get("id"));
             });
     });
 
@@ -65,7 +65,7 @@ describe("/api/tickets/:id/read", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal("Test ticket", res.body[0].title);
-                assert.equal(ticket.get("id"), res.body[0].readTickets[0].ticket_id);
+                assert.equal(ticket.get("id"), res.body[0].readTickets[0].ticketId);
                 assert.equal(self.user.id, res.body[0].readTickets[0].readById);
             });
     });
