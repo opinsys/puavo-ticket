@@ -81,7 +81,7 @@ var Tag = Base.extend({
         return Tag.collection()
             .query(function(qb) {
                 qb
-                .whereNull("deleted_at")
+                .whereNull("deletedAt")
                 .andWhere({
                     tag: self.get("tag"),
                     ticket_id: self.get("ticket_id")
@@ -130,7 +130,7 @@ var Tag = Base.extend({
         return Tag.collection()
             .query(function(qb) {
                 qb
-                .whereNull("deleted_at")
+                .whereNull("deletedAt")
                 .andWhere({ ticket_id: ticketId })
                 .andWhere("tag", "like", "status:%");
             });

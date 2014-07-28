@@ -55,7 +55,7 @@ var Base = Bookshelf.DB.Model.extend({
     },
 
     /**
-     * Set timestamp to deleted_at
+     * Set timestamp to deletedAt
      *
      * @method softDelete
      * @param {models.server.User|Number} byUser The user who deleted the model
@@ -67,7 +67,7 @@ var Base = Bookshelf.DB.Model.extend({
         }
         this.set({
             deletedById: Base.toId(byUser),
-            deleted_at: new Date(),
+            deletedAt: new Date(),
             deleted: this.get("id")
         });
         return this.save();

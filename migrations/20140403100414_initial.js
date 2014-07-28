@@ -12,7 +12,7 @@ function addLifecycleColumns(table) {
 
     table.dateTime("createdAt").notNullable();
     table.dateTime("updatedAt").notNullable();
-    table.dateTime("deleted_at");
+    table.dateTime("deletedAt");
 
     // A helper column for the uniqueForTicket constraints. Null value
     // in the delete_at field won't work as one would expect.

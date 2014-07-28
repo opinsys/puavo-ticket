@@ -183,7 +183,7 @@ describe("Tag model", function() {
 
                 var otherTag = tags.findWhere({ tag: "othertag" });
                 assert(otherTag, "othertag is available");
-                assert(!otherTag.get("deleted_at"), "othertag is not soft deleted");
+                assert(!otherTag.get("deletedAt"), "othertag is not soft deleted");
             });
     });
 
