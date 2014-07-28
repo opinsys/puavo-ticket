@@ -24,8 +24,7 @@ var TicketForm = React.createClass({
 
     getInitialState: function() {
         return {
-            formDisabled: false,
-            ticket: new Ticket(),
+            saving: false,
             description: "",
             title: ""
         };
@@ -42,11 +41,15 @@ var TicketForm = React.createClass({
      * @method handleSave
      */
     handleSave: function() {
-        this.setState({ formDisabled: true });
-        this.state.ticket.replaceSave({
+        this.setState({ saving: true });
+
+        var ticket = new Ticket({
             title: this.state.title,
             description: this.state.description
-        }).then(function(savedTicket) {
+        });
+
+        ticket.save()
+        .then(function(savedTicket) {
             Router.transitionTo("ticket", { id: savedTicket.get("id") });
         })
         .catch(captureError("Tukipyynnön tallennus epäonnistui"));
@@ -58,14 +61,14 @@ var TicketForm = React.createClass({
 
     render: function() {
         return (
-            <div className="row">
+            <div className="row TicketForm">
                <div className="ticket-form form-group col-md-8">
                     <div className="header">
                         <b>Uusi tukipyyntö</b><br/>
                     </div>
                     <input
                         className="form-control"
-                        disabled={this.state.formDisabled}
+                        disabled={this.state.saving}
                         autoFocus
                         ref="title"
                         type="text"
@@ -76,7 +79,7 @@ var TicketForm = React.createClass({
 
                     <textarea
                         className="form-control"
-                        disabled={this.state.formDisabled}
+                        disabled={this.state.saving}
                         ref="description"
                         placeholder="Tarkka kuvaus tuen tarpeesta."
                         value={this.state.description}
@@ -86,8 +89,10 @@ var TicketForm = React.createClass({
                     <div className="button-wrap">
                         <Button
                             className="button save-button"
-                            disabled={!this.isFormOk()}
-                            onClick={this.handleSave} >Lähetä</Button>
+                            disabled={!this.isFormOk() || this.state.saving}
+                            onClick={this.handleSave} >
+                            Lähetä {this.state.saving && <Loading.Spinner />}
+                        </Button>
                     </div>
                 </div>
                 <div className="sidebar col-md-4">
