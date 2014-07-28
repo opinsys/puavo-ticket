@@ -47,11 +47,7 @@ var TicketView = React.createClass({
 
 
     handleCommentChange: function(e) {
-        if (e.target.value.trim()) {
-            this.setState({ comment: e.target.value });
-        } else {
-            this.setState({ comment: "" });
-        }
+        this.setState({ comment: e.target.value });
     },
 
     /**
@@ -109,6 +105,7 @@ var TicketView = React.createClass({
 
         // Ctrl+Enter always saves the comment
         if (e.ctrlKey) {
+            e.preventDefault();
             this.saveComment();
             return;
         }
@@ -116,6 +113,7 @@ var TicketView = React.createClass({
         // Shift+Enter or plain enter in multiline mode inserts a line break
         if (e.shiftKey || this.isMultilineMode()) return;
 
+        e.preventDefault();
         this.saveComment();
     },
 
