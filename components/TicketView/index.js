@@ -16,6 +16,7 @@ var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
 var ToggleTagsButton = require("./ToggleTagsButton");
 var ToggleStatusButton = require("./ToggleStatusButton");
+var ElasticTextarea = require("../ElasticTextarea");
 
 
 
@@ -36,8 +37,6 @@ var TicketView = React.createClass({
 
     getInitialState: function() {
         return {
-            doGrow: false,
-            commentRows: 1,
             ticket: new Ticket({ id: this.props.params.id }),
             fetching: true,
             saving: false,
@@ -48,10 +47,11 @@ var TicketView = React.createClass({
 
 
     handleCommentChange: function(e) {
-        this.setState({
-            comment: e.target.value,
-            commentRows: 1
-        });
+        if (e.target.value.trim()) {
+            this.setState({ comment: e.target.value });
+        } else {
+            this.setState({ comment: "" });
+        }
     },
 
     /**
@@ -80,25 +80,12 @@ var TicketView = React.createClass({
         this.refs.comment.getDOMNode().focus();
     },
 
-    handleCommentKeyUp: function(e) {
+    handleKeyDown: function(e) {
         if (e.key === "Enter" && !e.shiftKey) {
             this.saveComment();
         }
     },
 
-    growCommentBox: function() {
-        var el = this.refs.comment.getDOMNode();
-
-        if (el.scrollHeight > el.clientHeight) {
-            this.setState({
-                commentRows: this.state.commentRows+1
-            }, scrollToBottom);
-        }
-    },
-
-    componentDidUpdate: function() {
-        this.growCommentBox();
-    },
 
     hasUnsavedComment: function() {
         return !!this.state.comment.trim();
@@ -276,13 +263,13 @@ var TicketView = React.createClass({
                         );})}
                     </div>
                         <Loading visible={this.state.saving} className="saving" />
-                        <textarea
-                            rows={this.state.commentRows}
+                        <ElasticTextarea
                             className="form-control"
                             ref="comment"
                             type="text"
+                            minRows="1"
                             onChange={this.handleCommentChange}
-                            onKeyUp={this.handleCommentKeyUp}
+                            onKeyDown={this.handleKeyDown}
                             value={this.state.comment}
                             placeholder="Kirjoita kommentti..."
                         />
