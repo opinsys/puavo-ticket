@@ -117,7 +117,7 @@ var Main = React.createClass({
 });
 
 React.renderComponent(
-    <Routes>
+    <Routes location="history">
         <Route handler={Main}>
             <Route name="new" handler={TicketForm} />
             <Route name="tickets" handler={TicketList} />
