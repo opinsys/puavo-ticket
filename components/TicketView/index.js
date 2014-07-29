@@ -3,13 +3,11 @@
 var React = require("react/addons");
 var _ = require("lodash");
 var Promise = require("bluebird");
-var $ = require("jquery");
 
 var Button = require("react-bootstrap/Button");
 var Badge = require("react-bootstrap/Badge");
-var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
-var Tooltip = require("react-bootstrap/Tooltip");
-var Label = require("react-bootstrap/Label");
+var Loading = require("../Loading");
+var CommentForm = require("../CommentForm");
 
 var captureError = require("puavo-ticket/utils/captureError");
 var BackboneMixin = require("puavo-ticket/components/BackboneMixin");
@@ -20,28 +18,9 @@ var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
 var ToggleTagsButton = require("./ToggleTagsButton");
 var ToggleStatusButton = require("./ToggleStatusButton");
-var MultimodeTextarea = require("../MultimodeTextarea");
 
 
 
-function scrollElBottom(el, padding) {
-    padding = padding || 0;
-    var $el = $(el);
-    window.scrollTo(0, $el.offset().top - $(window).height() + $el.height() + padding);
-}
-
-
-// http://stackoverflow.com/a/488073/153718
-function isScrolledIntoView(elem, padding) {
-    padding = padding || 0;
-    var docViewTop = $(window).scrollTop();
-    var docViewBottom = docViewTop + $(window).height();
-
-    var elemTop = $(elem).offset().top;
-    var elemBottom = elemTop + $(elem).height() + padding;
-
-    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
-}
 
 
 /**
@@ -57,7 +36,6 @@ var TicketView = React.createClass({
     getInitialState: function() {
         return {
             ticket: new Ticket({ id: this.props.params.id }),
-            multiLineMode: false,
             fetching: true,
             saving: false,
             showTags: true,
@@ -71,12 +49,11 @@ var TicketView = React.createClass({
      *
      * @method saveComment
      */
-    saveComment: function() {
-        var commentInput = this.refs.commentInput;
-        if (!commentInput.hasValue()) return;
-
+    saveComment: function(e) {
+        e.clear();
         this.setState({ saving: true });
-        this.state.ticket.addComment(commentInput.getValue(), this.props.user)
+
+        this.state.ticket.addComment(e.comment)
         .bind(this)
         .then(function() {
             return this.markAsRead();
@@ -84,12 +61,10 @@ var TicketView = React.createClass({
         .then(function() {
             if (!this.isMounted()) return;
             this.setState({ saving: false });
-            process.nextTick(this.scrollToCommentButton);
+            process.nextTick(e.scrollToCommentButton);
         })
         .catch(captureError("Kommentin tallennus epäonnistui"));
 
-        commentInput.clear();
-        commentInput.getDOMNode().focus();
     },
 
 
@@ -158,7 +133,6 @@ var TicketView = React.createClass({
 
     componentDidMount: function() {
         this.markAsRead();
-        this.scrollToCommentButton = _.throttle(this.scrollToCommentButton, 100);
         window.addEventListener("focus", this.handleOnFocus);
     },
 
@@ -186,37 +160,6 @@ var TicketView = React.createClass({
         );
     },
 
-    renderLinemodeTip: function() {
-        var title = "Yksirivitila";
-        var desc = "Enter-näppäin lähettää kommentin. Paina Shift+enter siirtyäksesi monirivitilaan.";
-        var bsStyle = "default";
-
-        if (this.state.multiLineMode) {
-            title = "Monirivitila";
-            desc = "Enter-näppäin lisää rivin vaihdon. Paina Ctrl+Enter lähettääksesi kommentin.";
-            bsStyle = "success";
-        }
-
-        return (
-            <OverlayTrigger placement="left" overlay={<Tooltip>{desc}</Tooltip>}>
-                <Label bsStyle={bsStyle} className="linemode-tooltip">{title}</Label>
-            </OverlayTrigger>
-        );
-    },
-
-    scrollToCommentButton: function() {
-        if (!this.refs.commentButton) {
-            console.log("no el now");
-            return;
-        }
-        var $el = $(this.refs.commentButton.getDOMNode());
-        if (isScrolledIntoView($el, 10)) {
-            console.log("no need to scroll");
-            return;
-        }
-        console.log("!!Scrolling!");
-        scrollElBottom($el, 50);
-    },
 
     render: function() {
         var self = this;
@@ -298,32 +241,12 @@ var TicketView = React.createClass({
                         );})}
                     </div>
 
+                    <CommentForm onSubmit={this.saveComment} >
+                        Lähetä {this.state.saving && <Loading.Spinner />}
+                    </CommentForm>
 
-                        {this.renderLinemodeTip()}
-
-                        <MultimodeTextarea
-                            className="form-control"
-                            minRows={1}
-                            ref="commentInput"
-                            onResize={function(e) {
-                                console.log("resize elastich textarea");
-                                if (e.active) self.scrollToCommentButton();
-                            }}
-                            onSubmit={this.saveComment}
-                            onModeChange={function(e) {
-                                self.setState({ multiLineMode: e.multiLineMode });
-                            }}
-                            placeholder="Kirjoita kommentti..."
-                        />
-                    <div className="ticket-update-buttons">
-                        <Button
-                            ref="commentButton"
-                            onClick={this.saveComment}
-                            disabled={this.state.saving} >
-                            Lähetä {this.state.saving && <Loading.Spinner />}
-                        </Button>
-                    </div>
                 </div>
+
                 <div className="sidebar col-md-4">
                     <SideInfo />
                 </div>

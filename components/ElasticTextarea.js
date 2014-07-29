@@ -44,10 +44,10 @@ var ElasticTextarea = React.createClass({
         // Grow the textarea until it's large enough
         while (this._isTooSmall(el)) el.rows++;
 
-        this.props.onResize({
+        process.nextTick(this.props.onResize.bind(null, {
             target: el,
             active: document.activeElement === el
-        });
+        }));
     },
 
     componentWillReceiveProps: function(nextProps) {
