@@ -80,7 +80,7 @@ describe("Ticket email notifications", function() {
             })
             .save()
             .then(function(ticket) {
-                ticket.addTitle("Computer does not work");
+                ticket.addTitle("Computer does not work", self.user);
                 return ticket;
             })
             .then(function(ticket) {
