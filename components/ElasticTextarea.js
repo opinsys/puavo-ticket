@@ -32,6 +32,11 @@ var ElasticTextarea = React.createClass({
 
         var el = this.refs.textarea.getDOMNode();
 
+        // Resizing the textarea causes some scrolling glitches when the
+        // textarea is very large. Workaround it by forcing the scroll position
+        // back to its original
+        var currentScrollPosition = [window.scrollX, window.scrollY];
+
         if (el.value === "") {
             el.rows = parseInt(this.props.minRows, 10);
             return;
@@ -44,6 +49,8 @@ var ElasticTextarea = React.createClass({
         // Grow the textarea until it's large enough
         while (this._isTooSmall(el)) el.rows++;
 
+
+        window.scrollTo.apply(window, currentScrollPosition);
         process.nextTick(this.props.onResize.bind(null, {
             target: el,
             active: document.activeElement === el
