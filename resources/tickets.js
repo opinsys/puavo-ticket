@@ -46,7 +46,6 @@ app.get("/api/tickets", function(req, res, next) {
  * @apiName GetTicket
  * @apiGroup tickets
  *
- * @apiSuccess {String} title Title of the ticket
  * @apiSuccess {String} description Description of the ticket
  */
 app.get("/api/tickets/:id", function(req, res, next) {
@@ -67,7 +66,8 @@ app.get("/api/tickets/:id", function(req, res, next) {
             "handlers.createdBy",
             "devices.createdBy",
             "relatedUsers.user",
-            "relatedUsers.createdBy"
+            "relatedUsers.createdBy",
+            "titles.createdBy"
         ],
         require: true
     })
