@@ -20,7 +20,7 @@ var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
 var ToggleTagsButton = require("./ToggleTagsButton");
 var ToggleStatusButton = require("./ToggleStatusButton");
-var ElasticTextarea = require("../ElasticTextarea");
+var MultimodeTextarea = require("../MultimodeTextarea");
 
 
 
@@ -57,17 +57,13 @@ var TicketView = React.createClass({
     getInitialState: function() {
         return {
             ticket: new Ticket({ id: this.props.params.id }),
+            multiLineMode: false,
             fetching: true,
             saving: false,
             showTags: true,
-            comment: "",
         };
     },
 
-
-    handleCommentChange: function(e) {
-        this.setState({ comment: e.target.value });
-    },
 
     /**
      * Save comment handler. Reports any unhandled errors to the global error
@@ -76,10 +72,11 @@ var TicketView = React.createClass({
      * @method saveComment
      */
     saveComment: function() {
-        if (!this.hasUnsavedComment()) return;
-        this.setState({ saving: true });
+        var commentInput = this.refs.commentInput;
+        if (!commentInput.hasValue()) return;
 
-        this.state.ticket.addComment(this.state.comment, this.props.user)
+        this.setState({ saving: true });
+        this.state.ticket.addComment(commentInput.getValue(), this.props.user)
         .bind(this)
         .then(function() {
             return this.markAsRead();
@@ -91,54 +88,8 @@ var TicketView = React.createClass({
         })
         .catch(captureError("Kommentin tallennus epäonnistui"));
 
-        this.setState({ comment: "" });
-        this.refs.comment.getDOMNode().focus();
-    },
-
-    /**
-     * If the comment field has multiple line breaks it is considered to be in
-     * multiline mode.
-     *
-     * @method isMultilineMode
-     * @return {Booleann}
-     */
-    isMultilineMode: function() {
-        return this.state.comment.split("\n").length > 1;
-    },
-
-    /**
-     * When in multiline mode:
-     *
-     *   - Enter key adds an additional line break
-     *   - Ctrl+Enter submits the comment
-     *
-     * When not in multiline mode
-     *
-     *   - Enter key submits the comment
-     *   - Shift+Enter forces a line break and enables the multiline mode
-     *
-     * @method handleKeyDown
-     */
-    handleKeyDown: function(e) {
-        if (e.key !== "Enter") return;
-
-        // Ctrl+Enter always saves the comment
-        if (e.ctrlKey) {
-            e.preventDefault();
-            this.saveComment();
-            return;
-        }
-
-        // Shift+Enter or plain enter in multiline mode inserts a line break
-        if (e.shiftKey || this.isMultilineMode()) return;
-
-        e.preventDefault();
-        this.saveComment();
-    },
-
-
-    hasUnsavedComment: function() {
-        return !!this.state.comment.trim();
+        commentInput.clear();
+        commentInput.getDOMNode().focus();
     },
 
 
@@ -240,7 +191,7 @@ var TicketView = React.createClass({
         var desc = "Enter-näppäin lähettää kommentin. Paina Shift+enter siirtyäksesi monirivitilaan.";
         var bsStyle = "default";
 
-        if (this.isMultilineMode()) {
+        if (this.state.multiLineMode) {
             title = "Monirivitila";
             desc = "Enter-näppäin lisää rivin vaihdon. Paina Ctrl+Enter lähettääksesi kommentin.";
             bsStyle = "success";
@@ -254,13 +205,13 @@ var TicketView = React.createClass({
     },
 
     scrollToCommentButton: function() {
-        if (!this.refs.saveCommentButton) {
+        if (!this.refs.commentButton) {
             console.log("no el now");
             return;
         }
-        var $el = $(this.refs.saveCommentButton.getDOMNode());
+        var $el = $(this.refs.commentButton.getDOMNode());
         if (isScrolledIntoView($el, 10)) {
-            console.log("scroll ok!");
+            console.log("no need to scroll");
             return;
         }
         console.log("!!Scrolling!");
@@ -350,24 +301,25 @@ var TicketView = React.createClass({
 
                         {this.renderLinemodeTip()}
 
-                        <ElasticTextarea
+                        <MultimodeTextarea
                             className="form-control"
-                            ref="comment"
-                            type="text"
-                            minRows="1"
+                            minRows={1}
+                            ref="commentInput"
                             onResize={function(e) {
+                                console.log("resize elastich textarea");
                                 if (e.active) self.scrollToCommentButton();
                             }}
-                            onChange={this.handleCommentChange}
-                            onKeyDown={this.handleKeyDown}
-                            value={this.state.comment}
+                            onSubmit={this.saveComment}
+                            onModeChange={function(e) {
+                                self.setState({ multiLineMode: e.multiLineMode });
+                            }}
                             placeholder="Kirjoita kommentti..."
                         />
                     <div className="ticket-update-buttons">
                         <Button
-                            ref="saveCommentButton"
+                            ref="commentButton"
                             onClick={this.saveComment}
-                            disabled={this.state.saving || !this.hasUnsavedComment()} >
+                            disabled={this.state.saving} >
                             Lähetä {this.state.saving && <Loading.Spinner />}
                         </Button>
                     </div>

@@ -12,6 +12,11 @@ var _ = require("lodash");
  */
 var ElasticTextarea = React.createClass({
 
+    propTypes: {
+        onResize: React.PropTypes.func,
+        minRows: React.PropTypes.number
+    },
+
     _isTooSmall: function(el) {
         return el.scrollHeight > el.clientHeight;
     },
