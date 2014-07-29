@@ -18,7 +18,8 @@ var ElasticTextarea = React.createClass({
 
     getDefaultProps: function() {
         return {
-            minRows: 1
+            minRows: 1,
+            onResize: function(){}
         };
     },
 
@@ -31,10 +32,6 @@ var ElasticTextarea = React.createClass({
             return;
         }
 
-        // When searching for the correct height page height might change
-        // temporally. Save the scroll position.
-        var scrollPosition = [window.scrollX, window.scrollY];
-
         // If the textarea is not too small it might be too big. Force it to be
         // too small.
         if (!this._isTooSmall(el)) el.rows = parseInt(this.props.minRows, 10);
@@ -42,7 +39,10 @@ var ElasticTextarea = React.createClass({
         // Grow the textarea until it's large enough
         while (this._isTooSmall(el)) el.rows++;
 
-        window.scrollTo.apply(window, scrollPosition);
+        this.props.onResize({
+            target: el,
+            active: document.activeElement === el
+        });
     },
 
     componentWillReceiveProps: function(nextProps) {

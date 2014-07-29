@@ -3,6 +3,7 @@
 var React = require("react/addons");
 var _ = require("lodash");
 var Promise = require("bluebird");
+var $ = require("jquery");
 
 var Button = require("react-bootstrap/Button");
 var Badge = require("react-bootstrap/Badge");
@@ -23,8 +24,23 @@ var ElasticTextarea = require("../ElasticTextarea");
 
 
 
-function scrollToBottom() {
-    window.scrollTo(0, document.body.scrollHeight);
+function scrollElBottom(el, padding) {
+    padding = padding || 0;
+    var $el = $(el);
+    window.scrollTo(0, $el.offset().top - $(window).height() + $el.height() + padding);
+}
+
+
+// http://stackoverflow.com/a/488073/153718
+function isScrolledIntoView(elem, padding) {
+    padding = padding || 0;
+    var docViewTop = $(window).scrollTop();
+    var docViewBottom = docViewTop + $(window).height();
+
+    var elemTop = $(elem).offset().top;
+    var elemBottom = elemTop + $(elem).height() + padding;
+
+    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 }
 
 
@@ -71,7 +87,7 @@ var TicketView = React.createClass({
         .then(function() {
             if (!this.isMounted()) return;
             this.setState({ saving: false });
-            scrollToBottom();
+            process.nextTick(this.scrollToCommentButton);
         })
         .catch(captureError("Kommentin tallennus epäonnistui"));
 
@@ -191,6 +207,7 @@ var TicketView = React.createClass({
 
     componentDidMount: function() {
         this.markAsRead();
+        this.scrollToCommentButton = _.throttle(this.scrollToCommentButton, 100);
         window.addEventListener("focus", this.handleOnFocus);
     },
 
@@ -234,6 +251,20 @@ var TicketView = React.createClass({
                 <Label bsStyle={bsStyle} className="linemode-tooltip">{title}</Label>
             </OverlayTrigger>
         );
+    },
+
+    scrollToCommentButton: function() {
+        if (!this.refs.saveCommentButton) {
+            console.log("no el now");
+            return;
+        }
+        var $el = $(this.refs.saveCommentButton.getDOMNode());
+        if (isScrolledIntoView($el, 10)) {
+            console.log("scroll ok!");
+            return;
+        }
+        console.log("!!Scrolling!");
+        scrollElBottom($el, 50);
     },
 
     render: function() {
@@ -324,6 +355,9 @@ var TicketView = React.createClass({
                             ref="comment"
                             type="text"
                             minRows="1"
+                            onResize={function(e) {
+                                if (e.active) self.scrollToCommentButton();
+                            }}
                             onChange={this.handleCommentChange}
                             onKeyDown={this.handleKeyDown}
                             value={this.state.comment}
@@ -331,6 +365,7 @@ var TicketView = React.createClass({
                         />
                     <div className="ticket-update-buttons">
                         <Button
+                            ref="saveCommentButton"
                             onClick={this.saveComment}
                             disabled={this.state.saving || !this.hasUnsavedComment()} >
                             Lähetä {this.state.saving && <Loading.Spinner />}
