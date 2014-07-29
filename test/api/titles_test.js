@@ -1,11 +1,11 @@
 "use strict";
 var helpers = require("../helpers");
-var ReadTicket = require("../../models/server/ReadTicket");
 
 var assert = require("assert");
+var _ = require("lodash");
 
 
-describe("/api/tickets/:id/read", function() {
+describe("/api/tickets/:id/titles", function() {
 
     var ticket = null;
     var otherTicket = null;
@@ -31,6 +31,7 @@ describe("/api/tickets/:id/read", function() {
                 ticket = tickets.ticket;
                 otherTicket = tickets.otherTicket;
             });
+
     });
 
     after(function() {
@@ -38,36 +39,35 @@ describe("/api/tickets/:id/read", function() {
     });
 
 
-    it("can mark ticket as read", function() {
+    it("can create new title to ticket", function() {
         var self = this;
-
         return this.agent
-            .post("/api/tickets/" + ticket.get("id") + "/read")
-            .send()
+            .post("/api/tickets/" + ticket.get("id") + "/titles")
+            .send({
+                title: "another test title"
+            })
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-            })
-            .then(function() {
-                return ReadTicket.forge({ readById: self.user.id }).fetch();
-            })
-            .then(function(readTicket) {
-                assert.equal(readTicket.get("ticketId"), ticket.get("id"));
+                assert.equal(res.body.title, "another test title");
+                assert.equal(res.body.ticketId, ticket.get("id"));
+                assert.equal(res.body.createdById, self.user.id);
             });
     });
 
-    it("can see is ticket as read", function() {
-        var self = this;
-
+    it("are visible in the tickets api", function() {
         return this.agent
-            .get("/api/tickets")
+            .get("/api/tickets/" + ticket.get("id"))
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.equal("Test ticket with comments, related users etc.", res.body[0].description);
-                assert.equal(ticket.get("id"), res.body[0].readTickets[0].ticketId);
-                assert.equal(self.user.id, res.body[0].readTickets[0].readById);
+                assert(res.body.titles);
+                var title = _.findWhere(res.body.titles, { title: "another test title" });
+                assert(title);
+                assert(title.createdBy);
+                assert.equal("olli.opettaja", title.createdBy.externalData.username);
             });
     });
+
 
 });

@@ -48,12 +48,19 @@ exports.up = function(knex, Promise) {
         return knex.schema.createTable("tickets", function(table) {
             addLifecycleColumns(table);
             table.increments("id");
-            table.text("title");
             table.text("description");
         });
     })
     .then(function createTicketRelationTables() {
         return Promise.all([
+            knex.schema.createTable("titles", function(table) {
+                addLifecycleColumns(table);
+                addTicketRelation(table);
+
+                table.increments("id");
+                table.text("title").notNullable();
+            }),
+
             knex.schema.createTable("comments", function(table) {
                 addLifecycleColumns(table);
                 addTicketRelation(table);
@@ -153,6 +160,7 @@ exports.up = function(knex, Promise) {
 exports.down = function(knex, Promise) {
 
     return Promise.all([
+        knex.schema.dropTableIfExists("titles"),
         knex.schema.dropTableIfExists("comments"),
         knex.schema.dropTableIfExists("visibilities"),
         knex.schema.dropTableIfExists("relatedUsers"),

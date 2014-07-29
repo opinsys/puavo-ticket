@@ -17,7 +17,6 @@ describe("Base#softDelete()", function() {
                 self.user = user;
 
                 return Ticket.forge({
-                    title: "Title",
                     description: "Desc",
                     createdById: user.get("id")
                 }).save();

@@ -1,11 +1,10 @@
 "use strict";
 var helpers = require("../../helpers");
 
-// var Comment = require("../../../models/server/Comment");
 var Ticket = require("../../../models/server/Ticket");
 var assert = require("assert");
 
-describe("Comment model", function() {
+describe("Title model", function() {
 
     before(function() {
         var self = this;
@@ -26,22 +25,22 @@ describe("Comment model", function() {
     it("instance can be created from Ticket", function() {
         var self = this;
         return Ticket.forge({
-                description: "Computer does not work",
+                description: "It just doesn't",
                 createdById: self.user.get("id")
             })
             .save()
             .then(function(ticket) {
                 self.ticket = ticket;
-                return ticket.addComment("foo", self.user);
+                return ticket.addTitle("Computer does not work", self.user);
             })
             .then(function() {
-                return self.ticket.comments().fetch({
+                return self.ticket.titles().fetch({
                         withRelated: "createdBy"
                     });
             })
-            .then(function(comments) {
-                var commentCreator = comments.first().related("createdBy");
-                assert.equal("Olli", commentCreator.get("externalData").first_name);
+            .then(function(titles) {
+                var titleCreator = titles.first().related("createdBy");
+                assert.equal("Olli", titleCreator.get("externalData").first_name);
             });
     });
 

@@ -37,8 +37,7 @@ describe("Ticket email notifications", function() {
         var spy = sinon.spy(stubTransport, "sendMail");
 
         return Ticket.forge({
-                title: "Computer does not work",
-                description: "It just doesn't",
+                description: "Computer does not work",
                 createdById: self.user.get("id")
             }, {
                 emailTransport: stubTransport
@@ -74,13 +73,16 @@ describe("Ticket email notifications", function() {
         var spy = sinon.spy(stubTransport, "sendMail");
 
         return Ticket.forge({
-                title: "Computer does not work",
                 description: "It just doesn't",
                 createdById: self.user.get("id")
             }, {
                 emailTransport: stubTransport
             })
             .save()
+            .then(function(ticket) {
+                ticket.addTitle("Computer does not work", self.user);
+                return ticket;
+            })
             .then(function(ticket) {
                 return ticket.addHandler(self.otherUser, self.manager)
                     .then(function() { return ticket; });

@@ -89,7 +89,6 @@ function loginAsUser(userData){
 function insertTestTickets(user) {
     var ticket = Ticket.forge({
         createdById: user.get("id"),
-        title: "Test ticket",
         description: "Test ticket with comments, related users etc."
     });
 
@@ -115,7 +114,6 @@ function insertTestTickets(user) {
         .then(function addAnotherTicket() {
             return Ticket.forge({
                 createdById: user.get("id"),
-                title: "Other test ticket",
                 description: "Other test tickets"
             }).save();
         })
@@ -152,7 +150,8 @@ function clearTestDatabase() {
         'followers',
         'tags',
         'handlers',
-        'readTickets'
+        'readTickets',
+        'titles'
  ];
 
     return Promise.all(tables.map(function(table) {
