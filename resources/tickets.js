@@ -32,6 +32,7 @@ app.get("/api/tickets", function(req, res, next) {
             "createdBy",
             "handlers.handler",
             "tags",
+            "titles",
             "readTickets"
         ]
     })
