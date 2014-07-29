@@ -46,7 +46,7 @@ var ElasticTextarea = React.createClass({
     },
 
     componentWillReceiveProps: function(nextProps) {
-        this._didChange = nextProps.value !== this.props.value;
+        this.setState({ didChange: nextProps.value !== this.props.value });
     },
 
     componentDidMount: function() {
@@ -60,17 +60,9 @@ var ElasticTextarea = React.createClass({
 
     componentDidUpdate: function() {
         // Resize only if the content has changed
-        if (this._didChange) {
-            this._didChange = false;
-            this._resizeTextarea();
-        }
+        if (this.state.didChange) this._resizeTextarea();
     },
 
-
-    handleChange: function(e) {
-        this._didChange = true;
-        this.props.onChange(e);
-    },
 
     style: {
         // Chrome textarea resize tool can mess up this. Disable it.
@@ -83,7 +75,6 @@ var ElasticTextarea = React.createClass({
     render: function() {
         return this.transferPropsTo(<textarea
             style={this.style}
-            onChange={this.handleChange}
             rows={this.props.minRows}
             ref="textarea"
             className="ElasticTextarea"></textarea>);
