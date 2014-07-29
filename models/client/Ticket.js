@@ -4,6 +4,7 @@ var Base = require("./Base");
 var Tag = require("./Tag");
 var Handler = require("./Handler");
 var Comment = require("./Comment");
+var Title = require("./Title");
 var Tag = require("./Tag");
 var ReadTicket = require("./ReadTicket");
 var _ = require("lodash");
@@ -30,6 +31,7 @@ var Ticket = Base.extend({
             title: "",
             description: "",
             tags: [],
+            titles: [],
             tagHistory: [],
             comments: [],
             handlers: [],
@@ -59,10 +61,26 @@ var Ticket = Base.extend({
         return updates;
     },
 
+    /**
+     * @method tags
+     * @return {Array} Array of Tag models
+     */
     tags: function() {
         var self = this;
         return this.get("tags").map(function(data) {
             return new Tag(data, { parent: self });
+        });
+    },
+
+    /**
+     *
+     * @method titles
+     * @return {Array} Array of Title models
+     */
+    titles: function(){
+        var self = this;
+        return this.get("titles").map(function(data) {
+            return new Title(data, { parent: self });
         });
     },
 
@@ -91,18 +109,24 @@ var Ticket = Base.extend({
     },
 
     /**
-     * TODO
      *
      * @method addComment
      * @param {String} comment
-     * @param {models.client.User} createdBy
      * @return {Bluebird.Promise}
      */
-    addComment: function(comment, createdBy){
-        var model = new Comment({
-            comment: comment,
-            createdBy: createdBy.toJSON()
-        }, { parent: this });
+    addComment: function(comment){
+        var model = new Comment({ comment: comment }, { parent: this });
+        return model.save();
+    },
+
+    /**
+     *
+     * @method addTitle
+     * @param {String} title
+     * @return {Bluebird.Promise}
+     */
+    addTitle: function(title){
+        var model = new Title({ title: title }, { parent: this });
         return model.save();
     },
 
@@ -214,6 +238,19 @@ var Ticket = Base.extend({
         return _.max(statusTags,  function(update) {
             return update.createdAt().getTime();
         }).getStatus();
+    },
+
+    /**
+     *
+     * @method getCurrentTitle
+     */
+    getCurrentTitle: function(){
+        var titles = this.titles();
+        if (titles.length === 0) return "[NO TITLE]";
+
+        return _.max(titles,  function(m) {
+            return m.createdAt().getTime();
+        }).get("title");
     },
 
     /**

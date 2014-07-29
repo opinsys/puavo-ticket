@@ -44,12 +44,15 @@ var TicketForm = React.createClass({
     handleSave: function() {
         this.setState({ saving: true });
 
-        var ticket = new Ticket({
-            title: this.state.title,
+        new Ticket({
             description: this.state.description
-        });
-
-        ticket.save()
+        })
+        .save()
+        .bind(this)
+        .then(function(savedTicket) {
+            return savedTicket.addTitle(this.state.title)
+                .then(function() { return savedTicket; });
+        })
         .then(function(savedTicket) {
             Router.transitionTo("ticket", { id: savedTicket.get("id") });
         })

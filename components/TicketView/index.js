@@ -250,7 +250,7 @@ var TicketView = React.createClass({
                         </div>
                         <div className="header ticket-header">
                             <h3>
-                                {this.state.ticket.get("title") + " "} {/* ({this.state.ticket.getCurrentStatus()}) */}
+                                {this.state.ticket.getCurrentTitle() + " "}
                             </h3>
                             {this.renderDate()}
                         </div>

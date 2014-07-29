@@ -102,7 +102,7 @@ var List = React.createClass({
                                 <td>#{ticket.get("id")}</td>
                                 <td>
                                     <Link to="ticket" id={ticket.get("id")}>
-                                        {ticket.get("title")}
+                                        {ticket.getCurrentTitle()}
                                         <span className="badge unread-comments" title="Uusia kommentteja">
                                             <i className="fa fa-comment-o"></i>
                                         </span>
