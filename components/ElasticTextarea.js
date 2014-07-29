@@ -80,7 +80,7 @@ var ElasticTextarea = React.createClass({
         // Chrome textarea resize tool can mess up this. Disable it.
         resize: "none",
         // When user holds down the enter key scroll bars might appear for few
-        // ms as resizing it throttled. Ensure it stays hidden.
+        // ms as resizing it is throttled. Ensure it stays hidden.
         overflow: "hidden"
     },
 
