@@ -146,6 +146,7 @@
       - name: Clone puavo-user repository
         git: repo=git://github.com/opinsys/puavo-users.git
           dest={{ code_dest }}/puavo-users
+          force=no
         sudo_user: "{{ dev_user }}"
 
       - name: puavo-web, Install Ruby gems, node modules and build assets.
