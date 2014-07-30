@@ -101,6 +101,16 @@ var UserMixin = {
     },
 
     /**
+     *
+     * @method getFullname
+     * @return {String}
+     */
+    getFullname: function(){
+        return this.get("externalData").first_name + " " +
+            this.get("externalData").last_name;
+    },
+
+    /**
      * @method getProfileImage
      * @return {String} url to the profile image
      */
