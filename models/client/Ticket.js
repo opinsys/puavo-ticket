@@ -246,7 +246,7 @@ var Ticket = Base.extend({
      */
     getCurrentTitle: function(){
         var titles = this.titles();
-        if (titles.length === 0) return "[NO TITLE]";
+        if (titles.length === 0) return null;
 
         return _.max(titles,  function(m) {
             return m.createdAt().getTime();

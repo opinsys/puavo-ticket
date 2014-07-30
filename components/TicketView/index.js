@@ -16,6 +16,8 @@ var Loading = require("../Loading");
 var Base = require("puavo-ticket/models/client/Base");
 var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
+var Redacted = require("../Redacted");
+
 var ToggleTagsButton = require("./ToggleTagsButton");
 var ToggleStatusButton = require("./ToggleStatusButton");
 
@@ -147,6 +149,8 @@ var TicketView = React.createClass({
                 return <Badge className={status}>Ratkaisematon</Badge>;
             case "closed":
                 return <Badge className={status}>Ratkaistu</Badge>;
+            default:
+                return <Badge><Redacted>Unknown</Redacted></Badge>;
         }
     },
 
@@ -193,7 +197,7 @@ var TicketView = React.createClass({
                         </div>
                         <div className="header ticket-header">
                             <h3>
-                                {this.state.ticket.getCurrentTitle() + " "}
+                                {this.state.ticket.getCurrentTitle() || <Redacted>Ladataan otsikkoa</Redacted>}
                             </h3>
                             {this.renderDate()}
                         </div>
@@ -203,11 +207,11 @@ var TicketView = React.createClass({
                         <div className="message">
                              <span>
                                 <strong>
-                                    {this.state.ticket.createdBy().getName() + " "}
+                                    {this.state.ticket.createdBy().getName() || <Redacted>Matti Meikäläinen</Redacted>}
                                 </strong>
                             </span><br />
                             <span>
-                                {this.state.ticket.get("description")}
+                                {this.state.ticket.get("description") || <Redacted ipsum />}
                             </span>
                         </div>
                     </div>

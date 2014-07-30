@@ -8,6 +8,25 @@
 @import "./components/TicketView";
 @import "./components/TicketForm";
 
+
+@font-face{
+    font-family: 'redacted-regular';
+    src: url('/Redacted-Font/fonts/web/redacted-regular.eot');
+    src: url('/Redacted-Font/fonts/web/redacted-regular.eot?#iefix') format('embedded-opentype'),
+         url('/Redacted-Font/fonts/web/redacted-regular.woff') format('woff'),
+         url('/Redacted-Font/fonts/web/redacted-regular.ttf') format('truetype'),
+         url('/Redacted-Font/fonts/web/redacted-regular.svg#webfont') format('svg');
+}
+
+@font-face{
+    font-family: 'redacted-script-regular';
+    src: url('/Redacted-Font/fonts/web/redacted-script-regular.eot');
+    src: url('/Redacted-Font/fonts/web/redacted-script-regular.eot?#iefix') format('embedded-opentype'),
+         url('/Redacted-Font/fonts/web/redacted-script-regular.woff') format('woff'),
+         url('/Redacted-Font/fonts/web/redacted-script-regular.ttf') format('truetype'),
+         url('/Redacted-Font/fonts/web/redacted-script-regular.svg#webfont') format('svg');
+}
+
 body, html {
     font-family: 'Lato', 'Helvetica Neue', Arial, sans-serif;
     font-size: 100%;
