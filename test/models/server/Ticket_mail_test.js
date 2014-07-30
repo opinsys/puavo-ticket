@@ -44,6 +44,10 @@ describe("Ticket email notifications", function() {
             })
             .save()
             .then(function(ticket) {
+                return ticket.addTitle("A title", self.user, { silent: true })
+                    .return(ticket);
+            })
+            .then(function(ticket) {
                 return ticket.addComment("foo", self.otherUser);
             })
             .then(function() {
@@ -96,14 +100,14 @@ describe("Ticket email notifications", function() {
             .then(function(ticket) {
                 assert.equal(
                     2, spy.callCount,
-                    "sendMail must be called twice for each handler"
+                    "sendMail must be called twice for each handler. Instead got " + spy.callCount
                 );
                 assert.equal(
-                    spy.args[0][0].subject, "Tiketti " + ticket.get("id") + ": Computer does not work", 
+                    spy.args[0][0].subject, "Tiketti " + ticket.get("id") + ": Computer does not work",
                     "title is not correct"
-                );  
+                );
                 assert.equal
-                    (spy.args[0][0].text, 
+                    (spy.args[0][0].text,
                     "Tukipyyntöä (" +
                     ticket.get("id") +
                     ") on päivitetty. Pääset katselemaan ja päivittämään sitä tästä linkistä: https://staging-support.opinsys.fi/tickets/" +
@@ -117,7 +121,7 @@ describe("Ticket email notifications", function() {
                     "It just doesn't" +
                     "\n\n" + Moment().format('MMM Do H:mm')
                 );
-                
+
                 // TODO: assert email addresses from spy.lastCall.args
             });
     });

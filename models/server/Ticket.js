@@ -521,14 +521,34 @@ var Ticket = Base.extend({
             });
     },
 
+    /**
+     * Return the current title. Requires `titles` relation
+     *
+     * @method getCurrentTitle
+     * @return {String}
+     */
+    getCurrentTitle: function() {
+        if (!this.relations.titles) {
+            throw new Error("titles relation not fetched. Use load or withRelated");
+        }
+
+        var titles = this.relations.titles.models;
+        if (titles.length === 0) {
+            throw new Error("Invalid Ticket model. No title!");
+        }
+
+        return _.max(titles, function(m) {
+            return m.createdAt().getTime();
+        }).get("title");
+    },
 
     sendEmail: function(updateModel){
         var self = this;
 
-        return updateModel.load("createdBy").then(function(){
-            return self.handlers().fetch({ withRelated: "handler" });
-        }).then(function(res) {
-            return res.models;
+        return self.load(["titles", "handlers.handler"]).then(function() {
+            return updateModel.load("createdBy");
+        }).then(function() {
+            return self.relations.handlers.models;
         }).map(function(handler){
             return handler.related("handler").getEmail();
         })
@@ -536,7 +556,7 @@ var Ticket = Base.extend({
             return self.sendMailPromise({
                 from: "Opinsys support <noreply@opinsys.net>",
                 to: email,
-                subject: "Tiketti " + self.get("id") + ": " + self.get("title"),
+                subject: "Tiketti " + self.get("id") + ": " + self.getCurrentTitle(),
                 text: "Tukipyyntöä (" + self.get("id") +
                  ") on päivitetty. Pääset katselemaan ja päivittämään sitä tästä linkistä: " +
                   "https://staging-support.opinsys.fi/tickets/" + self.get("id") +
