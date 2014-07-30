@@ -521,44 +521,35 @@ var Ticket = Base.extend({
             });
     },
 
-    sendEmail: function(model){
+
+    sendEmail: function(updateModel){
         var self = this;
 
-        return model.load("createdBy").then(function(){
-            return self.handlers().fetch({ withRelated: "handler"  });
-
-        }).then(function(handlers){
-            var emailAddresses = handlers.map(function(handler) { return handler.related("handler").getEmail(); });
-            var emailAddress;
-            var a = [];
-            for (var i = 0; i < emailAddresses.length; i++) {
-                emailAddress = (emailAddresses[i]);
-                var mailOptions = {
-                    from: "Opinsys support <noreply@opinsys.net>",
-                    to: emailAddress,
-                    subject: "Tiketti " + self.get("id") + ": " + self.get("title"),
-                    text: "Tukipyyntöä (" + self.get("id") +
-                     ") on päivitetty. Pääset katselemaan ja päivittämään sitä tästä linkistä: " +
-                      "https://staging-support.opinsys.fi/tickets/" + self.get("id") +
-                      "\n\n" +
-                      model.relations.createdBy.get("externalData").first_name +
-                      " " +
-                      model.relations.createdBy.get("externalData").last_name +
-                      ":"+
-                      "\n" +
-                      self.get("description") +
-                      "\n\n" + Moment().format('MMM Do H:mm') // TODO Newest comment on the top. Older under that.
-                };
-                var operation = self.sendMailPromise(mailOptions);
-                a.push(operation);
-
-            }
-
-            return Promise.all(a);
+        return updateModel.load("createdBy").then(function(){
+            return self.handlers().fetch({ withRelated: "handler" });
+        }).then(function(res) {
+            return res.models;
+        }).map(function(handler){
+            return handler.related("handler").getEmail();
+        })
+        .map(function(email) {
+            return self.sendMailPromise({
+                from: "Opinsys support <noreply@opinsys.net>",
+                to: email,
+                subject: "Tiketti " + self.get("id") + ": " + self.get("title"),
+                text: "Tukipyyntöä (" + self.get("id") +
+                 ") on päivitetty. Pääset katselemaan ja päivittämään sitä tästä linkistä: " +
+                  "https://staging-support.opinsys.fi/tickets/" + self.get("id") +
+                  "\n\n" +
+                  updateModel.relations.createdBy.get("externalData").first_name +
+                  " " +
+                  updateModel.relations.createdBy.get("externalData").last_name +
+                  ":"+
+                  "\n" +
+                  self.get("description") +
+                  "\n\n" + Moment().format('MMM Do H:mm') // TODO Newest comment on the top. Older under that.
+            });
         });
-
-
-
     },
 
     onTicketUpdate: function(e){
