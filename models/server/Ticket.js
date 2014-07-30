@@ -574,7 +574,11 @@ var Ticket = Base.extend({
 function triggerUpdate(opts, context) {
     return function(updateModel) {
         if (opts && opts.silent) return updateModel;
-        return this.triggerThen("update", { model: updateModel });
+
+        return this.triggerThen("update", {
+            model: updateModel
+        }).return(updateModel);
+
     }.bind(context);
 }
 
