@@ -36,6 +36,9 @@ describe("Ticket model", function() {
             })
             .save()
             .then(function(ticket) {
+                return ticket.addTitle("A Title", self.user).return(ticket);
+            })
+            .then(function(ticket) {
                 return Ticket.forge({ id: ticket.get("id") }).fetch();
             })
             .then(function(ticket) {
@@ -104,8 +107,11 @@ describe("Ticket model", function() {
         })
         .save()
         .then(function(ticket) {
+            return ticket.addTitle("A Title", self.user).return(ticket);
+        })
+        .then(function(ticket) {
             return ticket.addComment("foo", self.user)
-                .then(function() { return ticket.get("id"); });
+                .return(ticket.get("id"));
         });
 
         return ticketId.then(function(id) {
@@ -154,8 +160,7 @@ describe("Ticket model", function() {
             })
             .save()
             .then(function(ticket) {
-                return ticket.markAsRead(self.user)
-                    .then(function() { return ticket; });
+                return ticket.markAsRead(self.user).return(ticket);
             })
             .then(function(ticket) {
                 testTicket = ticket;
@@ -173,9 +178,7 @@ describe("Ticket model", function() {
                 );
             })
             .then(function() {
-                return testTicket.markAsUnread()
-                    .then(function() { return testTicket; });
-
+                return testTicket.markAsUnread().return(testTicket);
             })
             .then(function(ticket) {
                 return ReadTicket.forge({

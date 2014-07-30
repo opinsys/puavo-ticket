@@ -31,6 +31,10 @@ describe("Comment model", function() {
             })
             .save()
             .then(function(ticket) {
+                return ticket.addTitle("A title", self.user)
+                    .return(ticket);
+            })
+            .then(function(ticket) {
                 self.ticket = ticket;
                 return ticket.addComment("foo", self.user);
             })
