@@ -95,18 +95,20 @@ describe("Ticket email notifications", function() {
             })
             .save()
             .then(function(ticket) {
-                ticket.addTitle("Computer does not work", self.user, { silent: true });
-                return ticket;
+                return ticket.addTitle(
+                    "Computer does not work",
+                    self.user,
+                    { silent: true }
+                ).return(ticket);
             })
             .then(function(ticket) {
-                return ticket.addHandler(self.otherUser, self.manager)
-                    .then(function() { return ticket; });
+                return ticket.addHandler(
+                    self.otherUser,
+                    self.manager
+                ).return(ticket);
             })
             .then(function(ticket) {
-                return ticket.addComment("bar", self.manager)
-                .then(function(){
-                    return ticket;
-                });
+                return ticket.addComment("bar", self.manager).return(ticket);
             })
             .then(function(ticket) {
                 assert.equal(
