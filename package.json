@@ -13,7 +13,6 @@
     "backbone.cocktail": "~0.5.8",
     "bluebird": "~2.2.2",
     "body-parser": "~1.4.3",
-    "bookshelf": "~0.7.6",
     "bootstrap": "^3.2.0",
     "browserify": "~4.2.1",
     "browserify-middleware": "~3.0.1",
@@ -27,7 +26,6 @@
     "jquery": "~2.1.1",
     "jwt-simple": "~0.2.0",
     "jwtsso": "opinsys/node-jwtsso",
-    "knex": "~0.6.22",
     "lodash": "~2.4.1",
     "mocha": "~1.20.1",
     "moment": "~2.7.0",
@@ -46,7 +44,9 @@
     "watchify": "~0.10.2",
     "xtend": "~3.0.0",
     "react-router": "~0.5.0",
-    "reactify": "~0.14.0"
+    "reactify": "~0.14.0",
+    "bookshelf": "~0.7.7",
+    "knex": "~0.6.22"
   },
   "devDependencies": {
     "jshint": "~2.5.2",
