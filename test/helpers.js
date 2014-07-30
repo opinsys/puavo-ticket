@@ -93,6 +93,9 @@ function insertTestTickets(user) {
     });
 
     return ticket.save()
+        .then(function(ticket) {
+            return ticket.addTitle("Test ticket title", user);
+        })
         .then(function addComment() {
             return Comment.forge({
                 createdById: user.get("id"),
