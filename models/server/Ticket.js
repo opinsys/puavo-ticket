@@ -193,20 +193,16 @@ var Ticket = Base.extend({
      * @method addComment
      * @param {String} comment
      * @param {models.server.User|Number} user Creator of the tag
+     * @param {Boolean} opts.silent Set to true to disable update notifications
      * @return {Bluebird.Promise} with models.server.Comment
      */
-    addComment: function(comment, user) {
-        var self = this;
-
+    addComment: function(comment, user, opts) {
         return Comment.forge({
             ticketId: this.get("id"),
             comment: comment,
             createdById: Base.toId(user)
         }).save()
-        .then(function(comment) {
-            return self.triggerThen("update", { model: comment })
-                .then(function() { return comment; });
-        });
+        .then(triggerUpdate(opts, this));
     },
 
 
@@ -216,20 +212,16 @@ var Ticket = Base.extend({
      * @method addTitle
      * @param {String} title
      * @param {models.server.User|Number} user Creator of the tag
+     * @param {Boolean} opts.silent Set to true to disable update notifications
      * @return {Bluebird.Promise} with models.server.Title
      */
-    addTitle: function(title, user) {
-        var self = this;
-
+    addTitle: function(title, user, opts) {
         return Title.forge({
             ticketId: this.get("id"),
             title: title,
             createdById: Base.toId(user)
         }).save()
-        .then(function(title) {
-            return self.triggerThen("update", { model: title })
-                .then(function() { return title; });
-        });
+        .then(triggerUpdate(opts, this));
     },
 
     /**
@@ -577,6 +569,23 @@ var Ticket = Base.extend({
     }
 
 });
+
+/**
+ * Trigger update for the promise value
+ *
+ * @private
+ * @static
+ * @method triggerUpdate
+ * @param {Boolean} opts.silent Set to true to disable the notification
+ * @param {Object} context Se the context of the returned function
+ * @return {Function}
+ */
+function triggerUpdate(opts, context) {
+    return function(updateModel) {
+        if (opts && opts.silent) return updateModel;
+        return this.triggerThen("update", { model: updateModel });
+    }.bind(context);
+}
 
 /**
  * Fetch tickets by give visibilities.
