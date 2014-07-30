@@ -83,12 +83,12 @@ var Ticket = Base.extend({
     initialize: function(attrs, options) {
         if (options && options.emailTransport) {
             this.emailTransport = options.emailTransport;
-            
+
         }
-        
+
         /**
          * See nodemailer module docs
-         * 
+         *
          * @method sendMailPromise
          * @param {Object} options
          * @return {Bluebird.Promise}
@@ -531,10 +531,10 @@ var Ticket = Base.extend({
 
     sendEmail: function(model){
         var self = this;
-        
+
         return model.load("createdBy").then(function(){
             return self.handlers().fetch({ withRelated: "handler"  });
-            
+
         }).then(function(handlers){
             var emailAddresses = handlers.map(function(handler) { return handler.related("handler").getEmail(); });
             var emailAddress;
@@ -542,33 +542,33 @@ var Ticket = Base.extend({
             for (var i = 0; i < emailAddresses.length; i++) {
                 emailAddress = (emailAddresses[i]);
                 var mailOptions = {
-                    from: "Opinsys support <noreply@opinsys.net>", 
-                    to: emailAddress, 
+                    from: "Opinsys support <noreply@opinsys.net>",
+                    to: emailAddress,
                     subject: "Tiketti " + self.get("id") + ": " + self.get("title"),
                     text: "Tukipyyntöä (" + self.get("id") +
                      ") on päivitetty. Pääset katselemaan ja päivittämään sitä tästä linkistä: " +
-                      "https://staging-support.opinsys.fi/tickets/" + self.get("id") + 
-                      "\n\n" + 
+                      "https://staging-support.opinsys.fi/tickets/" + self.get("id") +
+                      "\n\n" +
                       model.relations.createdBy.get("externalData").first_name +
                       " " +
                       model.relations.createdBy.get("externalData").last_name +
-                      ":"+ 
-                      "\n" + 
-                      self.get("description") + 
+                      ":"+
+                      "\n" +
+                      self.get("description") +
                       "\n\n" + Moment().format('MMM Do H:mm') // TODO Newest comment on the top. Older under that.
                 };
                 var operation = self.sendMailPromise(mailOptions);
                 a.push(operation);
-                
+
             }
-            
+
             return Promise.all(a);
         });
 
 
-               
+
     },
-    
+
     onTicketUpdate: function(e){
         return Promise.all([
             this.markAsUnread(e.model),
