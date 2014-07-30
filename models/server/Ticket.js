@@ -509,16 +509,12 @@ var Ticket = Base.extend({
         return ReadTicket.collection()
             .query("where", "ticketId", "=", self.get("id"))
             .fetch()
-            .then(function(readTickets) {
-                return Promise.all(
-                    readTickets.mapThen(function(readTicket) {
-                        return readTicket.set(
-                            { "readAt": new Date(),
-                              "unread": "true" }
-                            )
-                            .save();
-                    })
-                );
+            .then(function(coll) { return coll.models; })
+            .map(function(readTicket) {
+                return readTicket.set({
+                    readAt: new Date(),
+                    unread: "true"
+                }).save();
             });
     },
 
