@@ -44,11 +44,18 @@ app.use(function(req, res, next) {
 
     debug("Proxying request to %s %s", req.method, puavoUrl);
 
+    var domain = req.user.get("externalData").organisation_domain;
+
     promisePipe(
         request({
             method: "GET",
             headers: _.extend({}, req.headers, {
-                host: req.user.get("externalData").organisation_domain
+                // Fix request domain for the current organisation
+                host: domain,
+
+                // Try to workaround the referer check on puavo-rest
+                // http://rubydoc.info/github/rkh/rack-protection/Rack/Protection/JsonCsrf
+                referer: domain
             }),
             url: puavoUrl,
             pool: {},
