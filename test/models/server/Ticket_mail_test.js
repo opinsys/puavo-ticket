@@ -2,7 +2,6 @@
 var Promise = require("bluebird");
 var nodemailer = require("nodemailer");
 var sinon = require("sinon");
-var Moment = require("moment");
 
 var helpers = require("../../helpers");
 
@@ -65,8 +64,20 @@ describe("Ticket email notifications", function() {
                     // we do not support email replies yet
                 );
 
-                // TODO: assert email subject and body from spy.lastCall.args[0].  subject|text
-                // https://github.com/andris9/Nodemailer#tldr-usage-example
+                var body = spy.lastCall.args[0].text;
+
+                assert(
+                    /Matti Meikäläinen on lisännyt päivityksen tukipyyntöön "A title" \([0-9]+\)/.test(body),
+                    "invalid body: " + body
+                );
+
+                assert(
+                    /Pääset tarkastelemaan sitä osoitteessa .+/.test(body),
+                    "invalid body: " + body
+                );
+
+                // TODO: assert subject
+
 
             });
     });
@@ -102,26 +113,6 @@ describe("Ticket email notifications", function() {
                     2, spy.callCount,
                     "sendMail must be called twice for each handler. Instead got " + spy.callCount
                 );
-                assert.equal(
-                    spy.args[0][0].subject, "Tiketti " + ticket.get("id") + ": Computer does not work",
-                    "title is not correct"
-                );
-                assert.equal
-                    (spy.args[0][0].text,
-                    "Tukipyyntöä (" +
-                    ticket.get("id") +
-                    ") on päivitetty. Pääset katselemaan ja päivittämään sitä tästä linkistä: https://staging-support.opinsys.fi/tickets/" +
-                    ticket.get("id") +
-                    "\n\n" +
-                    self.manager.get("externalData").first_name +
-                    " " +
-                    self.manager.get("externalData").last_name +
-                    ":"+
-                    "\n" +
-                    "It just doesn't" +
-                    "\n\n" + Moment().format('MMM Do H:mm')
-                );
-
                 // TODO: assert email addresses from spy.lastCall.args
             });
     });

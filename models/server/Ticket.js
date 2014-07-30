@@ -1,7 +1,7 @@
 "use strict";
+var fs = require("fs");
 var _ = require("lodash");
 var Promise = require("bluebird");
-var Moment = require("moment");
 
 var config = require("../../config");
 var Base = require("./Base");
@@ -16,6 +16,7 @@ var Device = require("./Device");
 var User = require("./User");
 var ReadTicket = require("./ReadTicket");
 var Title = require("./Title");
+
 
 /**
  * Knex query helpers
@@ -557,17 +558,12 @@ var Ticket = Base.extend({
                 from: "Opinsys support <noreply@opinsys.net>",
                 to: email,
                 subject: "Tiketti " + self.get("id") + ": " + self.getCurrentTitle(),
-                text: "Tukipyyntöä (" + self.get("id") +
-                 ") on päivitetty. Pääset katselemaan ja päivittämään sitä tästä linkistä: " +
-                  "https://staging-support.opinsys.fi/tickets/" + self.get("id") +
-                  "\n\n" +
-                  updateModel.relations.createdBy.get("externalData").first_name +
-                  " " +
-                  updateModel.relations.createdBy.get("externalData").last_name +
-                  ":"+
-                  "\n" +
-                  self.get("description") +
-                  "\n\n" + Moment().format('MMM Do H:mm') // TODO Newest comment on the top. Older under that.
+                text: renderUpdateEmail({
+                    title: self.getCurrentTitle(),
+                    ticketId: self.get("id"),
+                    name: updateModel.relations.createdBy.getFullname(),
+                    url: "https://staging-support.opinsys.fi/tickets/" + self.get("id")
+                })
             });
         });
     },
@@ -601,6 +597,19 @@ function triggerUpdate(opts, context) {
 
     }.bind(context);
 }
+
+/**
+ * Render email update template
+ *
+ * @private
+ * @static
+ * @method renderUpdateEmail
+ * @param {Object} context
+ * @return {String}
+ */
+var renderUpdateEmail = _.template(
+    fs.readFileSync(__dirname + "/email_update_template.txt").toString()
+);
 
 /**
  * Fetch tickets by give visibilities.

@@ -1,0 +1,5 @@
+
+${name} on lisännyt päivityksen tukipyyntöön "${title}" (${ticketId}).
+
+Pääset tarkastelemaan sitä osoitteessa ${url}
+
