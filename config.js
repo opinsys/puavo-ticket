@@ -22,7 +22,7 @@ var config = {
     redis: {}
 };
 
-config.emailTransport = nodemailer.createTransport(stubTransport());
+config.mailTransport = nodemailer.createTransport(stubTransport());
 
 if (process.env.NODE_ENV === "test") {
     config.database.connection = {
@@ -51,7 +51,7 @@ if (process.env.NODE_ENV === "test") {
     config = _.extend(config, productionConfig);
 
     if (productionConfig.smtp) {
-        config.emailTransport = nodemailer.createTransport(
+        config.mailTransport = nodemailer.createTransport(
             smtpTransport(productionConfig.smtp)
         );
     } else {

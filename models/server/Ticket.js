@@ -48,6 +48,7 @@ var queries = {
 };
 
 
+
 /**
  * Server Ticket model
  *
@@ -70,31 +71,35 @@ var Ticket = Base.extend({
      *
      * https://github.com/andris9/Nodemailer
      *
-     * @property emailTransport
+     * @private
+     * @property _mailTransport
      * @type Object
      */
-    emailTransport: config.emailTransport,
+    _mailTransport: config.mailTransport,
 
     /**
      *
      * @method initialize
      * @param attrs Model attributes
-     * @param [options.emailTransport] custom email transport
+     * @param [options.mailTransport] custom mail transport
      */
     initialize: function(attrs, options) {
-        if (options && options.emailTransport) {
-            this.emailTransport = options.emailTransport;
+        if (options && options.mailTransport) {
+            this._mailTransport = options.mailTransport;
 
         }
 
         /**
          * See nodemailer module docs
          *
-         * @method sendMailPromise
+         * @private
+         * @method _sendMailPromise
          * @param {Object} options
          * @return {Bluebird.Promise}
          * */
-        this.sendMailPromise = Promise.promisify(this.emailTransport.sendMail.bind(this.emailTransport));
+        this._sendMailPromise = Promise.promisify(
+            this._mailTransport.sendMail.bind(this._mailTransport)
+        );
 
         this.on("created", this._setInitialTicketState.bind(this));
         this.on("update", this.onTicketUpdate.bind(this));
@@ -539,7 +544,7 @@ var Ticket = Base.extend({
         }).get("title");
     },
 
-    sendEmail: function(updateModel){
+    sendMail: function(updateModel){
         var self = this;
 
         return self.load(["titles", "handlers.handler"]).then(function() {
@@ -550,7 +555,7 @@ var Ticket = Base.extend({
             return handler.related("handler").getEmail();
         })
         .map(function(email) {
-            return self.sendMailPromise({
+            return self._sendMailPromise({
                 from: "Opinsys support <noreply@opinsys.net>",
                 to: email,
                 subject: "Tiketti " + self.get("id") + ": " + self.getCurrentTitle(),
@@ -567,7 +572,7 @@ var Ticket = Base.extend({
     onTicketUpdate: function(e){
         return Promise.all([
             this.markAsUnread(e.model),
-            this.sendEmail(e.model),
+            this.sendMail(e.model),
         ]);
     }
 

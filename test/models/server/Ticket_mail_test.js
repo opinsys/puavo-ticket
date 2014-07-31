@@ -40,7 +40,7 @@ describe("Ticket email notifications", function() {
                 description: "Computer does not work",
                 createdById: self.user.get("id")
             }, {
-                emailTransport: transport
+                mailTransport: transport
             })
             .save()
             .then(function(ticket) {
@@ -92,7 +92,7 @@ describe("Ticket email notifications", function() {
                 description: "It just doesn't",
                 createdById: self.user.get("id")
             }, {
-                emailTransport: transport
+                mailTransport: transport
             })
             .save()
             .then(function(ticket) {
