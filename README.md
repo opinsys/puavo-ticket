@@ -241,12 +241,14 @@ Example: `SQL=1 make test-server` or `SQL=1 node server.js`
 
 We are using the [debug](https://github.com/visionmedia/debug) module. For each
 .js file create own debug instance with a name `puavo-ticket:<path>` where the
-`<path>` is the path for the .js file.
+`<path>` is the path for the .js file. For more specific loggers a symbolic
+name can be used.
 
 Example:
 
 ```javascript
 var debug = require("debug")("puavo-ticket:resources/tickets");
+var debugMail = require("debug")("puavo-ticket:mail");
 ```
 
 Using the `puavo-ticket:` prefix we can enable debug logging for puavo-ticket
