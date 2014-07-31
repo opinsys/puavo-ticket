@@ -76,12 +76,22 @@ var UserMixin = {
     },
 
     /**
+     * WARNING this is not unique between different organisations in
+     * puavo-ticket. Use User#getDomainUsername() when possible.
      *
      * @method getUsername
      * @return {String}
      */
     getUsername: function(){
         return this.get("externalData").username;
+    },
+
+    /**
+     * @method getDomainUsername
+     * @return {String}
+     */
+    getDomainUsername: function() {
+        return this.getUsername() + "@" + this.getOrganisationDomain();
     },
 
     /**
