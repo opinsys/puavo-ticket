@@ -68,7 +68,7 @@ var TicketForm = React.createClass({
             <div className="row TicketForm">
                <div className="ticket-form form-group col-md-8">
                     <div className="header">
-                        <b>Uusi tukipyyntö</b><br/>
+                        <h3>Uusi tukipyyntö</h3>
                     </div>
                     <input
                         className="form-control"
