@@ -481,7 +481,6 @@ table td {
         padding: 0;
     }
     .topmenu, .main {
-        margin: 0;
         padding: 1rem;
     }
     .top-buttons{
@@ -489,11 +488,13 @@ table td {
     }
     .top-button {
         width: 49%;
+        height: 100% ;
     }
     .update-buttons-wrap {
          .update-buttons {
              button{
-            width: 32%
+            width: 32%;
+            height: 100% ;
             }
         }
     }
