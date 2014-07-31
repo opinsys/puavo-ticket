@@ -563,7 +563,7 @@ var Ticket = Base.extend({
                     title: self.getCurrentTitle(),
                     ticketId: self.get("id"),
                     name: updateModel.relations.createdBy.getFullname(),
-                    url: "https://staging-support.opinsys.fi/tickets/" + self.get("id")
+                    url: "https://support.opinsys.fi/tickets/" + self.get("id")
                 })
             });
         });
