@@ -1,7 +1,4 @@
 var _ = require("lodash");
-var nodemailer = require("nodemailer");
-var stubTransport = require("nodemailer-stub-transport");
-var smtpTransport = require("nodemailer-smtp-transport");
 
 if (typeof window !== "undefined") {
     throw new Error("config.js is not allowed in the browser");
@@ -22,7 +19,6 @@ var config = {
     redis: {}
 };
 
-config.mailTransport = nodemailer.createTransport(stubTransport());
 
 if (process.env.NODE_ENV === "test") {
     config.database.connection = {
@@ -46,18 +42,8 @@ if (process.env.NODE_ENV === "test") {
     config.managerOrganisationDomain = "managertesting.opinsys.net";
 
 } else {
-
     var productionConfig = require("./_config");
     config = _.extend(config, productionConfig);
-
-    if (productionConfig.smtp) {
-        config.mailTransport = nodemailer.createTransport(
-            smtpTransport(productionConfig.smtp)
-        );
-    } else {
-        console.warn("'smtp' config is missing from _config.json. Email sending is disabled.");
-    }
-
 
     if (!config.puavo.sharedSecret) {
         throw new Error('"sharedSecret" is missing from _config.json');
