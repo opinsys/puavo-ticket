@@ -477,6 +477,11 @@ table td {
 
 
 @media screen and (max-width: 680px) {
+    .user-info{
+        button{
+            height: 40px;
+        }
+    }
     .wrapper {
         padding: 0;
     }
@@ -492,9 +497,9 @@ table td {
     }
     .update-buttons-wrap {
          .update-buttons {
-             button{
-            width: 32%;
-            height: 100% ;
+            button{
+                width: 32%;
+                height: 100% ;
             }
         }
     }
