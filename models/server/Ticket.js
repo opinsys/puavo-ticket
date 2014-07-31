@@ -566,18 +566,37 @@ var Ticket = Base.extend({
     sendMailUpdateNotification: function(updatedModel){
         var self = this;
 
-        return self.load(["titles", "handlers.handler"]).then(function() {
+        return self.load(["titles", "handlers.handler"])
+        .then(function() {
             return updatedModel.load("createdBy");
         }).then(function() {
             return self.relations.handlers.models;
-        }).map(function(handler){
-            return handler.related("handler").getEmail();
+        }).map(function(handler) {
+            return handler.related("handler");
+        }).map(function(user) {
+            if (!user.getEmail()) {
+                console.error(
+                    "Warning! User",
+                    user.getDomainUsername(),
+                    "has no email address"
+                 );
+            }
+            return user.getEmail();
         })
+        .filter(Boolean)
         .map(function(email) {
+            var title = self.getCurrentTitle();
+            var id = self.get("id");
+
+            debugMail(
+                "Would send update email to %s about \"%s\" (%s)",
+                email, title, id
+            );
+
             return self._sendMailPromise({
                 from: "Opinsys support <noreply@opinsys.net>",
                 to: email,
-                subject: "Tiketti " + self.get("id") + ": " + self.getCurrentTitle(),
+                subject: "Tiketti " + id + ": " + title,
                 text: renderUpdateEmail({
                     title: self.getCurrentTitle(),
                     ticketId: self.get("id"),
