@@ -8,6 +8,7 @@ var Promise = require("bluebird");
 var Button = require("react-bootstrap/Button");
 
 var User = require("../models/client/User");
+var captureError = require("puavo-ticket/utils/captureError");
 
 
 /**
@@ -64,9 +65,7 @@ var SelectUsers = React.createClass({
         .catch(Promise.CancellationError, function() {
             // cancel is ok
         })
-        .catch(function(err) {
-            self.setState({ error: err });
-        });
+        .catch(captureError("Käyttäjien haku epäonnistui"));
 
         self.setState({
             error: null,
