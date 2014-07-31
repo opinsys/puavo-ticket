@@ -48,7 +48,7 @@ app.use(function(req, res, next) {
 
     promisePipe(
         request({
-            method: "GET",
+            method: req.method,
             headers: _.extend({}, req.headers, {
                 // Fix request domain for the current organisation
                 host: domain,
@@ -68,7 +68,10 @@ app.use(function(req, res, next) {
             strictSSL: false
         }),
         res
-    ).catch(next);
+    ).catch(function(err) {
+        console.error("Proxy connection to puavo-rest failed. Tried GET", puavoUrl, "with forced Host header:", domain);
+        next(err);
+    });
 });
 
 module.exports = function(_config) {
