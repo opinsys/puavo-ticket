@@ -94,7 +94,7 @@ var Ticket = Base.extend({
          * @param {Object} options
          * @return {Bluebird.Promise}
          * */
-        this.sendMailPromise = Promise.promisify(this.emailTransport.sendMail.bind(this));
+        this.sendMailPromise = Promise.promisify(this.emailTransport.sendMail.bind(this.emailTransport));
 
         this.on("created", this._setInitialTicketState.bind(this));
         this.on("update", this.onTicketUpdate.bind(this));

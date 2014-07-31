@@ -1,5 +1,7 @@
 var _ = require("lodash");
 var nodemailer = require("nodemailer");
+var stubTransport = require("nodemailer-stub-transport");
+var smtpTransport = require("nodemailer-smtp-transport");
 
 if (typeof window !== "undefined") {
     throw new Error("config.js is not allowed in the browser");
@@ -20,7 +22,7 @@ var config = {
     redis: {}
 };
 
-config.emailTransport = nodemailer.createTransport("stub", {error: false});
+config.emailTransport = nodemailer.createTransport(stubTransport());
 
 if (process.env.NODE_ENV === "test") {
     config.database.connection = {
@@ -50,8 +52,7 @@ if (process.env.NODE_ENV === "test") {
 
     if (productionConfig.smtp) {
         config.emailTransport = nodemailer.createTransport(
-            "SMTP",
-            productionConfig.smtp
+            smtpTransport(productionConfig.smtp)
         );
     } else {
         console.warn("'smtp' config is missing from _config.json. Email sending is disabled.");

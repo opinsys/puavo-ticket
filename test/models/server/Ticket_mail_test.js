@@ -1,6 +1,7 @@
 "use strict";
 var Promise = require("bluebird");
 var nodemailer = require("nodemailer");
+var stubTransport = require("nodemailer-stub-transport");
 var sinon = require("sinon");
 
 var helpers = require("../../helpers");
@@ -32,14 +33,14 @@ describe("Ticket email notifications", function() {
     it("is sent to creator from new comments", function() {
         var self = this;
 
-        var stubTransport = nodemailer.createTransport("stub", {error: false});
-        var spy = sinon.spy(stubTransport, "sendMail");
+        var transport = nodemailer.createTransport(stubTransport());
+        var spy = sinon.spy(transport, "sendMail");
 
         return Ticket.forge({
                 description: "Computer does not work",
                 createdById: self.user.get("id")
             }, {
-                emailTransport: stubTransport
+                emailTransport: transport
             })
             .save()
             .then(function(ticket) {
@@ -84,14 +85,14 @@ describe("Ticket email notifications", function() {
 
     it("is sent to other handlers too as individual emails", function() {
         var self = this;
-        var stubTransport = nodemailer.createTransport("stub", {error: false});
-        var spy = sinon.spy(stubTransport, "sendMail");
+        var transport = nodemailer.createTransport(stubTransport());
+        var spy = sinon.spy(transport, "sendMail");
 
         return Ticket.forge({
                 description: "It just doesn't",
                 createdById: self.user.get("id")
             }, {
-                emailTransport: stubTransport
+                emailTransport: transport
             })
             .save()
             .then(function(ticket) {

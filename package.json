@@ -31,7 +31,7 @@
     "moment": "~2.7.0",
     "multiparty": "~3.3.0",
     "node-sass": "~0.9.3",
-    "nodemailer": "~0.6.5",
+    "nodemailer": "~1.0.0",
     "pg": "~3.4.0",
     "promisepipe": "~1.0.1",
     "react": "~0.11.1",
@@ -46,7 +46,9 @@
     "react-router": "~0.5.0",
     "reactify": "~0.14.0",
     "bookshelf": "~0.7.7",
-    "knex": "~0.6.22"
+    "knex": "~0.6.22",
+    "nodemailer-smtp-transport": "~0.1.12",
+    "nodemailer-stub-transport": "~0.1.4"
   },
   "devDependencies": {
     "jshint": "~2.5.2",
