@@ -544,11 +544,19 @@ var Ticket = Base.extend({
         }).get("title");
     },
 
-    sendMail: function(updateModel){
+    /**
+     * Send email notifications about the updateModel to the handlers of this
+     * ticket.
+     *
+     * @method sendMailUpdateNotification
+     * @param {models.server.Base} updatedModel
+     * @return {Bluebird.Promise}
+     */
+    sendMailUpdateNotification: function(updatedModel){
         var self = this;
 
         return self.load(["titles", "handlers.handler"]).then(function() {
-            return updateModel.load("createdBy");
+            return updatedModel.load("createdBy");
         }).then(function() {
             return self.relations.handlers.models;
         }).map(function(handler){
@@ -562,7 +570,7 @@ var Ticket = Base.extend({
                 text: renderUpdateEmail({
                     title: self.getCurrentTitle(),
                     ticketId: self.get("id"),
-                    name: updateModel.relations.createdBy.getFullname(),
+                    name: updatedModel.relations.createdBy.getFullname(),
                     url: "https://support.opinsys.fi/tickets/" + self.get("id")
                 })
             });
