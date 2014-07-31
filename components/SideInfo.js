@@ -17,17 +17,17 @@ var TicketForm = React.createClass({
         return (
             <div>
             <div className="contact">
-                <p>Kiireellisissä tapauksissa soita tukinumeroomme <strong>014-4591625</strong></p>
+                <p>Kiireellisissä tapauksissa <br/> soita tukinumeroomme <strong>014-4591625</strong></p>
             </div>
                         
             <div className="checklist">
                 <p><strong>Ilmoita nämä asiat tukipyynnössä</strong></p>
                 <ul>
                     <li>tarkka kuvaus tuen tarpeesta</li>
+                    <li>koskeeko yhtä vai useampaa laitetta/käyttäjää</li>
                     <li>laite</li>
                     <li>käyttäjätunnus</li>
                     <li>ajankohta</li>
-                    <li>koskeeko yhtä vai useampaa laitetta/käyttäjää</li>
                 </ul>
             </div>
         
