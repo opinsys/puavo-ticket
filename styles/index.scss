@@ -247,12 +247,18 @@ table td {
      }
 }
 
+.header{
+    h3 {
+        font-size: 160%;
+    }
+}
+            
 .ticket-view {
     .ticket-header {
         margin: 0.5rem 0;
         h3 {
-            font-size: 130%;
-            font-weight: 800;
+            font-size: 160%;
+           // font-weight: 800;
             margin: 0;
         }
     }
@@ -296,6 +302,7 @@ table td {
 }
 
 .update-buttons-wrap{
+    margin-top: -27px;
     padding: 0 0 0.5rem;
     .update-buttons{
         text-align: right;
