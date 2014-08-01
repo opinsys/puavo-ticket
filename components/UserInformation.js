@@ -25,14 +25,17 @@ var UserInformation = React.createClass({
     },
 
     render: function() {
+        var linkToProfile = "https://" + this.props.user.get("externalData").organisation_domain + "/users/profile/edit";
         return (
             <div className="UserInformation">
                 <img src={this.props.user.getProfileImage()} />
                 <DropdownButton bsSize="xsmall"  title={this.getFullname()}>
 
                     {/* TODO: redirect to puavo profile edit */}
-                    <MenuItem onClick={alert.bind(null, "todo")}>
-                        <i className="fa fa-cog"></i> Muokkaa profiiliasi
+                    <MenuItem>
+                        <a href={linkToProfile} target="_blank">
+                            <i className="fa fa-cog"></i> Muokkaa profiiliasi
+                        </a>
                     </MenuItem>
 
                     <MenuItem onClick={this.handleLogout}>
