@@ -1,9 +1,9 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
-var _ = require("lodash");
 var Link = require("react-router").Link;
 var Loading = require("./Loading");
+var ProfileBadge = require("./ProfileBadge");
 
 var captureError = require("puavo-ticket/utils/captureError");
 var Ticket = require("../models/client/Ticket");
@@ -19,35 +19,29 @@ var List = React.createClass({
     },
 
     renderTicketMetaInfo: function(ticket) {
-        // TODO error checks at least
-        var ticketCreator, firstname = ticket.get("createdBy").externalData.first_name, lastname = ticket.get("createdBy").externalData.last_name, latestUpdate = ticket.get("updatedAt"), handlers = ticket.get("handlers"), options={weekday: "short", month: "numeric", day: "numeric", hour: "numeric", minute:"numeric"}, firstNames, lastNames;
-        ticketCreator = firstname + " " + lastname;
-        // TODO not sure if this is the best way to do this at all...
-        firstNames = _.chain(handlers)
-            .map(function(items){return items.handler.externalData;})
-            .mapValues('first_name')
-            .toArray()
-            .value();
-        lastNames = _.chain(handlers)
-            .map(function(items){return items.handler.externalData;})
-            .mapValues('last_name')
-            .toArray()
-            .value();
+
+        var creator = ticket.createdBy();
+        var lastUpdate = ticket.get("updatedAt");
+        var handlers = ticket.handlers();
+
+        var options = {
+            weekday: "short",
+            month: "long",
+            day: "numeric"
+        };
 
         return(
             <span>
             <td className="ticket-creator">
-                {ticketCreator}
+                {creator.getFullname()}
             </td>
             <td className="ticket-updated">
-                <time dateTime={'"' + latestUpdate + '"'} />{" " + new Date(Date.parse(latestUpdate)).toLocaleString('fi', options)}
+                <time dateTime={'"' + lastUpdate + '"'} />{" " + new Date(Date.parse(lastUpdate)).toLocaleString('fi', options)}
             </td>
             <td className="ticket-handlers">
-                {
-                    _.map(_.zipObject(firstNames, lastNames), function(item, key){
-                        return key + " " + item;
-                    })
-                }
+                {handlers.map(function(handler) {
+                    return <ProfileBadge tipPlacement="left" size={40} user={handler.getHandlerUser()} />;
+                })}
             </td>
             </span>
         );
@@ -135,7 +129,7 @@ var TicketList = React.createClass({
         var closed = coll.selectClosed();
 
         return (
-            <div className="ticket-wrap row">
+            <div className="TicketList ticket-wrap row">
                 <Loading visible={this.state.fetching} />
                 <List title="Odottavat tukipyynnöt" tickets={pending} user={this.props.user} />
                 <List title="Minun tukipyynnöt" tickets={myTickets} user={this.props.user} />
