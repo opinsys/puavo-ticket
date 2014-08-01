@@ -1,6 +1,17 @@
 .UserInformation {
    text-align: right;
 
+
+   .ProfileBadge {
+       display: block;
+       float: left;
+       margin-right: 10px;
+   }
+
+   .btn {
+       height: 38px;
+   }
+
     ul {
         float: right;
         list-style: none;
@@ -11,7 +22,7 @@
 
 @media screen and (max-width:680px){
     .UserInformation{
-        .btn{
+        .btn {
             padding: 1rem;
         }
      }

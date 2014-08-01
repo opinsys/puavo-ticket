@@ -89,9 +89,11 @@ var Main = React.createClass({
                 <h1 className="site-header">Opinsys tukipalvelu</h1>
                 {this.state.renderModalContent && this.state.renderModalContent()}
                 <div className="topmenu row">
-                    <div className="user-info col-md-6 pull-right">
+
+                    <div className="user-info pull-right">
                         <UserInformation user={this.state.user} />
                     </div>
+
                     <div className="top-buttons col-md-6">
 
                         <Link className="btn btn-default top-button" to="new">

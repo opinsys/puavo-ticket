@@ -16,9 +16,6 @@ var ProfileBadge = require("./ProfileBadge");
  */
 var UserInformation = React.createClass({
 
-    getFullname: function() {
-        return this.props.user.get("externalData").first_name + " " + this.props.user.get("externalData").last_name;
-    },
 
     render: function() {
         var linkToProfile = "https://" + this.props.user.get("externalData").organisation_domain + "/users/profile/edit";
@@ -26,8 +23,9 @@ var UserInformation = React.createClass({
 
         return (
             <div className="UserInformation">
-                <ProfileBadge user={this.props.user} height={50} tipPlacement="left" />
-                <DropdownButton bsSize="xsmall"  title={this.getFullname()}>
+
+                <ProfileBadge user={this.props.user} size={40} tipPlacement="left" />
+                <DropdownButton className="menu" bsSize="xsmall"  title={this.props.user.getFullname()}>
 
                     {/* TODO: redirect to puavo profile edit */}
                     <MenuItem>
@@ -43,6 +41,7 @@ var UserInformation = React.createClass({
                     </MenuItem>
 
                 </DropdownButton>
+
             </div>
         );
     }
