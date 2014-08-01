@@ -5,6 +5,10 @@
 .modal {
     position: absolute;
     max-height:90%;
+
+   .close {
+     display: none;
+   }
 }
 
 .modal-title {
