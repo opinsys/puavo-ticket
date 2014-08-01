@@ -20,8 +20,8 @@ var UserInformation = React.createClass({
     },
 
     handleLogout: function() {
+        // TODO: redirect full page to /logout
         alert("todo");
-        // window.location = LogoutLink.renderHref();
     },
 
     render: function() {
