@@ -314,7 +314,59 @@ var Collection = Base.Collection.extend({
      * @property model
      * @type {models.client.Ticket}
      */
-    model: Ticket
+    model: Ticket,
+
+
+    selectClosed: function() {
+        return this.filter(function(t) {
+            return t.getCurrentStatus() === "closed";
+        });
+    },
+
+    selectOpen: function() {
+        return this.filter(function(t) {
+            return t.getCurrentStatus() === "open";
+        });
+    },
+
+    selectPending: function() {
+        return this.selectOpen().filter(function(t) {
+            // None of the handlers are manager
+            return !t.handlers().some(function(h) {
+                return h.getHandlerUser().isManager();
+            });
+        });
+    },
+
+    selectHandledBy: function(user) {
+        return this.selectOpen().filter(function(t) {
+            // One of the handlers is me
+            return t.handlers().some(function(h) {
+                return h.getHandlerUser().get("id") === user.get("id");
+            });
+        });
+    },
+
+    selectHandledByOtherManagers: function(user) {
+        return this.selectOpen().filter(function(t) {
+
+            var managers = t.handlers().map(function(h) {
+                return h.getHandlerUser();
+            }).filter(function(u) {
+                return u.isManager();
+            });
+
+            // No manager handlers - the ticket is pending
+            if (managers.length === 0) return false;
+
+            // Every manager is not me
+            return managers.every(function(manager) {
+                return manager.get("id") !== user.get("id");
+            });
+
+        });
+    },
+
 });
 
 module.exports = Ticket;
