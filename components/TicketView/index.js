@@ -156,7 +156,7 @@ var TicketView = React.createClass({
 
     renderDate: function() {
         var datestring = this.state.ticket.get("createdAt"),
-        options={weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "numeric", minute:"numeric"};
+        options={weekday: "long", year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute:"numeric"};
         return(
             <span className="badge-text">
                 <time dateTime={'"' + datestring + '"'} />{" " + new Date(Date.parse(datestring)).toLocaleString('fi', options)}
@@ -221,7 +221,7 @@ var TicketView = React.createClass({
                             <img src="/images/support_person.png" />
                         </div>
                         <div className="message">
-                            <strong>Opinsys tuki </strong>
+                            <strong>Opinsys tuki <br/></strong>
                             <span>Olemme vastaanottaneet tukipyyntösi. Voit halutessasi täydentää sitä.</span>
                         </div>
                     </div>
@@ -295,7 +295,7 @@ var VIEW_TYPES = {
                         <img src={this.props.update.createdBy().getProfileImage()} />
                     </div>
                     <div className="message">
-                        <strong>{this.props.update.createdBy().getName()} </strong>
+                        <strong>{this.props.update.createdBy().getName()} <br/></strong>
                         <span>
                             {this.props.update.get("comment").trim().split("\n").map(function(line) {
                                 return <span>{line}<br /></span>;
