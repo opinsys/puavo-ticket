@@ -17,11 +17,21 @@ var Base = require("puavo-ticket/models/client/Base");
 var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
+var ProfileBadge = require("../ProfileBadge");
 
 var ToggleTagsButton = require("./ToggleTagsButton");
 var ToggleStatusButton = require("./ToggleStatusButton");
 
 
+var supportPerson = {
+    getFullname: function() {
+        return "Opinsys Oy";
+    },
+
+    getProfileImage: function() {
+        return "/images/support_person.png";
+    }
+};
 
 
 
@@ -202,7 +212,7 @@ var TicketView = React.createClass({
                             {this.renderDate()}
                         </div>
                         <div className="image">
-                            <img src={this.state.ticket.createdBy().getProfileImage()} />
+                            <ProfileBadge user={this.state.ticket.createdBy()} />
                         </div>
                         <div className="message">
                              <span>
@@ -218,7 +228,7 @@ var TicketView = React.createClass({
 
                     <div className="ticket-updates comments">
                         <div className="image">
-                            <img src="/images/support_person.png" />
+                            <ProfileBadge user={supportPerson} />
                         </div>
                         <div className="message">
                             <strong>Opinsys tuki <br/></strong>
@@ -292,7 +302,7 @@ var VIEW_TYPES = {
             return (
                 <div className="ticket-updates comments">
                     <div className="image">
-                        <img src={this.props.update.createdBy().getProfileImage()} />
+                        <ProfileBadge user={this.props.update.createdBy()} />
                     </div>
                     <div className="message">
                         <strong>{this.props.update.createdBy().getName()} <br/></strong>
