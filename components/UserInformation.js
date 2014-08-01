@@ -6,6 +6,7 @@ var React = require("react/addons");
 var DropdownButton = require("react-bootstrap/DropdownButton");
 var MenuItem = require("react-bootstrap/MenuItem");
 
+var ProfileBadge = require("./ProfileBadge");
 
 /**
  * User information and logout
@@ -25,7 +26,7 @@ var UserInformation = React.createClass({
 
         return (
             <div className="UserInformation">
-                <img src={this.props.user.getProfileImage()} />
+                <ProfileBadge user={this.props.user} height={50} tipPlacement="left" />
                 <DropdownButton bsSize="xsmall"  title={this.getFullname()}>
 
                     {/* TODO: redirect to puavo profile edit */}
