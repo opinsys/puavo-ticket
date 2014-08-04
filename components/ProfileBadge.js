@@ -62,7 +62,7 @@ var ProfileBadge = React.createClass({
     },
 
     getImgURL: function() {
-        return this.props.user.getProfileImage();
+        return "/images/anonymous.jpg";
     },
 
     renderTooltip: function() {
