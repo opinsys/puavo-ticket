@@ -60,7 +60,7 @@ describe("Ticket email notifications", function() {
                 );
 
                 assert.equal(
-                    spy.lastCall.args[0].from, "Opinsys support <noreply@opinsys.net>",
+                    spy.lastCall.args[0].from, "Opinsys tukipalvelu <noreply@opinsys.fi>",
                     "mail is sent from noreply address"
                     // we do not support email replies yet
                 );
@@ -73,7 +73,7 @@ describe("Ticket email notifications", function() {
                 );
 
                 assert(
-                    /Pääset tarkastelemaan sitä osoitteessa .+/.test(body),
+                    /Pääset tarkastelemaan tukipyyntöä osoitteessa .+/.test(body),
                     "invalid body: " + body
                 );
 

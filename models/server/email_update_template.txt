@@ -1,5 +1,12 @@
-
 ${name} on lisännyt päivityksen tukipyyntöön "${title}" (${ticketId}).
 
-Pääset tarkastelemaan sitä osoitteessa ${url}
+Pääset tarkastelemaan tukipyyntöä osoitteessa ${url}
 
+----------------------------------------------
+${name}, ${timestamp}
+
+${message}
+
+
+----------------------------------------------
+Tämä viesti on lähetetty Opinsysin tukipalvelusta

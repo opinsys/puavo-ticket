@@ -20,6 +20,7 @@ var Device = require("./Device");
 var User = require("./User");
 var ReadTicket = require("./ReadTicket");
 var Title = require("./Title");
+var Moment = require("moment");
 
 
 if (config.smtp) {
@@ -594,13 +595,15 @@ var Ticket = Base.extend({
             );
 
             return self._sendMailPromise({
-                from: "Opinsys support <noreply@opinsys.net>",
+                from: "Opinsys tukipalvelu <noreply@opinsys.fi>",
                 to: email,
-                subject: "Tiketti " + id + ": " + title,
+                subject: "Tukipyyntö " + id + ": " + title,
                 text: renderUpdateEmail({
                     title: self.getCurrentTitle(),
                     ticketId: self.get("id"),
                     name: updatedModel.relations.createdBy.getFullname(),
+                    timestamp: Moment().format('D.M.YYYY H:mm'),
+                    message: updatedModel.textToEmail(),
                     url: "https://support.opinsys.fi/tickets/" + self.get("id")
                 })
             });

@@ -25,6 +25,18 @@ var Comment = Base.extend({
 
   createdBy: function() {
       return this.belongsTo(User, "createdById");
+  },
+
+  /**
+   * Text for email notification when this model has changed
+   *
+   * @method textToEmail
+   * @return {String}
+   */
+  textToEmail: function() {
+      var self = this;
+
+      return self.get("comment");
   }
 
 });
