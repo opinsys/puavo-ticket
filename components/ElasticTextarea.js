@@ -89,7 +89,8 @@ var ElasticTextarea = React.createClass({
             style={this.style}
             rows={this.props.minRows}
             ref="textarea"
-            className="ElasticTextarea"></textarea>);
+            className={"ElasticTextarea " + this.props.className}></textarea>
+        );
     }
 
 });

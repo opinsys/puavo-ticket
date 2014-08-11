@@ -99,7 +99,6 @@ h2 {
     padding: 0.5rem;
     line-height: 1.4;
     border-radius: 4px;
-    -webkit-font-smoothing: subpixel-antialiased;
     transition: 0.25s linear;
 }
 
@@ -119,6 +118,12 @@ h2 {
 .form-control:focus {
     border-color: $active-input-color;
     box-shadow: none;
+}
+
+input.form-control, textarea.form-control {
+    @include placeholder {
+        color: #B1B1B1;
+    }
 }
 
 
