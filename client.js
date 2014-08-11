@@ -108,7 +108,7 @@ var Main = React.createClass({
                 </div>
 
                 <div className="main-wrap clearfix" >
-                    <div className="main box-shadow">
+                    <div className="main">
 
                         <this.props.activeRouteHandler
                             renderInModal={this.renderInModal}
