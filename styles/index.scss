@@ -73,7 +73,6 @@ table td {
 }
 .wrapper {
     margin: 0 auto;
-    min-width: 330px;
     position: relative;
     max-width: 1200px;
 }
@@ -451,6 +450,11 @@ table td {
     .adddevice{
         min-height: 440px;
     }
+}
+
+.top-buttons {
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 
