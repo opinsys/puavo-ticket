@@ -230,7 +230,6 @@ table td {
 
 .top-button {
     font-weight: bold;
-    padding-top: 0.9em;
     &:first-of-type{
         margin: 0;
      }
@@ -241,7 +240,7 @@ table td {
         font-size: 160%;
     }
 }
-            
+
 .ticket-view {
     .ticket-header {
         margin: 0.5rem 0;

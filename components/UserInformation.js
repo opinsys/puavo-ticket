@@ -25,7 +25,7 @@ var UserInformation = React.createClass({
             <div className="UserInformation">
 
                 <ProfileBadge user={this.props.user} size={40} tipPlacement="left" />
-                <DropdownButton className="menu" bsSize="xsmall"  title={this.props.user.getFullname()}>
+                <DropdownButton className="menu" bsSize="xsmall"  title={this.props.user.getFullname()} pullRight>
 
                     {/* TODO: redirect to puavo profile edit */}
                     <MenuItem>
