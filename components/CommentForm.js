@@ -186,6 +186,7 @@ var CommentForm = React.createClass({
                 </OverlayTrigger>
 
                 <ElasticTextarea
+                    placeholder="Kommentti..."
                     className="form-control"
                     value={this.state.comment}
                     onChange={this._handleCommentChange}
