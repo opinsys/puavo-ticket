@@ -1,3 +1,7 @@
+body {
+    line-height: 1.72222;
+}
+
 .table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th {
     background-color: #E4DDD4;
 }
@@ -61,22 +65,44 @@ h2 {
 
 
 .btn-default {
-   background-color: $input-color;
+    background-color: $input-color;
+    color: #ffffff;
 
     &:hover:not([disabled]), &:focus:not([disabled]), &:active:not([disabled]) {
         background-color: $active-input-color;
+        color: #ffffff;
+    }
+
+    &:disabled {
+        color: rgba(255, 255, 255, 0.75);
+        background-color: #bdc3c7;
+        opacity: 0.7;
     }
 
     &:disabled:hover {
         cursor: not-allowed;
     }
+
 }
+
+
+.btn.active {
+    background: #a1a6a9;
+    color: #ffffff;
+}
+
 .btn {
+    border: none;
     font-size: 80%;
     font-weight: 800;
     margin: 0 0 0 0.5rem;
     padding: 0.5rem;
+    line-height: 1.4;
+    border-radius: 4px;
+    -webkit-font-smoothing: subpixel-antialiased;
+    transition: 0.25s linear;
 }
+
 .btn-success {
     background-color: $green-active-color;
     &:hover, &:focus, &:active{
@@ -92,7 +118,19 @@ h2 {
 
 .form-control:focus {
     border-color: $active-input-color;
+    box-shadow: none;
 }
+
+
+.form-control {
+    border: 2px solid #bdc3c7;
+    font-family: "Lato", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    height: 42px;
+    border-radius: 6px;
+    transition: border .25s linear, color .25s linear, background-color .25s linear;
+}
+
 .badge {
     display: inline-block;
     min-width: 10px;
