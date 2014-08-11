@@ -94,7 +94,7 @@ var Main = React.createClass({
                         <UserInformation user={this.state.user} />
                     </div>
 
-                    <div className="top-buttons col-md-6">
+                    <div className="top-buttons">
 
                         <Link className="btn btn-default top-button" to="new">
                             <i className="fa fa-pencil-square-o"></i>Uusi tukipyyntö
