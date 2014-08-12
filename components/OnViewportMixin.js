@@ -2,7 +2,8 @@
 var React = require("react/addons");
 
 /**
- *
+ * This React component mixin adds onViewport callback prop. It's called when
+ * the component is scrolled to the visible viewport
  *
  * @namespace components
  * @class OnViewportMixin
