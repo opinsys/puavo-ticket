@@ -261,10 +261,29 @@ var Ticket = Base.extend({
      * @return {Boolean}
      */
     hasRead: function(userId) {
-        return this.get("readTickets").some( function(readTicket) {
+        return this.get("readTickets").some(function(readTicket) {
             return readTicket.readById === userId && readTicket.unread === false;
         });
     },
+
+    /**
+     * Get Date object when the given user has last read this ticket content
+     *
+     * @method getReadDate
+     * @param {models.client.User} user
+     * @return {Date}
+     */
+    getReadAtFor: function(user){
+        return _(this.get("readTickets"))
+            .filter(function(ob) {
+                return ob.readById === user.get("id");
+            }).map(function(ob) {
+                return new Date(ob.readAt);
+            }).max(function(readAt) {
+                return readAt.getTime();
+            }).value() || new Date(0);
+    },
+
 
     /**
      * @method markAsRead

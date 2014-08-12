@@ -1,5 +1,8 @@
 "use strict";
+var _ = require("lodash");
+
 var Base = require("./Base");
+var UpdateMixin = require("./UpdateMixin");
 
 /**
  * Client Title model
@@ -24,4 +27,5 @@ var Title = Base.extend({
 
 });
 
+_.extend(Title.prototype, UpdateMixin);
 module.exports = Title;

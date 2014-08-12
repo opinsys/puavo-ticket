@@ -1,6 +1,9 @@
 "use strict";
+var _ = require("lodash");
+
 var Base = require("./Base");
 var User = require("./User");
+var UpdateMixin = require("./UpdateMixin");
 
 
 /**
@@ -9,6 +12,7 @@ var User = require("./User");
  * @namespace models.client
  * @class Handler
  * @extends models.client.Base
+ * @uses models.client.UpdateMixin
  */
 var Handler = Base.extend({
 
@@ -34,5 +38,7 @@ var Handler = Base.extend({
     },
 
 });
+
+_.extend(Handler.prototype, UpdateMixin);
 
 module.exports = Handler;

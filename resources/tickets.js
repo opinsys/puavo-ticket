@@ -70,7 +70,10 @@ app.get("/api/tickets/:id", function(req, res, next) {
             "devices.createdBy",
             "relatedUsers.user",
             "relatedUsers.createdBy",
-            "titles.createdBy"
+            "titles.createdBy",
+            { readTickets: function(qb) {
+                qb.where({ readById: req.user.get("id") });
+            }}
         ],
         require: true
     })

@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
+var classSet = React.addons.classSet;
 var _ = require("lodash");
 var Promise = require("bluebird");
 
@@ -18,6 +19,7 @@ var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
 var ProfileBadge = require("../ProfileBadge");
+var OnViewportMixin = require("../OnViewportMixin");
 
 var ToggleTagsButton = require("./ToggleTagsButton");
 var ToggleStatusButton = require("./ToggleStatusButton");
@@ -115,9 +117,15 @@ var TicketView = React.createClass({
     },
 
     handleOnFocus: function() {
-        this.markAsRead();
+        this.fetchTicket();
     },
 
+    /**
+     * Mark the ticket as read by the current user and refetch the ticket data
+     *
+     * @method markAsRead
+     * @return {Bluebird.Promise}
+     */
     markAsRead: function() {
         if (!this.isMounted()) return;
 
@@ -130,6 +138,13 @@ var TicketView = React.createClass({
             .catch(captureError("Tukipyynnön merkkaaminen luetuksi epäonnistui"));
     },
 
+
+    /**
+     * Fetch the ticket data
+     *
+     * @method fetchTicket
+     * @return {Bluebird.Promise}
+     */
     fetchTicket: function() {
         if (!this.isMounted()) return;
 
@@ -144,8 +159,16 @@ var TicketView = React.createClass({
 
 
     componentDidMount: function() {
-        this.markAsRead();
+        this.fetchTicket();
         window.addEventListener("focus", this.handleOnFocus);
+
+        /**
+         * Lazy version of the `markAsRead()` method. It will mark the ticket
+         * as read at max once in 10 seconds
+         *
+         * @method lazyMarkAsRead
+         */
+        this.lazyMarkAsRead = _.throttle(this.markAsRead, 10*1000);
     },
 
     componentWillUnmount: function() {
@@ -177,6 +200,13 @@ var TicketView = React.createClass({
 
     render: function() {
         var self = this;
+        var updates = this.state.ticket.updates().filter(function(update) {
+            if (!self.state.showTags && update.get("type") === "tags") {
+                return false;
+            }
+
+            return true;
+        });
         return (
             <div className="row TicketView">
                 <div className="ticket-view col-md-8">
@@ -236,23 +266,27 @@ var TicketView = React.createClass({
                         </div>
                     </div>
                     <div>
-                    {this.state.ticket.updates()
-                        .filter(function(update) {
-                            if (!self.state.showTags && update.get("type") === "tags") {
-                                return false;
-                            }
+                    {updates.map(function(update) {
+                        var View = VIEW_TYPES[update.get("type")];
 
-                            return true;
-                        })
-                        .map(function(update) {
-                            var view = VIEW_TYPES[update.get("type")];
-                            return (
-                                <span key={update.get("unique_id")}>
-                                    {view ?  view({ update: update })
-                                          : "Unknown update type: " + update.get("type")
-                                    }
-                                </span>
-                        );})}
+                        var unread = update.isUnreadBy(self.props.user);
+
+                        return (
+                            <div key={update.get("unique_id")} className={classSet({ unread: unread })}>
+
+                                {View ?
+                                    <View update={update} onViewport={function(props) {
+                                        if (_.last(updates) !== props.update) return;
+                                        // Mark the ticket as read 30 seconds
+                                        // after the last update has been shown
+                                        // to the user
+                                        setTimeout(self.lazyMarkAsRead, 30*1000);
+                                    }} />
+                                  : "Unknown update type: " + update.get("type")
+                                }
+                            </div>
+                        );
+                    })}
                     </div>
 
                     <CommentForm onSubmit={this.saveComment} >
@@ -272,7 +306,14 @@ var TicketView = React.createClass({
 
 
 
+/**
+ * Common functionality for each ticket update component
+ *
+ * @namespace components
+ * @class TicketView.UpdateMixin
+ */
 var UpdateMixin = {
+
     propTypes: {
         update: React.PropTypes.instanceOf(Base).isRequired
     },
@@ -297,7 +338,7 @@ var UpdateMixin = {
 var VIEW_TYPES = {
 
     comments: React.createClass({
-        mixins: [UpdateMixin],
+        mixins: [UpdateMixin, OnViewportMixin],
         render: function() {
             return (
                 <div className="ticket-updates comments">
@@ -318,7 +359,7 @@ var VIEW_TYPES = {
     }),
 
     tags: React.createClass({
-        mixins: [UpdateMixin],
+        mixins: [UpdateMixin, OnViewportMixin],
         render: function() {
             return (
                 <div className="tags">
@@ -330,7 +371,7 @@ var VIEW_TYPES = {
     }),
 
     handlers: React.createClass({
-        mixins: [UpdateMixin],
+        mixins: [UpdateMixin, OnViewportMixin],
         render: function() {
             return (
                 <div className="tags">

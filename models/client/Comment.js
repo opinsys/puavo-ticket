@@ -1,5 +1,8 @@
 "use strict";
+var _ = require("lodash");
+
 var Base = require("./Base");
+var UpdateMixin = require("./UpdateMixin");
 
 /**
  * Client Comment model
@@ -8,6 +11,7 @@ var Base = require("./Base");
  * @class Comment
  * @extends models.client.Base
  * @uses models.TicketMixin
+ * @uses models.client.UpdateMixin
  */
 var Comment = Base.extend({
 
@@ -23,5 +27,7 @@ var Comment = Base.extend({
     },
 
 });
+
+_.extend(Comment.prototype, UpdateMixin);
 
 module.exports = Comment;

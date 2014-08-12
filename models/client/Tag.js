@@ -1,7 +1,8 @@
 "use strict";
-
+var _ = require("lodash");
 var Cocktail = require("backbone.cocktail");
 
+var UpdateMixin = require("./UpdateMixin");
 var Base = require("./Base");
 var TagMixin = require("../TagMixin");
 
@@ -29,4 +30,5 @@ var Tag = Base.extend({
 });
 
 Cocktail.mixin(Tag, TagMixin);
+_.extend(Tag.prototype, UpdateMixin);
 module.exports = Tag;

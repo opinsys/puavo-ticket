@@ -65,8 +65,7 @@ table td {
     tbody{
         tr.unread{
             td{
-                background-color: $input-color;
-                background-color: $orange-alpha;
+                background-color: $unread-color;
             }
         }
     }
@@ -300,7 +299,6 @@ table td {
     color: gray;
     font-size: 80%;
     margin-left: 50px;
-    margin-bottom: 1px;
 }
 
 
