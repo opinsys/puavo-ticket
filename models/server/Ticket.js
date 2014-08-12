@@ -528,10 +528,7 @@ var Ticket = Base.extend({
             .fetch()
             .then(function(coll) { return coll.models; })
             .map(function(readTicket) {
-                return readTicket.set({
-                    readAt: new Date(),
-                    unread: "true"
-                }).save();
+                return readTicket.set({ unread: true }).save();
             });
     },
 
