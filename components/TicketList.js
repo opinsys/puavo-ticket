@@ -2,12 +2,15 @@
 "use strict";
 var React = require("react/addons");
 var Link = require("react-router").Link;
+var Badge = require("react-bootstrap/Badge");
+
 var Loading = require("./Loading");
 var ProfileBadge = require("./ProfileBadge");
 
 var captureError = require("puavo-ticket/utils/captureError");
 var Ticket = require("../models/client/Ticket");
 var BackboneMixin = require("./BackboneMixin");
+
 
 var List = React.createClass({
 
@@ -76,9 +79,11 @@ var List = React.createClass({
                                         <td>
                                             <Link to="ticket" id={ticket.get("id")}>
                                                 {ticket.getCurrentTitle()}
-                                                <span className="badge unread-comments" title="Uusia kommentteja">
+
+                                                <Badge className="unread-comments" title="Uusia kommentteja">
                                                     <i className="fa fa-comment-o"></i>
-                                                </span>
+                                                </Badge>
+
                                             </Link>
                                         </td>
                                          {self.renderTicketMetaInfo(ticket)}
