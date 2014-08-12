@@ -73,6 +73,7 @@
     "browser": true,
     "strict": true,
     "newcap": false,
+    "lastsemic": true,
     "globals": {
       "alert": true,
       "it": true,
