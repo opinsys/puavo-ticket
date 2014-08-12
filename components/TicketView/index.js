@@ -269,21 +269,24 @@ var TicketView = React.createClass({
                     {updates.map(function(update) {
                         var View = VIEW_TYPES[update.get("type")];
 
-                        var unread = update.isUnreadBy(self.props.user);
+                        if (!View) {
+                            console.error("Unknown update type: " + update.get("type"));
+                            return;
+                        }
+
+                        var className = classSet({
+                            unread: update.isUnreadBy(self.props.user)
+                        });
 
                         return (
-                            <div key={update.get("unique_id")} className={classSet({ unread: unread })}>
-
-                                {View ?
-                                    <View update={update} onViewport={function(props) {
-                                        if (_.last(updates) !== props.update) return;
-                                        // Mark the ticket as read 30 seconds
-                                        // after the last update has been shown
-                                        // to the user
-                                        setTimeout(self.lazyMarkAsRead, 30*1000);
-                                    }} />
-                                  : "Unknown update type: " + update.get("type")
-                                }
+                            <div key={update.get("unique_id")} className={className}>
+                                <View update={update} onViewport={function(props) {
+                                    if (_.last(updates) !== props.update) return;
+                                    // Mark the ticket as read 30 seconds
+                                    // after the last update has been shown
+                                    // to the user
+                                    setTimeout(self.lazyMarkAsRead, 30*1000);
+                                }} />
                             </div>
                         );
                     })}
