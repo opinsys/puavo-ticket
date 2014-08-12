@@ -33,7 +33,9 @@ app.get("/api/tickets", function(req, res, next) {
             "handlers.handler",
             "tags",
             "titles",
-            "readTickets"
+            { readTickets: function(qb) {
+                qb.where({ readById: req.user.get("id") });
+            }}
         ]
     })
     .then(function(tickets) {
