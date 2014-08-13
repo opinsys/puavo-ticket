@@ -24,7 +24,7 @@
     "jwtsso": "opinsys/node-jwtsso",
     "lodash": "~2.4.1",
     "mocha": "~1.20.1",
-    "moment": "~2.7.0",
+    "moment": "~2.8.0",
     "multiparty": "~3.3.0",
     "node-sass": "~0.9.3",
     "nodemailer": "~1.0.0",

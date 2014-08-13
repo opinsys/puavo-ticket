@@ -20,6 +20,7 @@ var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
 var ProfileBadge = require("../ProfileBadge");
 var OnViewportMixin = require("../OnViewportMixin");
+var TimeAgo = require("../TimeAgo");
 
 var ToggleTagsButton = require("./ToggleTagsButton");
 var ToggleStatusButton = require("./ToggleStatusButton");
@@ -355,6 +356,7 @@ var VIEW_TYPES = {
                                 return <span>{line}<br /></span>;
                             })}
                         </span>
+                        <TimeAgo date={this.props.update.createdAt()} />
                     </div>
                 </div>
             );
