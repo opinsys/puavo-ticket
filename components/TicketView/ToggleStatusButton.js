@@ -6,7 +6,7 @@ var Button = require("react-bootstrap/Button");
 
 
 var Spinner = require("../Loading").Spinner;
-var captureError = require("puavo-ticket/utils/captureError");
+var captureError = require("../../utils/captureError");
 
 /**
  * ToggleStatusButton

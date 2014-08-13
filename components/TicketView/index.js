@@ -10,11 +10,11 @@ var Badge = require("react-bootstrap/Badge");
 var Loading = require("../Loading");
 var CommentForm = require("../CommentForm");
 
-var captureError = require("puavo-ticket/utils/captureError");
-var BackboneMixin = require("puavo-ticket/components/BackboneMixin");
-var Ticket = require("puavo-ticket/models/client/Ticket");
+var captureError = require("../../utils/captureError");
+var BackboneMixin = require("../../components/BackboneMixin");
+var Ticket = require("../../models/client/Ticket");
 var Loading = require("../Loading");
-var Base = require("puavo-ticket/models/client/Base");
+var Base = require("../../models/client/Base");
 var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");

@@ -4,13 +4,13 @@ var React = require("react/addons");
 var Button = require("react-bootstrap/Button");
 var Router = require("react-router");
 
-var captureError = require("puavo-ticket/utils/captureError");
+var captureError = require("../utils/captureError");
 var SideInfo = require("./SideInfo");
 var Loading = require("./Loading");
 var ElasticTextarea = require("./ElasticTextarea");
 
-var BackboneMixin = require("puavo-ticket/components/BackboneMixin");
-var Ticket = require("puavo-ticket/models/client/Ticket");
+var BackboneMixin = require("../components/BackboneMixin");
+var Ticket = require("../models/client/Ticket");
 
 /**
  * Edit form for a ticket

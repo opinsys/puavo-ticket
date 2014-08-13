@@ -7,7 +7,7 @@ var Badge = require("react-bootstrap/Badge");
 var Loading = require("./Loading");
 var ProfileBadge = require("./ProfileBadge");
 
-var captureError = require("puavo-ticket/utils/captureError");
+var captureError = require("../utils/captureError");
 var Ticket = require("../models/client/Ticket");
 var BackboneMixin = require("./BackboneMixin");
 

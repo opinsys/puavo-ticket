@@ -8,7 +8,7 @@ var Promise = require("bluebird");
 var Button = require("react-bootstrap/Button");
 
 var User = require("../models/client/User");
-var captureError = require("puavo-ticket/utils/captureError");
+var captureError = require("../utils/captureError");
 
 
 /**
