@@ -21,7 +21,8 @@ function isjQueryAjaxError(err) {
 }
 
 /**
- * ErrorMessage
+ * Render instructions for the user on how to report an unexpected error to the
+ * developers
  *
  * @namespace components
  * @class ErrorMessage
