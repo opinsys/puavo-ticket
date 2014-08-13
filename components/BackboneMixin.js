@@ -15,7 +15,8 @@ var BackboneMixin = {
      * a replacement event emitter for the given key.
      *
      * @method setBackbone
-     * @param {Object}
+     * @param {Object} attrs
+     * @param {Function} cb
      */
     setBackbone: function(attrs, cb) {
         var self = this;

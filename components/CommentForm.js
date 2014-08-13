@@ -46,7 +46,7 @@ function isScrolledIntoView(elem, padding) {
  *   - Ctrl+Enter submits the value
  *
  * @namespace components
- * @class MultimodeTextarea
+ * @class CommentForm
  */
 var CommentForm = React.createClass({
 
