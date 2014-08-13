@@ -42,6 +42,7 @@
           - wget
           - curl
           - bash-completion
+          - inotify-tools
           - vim-nox
 
       - name: Install browsers
