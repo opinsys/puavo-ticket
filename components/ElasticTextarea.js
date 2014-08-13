@@ -9,6 +9,10 @@ var _ = require("lodash");
  *
  * @namespace components
  * @class ElasticTextarea
+ * @constructor
+ * @param {Object} props
+ * @param {Function} [props.onResize] Called when the textarea has been resized
+ * @param {Number} [props.minRows] Minimum rows size for the textarea
  */
 var ElasticTextarea = React.createClass({
 

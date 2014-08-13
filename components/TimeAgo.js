@@ -19,6 +19,7 @@ setInterval(function() {
  * @namespace components
  * @class TimeAgo
  * @constructor
+ * @param {Object} props
  * @param {Date} props.date
  */
 var TimeAgo = React.createClass({

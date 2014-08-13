@@ -47,6 +47,10 @@ function isScrolledIntoView(elem, padding) {
  *
  * @namespace components
  * @class CommentForm
+ * @constructor
+ * @param {Object} props
+ * @param {Function} [props.onSubmit] Called when the form is submitted with
+ * the button or the keyboard shortcut
  */
 var CommentForm = React.createClass({
 

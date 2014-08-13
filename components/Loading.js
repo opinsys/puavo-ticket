@@ -1,5 +1,4 @@
 /** @jsx React.DOM */
-
 "use strict";
 var React = require("react/addons");
 
@@ -11,6 +10,8 @@ var React = require("react/addons");
  * @namespace components
  * @class Loading
  * @extends React.ReactComponent
+ * @constructor
+ * @param {Boolean} props.visible Set false to make the spinner invisible
  */
 var Loading = React.createClass({
 

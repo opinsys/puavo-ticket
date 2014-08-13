@@ -6,13 +6,31 @@ var Badge = require("react-bootstrap/Badge");
 
 var Loading = require("./Loading");
 var ProfileBadge = require("./ProfileBadge");
-
 var captureError = require("../utils/captureError");
 var Ticket = require("../models/client/Ticket");
 var BackboneMixin = require("./BackboneMixin");
+var User = require("../models/client/User");
 
 
-var List = React.createClass({
+/**
+ * List of tickets under a title
+ *
+ * @namespace components
+ * @class TicketList.TitleList
+ * @constructor
+ * @param {Object} props
+ * @param {String} props.title Title for the list
+ * @param {models.client.User} props.user The current user. Used to render
+ * unread highlights
+ * @param {Array} props.tickets Array of models.client.Ticket
+ */
+var TitleList = React.createClass({
+
+    propTypes: {
+        title: React.PropTypes.string.isRequired,
+        user: React.PropTypes.instanceOf(User).isRequired,
+        tickets: React.PropTypes.array.isRequired
+    },
 
     getTitleClass: function(ticket, userId) {
         if (ticket.hasRead( userId )) {
@@ -100,13 +118,20 @@ var List = React.createClass({
 });
 
 /**
- * List existing tickes
+ * List existing tickets under multiple categories
  *
  * @namespace components
  * @class TicketList
  * @extends React.ReactComponent
+ * @constructor
+ * @param {Object} props
+ * @param {models.client.User} props.user
  */
 var TicketList = React.createClass({
+
+    propTypes: {
+        user: React.PropTypes.instanceOf(User).isRequired,
+    },
 
     mixins: [BackboneMixin],
 
@@ -136,10 +161,10 @@ var TicketList = React.createClass({
         return (
             <div className="TicketList ticket-wrap row">
                 <Loading visible={this.state.fetching} />
-                <List title="Odottavat tukipyynnöt" tickets={pending} user={this.props.user} />
-                <List title="Minun tukipyynnöt" tickets={myTickets} user={this.props.user} />
-                <List title="Muiden tukipyynnöt" tickets={others} user={this.props.user} />
-                <List title="Käsitellyt tukipyynnöt" tickets={closed} user={this.props.user} />
+                <TitleList title="Odottavat tukipyynnöt" tickets={pending} user={this.props.user} />
+                <TitleList title="Minun tukipyynnöt" tickets={myTickets} user={this.props.user} />
+                <TitleList title="Muiden tukipyynnöt" tickets={others} user={this.props.user} />
+                <TitleList title="Käsitellyt tukipyynnöt" tickets={closed} user={this.props.user} />
             </div>
         );
     }

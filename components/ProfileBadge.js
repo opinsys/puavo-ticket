@@ -13,6 +13,12 @@ var Tooltip = require("react-bootstrap/Tooltip");
  *
  * @namespace components
  * @class ProfileBadge
+ * @constructor
+ * @param {Object} props
+ * @param {models.client.User} props.user
+ * @param {Number} [props.size=50]
+ * @param {Number} [props.padding=4]
+ * @param {String} [props.tipPlacement=right]
  */
 var ProfileBadge = React.createClass({
 

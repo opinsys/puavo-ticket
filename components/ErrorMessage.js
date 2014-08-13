@@ -25,14 +25,27 @@ function isjQueryAjaxError(err) {
  *
  * @namespace components
  * @class ErrorMessage
+ * @constructor
+ * @param {Object} props
+ * @param {Object} props.error Error object to be rendered
  */
 var ErrorMessage = React.createClass({
+
+    propTypes: {
+        error: React.PropTypes.object.isRequired
+    },
 
     mail: {
         to: "dev@opinsys.fi",
         subject: "Ongelma tukipalvelussa"
     },
 
+    /**
+     * Format the error object to email suitable string
+     *
+     * @method formatError
+     * @return {String}
+     */
     formatError: function() {
         var ob = {
             "Selain": window.navigator.userAgent,

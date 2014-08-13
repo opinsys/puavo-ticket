@@ -53,7 +53,7 @@ create-test-db:
 .PHONY: doc
 doc-js:
 	mkdir -p doc
-	rm -f test/components/bundle.js
+	rm -f test/components/bundle.js test/bundle.js
 	yuidoc \
 		--themedir yuidoc-theme \
 		--exclude test/vendor,node_modules,doc,resources \

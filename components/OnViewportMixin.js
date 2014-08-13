@@ -7,6 +7,10 @@ var React = require("react/addons");
  *
  * @namespace components
  * @class OnViewportMixin
+ * @constructor
+ * @param {Object} props
+ * @param {Function} props.onViewport
+ *      Called when the component appear in the viewport
  */
 var OnViewportMixin = {
 
