@@ -4,8 +4,11 @@
 var React = require("react/addons");
 var moment = require("moment");
 
-var mounted = [];
 
+// The app will have bunch of these mounted at once. To avoid each one randomly
+// updateding collect all the mounted instances here and update the time
+// displays at once.
+var mounted = [];
 setInterval(function() {
     mounted.forEach(function(c) {
         c.forceUpdate();
