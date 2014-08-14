@@ -146,6 +146,7 @@
 
       - name: Clone puavo-user repository
         git: repo=git://github.com/opinsys/puavo-users.git
+          accept_hostkey=yes
           dest={{ code_dest }}/puavo-users
           force=no
         sudo_user: "{{ dev_user }}"
