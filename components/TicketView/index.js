@@ -14,19 +14,24 @@ var captureError = require("../../utils/captureError");
 var BackboneMixin = require("../../components/BackboneMixin");
 var Ticket = require("../../models/client/Ticket");
 var Loading = require("../Loading");
-var Base = require("../../models/client/Base");
 var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
 var ProfileBadge = require("../ProfileBadge");
-var OnViewportMixin = require("../OnViewportMixin");
-var TimeAgo = require("../TimeAgo");
-var ForcedLinebreaks = require("../ForcedLinebreaks");
 
 var ToggleTagsButton = require("./ToggleTagsButton");
 var ToggleStatusButton = require("./ToggleStatusButton");
 
 
+// Individual components for each ticket update type
+var UPDATE_COMPONENTS = {
+    comments: require("./CommentUpdate"),
+    tags: require("./TagUpdate"),
+    handlers: require("./HandlerUpdate")
+};
+
+// Mock user object for the first automated message user receives after sending
+// a ticket
 var supportPerson = {
     getFullName: function() {
         return "Opinsys Oy";
@@ -269,9 +274,9 @@ var TicketView = React.createClass({
                     </div>
                     <div>
                     {updates.map(function(update) {
-                        var View = VIEW_TYPES[update.get("type")];
+                        var UpdateComponent = UPDATE_COMPONENTS[update.get("type")];
 
-                        if (!View) {
+                        if (!UpdateComponent) {
                             console.error("Unknown update type: " + update.get("type"));
                             return;
                         }
@@ -282,7 +287,7 @@ var TicketView = React.createClass({
 
                         return (
                             <div key={update.get("unique_id")} className={className}>
-                                <View update={update} onViewport={function(props) {
+                                <UpdateComponent update={update} onViewport={function(props) {
                                     if (_.last(updates) !== props.update) return;
                                     // Mark the ticket as read 30 seconds
                                     // after the last update has been shown
@@ -308,87 +313,5 @@ var TicketView = React.createClass({
     },
 
 });
-
-
-
-/**
- * Common functionality for each ticket update component
- *
- * @namespace components
- * @class TicketView.UpdateMixin
- */
-var UpdateMixin = {
-
-    propTypes: {
-        update: React.PropTypes.instanceOf(Base).isRequired
-    },
-
-    getCreatorName: function() {
-        if (this.props.update.createdBy) {
-            var createdBy = this.props.update.createdBy();
-            if (!createdBy) return "Unknown";
-            return createdBy.getFullName();
-        }
-        return "Unknown";
-    },
-};
-
-/**
- * Individual components for each ticket update type
- *
- * @namespace components
- * @private
- * @class TicketView.VIEW_TYPES
- */
-var VIEW_TYPES = {
-
-    comments: React.createClass({
-        mixins: [UpdateMixin, OnViewportMixin],
-        render: function() {
-            var update = this.props.update;
-            var hashId = "comment-" + update.get("id");
-
-            return (
-                <div className="ticket-updates comments" id={hashId}>
-                    <div className="image">
-                        <ProfileBadge user={update.createdBy()} />
-                    </div>
-                    <div className="message">
-                        <strong>{update.createdBy().getFullName()} <br/></strong>
-                        <ForcedLinebreaks>{update.get("comment")}</ForcedLinebreaks>
-                        <a href={"#" + hashId }>
-                            <TimeAgo date={update.createdAt()} />
-                        </a>
-                    </div>
-                </div>
-            );
-        },
-    }),
-
-    tags: React.createClass({
-        mixins: [UpdateMixin, OnViewportMixin],
-        render: function() {
-            return (
-                <div className="tags">
-                    <i>{this.getCreatorName()} lisäsi tagin: </i>
-                    <span>{this.props.update.get("tag")}</span>
-                </div>
-            );
-        },
-    }),
-
-    handlers: React.createClass({
-        mixins: [UpdateMixin, OnViewportMixin],
-        render: function() {
-            return (
-                <div className="tags">
-                    <i>{this.getCreatorName()} lisäsi käsittelijäksi käyttäjän </i>
-                    <span>{this.props.update.get("handler").externalData.username}</span>
-                </div>
-            );
-        },
-    })
-};
-
 
 module.exports = TicketView;
