@@ -54,7 +54,7 @@ var TitleList = React.createClass({
         return(
             <span>
             <td className="ticket-creator">
-                {creator.getFullname()}
+                {creator.getFullName()}
             </td>
             <td className="ticket-updated">
                 <time dateTime={'"' + lastUpdate + '"'} />{" " + new Date(Date.parse(lastUpdate)).toLocaleString('fi', options)}

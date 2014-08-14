@@ -598,7 +598,7 @@ var Ticket = Base.extend({
                 text: renderUpdateEmail({
                     title: self.getCurrentTitle(),
                     ticketId: self.get("id"),
-                    name: updatedModel.relations.createdBy.getFullname(),
+                    name: updatedModel.relations.createdBy.getFullName(),
                     timestamp: Moment().format('D.M.YYYY H:mm'),
                     message: updatedModel.textToEmail(),
                     url: "https://support.opinsys.fi/tickets/" + self.get("id")

@@ -28,7 +28,7 @@ var ToggleStatusButton = require("./ToggleStatusButton");
 
 
 var supportPerson = {
-    getFullname: function() {
+    getFullName: function() {
         return "Opinsys Oy";
     },
 
@@ -249,7 +249,7 @@ var TicketView = React.createClass({
                         <div className="message">
                              <span>
                                 <strong>
-                                    {this.state.ticket.createdBy().getFullname() || <Redacted>Matti Meikäläinen</Redacted>}
+                                    {this.state.ticket.createdBy().getFullName() || <Redacted>Matti Meikäläinen</Redacted>}
                                 </strong>
                             </span><br />
                             <span>
@@ -327,7 +327,7 @@ var UpdateMixin = {
         if (this.props.update.createdBy) {
             var createdBy = this.props.update.createdBy();
             if (!createdBy) return "Unknown";
-            return createdBy.getFullname();
+            return createdBy.getFullName();
         }
         return "Unknown";
     },
@@ -351,7 +351,7 @@ var VIEW_TYPES = {
                         <ProfileBadge user={this.props.update.createdBy()} />
                     </div>
                     <div className="message">
-                        <strong>{this.props.update.createdBy().getFullname()} <br/></strong>
+                        <strong>{this.props.update.createdBy().getFullName()} <br/></strong>
                         <ForcedLinebreaks>{this.props.update.get("comment")}</ForcedLinebreaks>
                         <TimeAgo date={this.props.update.createdAt()} />
                     </div>

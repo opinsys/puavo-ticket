@@ -112,10 +112,10 @@ var UserMixin = {
 
     /**
      *
-     * @method getFullname
+     * @method getFullName
      * @return {String}
      */
-    getFullname: function(){
+    getFullName: function(){
         var data = this.get("externalData");
         if (!data) return "";
         return data.first_name + " " + data.last_name;

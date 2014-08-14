@@ -24,7 +24,7 @@ var ProfileBadge = React.createClass({
 
     propTypes: {
         user: React.PropTypes.shape({
-            getFullname: React.PropTypes.func.isRequired,
+            getFullName: React.PropTypes.func.isRequired,
             getProfileImage: React.PropTypes.func.isRequired
         }).isRequired,
         size: React.PropTypes.number,
@@ -72,7 +72,7 @@ var ProfileBadge = React.createClass({
     },
 
     renderTooltip: function() {
-        return this.props.user.getFullname();
+        return this.props.user.getFullName();
     },
 
     getSizeInCSS: function() {
