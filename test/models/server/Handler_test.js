@@ -35,13 +35,6 @@ describe("Ticket handlers", function() {
             });
     });
 
-    it("new tickets has an implicit 'nohandlers' tag", function() {
-        return this.ticket.tags().fetch().then(function(tags) {
-            var tagStrings = tags.pluck("tag");
-            assert(tagStrings.indexOf("nohandlers") !== -1);
-        });
-    });
-
     it("can be added from a ticket", function() {
         var self = this;
 
@@ -109,20 +102,6 @@ describe("Ticket handlers", function() {
 
                 assert(visibilities.indexOf(self.user.getPersonalVisibility()) !== -1);
             });
-    });
-
-    it("'nohandlers' tag is removed because a handler is added", function() {
-        return this.ticket.tags().fetch().bind(this).then(function(tags) {
-            var tag = tags.findWhere({ tag: "nohandlers" });
-            assert(!tag);
-
-            return this.ticket.tagHistory().fetch().bind(this);
-        })
-        .then(function(tags) {
-            var tag = tags.findWhere({ tag: "nohandlers" });
-            assert(tag, "tag is moved to history");
-            assert(tag.isSoftDeleted(), "tag is soft deleted");
-        });
     });
 
 

@@ -123,7 +123,6 @@ var Ticket = Base.extend({
             var isOpen = ticket.setStatus("open", user, {
                 force: true
             });
-            var hasNoHandlersTag = ticket.addTag("nohandlers", user);
             var creatorCanView = ticket.addHandler(
                 user,
                 user
@@ -136,7 +135,6 @@ var Ticket = Base.extend({
             return Promise.all([
                 isOpen,
                 creatorCanView,
-                hasNoHandlersTag,
                 organisationAdminCanView
             ]);
         });
@@ -383,7 +381,6 @@ var Ticket = Base.extend({
                     addedBy
                 ),
 
-                self.removeTag("nohandlers", addedBy)
 
             ]);
         })
