@@ -345,15 +345,20 @@ var VIEW_TYPES = {
     comments: React.createClass({
         mixins: [UpdateMixin, OnViewportMixin],
         render: function() {
+            var update = this.props.update;
+            var hashId = "comment-" + update.get("id");
+
             return (
-                <div className="ticket-updates comments">
+                <div className="ticket-updates comments" id={hashId}>
                     <div className="image">
-                        <ProfileBadge user={this.props.update.createdBy()} />
+                        <ProfileBadge user={update.createdBy()} />
                     </div>
                     <div className="message">
-                        <strong>{this.props.update.createdBy().getFullName()} <br/></strong>
-                        <ForcedLinebreaks>{this.props.update.get("comment")}</ForcedLinebreaks>
-                        <TimeAgo date={this.props.update.createdAt()} />
+                        <strong>{update.createdBy().getFullName()} <br/></strong>
+                        <ForcedLinebreaks>{update.get("comment")}</ForcedLinebreaks>
+                        <a href={"#" + hashId }>
+                            <TimeAgo date={update.createdAt()} />
+                        </a>
                     </div>
                 </div>
             );
