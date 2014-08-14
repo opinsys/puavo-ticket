@@ -21,6 +21,7 @@ var Redacted = require("../Redacted");
 var ProfileBadge = require("../ProfileBadge");
 var OnViewportMixin = require("../OnViewportMixin");
 var TimeAgo = require("../TimeAgo");
+var ForcedLinebreaks = require("../ForcedLinebreaks");
 
 var ToggleTagsButton = require("./ToggleTagsButton");
 var ToggleStatusButton = require("./ToggleStatusButton");
@@ -351,11 +352,7 @@ var VIEW_TYPES = {
                     </div>
                     <div className="message">
                         <strong>{this.props.update.createdBy().getName()} <br/></strong>
-                        <span>
-                            {this.props.update.get("comment").trim().split("\n").map(function(line) {
-                                return <span>{line}<br /></span>;
-                            })}
-                        </span>
+                        <ForcedLinebreaks>{this.props.update.get("comment")}</ForcedLinebreaks>
                         <TimeAgo date={this.props.update.createdAt()} />
                     </div>
                 </div>
