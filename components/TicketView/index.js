@@ -249,7 +249,7 @@ var TicketView = React.createClass({
                         <div className="update-buttons-wrap row">
                             <div className="badges col-md-3">
                                 <span className="badge-text">
-                                {"Tiketti #" + this.state.ticket.get("id") + " "}
+                                {"Tukipyyntö #" + this.state.ticket.get("id") + " "}
                                 </span>
                                 {this.renderBadge()}
                             </div>
