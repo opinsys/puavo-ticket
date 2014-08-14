@@ -18,7 +18,7 @@ var UserMixin = require("../UserMixin");
 var User = Base.extend({
 
     /**
-     * Return true if the user a manager
+     * Return true if the user is a manager
      *
      * @method isManager
      * @return {Boolean}
@@ -26,12 +26,6 @@ var User = Base.extend({
     isManager: function() {
         return !!this.get("isManager");
     },
-
-    getName: function() {
-        if (this.get("externalData")) {
-            return this.get("externalData").first_name + " " + this.get("externalData").last_name;
-        }
-    }
 
 }, {
 
