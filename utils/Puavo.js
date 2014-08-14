@@ -36,8 +36,8 @@ Puavo.prototype.request = function(pathname) {
 
     return request(puavoUrl, {
             auth: {
-                'user': config.puavo.organisations[this.domain].username,
-                'pass': config.puavo.organisations[this.domain].password
+                'user': config.puavo.username,
+                'pass': config.puavo.password
             },
             headers: {
                 host: this.domain

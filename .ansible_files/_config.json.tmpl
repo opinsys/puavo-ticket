@@ -5,13 +5,7 @@
     "puavo": {
         "sharedSecret": "secret",
         "restServerAddress": "http://{{ hostname_command["stdout"] }}:{{ puavo_rest_port }}",
-        "username":"uid=admin,o=puavo",
-        "password":"password",
-        "organisations": {
-            "hogwarts.opinsys.net": {
-                "username":"uid=admin,o=puavo",
-                "password":"password"
-            }
-        }
+        "username":"uid=puavo-ticket,o=puavo",
+        "password":"password"
     }
 }
