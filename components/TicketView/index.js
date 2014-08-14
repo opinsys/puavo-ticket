@@ -63,6 +63,31 @@ var TicketView = React.createClass({
         };
     },
 
+    /**
+     * Anchor links (eg. #foobar) does not work on dynamically loaded elements
+     * because they are not present at load time. This method manually scrolls
+     * to the linked element when they appear.
+     *
+     * @method scrollToAnchoredElement
+     */
+    scrollToAnchoredElement: function() {
+        // Nothing selected
+        if (!window.location.hash) return;
+
+        // No need to scroll multiple times
+        if (this._scrolled) return;
+
+        var el = document.getElementById(window.location.hash.slice(1));
+        // Element not rendered yet - or it just does not exists
+        if (!el) return;
+
+        el.scrollIntoView();
+        this._scrolled = true;
+    },
+
+    componentDidUpdate: function() {
+        this.scrollToAnchoredElement();
+    },
 
     /**
      * Save comment handler. Reports any unhandled errors to the global error
