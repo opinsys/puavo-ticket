@@ -121,7 +121,7 @@
         command: puavo-init-standalone --unsafe-passwords opinsys.net
           creates=/etc/puavo
 
-      - name: Create organisatios for test and development
+      - name: Create organisations for test and development
         command: puavo-add-new-organisation --yes {{ item.organisation }} --username {{ item.username }} --password {{ item.password }} --given-name {{ item.givenname }} --surname {{ item.surname }}
           creates={{ item.creates }}
         with_items:
