@@ -29,8 +29,14 @@ var User = Base.extend({
 
 }, {
 
-    search: function(keywords) {
-        return Promise.cast($.get("/api/puavo/v3/users/_search", {
+    /**
+     * @static
+     * @method search
+     * @param {String} domain Organisation domain string. Eg. foo.opinsys.fi
+     * @return {Bluebird.Promise} Array of user objects
+     */
+    search: function(domain, keywords) {
+        return Promise.cast($.get("/api/puavo/" + domain + "/v3/users/_search", {
                 q: keywords
             })).cancellable()
             .then(function(data) {

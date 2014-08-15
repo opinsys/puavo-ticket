@@ -8,6 +8,7 @@ var Promise = require("bluebird");
 var Button = require("react-bootstrap/Button");
 
 var User = require("../models/client/User");
+var Ticket = require("../models/client/Ticket");
 var captureError = require("../utils/captureError");
 
 
@@ -16,8 +17,15 @@ var captureError = require("../utils/captureError");
  *
  * @namespace components
  * @class SelectUsers.UserItem
+ * @constructor
+ * @param {Object} props
+ * @param {models.client.User} props.user
  */
 var UserItem = React.createClass({
+
+    propTypes: {
+        user: React.PropTypes.instanceOf(User).isRequired
+    },
 
     getDefaultProps: function() {
         return {
@@ -33,6 +41,7 @@ var UserItem = React.createClass({
 
     render: function() {
         var id = _.uniqueId("checkbox");
+        var user = this.props.user;
         return (
             <label className="UserItem" for={id}>
                 <input
@@ -42,35 +51,69 @@ var UserItem = React.createClass({
                     disabled={this.props.disabled}
                     onChange={this.handleOnChange}
                     ref="checkbox" />
-                <span className="first-name" >{this.props.user.get("externalData").first_name + " "}</span>
-                <span className="last-name" >{this.props.user.get("externalData").last_name + " "}</span>
-                <span className="badge" >{this.props.user.getUsername()}</span>
+                <span className="first-name" >{user.get("externalData").first_name + " "}</span>
+                <span className="last-name" >{user.get("externalData").last_name + " "}</span>
+                <span className="badge" >{user.getDomainUsername()}</span>
             </label>
         );
     }
 });
 
 
+
+/**
+ * SelectUsers
+ *
+ * @namespace components
+ * @class SelectUsers
+ * @constructor
+ * @param {Object} props
+ * @param {models.client.User} props.user
+ * @param {models.client.Ticket} props.Ticket
+ */
 var SelectUsers = React.createClass({
 
+    propTypes: {
+        user: React.PropTypes.instanceOf(User).isRequired,
+        ticket: React.PropTypes.instanceOf(Ticket).isRequired
+    },
 
+    /**
+     * Search users with the given search string. The results will be saved to
+     * the component state in `searchedUsers` key
+     *
+     * @method doSearch
+     * @param {String} searchString
+     */
     doSearch: function(searchString) {
-        var self = this;
-        self.cancelCurrentSearch();
+        this.cancelCurrentSearch();
 
-        var searchOp = User.search(searchString)
+        var self = this;
+        var user = this.props.user;
+        var ticket = this.props.ticket;
+
+        var creatorDomain = ticket.createdBy().getOrganisationDomain();
+        var currentDomain = user.getOrganisationDomain();
+        var orgs = [currentDomain];
+
+        // If the user is manager and the ticket creator is from a another
+        // organisation search users from that organisation too.
+        if (creatorDomain !== currentDomain && user.isManager()) {
+            orgs.push(creatorDomain);
+        }
+
+        var searchOp = Promise.map(orgs, function(domain) {
+            return User.search(domain, searchString);
+        })
         .then(function(users) {
-            self.setState({ searchedUsers: users });
+            self.setState({ searchedUsers: _.flatten(users) });
         })
         .catch(Promise.CancellationError, function() {
             // cancel is ok
         })
         .catch(captureError("Käyttäjien haku epäonnistui"));
 
-        self.setState({
-            error: null,
-            searchOp: searchOp
-        });
+        self.setState({ searchOp: searchOp });
     },
 
     componentWillMount: function() {
@@ -88,18 +131,9 @@ var SelectUsers = React.createClass({
         this.state.searchOp.cancel();
     },
 
-    renderSearchError: function() {
-        if (!this.state.error) return;
-        return (
-            <div className="error">
-                {this.state.error.message}
-            </div>
-        );
-    },
 
     getInitialState: function() {
         return {
-            error: null,
             searchString: "",
             searchOp: null,
             searchedUsers: [],
@@ -158,8 +192,6 @@ var SelectUsers = React.createClass({
         var self = this;
         return (
             <div className="SelectUsers">
-                {self.renderSearchError()}
-
                 <div className="search-input-wrap">
                     <input
                         className="form-control search-input"
