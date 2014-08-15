@@ -15,13 +15,13 @@ function addLifecycleColumns(table) {
     table.dateTime("deletedAt");
 
     // A helper column for the uniqueForTicket constraints. Null value
-    // in the delete_at field won't work as one would expect.
+    // in the deleteAt field won't work as one would expect.
     // See http://stackoverflow.com/a/5834554
     //
     // "deleted" column  defaults to 0 and when the Model is soft deleted it is
-    // set as the id of the Model (See models.server.Base#softDelete). Using this
-    // uniqueForTicket constraint can ensure that only one columnName can be in
-    // non soft deleted state.
+    // set as the id of the Model (See models.server.Base#softDelete). Using
+    // this the uniqueForTicket constraint can ensure that only one columnName
+    // can be in non soft deleted state.
     table.integer("deleted").defaultTo(0).notNullable();
 }
 
