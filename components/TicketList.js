@@ -4,12 +4,14 @@ var React = require("react/addons");
 var Link = require("react-router").Link;
 var Badge = require("react-bootstrap/Badge");
 
+var Ticket = require("../models/client/Ticket");
+var User = require("../models/client/User");
+
 var Loading = require("./Loading");
 var ProfileBadge = require("./ProfileBadge");
 var captureError = require("../utils/captureError");
-var Ticket = require("../models/client/Ticket");
 var BackboneMixin = require("./BackboneMixin");
-var User = require("../models/client/User");
+var TimeAgo = require("./TimeAgo");
 
 
 /**
@@ -42,14 +44,7 @@ var TitleList = React.createClass({
     renderTicketMetaInfo: function(ticket) {
 
         var creator = ticket.createdBy();
-        var lastUpdate = ticket.get("updatedAt");
         var handlers = ticket.handlers();
-
-        var options = {
-            weekday: "short",
-            month: "long",
-            day: "numeric"
-        };
 
         return(
             <span>
@@ -57,7 +52,7 @@ var TitleList = React.createClass({
                 {creator.getFullName()}
             </td>
             <td className="ticket-updated">
-                <time dateTime={'"' + lastUpdate + '"'} />{" " + new Date(Date.parse(lastUpdate)).toLocaleString('fi', options)}
+                <TimeAgo date={ticket.updatedAt()} />
             </td>
             <td className="ticket-handlers">
                 {handlers.map(function(handler) {
