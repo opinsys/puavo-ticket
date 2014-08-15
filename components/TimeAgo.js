@@ -3,6 +3,8 @@
 
 var React = require("react/addons");
 var moment = require("moment");
+var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
+var Tooltip = require("react-bootstrap/Tooltip");
 
 
 // The app will have bunch of these mounted at once. To avoid each one randomly
@@ -42,10 +44,12 @@ var TimeAgo = React.createClass({
 
     render: function() {
         var fromNow = moment(this.props.date).fromNow();
-        var literaldate = this.props.date.toString();
+        var formatted = moment(this.props.date).format("LLL");
 
-        return this.transferPropsTo(
-            <span className="TimeAgo" title={literaldate}>{fromNow}</span>
+        return (
+            <OverlayTrigger placement="top" overlay={<Tooltip>{formatted}</Tooltip>}>
+                {this.transferPropsTo(<span className="TimeAgo" title={formatted}>{fromNow}</span>)}
+            </OverlayTrigger>
         );
     }
 });
