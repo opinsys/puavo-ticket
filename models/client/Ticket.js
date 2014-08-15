@@ -274,14 +274,18 @@ var Ticket = Base.extend({
      * @return {Date}
      */
     getReadAtFor: function(user){
-        return _(this.get("readTickets"))
+        var never = new Date(0);
+        var reads = this.get("readTickets");
+        if (!reads || reads.length === 0) return never;
+        return _(reads)
+            .filter(Boolean)
             .filter(function(ob) {
                 return ob.readById === user.get("id");
             }).map(function(ob) {
                 return new Date(ob.readAt);
             }).max(function(readAt) {
                 return readAt.getTime();
-            }).value() || new Date(0);
+            }).value();
     },
 
 
