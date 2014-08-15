@@ -33,6 +33,7 @@ var User = Base.extend({
      * @static
      * @method search
      * @param {String} domain Organisation domain string. Eg. foo.opinsys.fi
+     * @param {String} keywords Keywords used to search users
      * @return {Bluebird.Promise} Array of user objects
      */
     search: function(domain, keywords) {
