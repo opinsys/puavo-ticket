@@ -4,6 +4,8 @@ var $ = require("jquery");
 var Backbone = require("backbone");
 Backbone.$ = $;
 
+require("moment/locale/fi");
+
 // Make it possible to enable debug logs
 window.debug = require("debug");
 
