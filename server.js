@@ -137,6 +137,11 @@ app.get("/*", function(req, res) {
     });
 });
 
+app.use(function(err, req, res, next) {
+    if (process.env.NODE_ENV !== "test") next(err);
+    res.status(500).send(err.stack);
+});
+
 module.exports = app;
 
 if (require.main === module) {
