@@ -39,15 +39,10 @@ var User = Base.extend({
     search: function(domain, keywords) {
         return Promise.cast($.get("/api/puavo/" + domain + "/v3/users/_search", {
                 q: keywords
-            })).cancellable()
-            .then(function(data) {
-                var users =  data.map(function(userData) {
-                    return new User({
-                        externalData: userData
-                    });
-                });
-
-                return users;
+            }))
+            .cancellable()
+            .map(function(userData) {
+                return new User({ externalData: userData });
             });
     },
 });
