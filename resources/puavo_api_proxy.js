@@ -24,12 +24,23 @@ var app = express.Router();
  * @apiExample As user of testing.opisys.fi request to https://testing.opinsys.fi/v3/users can be made as
  *      GET /api/puavo/v3/users
  */
-app.use(function(req, res, next) {
+app.all("/:domain*", function(req, res, next) {
 
     // puavo-ticket users can only read data from puavo.
     if (req.method !== "GET") {
-        return res.json(401, {
+        return res.status(401).json({
             error: "Only GET requests are allowed for puavo requests"
+        });
+    }
+
+    var userDomain = req.user.get("externalData").organisation_domain;
+    var domain = req.params.domain;
+
+    // Only managers can access other organisations
+    if (userDomain !== domain && !req.user.isManager()) {
+        console.error("Non manager access denied to", req.url, "for", req.user.getDomainUsername());
+        return res.status(401).json({
+            error: "Cannot access other organisations"
         });
     }
 
@@ -38,13 +49,12 @@ app.use(function(req, res, next) {
     var puavoUrl = url.format({
         protocol: url.parse(config.puavo.restServerAddress).protocol,
         host: url.parse(config.puavo.restServerAddress).host,
-        pathname: u.pathname,
+        pathname: req.params[0],
         search: u.search
     });
 
     debug("Proxying request to %s %s", req.method, puavoUrl);
 
-    var domain = req.user.get("externalData").organisation_domain;
 
     promisePipe(
         request({
@@ -61,8 +71,8 @@ app.use(function(req, res, next) {
             pool: {},
             form: req.body,
             auth: {
-                'user': config.puavo.username,
-                'pass': config.puavo.password
+                "user": config.puavo.username,
+                "pass": config.puavo.password
             },
             // XXX: How to use our cert auth?
             strictSSL: false

@@ -27,18 +27,10 @@ if (process.env.NODE_ENV === "test") {
         password: "password",
         database: "puavo-ticket-test"
     };
-    config.puavo.restServerAddress = "https://testing.opinsys.fi";
+    config.puavo.restServerAddress = "https://test-api.opinsys.example";
     config.puavo.sharedSecret = "secret";
     config.puavo.username = "puavo-ticket";
     config.puavo.password = "password";
-    // FIXME: use one user for all organisations (o=puavo)
-    config.puavo.organisations = {
-        "testing.opinsys.fi": {
-            "username": "puavo-ticket",
-            "password": "password"
-        }
-    };
-
     config.managerOrganisationDomain = "managertesting.opinsys.net";
 
 } else {

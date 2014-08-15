@@ -5,7 +5,7 @@ var assert = require("assert");
 
 var nock = require('nock');
 
-describe("api.opinsys.fi proxy", function() {
+describe("puavo-rest api proxy", function() {
 
     var agent;
 
@@ -23,52 +23,74 @@ describe("api.opinsys.fi proxy", function() {
         nock.cleanAll();
     });
 
-    it("GET /api/puavo/v3/devices", function() {
-         nock("https://testing.opinsys.fi")
+    it("normal GET /api/puavo/testing.opinsys.fi/v3/devices", function() {
+         nock("https://test-api.opinsys.example")
         .get("/v3/devices")
-        // XXX: https://github.com/pgte/nock/issues/163
-        .matchHeader("Authorization", 'Basic cHVhdm8tdGlja2V0OnBhc3N3b3Jk')
-        .reply(200, [
-            {
-                username: "foo"
-            }
-        ]);
+        .matchHeader("Host", "testing.opinsys.fi")
+        .matchHeader("Authorization", "Basic cHVhdm8tdGlja2V0OnBhc3N3b3Jk")
+        .reply(200, [ { username: "foo" } ]);
 
         return agent
-            .get("/api/puavo/v3/devices")
+            .get("/api/puavo/testing.opinsys.fi/v3/devices")
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.deepEqual(res.body, [{"username":"foo"}]);
+                assert.deepEqual(res.body, [{ username:"foo" }]);
             });
     });
 
-    it("GET with querystring /api/puavo/v3/devices", function() {
-         nock("https://testing.opinsys.fi")
+    it("GET with querystring /api/puavo/testing.opinsys.fi/v3/devices", function() {
+         nock("https://test-api.opinsys.example")
         .get("/v3/devices?foo=bar")
-        .matchHeader("Authorization", 'Basic cHVhdm8tdGlja2V0OnBhc3N3b3Jk')
-        .reply(200, [
-            {
-                username: "bar"
-            }
-        ]);
+        .matchHeader("Host", "testing.opinsys.fi")
+        .matchHeader("Authorization", "Basic cHVhdm8tdGlja2V0OnBhc3N3b3Jk")
+        .reply(200, [{ username: "bar" }]);
 
         return agent
-            .get("/api/puavo/v3/devices?foo=bar")
+            .get("/api/puavo/testing.opinsys.fi/v3/devices?foo=bar")
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.deepEqual(res.body, [{"username":"bar"}]);
+                assert.deepEqual(res.body, [{ username:"bar" }]);
             });
     });
 
-    it("does not allow mutating requests", function() {
+    it("does not allow POST requests", function() {
         return agent
-            .post("/api/puavo/v3/devices")
+            .post("/api/puavo/testing.opinsys.fi/v3/devices")
             .send({ hostname: "afat" })
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 401);
+            });
+    });
+
+    it("does not allow normal users to access other organisations", function() {
+         nock("https://test-api.opinsys.example")
+        .matchHeader("Host", "other.opinsys.fi")
+        .get("/v3/users/foo")
+        .reply(200, [{ username: "bar" }]);
+
+        return agent
+            .get("/api/puavo/other.opinsys.fi/v3/devices")
+            .promise()
+            .then(function(res) {
+                assert.equal(res.status, 401);
+            });
+    });
+
+    it("allows managers to access other organisations", function() {
+         nock("https://test-api.opinsys.example")
+        .matchHeader("Host", "other.opinsys.fi")
+        .get("/v3/users/foo")
+        .reply(200, [{ username: "bar" }]);
+
+        return helpers.loginAsUser(helpers.user.manager)
+            .then(function(managerAgent) {
+                return managerAgent.get("/api/puavo/other.opinsys.fi/v3/users/foo").promise();
+            })
+            .then(function(res) {
+                assert.equal(res.status, 200, res.text);
             });
     });
 
