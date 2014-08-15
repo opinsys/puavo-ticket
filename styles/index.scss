@@ -126,9 +126,6 @@ table td {
         border-top: 0;
         margin-top: 25px;
     }
-    h1 {
-        background-color: white;
-    }
 }
 
 .header {
@@ -140,22 +137,7 @@ table td {
         margin: -10px 0 -10px 0;
     }
 }
-.ticket-division{
-    .header {
-        padding-left: 10px;
-        h3 {
-            font-size: 150%;
-            display:inline-block;
-        }
-        .numberOfTickets {
-            font-weight: 800;
-            margin: 0 0 0 0.5rem;
-        }
-    }
-    ul {
-        margin-left: -20px;
-    }
-}
+
 
 
 .sidebar {

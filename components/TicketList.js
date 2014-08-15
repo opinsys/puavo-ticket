@@ -3,6 +3,9 @@
 var React = require("react/addons");
 var Link = require("react-router").Link;
 var Badge = require("react-bootstrap/Badge");
+var Grid = require("react-bootstrap/Grid");
+var Row = require("react-bootstrap/Row");
+var Col = require("react-bootstrap/Row");
 
 var Ticket = require("../models/client/Ticket");
 var User = require("../models/client/User");
@@ -41,75 +44,38 @@ var TitleList = React.createClass({
         return "unread";
     },
 
-    renderTicketMetaInfo: function(ticket) {
-
-        var creator = ticket.createdBy();
-        var handlers = ticket.handlers();
-
-        return(
-            <span>
-            <td className="ticket-creator">
-                {creator.getFullName()}
-            </td>
-            <td className="ticket-updated">
-                <TimeAgo date={ticket.updatedAt()} />
-            </td>
-            <td className="ticket-handlers">
-                {handlers.map(function(handler) {
-                    return <ProfileBadge tipPlacement="left" size={40} user={handler.getHandlerUser()} />;
-                })}
-            </td>
-            </span>
-        );
-    },
-
 
     render: function() {
-        var self = this;
+        var title = this.props.title;
         var tickets = this.props.tickets;
+        return <span className="TitleList">{title}</span>;
         return (
-            <div className="ticket-division col-md-12">
-                <div className="header">
-                    <h3>{this.props.title}</h3>
-                    <span className="numberOfTickets">({tickets.length})</span>
-                </div>
+            <div className="TitleList">
+                <h1>{title} <span className="numberOfTickets">({tickets.length})</span></h1>
+                {tickets.map(function(ticket) {
+                    var creator = ticket.createdBy();
+                    return (
+                        <div className="ticket-group">
+                            <h2>{ticket.get("title")}</h2>
 
-                <div className="ticketlist">
-                    <table ref="list" className="table table-striped table-responsive">
-                        <tbody>
-                            <tr>
-                                <th data-column-id="id">ID</th>
-                                <th data-column-id="subject">Aihe</th>
-                                <th data-column-id="creator">Lähettäjä</th>
-                                <th data-column-id="updated">Viimeisin päivitys</th>
-                                <th data-column-id="handlers">Käsittelijä(t)</th>
-                            </tr>
+                            <p>
+                                Aloittanut {creator.getFullName()} <Badge>{creator.getOrganisationDomain()}</Badge>
+                            </p>
 
-                            {this.props.tickets.map(function(ticket) {
-                                return (
-                                    <tr key={ticket.get("id")} className={ self.getTitleClass(ticket, self.props.user.get("id")) }>
-                                        <td>#{ticket.get("id")}</td>
-                                        <td>
-                                            <Link to="ticket" id={ticket.get("id")}>
-                                                {ticket.getCurrentTitle()}
+                            <div className="handlers">
+                                {ticket.handlers().map(function(handler) {
+                                    return <ProfileBadge tipPlacement="left" size={40} user={handler.getHandlerUser()} />;
+                                })}
+                            </div>
 
-                                                <Badge className="unread-comments" title="Uusia kommentteja">
-                                                    <i className="fa fa-comment-o"></i>
-                                                </Badge>
-
-                                            </Link>
-                                        </td>
-                                         {self.renderTicketMetaInfo(ticket)}
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
+                            <TimeAgo date={ticket.updatedAt()} />
+                        </div>
+                    );
+                })}
             </div>
-
         );
     }
+
 });
 
 /**
@@ -154,12 +120,28 @@ var TicketList = React.createClass({
         var closed = coll.selectClosed();
 
         return (
-            <div className="TicketList ticket-wrap row">
+            <div className="TicketList">
                 <Loading visible={this.state.fetching} />
-                <TitleList title="Odottavat tukipyynnöt" tickets={pending} user={this.props.user} />
-                <TitleList title="Minun tukipyynnöt" tickets={myTickets} user={this.props.user} />
-                <TitleList title="Muiden tukipyynnöt" tickets={others} user={this.props.user} />
-                <TitleList title="Käsitellyt tukipyynnöt" tickets={closed} user={this.props.user} />
+
+                <Grid>
+                    <Row>
+                        <Col xs={6} md={4}>
+                            <TitleList title="Odottavat tukipyynnöt" tickets={pending} user={this.props.user} />
+                        </Col>
+                        <Col xs={6} md={4}>
+                            <TitleList title="Minun tukipyynnöt" tickets={myTickets} user={this.props.user} />
+                        </Col>
+                        <Col xs={6} md={4}>
+                            <TitleList title="Käsitellyt tukipyynnöt" tickets={closed} user={this.props.user} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12} md={12}>
+                            <TitleList title="Muiden tukipyynnöt" tickets={others} user={this.props.user} />
+                        </Col>
+                    </Row>
+                </Grid>
+
             </div>
         );
     }
