@@ -603,6 +603,18 @@ var Ticket = Base.extend({
         });
     },
 
+
+    /**
+     * Update `updatedAt` column to current time. Should be called when ever a
+     * update relation is added to the ticket
+     *
+     * @method updateTimestamp
+     * @return {Bluebird.Promise}
+     */
+    updateTimestamp: function() {
+        this.set("updatedAt", new Date()).save();
+    },
+
     onTicketUpdate: function(e){
         var self = this;
 
@@ -619,7 +631,11 @@ var Ticket = Base.extend({
             console.error("Stack:", err.stack);
         });
 
-        return Promise.all([this.markAsUnread(e.model), mailOp]);
+        return Promise.all([
+            this.markAsUnread(e.model),
+            mailOp,
+            this.updateTimestamp()
+        ]);
     }
 
 });
