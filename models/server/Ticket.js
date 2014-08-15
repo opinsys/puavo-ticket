@@ -104,12 +104,11 @@ var Ticket = Base.extend({
         /**
          * See nodemailer module docs
          *
-         * @private
-         * @method _sendMailPromise
+         * @method sendMail
          * @param {Object} options
          * @return {Bluebird.Promise}
          * */
-        this._sendMailPromise = Promise.promisify(
+        this.sendMail = Promise.promisify(
             this._mailTransport.sendMail.bind(this._mailTransport)
         );
 
@@ -588,7 +587,7 @@ var Ticket = Base.extend({
                 email, title, id
             );
 
-            return self._sendMailPromise({
+            return self.sendMail({
                 from: "Opinsys tukipalvelu <noreply@opinsys.fi>",
                 to: email,
                 subject: "Tukipyyntö " + id + ": " + title,
