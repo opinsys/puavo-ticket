@@ -18,6 +18,14 @@ var BaseMixin = {
     },
 
     /**
+     * @method updatedAt
+     * @return {Date}
+     */
+    updatedAt: function() {
+        return new Date(this.get("updatedAt"));
+    },
+
+    /**
      * @method isSoftDeleted
      * @return {Boolean}
      */
