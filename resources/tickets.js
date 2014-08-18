@@ -52,6 +52,7 @@ app.get("/api/tickets/:id", function(req, res, next) {
             "tagHistory.createdBy",
             "handlers.handler",
             "handlers.createdBy",
+            "followers.follower",
             "devices.createdBy",
             "relatedUsers.user",
             "relatedUsers.createdBy",

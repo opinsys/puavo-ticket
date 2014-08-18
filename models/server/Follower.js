@@ -27,6 +27,10 @@ var Follower = Base.extend({
         return this.belongsTo(User, "followedById");
     },
 
+    createdBy: function() {
+        return this.belongsTo(User, "createdById");
+    }
+
 });
 
 

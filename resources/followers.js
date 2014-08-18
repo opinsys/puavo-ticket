@@ -16,16 +16,18 @@ var app = express.Router();
  * @apiGroup followers
  */
 app.post("/api/tickets/:id/followers", function(req, res, next) {
-    Ticket.forge({ id: req.params.id })
-    .fetch()
+    Ticket.byIdWithVisibilities(req.user, req.params.id)
+    .fetchOne()
     .then(function(ticket) {
-        if (!ticket) return res.json(404, { error: "no such ticket" });
-        return ticket.addFollower({
-                createdById: req.user.id
-            })
-            .then(function(follower) {
-                res.json(follower.toJSON());
-            });
+        // TODO: In future we will probably need to add other users as
+        // followers too, but for now we can manage with this.
+        return ticket.addFollower(req.user, req.user);
+    })
+    .then(function(follower) {
+        return follower.load(["createdBy", "follower"]);
+    })
+    .then(function(follower) {
+        res.json(follower);
     })
     .catch(next);
 });
