@@ -666,6 +666,57 @@ var Ticket = Base.extend({
         ]);
     }
 
+}, {
+    /**
+     * Fetch tickets by given visibilities.
+     *
+     * @static
+     * @method byVisibilities
+     * @param {Array} visibilities Array of visibility strings. Strings are in the
+     * form of `organisation|school|user:<entity id>`.
+     *
+     *     Example: "school:2"
+     *
+     * @return {models.server.Base.Collection} with models.server.Ticket models
+     */
+    byVisibilities: function(visibilities) {
+        return this.collection()
+            .query(function(queryBuilder) {
+                queryBuilder
+                .join("visibilities", "tickets.id", "=", "visibilities.ticketId")
+                .whereIn("visibilities.entity", visibilities)
+                .whereNull("visibilities.deletedAt");
+            });
+    },
+
+    /**
+     * Query tickets with visibilities of the user
+     *
+     * @static
+     * @method
+     * @param {models.server.User} user
+     */
+    byUserVisibilities: function(user) {
+        // Manager is not restricted by visibilities. Just return everything.
+        if (user.isManager()) return this.collection();
+        else return this.byVisibilities(user.getVisibilities());
+    },
+
+    /**
+     * Fetch the ticket by id with visibilities of the user
+     *
+     * @static
+     * @method byIdWithVisibilities
+     * @param {models.server.User} user
+     * @param {models.server.Ticket|Number} ticket Ticket id
+     * @return {Bluebird.Promise} With models.server.Ticket
+     */
+    byIdWithVisibilities: function(user, ticket) {
+        return this.byUserVisibilities(user).query({
+            where: { "tickets.id": Base.toId(ticket) }
+        });
+    },
+
 });
 
 /**
@@ -702,26 +753,6 @@ var renderUpdateEmail = _.template(
     fs.readFileSync(__dirname + "/email_update_template.txt").toString()
 );
 
-/**
- * Fetch tickets by give visibilities.
- *
- * @static
- * @method byVisibilities
- * @param {Array} visibilities Array of visibility strings. Strings are in the
- * form of `organisation|school|user:<entity id>`.
- *
- *     Example: "school:2"
- * @return {models.server.Base.Collection} with models.server.Ticket models
- */
-Ticket.byVisibilities = function(visibilities) {
-    return Ticket
-        .collection()
-        .query(function(queryBuilder) {
-            queryBuilder
-            .join("visibilities", "tickets.id", "=", "visibilities.ticketId")
-            .whereIn("visibilities.entity", visibilities)
-            .whereNull("visibilities.deletedAt");
-        });
-};
+
 
 module.exports = Ticket;

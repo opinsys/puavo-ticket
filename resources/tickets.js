@@ -4,7 +4,6 @@
  */
 
 var express = require("express");
-var DB = require("../db");
 
 var Ticket = require("../models/server/Ticket");
 
@@ -19,15 +18,7 @@ var app = express.Router();
  * @apiSuccess {Object[]} . List of tickets
  */
 app.get("/api/tickets", function(req, res, next) {
-    var tickets;
-
-    if (req.user.isManager()) {
-        tickets = Ticket.collection();
-    } else {
-        tickets = Ticket.byVisibilities(req.user.getVisibilities());
-    }
-
-    tickets.fetch({
+    Ticket.byUserVisibilities(req.user).fetch({
         withRelated: [
             "createdBy",
             "handlers.handler",
@@ -52,13 +43,7 @@ app.get("/api/tickets", function(req, res, next) {
  * @apiSuccess {String} description Description of the ticket
  */
 app.get("/api/tickets/:id", function(req, res, next) {
-    var collection;
-
-    if (req.user.isManager()) collection = Ticket.collection();
-    else collection = Ticket.byVisibilities(req.user.getVisibilities());
-
-    collection.query({ where: { "tickets.id": req.params.id }})
-    .fetch({
+    Ticket.byIdWithVisibilities(req.user, req.params.id).fetchOne({
         withRelated: [
             "createdBy",
             "comments.createdBy",
@@ -78,9 +63,9 @@ app.get("/api/tickets/:id", function(req, res, next) {
         require: true
     })
     .then(function(ticket) {
-        res.json(ticket.first());
+        res.json(ticket);
     })
-    .catch(DB.EmptyError, function(err) {
+    .catch(Ticket.NotFoundError, function(err) {
         res.status(404);
         res.json({ error: "not found" });
     })

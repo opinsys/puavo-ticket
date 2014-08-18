@@ -75,7 +75,7 @@ describe("/api/tickets", function() {
             });
     });
 
-    it("or on /api/tickets/:id", function() {
+    it("other users cannot see the ticket on /api/tickets/:id", function() {
         var self = this;
         return helpers.loginAsUser(helpers.user.teacher2)
             .then(function(agent) {
