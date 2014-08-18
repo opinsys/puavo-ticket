@@ -43,10 +43,10 @@ describe("/api/tickets/:id/handlers", function() {
     });
 
 
-    it("can add handler to a ticket", function() {
+    it("can add a handler to a ticket", function() {
         var self = this;
 
-        nock("https://testing.opinsys.fi")
+        nock("https://test-api.opinsys.example")
         .get("/v3/users/matti.meikalainen")
         .matchHeader("Authorization", 'Basic cHVhdm8tdGlja2V0OnBhc3N3b3Jk')
         .reply(200, self.otherUser.get("externalData"));
