@@ -120,6 +120,42 @@ describe("Ticket email notifications", function() {
             });
     });
 
+    it("is sent to user that are only followers of a ticket", function() {
+        var self = this;
+        var transport = nodemailer.createTransport(stubTransport());
+        var spy = sinon.spy(transport, "sendMail");
+
+        return Ticket.forge({
+                description: "Ticket with follower",
+                createdById: self.user.get("id")
+            }, {
+                mailTransport: transport
+            })
+            .save()
+            .then(function(ticket) {
+                return ticket.addTitle(
+                    "Computer does not work",
+                    self.user,
+                    { silent: true }
+                ).return(ticket);
+            })
+            .then(function(ticket) {
+                return ticket.addFollower(
+                    self.otherUser,
+                    self.manager
+                ).return(ticket);
+            })
+            .then(function(ticket) {
+                return ticket.addComment("bar", self.manager).return(ticket);
+            })
+            .then(function(ticket) {
+                assert.equal(
+                    2, spy.callCount,
+                    "sendMail must be called twice for each handler. Instead got " + spy.callCount
+                );
+            });
+    });
+
 
     // TODO: test emails from new handlers, related users, devices, ticket state changes
 

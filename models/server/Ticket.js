@@ -588,13 +588,13 @@ var Ticket = Base.extend({
     sendMailUpdateNotification: function(updatedModel){
         var self = this;
 
-        return self.load(["titles", "handlers.handler"])
+        return self.load(["titles", "followers.follower"])
         .then(function() {
             return updatedModel.load("createdBy");
         }).then(function() {
-            return self.relations.handlers.models;
-        }).map(function(handler) {
-            return handler.related("handler");
+            return self.relations.followers.models;
+        }).map(function(follower) {
+            return follower.related("follower");
         }).map(function(user) {
             if (!user.getEmail()) {
                 console.error(
