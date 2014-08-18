@@ -125,11 +125,15 @@ exports.up = function(knex, Promise) {
             }),
 
             knex.schema.createTable("followers", function(table) {
+                table.increments("id");
                 addLifecycleColumns(table);
                 addTicketRelation(table);
+                table.integer("followedById")
+                    .notNullable()
+                    .references("id")
+                    .inTable("users");
 
-                // TODO: add user relation
-                table.increments("id");
+                uniqueForTicket(table, "followedById");
             }),
 
             knex.schema.createTable("tags", function(table) {

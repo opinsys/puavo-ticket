@@ -3,6 +3,7 @@
 require("../../db");
 
 var Base = require("./Base");
+var User = require("./User");
 
 /**
  * Followers for {{#crossLink "models.server.Ticket"}}{{/crossLink}}
@@ -20,7 +21,11 @@ var Follower = Base.extend({
             createdAt: new Date(),
             updatedAt: new Date()
         };
-    }
+    },
+
+    follower: function() {
+        return this.belongsTo(User, "followedById");
+    },
 
 });
 

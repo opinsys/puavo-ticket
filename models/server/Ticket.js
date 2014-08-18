@@ -184,7 +184,7 @@ var Ticket = Base.extend({
     addVisibility: function(visibility, addedBy, comment) {
         var self = this;
         if (typeof visibility !== "string" || !visibility) {
-            throw new Error("visibility must be a string");
+            throw new Error("visibility must be a non empty string");
         }
 
         return Visibility.forge({
@@ -340,24 +340,48 @@ var Ticket = Base.extend({
     },
 
     /**
-     * Add follower to the ticket
+     * Add follower to a ticket. Also adds a visibility for the follower.
      *
      * @method addFollower
-     * @param {Object} follower Plain object with models.server.Follower fields
-     * @return {Bluebird.Promise} with models.server.Follower
+     * @param {models.server.User|Number} follower User model or id of the follower
+     * @param {models.server.User|Number} addedBy User model or id of the user who adds the handler
+     * @return {Bluebird.Promise} with models.server.Handler
      */
-    addFollower: function(follower) {
-        follower = _.clone(follower);
-        follower.ticketId = this.get("id");
-        return Follower.forge(follower).save();
+    addFollower: function(follower, addedBy) {
+        var self = this;
+
+        return Follower.forge({
+            ticketId: self.get("id"),
+            followedById: Base.toId(follower)
+        })
+        .fetch()
+        .then(function(rel) {
+            if (rel) return rel;
+
+            return Promise.all([
+                Follower.forge({
+                    ticketId: self.get("id"),
+                    followedById: Base.toId(follower),
+                    createdById: Base.toId(addedBy)
+                }).save(),
+                self.addVisibility(
+                    follower.getPersonalVisibility(),
+                    addedBy
+                )
+            ])
+            .spread(function(followerRelation, visibility) {
+                return followerRelation;
+            });
+        });
+
     },
 
     /**
      * Add handler to a ticket
      *
      * @method addHandler
-     * @param {models.server.User|Number} handler User model or id of handler
-     * @param {models.server.User|Number} addedBy User model or id of user who adds the handler
+     * @param {models.server.User|Number} handler User model or id of the handler
+     * @param {models.server.User|Number} addedBy User model or id of the user who adds the handler
      * @return {Bluebird.Promise} with models.server.Handler
      */
     addHandler: function(handler, addedBy) {
@@ -375,11 +399,7 @@ var Ticket = Base.extend({
                     handler: Base.toId(handler)
                 }).save(),
 
-                self.addVisibility(
-                    handler.getPersonalVisibility(),
-                    addedBy
-                ),
-
+                self.addFollower(handler, addedBy),
 
             ]);
         })
@@ -396,6 +416,14 @@ var Ticket = Base.extend({
      */
     handlers: function() {
         return this.hasMany(Handler, "ticketId");
+    },
+
+    /**
+     * @method followers
+     * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket followers relations
+     */
+    followers: function(){
+        return this.hasMany(Follower, "ticketId");
     },
 
     handlerUsers: function() {

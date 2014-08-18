@@ -1,9 +1,11 @@
 "use strict";
 
-var helpers = require("../../helpers");
-
-var Follower = require("../../../models/server/Follower");
+var Promise = require("bluebird");
 var assert = require("assert");
+
+var helpers = require("../../helpers");
+var Ticket = require("../../../models/server/Ticket");
+var User = require("../../../models/server/User");
 
 describe("Follower model", function() {
 
@@ -11,40 +13,68 @@ describe("Follower model", function() {
         var self = this;
         return helpers.clearTestDatabase()
             .then(function() {
-                return helpers.loginAsUser(helpers.user.teacher);
+                return Promise.all([
+                    User.ensureUserFromJWTToken(helpers.user.manager),
+                    User.ensureUserFromJWTToken(helpers.user.teacher),
+                    User.ensureUserFromJWTToken(helpers.user.teacher2)
+                ]);
             })
-            .then(function(agent) {
-                self.agent = agent;
-
-                return helpers.fetchTestUser();
-            })
-            .then(function(user) {
+            .spread(function(manager, user, otherUser) {
+                self.manager = manager;
                 self.user = user;
+                self.otherUser = otherUser;
 
-                return helpers.insertTestTickets(user);
+                return Ticket.forge({
+                    description: "Handler test ticket",
+                    createdById: self.user.get("id")
+                }).save();
             })
-            .then(function(tickets) {
-                self.ticket = tickets.ticket;
-                self.otherTicket = tickets.otherTicket;
+            .then(function(ticket) {
+                self.ticket = ticket;
             });
     });
 
-    it("can be instantiated", function() {
+    it("can be added for a ticket", function() {
         var self = this;
+        return self.ticket.addFollower(self.otherUser, self.manager)
+            .then(function(follower) {
+                return self.ticket.followers().fetch({
+                    withRelated: "follower"
+                });
+            })
+            .then(function(followers) {
+                var usernames = followers.map(function(f) {
+                    return f.relations.follower.getUsername();
+                });
 
-        return Follower.forge({
-                ticketId: self.ticket.id,
-                createdById: self.user.id
-            })
-            .save()
-            .then(function(follower) {
-                return Follower.forge({ id: follower.get("id") }).fetch();
-            })
-            .then(function(follower) {
-                assert.equal(self.user.id, follower.get("createdById"));
-                assert.equal(self.ticket.id, follower.get("ticketId"));
+                // Creator and the new follower is present
+                assert.deepEqual(
+                    ["olli.opettaja", "matti.meikalainen"],
+                    usernames
+                );
             });
-
-
     });
+
+    it("does not make duplicates", function() {
+        var self = this;
+        return self.ticket.addFollower(self.otherUser, self.manager)
+            .then(function(follower) {
+                return self.ticket.followers().fetch({
+                    withRelated: "follower"
+                });
+            })
+            .then(function(followers) {
+                var usernames = followers.map(function(f) {
+                    return f.relations.follower.getUsername();
+                });
+
+                // No changes from the previous
+                assert.deepEqual(
+                    ["olli.opettaja", "matti.meikalainen"],
+                    usernames
+                );
+            });
+    });
+
+
 });
