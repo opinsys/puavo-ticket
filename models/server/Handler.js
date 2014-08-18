@@ -27,7 +27,7 @@ var Handler = Base.extend({
     _assertCreatorIsManagerOrOwner: function() {
         return Promise.all([
             User.byId(this.get("createdById")).fetch({ require: true }),
-            this.ticket().fetch({ require: true })      
+            this.ticket().fetch({ require: true })
         ])
         .spread(function(user, ticket){
             if (user.isManager()) return;
@@ -46,11 +46,11 @@ var Handler = Base.extend({
     handler: function() {
         return this.belongsTo(User, "handler");
     },
-    
+
     ticket: function() {
         var Ticket = require("./Ticket");
         return this.belongsTo(Ticket, "ticketId");
-    },    
+    },
 
     createdBy: function() {
         return this.belongsTo(User, "createdById");
