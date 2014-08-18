@@ -93,26 +93,4 @@ app.post("/api/tickets", function(req, res, next) {
 });
 
 
-/**
- * @api {put} /api/tickets/:id Update ticket by id
- * @apiName UpdateTicket
- * @apiGroup tickets
- *
- * @apiParam {String} title
- * @apiParam {String} description
- */
-app.put("/api/tickets/:id", function(req, res, next) {
-    Ticket.forge({ id: req.params.id })
-    .fetch()
-    .then(function(ticket) {
-        if (!ticket) return res.json(404, { error: "no such ticket" });
-        ticket.set(req.body);
-        return ticket.save();
-    })
-    .then(function(ticket) {
-        res.json(ticket.toJSON());
-    })
-    .catch(next);
-});
-
 module.exports = app;

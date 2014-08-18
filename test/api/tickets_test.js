@@ -139,35 +139,5 @@ describe("/api/tickets", function() {
             });
     });
 
-    it("can update ticket using PUT", function() {
-        var self = this;
-        return this.agent
-            .put("/api/tickets/" + self.ticket.id)
-            .send({
-                description: "updated ticket"
-            })
-            .promise()
-            .then(function(res) {
-                assert.equal(res.status, 200);
-                assert.equal(
-                    res.body.description,
-                    "updated ticket",
-                    "Responds with updated ticket data"
-                );
-                assert(res.body.id, "has id");
-            });
-    });
-
-    it("can get updated ticket using GET", function() {
-        var self = this;
-        return this.agent
-            .get("/api/tickets/" + self.ticket.id)
-            .promise()
-            .then(function(res) {
-                assert.equal(res.status, 200);
-                assert.equal(self.ticket.id, res.body.id);
-                assert.equal("updated ticket", res.body.description);
-            });
-    });
 
 });
