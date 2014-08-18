@@ -100,7 +100,7 @@ var User = Base.extend({
         if (!username) throw new Error("Invalid arguments: username is missing");
         if (!puavoDomain) throw new Error("Invalid arguments: puavoDomain is missing");
         var puavo = new Puavo({ domain: puavoDomain });
-        return puavo.userByUsername(username)
+        return puavo.fetchUserByUsername(username)
             .then(function(userdata) {
                 return User.ensureUserFromJWTToken(userdata);
             });

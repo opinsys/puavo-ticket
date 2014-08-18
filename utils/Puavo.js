@@ -52,11 +52,11 @@ Puavo.prototype.request = function(pathname) {
 /**
  * Get user information by username from the puavo-rest
  *
- * @method userByUsername
+ * @method fetchUserByUsername
  * @param {String} username
  * @return {Bluebird.Promise}
  */
-Puavo.prototype.userByUsername = function(username) {
+Puavo.prototype.fetchUserByUsername = function(username) {
     return this.request("/v3/users/" + username);
 };
 
