@@ -6,7 +6,6 @@
 var express = require("express");
 
 var Ticket = require("../models/server/Ticket");
-var Title = require("../models/server/Title");
 
 var app = express.Router();
 
@@ -30,21 +29,5 @@ app.post("/api/tickets/:id/titles", function(req, res, next) {
     .catch(next);
 });
 
-/**
- * @api {get} /api/tickets/:id/titles Get titles for a ticket
- * @apiName GetTitles
- * @apiGroup titles
- *
- * @apiSuccess {Object[]} . List of titles
- */
-app.get("/api/tickets/:id/titles", function(req, res, next) {
-    Title.collection()
-    .query('where', 'ticketId', '=', req.params.id)
-    .fetch()
-    .then(function(collection) {
-        res.json(collection.toJSON());
-    })
-    .catch(next);
-});
 
 module.exports = app;
