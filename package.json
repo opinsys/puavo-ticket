@@ -48,7 +48,7 @@
     "nodemailer-stub-transport": "~0.1.4"
   },
   "devDependencies": {
-    "jshint": "~2.5.2",
+    "jshint": "2.5.3",
     "jsxhint": "~0.4.14",
     "yuidocjs": "~0.3.50",
     "karma-mocha": "~0.1.6",
