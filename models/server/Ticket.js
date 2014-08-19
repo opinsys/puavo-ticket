@@ -532,7 +532,7 @@ var Ticket = Base.extend({
      * Mark ticket as read
      *
      * @method markAsRead
-     * @param {models.server.User|Number} user User model or id of user
+     * @param {models.server.User|Number} user User model or id of the user
      * @return {Bluebird.Promise} with models.server.ReadTicket
      */
     markAsRead: function(user) {
@@ -547,7 +547,8 @@ var Ticket = Base.extend({
             if(readTicket) {
                 readTicket.set({
                     readAt: new Date(),
-                    unread: false });
+                    unread: false
+                });
                 return readTicket.save();
             }
 
@@ -729,15 +730,16 @@ var Ticket = Base.extend({
      * Fetch the ticket by id with visibilities of the user
      *
      * @static
-     * @method byIdWithVisibilities
+     * @method fetchByIdConstrained
      * @param {models.server.User} user
-     * @param {models.server.Ticket|Number} ticket Ticket id
+     * @param {Number} ticketId Ticket id
+     * @param {Object} options Options passed to Bookshelf fetchOne method
      * @return {Bluebird.Promise} With models.server.Ticket
      */
-    byIdWithVisibilities: function(user, ticket) {
+    fetchByIdConstrained: function(user, ticketId, opts) {
         return this.byUserVisibilities(user).query({
-            where: { "tickets.id": Base.toId(ticket) }
-        });
+            where: { "tickets.id": Base.toId(ticketId) }
+        }).fetchOne(_.extend({ require: true }, opts));
     },
 
 });

@@ -18,13 +18,12 @@ var app = express.Router();
  * @apiParam {String} comment
  */
 app.post("/api/tickets/:id/comments", function(req, res, next) {
-    Ticket.forge({ id: req.params.id })
-    .fetch({ require: true })
+    Ticket.fetchByIdConstrained(req.user, req.params.id)
     .then(function(ticket) {
         return ticket.addComment(req.body.comment, req.user);
     })
     .then(function(comment) {
-        res.json(comment.toJSON());
+        res.json(comment);
     })
     .catch(next);
 });

@@ -23,7 +23,7 @@ var app = express.Router();
  */
 app.post("/api/tickets/:id/relatedUsers", function(req, res, next) {
     Promise.all([
-        Ticket.byId(req.params.id).fetch({ require: true }),
+        Ticket.fetchByIdConstrained(req.user, req.params.id),
         User.ensureUserByUsername(req.body.username, req.body.domain)
     ])
     .spread(function(ticket, relatedUser) {

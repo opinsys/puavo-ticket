@@ -22,7 +22,7 @@ var app = express.Router();
  */
 app.post("/api/tickets/:id/attachments", function(req, res, next) {
     var filePromise = fs.readFileAsync(req.files.attachment[0].path);
-    var ticketPromise = Ticket.forge({ id: req.params.id }).fetch();
+    var ticketPromise = Ticket.fetchByIdConstrained(req.user, req.params.id);
     Promise.all([filePromise, ticketPromise])
     .spread(function(data, ticket){
         if (!ticket) return res.json(404, { error: "no such ticket" });

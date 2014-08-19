@@ -16,8 +16,7 @@ var app = express.Router();
  * @apiGroup followers
  */
 app.post("/api/tickets/:id/followers", function(req, res, next) {
-    Ticket.byIdWithVisibilities(req.user, req.params.id)
-    .fetchOne({ require: true })
+    Ticket.fetchByIdConstrained(req.user, req.params.id)
     .then(function(ticket) {
         // TODO: In future we will probably need to add other users as
         // followers too, but for now we can manage with this.
@@ -36,8 +35,7 @@ app.post("/api/tickets/:id/followers", function(req, res, next) {
 });
 
 app.delete("/api/tickets/:id/followers/:userId", function(req, res, next) {
-    Ticket.byIdWithVisibilities(req.user, req.params.id)
-    .fetchOne({ require: true })
+    Ticket.fetchByIdConstrained(req.user, req.params.id)
     .then(function(ticket) {
         return ticket.removeFollower(req.user, req.user);
     })

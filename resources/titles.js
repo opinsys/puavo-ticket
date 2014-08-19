@@ -18,8 +18,7 @@ var app = express.Router();
  * @apiParam {String} title
  */
 app.post("/api/tickets/:id/titles", function(req, res, next) {
-    Ticket.forge({ id: req.params.id })
-    .fetch({ require: true })
+    Ticket.fetchByIdConstrained(req.user, req.params.id)
     .then(function(ticket) {
         return ticket.addTitle(req.body.title, req.user);
     })

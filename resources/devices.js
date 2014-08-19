@@ -18,8 +18,7 @@ var app = express.Router();
  * @apiParam {String} hostname
  */
 app.post("/api/tickets/:id/devices", function(req, res, next) {
-    Ticket.forge({ id: req.params.id })
-    .fetch()
+    Ticket.fetchByIdConstrained(req.user, req.params.id)
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
         return ticket.addDevice(req.body.hostname, req.user);

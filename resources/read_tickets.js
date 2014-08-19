@@ -22,8 +22,7 @@ app.post("/api/tickets/:id/read", function(req, res, next) {
         req.user.get("externalData").domain_username
     );
 
-    Ticket.forge({ id: req.params.id })
-    .fetch()
+    Ticket.fetchByIdConstrained(req.user, req.params.id)
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
         return ticket.markAsRead(req.user);

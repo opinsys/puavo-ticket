@@ -43,7 +43,7 @@ app.get("/api/tickets", function(req, res, next) {
  * @apiSuccess {String} description Description of the ticket
  */
 app.get("/api/tickets/:id", function(req, res, next) {
-    Ticket.byIdWithVisibilities(req.user, req.params.id).fetchOne({
+    Ticket.fetchByIdConstrained(req.user, req.params.id, {
         withRelated: [
             "createdBy",
             "comments.createdBy",

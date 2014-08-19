@@ -16,8 +16,7 @@ var app = express.Router();
  * @apiParam {Array} visibilities Array of visibilities
  */
 app.post("/api/tickets/:id/visibilities", function(req, res, next) {
-    Ticket.forge({ id: req.params.id })
-    .fetch()
+    Ticket.fetchByIdConstrained(req.user, req.params.id)
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
         return Promise.all(req.body.visibilities.map(function(visibility) {
