@@ -423,7 +423,30 @@ var Ticket = Base.extend({
      * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket followers relations
      */
     followers: function(){
-        return this.hasMany(Follower, "ticketId");
+        return this.hasMany(Follower, "ticketId").query(queries.notSoftDeleted);
+    },
+
+    /**
+     * Remove user from followers
+     *
+     * @method removeFollower
+     * @param {models.server.User} user
+     * @param {models.server.User} removedBy
+     * @return {Bluebird.Promise}
+     *
+     */
+    removeFollower: function(user, removedBy){
+        return this.followers()
+            .query(function(qb) {
+                qb.where("followedById", "=", user.get("id"));
+            })
+            .fetch()
+            .then(function(coll) {
+                return coll.models;
+            })
+            .map(function(followerRelation) {
+                return followerRelation.softDelete(removedBy);
+            });
     },
 
     handlerUsers: function() {

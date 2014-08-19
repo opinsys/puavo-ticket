@@ -67,8 +67,7 @@ app.get("/api/tickets/:id", function(req, res, next) {
         res.json(ticket);
     })
     .catch(Ticket.NotFoundError, function(err) {
-        res.status(404);
-        res.json({ error: "not found" });
+        res.status(404).json({ error: "not found" });
     })
     .catch(next);
 });

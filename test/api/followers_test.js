@@ -1,6 +1,7 @@
 "use strict";
 var assert = require("assert");
 var _ = require("lodash");
+var Promise = require("bluebird");
 
 var helpers = require("../helpers");
 var User = require("../../models/server/User");
@@ -14,19 +15,23 @@ describe("/api/tickets/:id/followers", function() {
 
         return helpers.clearTestDatabase()
             .then(function() {
-                return User.ensureUserFromJWTToken(helpers.user.teacher);
+                return Promise.all([
+                    User.ensureUserFromJWTToken(helpers.user.teacher),
+                    User.ensureUserFromJWTToken(helpers.user.manager),
+                ]);
             })
-            .then(function(user) {
-                self.user = user;
+            .spread(function(teacher, manager) {
+                self.teacher = teacher;
+                self.manager = manager;
 
                 return Ticket.forge({
                     description: "Ticket with followers",
-                    createdById: user.get("id")
+                    createdById: teacher.get("id")
                 }).save();
             })
             .then(function(ticket) {
                 self.ticket = ticket;
-                return ticket.addTitle("Followers tes", self.user);
+                return ticket.addTitle("Followers tes", self.teacher);
             })
             .then(function() {
                 return helpers.loginAsUser(helpers.user.manager);
@@ -46,12 +51,12 @@ describe("/api/tickets/:id/followers", function() {
             .get("/api/tickets/" + self.ticket.id)
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200);
+                assert.equal(res.status, 200, res.text);
                 assert(res.body.followers, "has followers property");
                 assert.equal(res.body.followers.length, 1,  "has one follower");
                 assert.equal(
                     res.body.followers[0].followedById,
-                    self.user.get("id")
+                    self.teacher.get("id")
                 );
             });
     });
@@ -63,11 +68,11 @@ describe("/api/tickets/:id/followers", function() {
             .send({})
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200);
+                assert.equal(res.status, 200, res.text);
                 return self.agent.get("/api/tickets/" + self.ticket.id).promise();
             })
             .then(function(res) {
-                assert.equal(res.status, 200);
+                assert.equal(res.status, 200, res.text);
                 assert(res.body.followers, "has followers property");
                 assert.equal(res.body.followers.length, 2,  "has two followers");
 
@@ -77,6 +82,35 @@ describe("/api/tickets/:id/followers", function() {
             });
     });
 
+    it("user can remove itself from the followers", function() {
+        var self = this;
+        return self.agent
+            .delete("/api/tickets/" + self.ticket.id + "/followers/" + self.manager.get("id"))
+            .promise()
+            .then(function(res) {
+                assert.equal(res.status, 200, res.text);
+                return self.agent.get("/api/tickets/" + self.ticket.id).promise();
+            })
+            .then(function(res) {
+                assert.equal(res.status, 200, res.text);
+                assert(res.body.followers, "has followers property");
+                assert.equal(res.body.followers.length, 1,  "has only one follower");
+                assert(_.findWhere(res.body.followers, function(f) {
+                    return f.follower.externalData.id === helpers.user.teacher.id;
+                }), "the user is a follower");
+            });
+    });
 
+    it("other users cannot follow tickets they do not have visibilities to", function() {
+        var self = this;
+        return helpers.loginAsUser(helpers.user.teacher2)
+            .then(function(agent) {
+                return agent.post("/api/tickets/" + self.ticket.id + "/followers")
+                    .send({}).promise();
+            })
+            .then(function(res) {
+                assert.equal(res.status, 404, res.text);
+            });
+    });
 
 });
