@@ -15,7 +15,7 @@ all: npm doc install-git-hooks protip
 protip:
 	@echo Protip: Add local node module scripts to PATH
 	@echo
-	@echo '    export PATH="$(CURDIR)/node_modules/.bin:$$PATH"'
+	@echo '    . .bash_node_modules'
 	@echo
 
 npm:
