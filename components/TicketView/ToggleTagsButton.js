@@ -8,6 +8,10 @@ var Button = require("react-bootstrap/Button");
  *
  * @namespace components
  * @class ToggleTagsButton
+ * @constructor
+ * @param {Object} props
+ * @param {Boolean} props.active
+ * @param {Function} [props.onClick]
  */
 var ToggleTagsButton = React.createClass({
 
