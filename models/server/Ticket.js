@@ -216,7 +216,12 @@ var Ticket = Base.extend({
             ticketId: this.get("id"),
             comment: comment,
             createdById: Base.toId(user)
-        }).save()
+        })
+        .save()
+        .bind(this)
+        .then(function() {
+            return this.addFollower(user, user);
+        })
         .then(triggerUpdate(opts, this));
     },
 
