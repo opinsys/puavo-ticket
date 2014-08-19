@@ -21,6 +21,7 @@ var ProfileBadge = require("../ProfileBadge");
 
 var ToggleTagsButton = require("./ToggleTagsButton");
 var ToggleStatusButton = require("./ToggleStatusButton");
+var ToggleFollowButton = require("./ToggleFollowButton");
 
 
 // Individual components for each ticket update type
@@ -267,6 +268,8 @@ var TicketView = React.createClass({
                                 {this.state.ticket.isHandler(this.props.user) &&
                                     <ToggleStatusButton ticket={this.state.ticket} user={this.props.user} />
                                 }
+
+                                <ToggleFollowButton ticket={this.state.ticket} user={this.props.user} />
                             </div>
                         </div>
                         <div className="header ticket-header">
