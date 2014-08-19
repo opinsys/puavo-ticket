@@ -6,7 +6,6 @@
 var express = require("express");
 
 var Ticket = require("../models/server/Ticket");
-var Comment = require("../models/server/Comment");
 
 var app = express.Router();
 
@@ -30,21 +29,5 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
     .catch(next);
 });
 
-/**
- * @api {get} /api/tickets/:id/comments Get comments for a ticket
- * @apiName GetComments
- * @apiGroup comments
- *
- * @apiSuccess {Object[]} . List of comments
- */
-app.get("/api/tickets/:id/comments", function(req, res, next) {
-    Comment.collection()
-    .query('where', 'ticketId', '=', req.params.id)
-    .fetch()
-    .then(function(collection) {
-        res.json(collection.toJSON());
-    })
-    .catch(next);
-});
 
 module.exports = app;
