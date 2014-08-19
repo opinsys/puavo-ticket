@@ -1,8 +1,10 @@
 "use strict";
 var debug = require("debug")("puavo-ticket:models/client/Ticket");
+var Promise = require("bluebird");
 var Base = require("./Base");
 var Tag = require("./Tag");
 var Handler = require("./Handler");
+var Follower = require("./Follower");
 var Comment = require("./Comment");
 var Title = require("./Title");
 var Tag = require("./Tag");
@@ -215,6 +217,55 @@ var Ticket = Base.extend({
         return this.handlers().some(function(handler) {
             return handler.getHandlerUser().isSame(user);
         });
+    },
+
+    /**
+     *
+     * @method followers
+     * @return {Array} of models.client.Followers
+     */
+    followers: function(){
+        var self = this;
+        return [].concat(this.get("followers")).filter(Boolean)
+            .map(function(data) {
+                return new Follower(data, { parent: self });
+            });
+    },
+
+
+    /**
+     * @method isFollower
+     * @param {models.client.User|Number}
+     * @return {Boolean}
+     */
+    isFollower: function(user) {
+        return this.followers().some(function(follower) {
+            return follower.getUser().isSame(user);
+        });
+    },
+
+    /**
+     * @method addFollower
+     * @param {models.client.User|Number} user User or user id
+     * @return {Bluebird.Promise}
+     */
+    addFollower: function(user){
+        var model = new Follower({
+            followedById: user.get("id")
+        }, { parent: this });
+        return model.save();
+    },
+
+    /**
+     * @method removeFollower
+     * @return {Bluebird.Promise}
+     */
+    removeFollower: function(user){
+        return Promise.all(this.followers().filter(function(follower) {
+            return follower.getUser().isSame(user);
+        }).map(function(follower) {
+            return follower.destroy();
+        }));
     },
 
     /**
