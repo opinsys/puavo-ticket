@@ -354,6 +354,7 @@ var Ticket = Base.extend({
             ticketId: self.get("id"),
             followedById: Base.toId(follower)
         })
+        .query(queries.notSoftDeleted)
         .fetch()
         .then(function(rel) {
             if (rel) return rel;
