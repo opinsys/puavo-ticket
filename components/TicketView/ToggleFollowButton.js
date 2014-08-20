@@ -10,7 +10,7 @@ var User = require("../../models/client/User");
  * ToggleFollowButton
  *
  * @namespace components
- * @class ToggleFollowButton
+ * @class TicketView.ToggleFollowButton
  * @constructor
  * @param {Object} props
  * @param {models.client.Ticket} props.ticket

@@ -7,7 +7,7 @@ var Button = require("react-bootstrap/Button");
  * ToggleTagsButton
  *
  * @namespace components
- * @class ToggleTagsButton
+ * @class TicketView.ToggleTagsButton
  * @constructor
  * @param {Object} props
  * @param {Boolean} props.active

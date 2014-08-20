@@ -9,7 +9,7 @@ var UpdateMixin = require("./UpdateMixin");
  * Render ticket handler change update
  *
  * @namespace components
- * @class HandlerUpdate
+ * @class TicketView.HandlerUpdate
  * @uses components.TicketView.UpdateMixin
  * @uses components.OnViewportMixin
  */
