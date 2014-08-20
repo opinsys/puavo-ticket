@@ -7,7 +7,7 @@ var $ = require("jquery");
 var Backbone = require("backbone");
 Backbone.$ = $;
 
-// Load Finnish locale for React
+// Load Finnish locale for Moment
 require("moment/locale/fi");
 
 // Make it possible to enable debug logs
