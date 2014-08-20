@@ -215,7 +215,7 @@ var Ticket = Base.extend({
      */
     isHandler: function(user) {
         return this.handlers().some(function(handler) {
-            return handler.getHandlerUser().isSame(user);
+            return handler.getUser().isSame(user);
         });
     },
 
@@ -407,7 +407,7 @@ var Collection = Base.Collection.extend({
         return this.selectOpen().filter(function(t) {
             // None of the handlers are manager
             return !t.handlers().some(function(h) {
-                return h.getHandlerUser().isManager();
+                return h.getUser().isManager();
             });
         });
     },
@@ -416,7 +416,7 @@ var Collection = Base.Collection.extend({
         return this.selectOpen().filter(function(t) {
             // One of the handlers is me
             return t.handlers().some(function(h) {
-                return h.getHandlerUser().get("id") === user.get("id");
+                return h.getUser().get("id") === user.get("id");
             });
         });
     },
@@ -425,7 +425,7 @@ var Collection = Base.Collection.extend({
         return this.selectOpen().filter(function(t) {
 
             var managers = t.handlers().map(function(h) {
-                return h.getHandlerUser();
+                return h.getUser();
             }).filter(function(u) {
                 return u.isManager();
             });

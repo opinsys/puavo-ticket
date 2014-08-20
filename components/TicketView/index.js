@@ -133,7 +133,7 @@ var TicketView = React.createClass({
                 <SelectUsers
                     user={self.props.user}
                     ticket={self.state.ticket}
-                    currentHandlers={_.invoke(self.state.ticket.handlers(), "getHandlerUser")}
+                    currentHandlers={_.invoke(self.state.ticket.handlers(), "getUser")}
                     onCancel={close}
                     onSelect={function(users) {
                         close();

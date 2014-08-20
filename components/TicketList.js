@@ -56,7 +56,7 @@ var TitleList = React.createClass({
             </td>
             <td className="ticket-handlers">
                 {handlers.map(function(handler) {
-                    return <ProfileBadge tipPlacement="left" size={40} user={handler.getHandlerUser()} />;
+                    return <ProfileBadge tipPlacement="left" size={40} user={handler.getUser()} />;
                 })}
             </td>
             </span>

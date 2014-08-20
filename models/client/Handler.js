@@ -30,10 +30,10 @@ var Handler = Base.extend({
     /**
      * Return the handler user object
      *
-     * @method getHandlerUser
+     * @method getUser
      * @return {models.client.User}
      */
-    getHandlerUser: function(){
+    getUser: function(){
         return new User(this.get("handler"));
     },
 
