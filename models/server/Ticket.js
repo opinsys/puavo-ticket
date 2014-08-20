@@ -219,8 +219,8 @@ var Ticket = Base.extend({
         })
         .save()
         .bind(this)
-        .then(function() {
-            return this.addFollower(user, user);
+        .then(function(comment) {
+            return this.addFollower(user, user).return(comment);
         })
         .then(triggerUpdate(opts, this));
     },

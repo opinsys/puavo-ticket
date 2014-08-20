@@ -1,4 +1,5 @@
 "use strict";
+var _ = require("lodash");
 var Promise = require("bluebird");
 var nodemailer = require("nodemailer");
 var stubTransport = require("nodemailer-stub-transport");
@@ -52,20 +53,14 @@ describe("Ticket email notifications", function() {
             })
             .then(function() {
 
-                assert.equal(1, spy.callCount, "sendMail must be called once");
+                var creatorMail = _.find(spy.args, function(args) {
+                    return args[0].to === self.user.getEmail();
+                });
 
-                assert.equal(
-                    spy.lastCall.args[0].to, self.user.getEmail(),
-                    "email should have been sent to ticket creator"
-                );
+                assert(creatorMail, "email should have been sent to ticket creator");
 
-                assert.equal(
-                    spy.lastCall.args[0].from, "Opinsys tukipalvelu <noreply@opinsys.fi>",
-                    "mail is sent from noreply address"
-                    // we do not support email replies yet
-                );
 
-                var body = spy.lastCall.args[0].text;
+                var body = creatorMail[0].text;
 
                 assert(
                     /Matti Meikäläinen on lisännyt päivityksen tukipyyntöön "A title" \([0-9]+\)/.test(body),
@@ -78,7 +73,6 @@ describe("Ticket email notifications", function() {
                 );
 
                 // TODO: assert subject
-
 
             });
     });
@@ -120,7 +114,7 @@ describe("Ticket email notifications", function() {
             });
     });
 
-    it("is sent to user that are only followers of a ticket", function() {
+    it("is sent to users that are only followers of a ticket", function() {
         var self = this;
         var transport = nodemailer.createTransport(stubTransport());
         var spy = sinon.spy(transport, "sendMail");
