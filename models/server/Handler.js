@@ -43,15 +43,27 @@ var Handler = Base.extend({
         };
     },
 
+    /**
+     * @method handler
+     * @return {models.server.User}
+     */
     handler: function() {
         return this.belongsTo(User, "handler");
     },
 
+    /**
+     * @method ticket
+     * @return {models.server.Ticket}
+     */
     ticket: function() {
         var Ticket = require("./Ticket");
         return this.belongsTo(Ticket, "ticketId");
     },
 
+    /**
+     * @method createdBy
+     * @return {models.server.User}
+     */
     createdBy: function() {
         return this.belongsTo(User, "createdById");
     }

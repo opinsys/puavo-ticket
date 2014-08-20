@@ -232,7 +232,8 @@ var Ticket = Base.extend({
      * @method addTitle
      * @param {String} title
      * @param {models.server.User|Number} user Creator of the tag
-     * @param {Boolean} opts.silent Set to true to disable update notifications
+     * @param {Boolean} [opts]
+     * @param {Boolean} [opts.silent=false] Set to true to disable update notifications
      * @return {Bluebird.Promise} with models.server.Title
      */
     addTitle: function(title, user, opts) {
