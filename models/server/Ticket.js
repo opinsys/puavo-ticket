@@ -625,7 +625,11 @@ var Ticket = Base.extend({
             return self.relations.followers.models;
         }).map(function(follower) {
             return follower.related("follower");
-        }).map(function(user) {
+        }).filter(function(user) {
+            // Do not send update notifications to the update creator
+            return user.get("id") !== updatedModel.get("createdById");
+        })
+        .map(function(user) {
             if (!user.getEmail()) {
                 console.error(
                     "Warning! User",
