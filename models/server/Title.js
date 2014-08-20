@@ -14,30 +14,30 @@ var Base = require("./Base");
  */
 var Title = Base.extend({
 
-  tableName: "titles",
+    tableName: "titles",
 
-  defaults: function() {
-      return {
-          createdAt: new Date(),
-          updatedAt: new Date()
-      };
-  },
+    defaults: function() {
+        return {
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+    },
 
-  createdBy: function() {
-      return this.belongsTo(User, "createdById");
-  },
+    createdBy: function() {
+        return this.belongsTo(User, "createdById");
+    },
 
-  /**
-   * Text for email notification when this model has changed
-   *
-   * @method textToEmail
-   * @return {String}
-   */
-  textToEmail: function() {
-      var self = this;
+    /**
+     * Text for email notification when this model has changed
+     *
+     * @method textToEmail
+     * @return {String}
+     */
+    textToEmail: function() {
+        var self = this;
 
-      return self.get("title");
-  }
+        return self.get("title");
+    }
 
 });
 
