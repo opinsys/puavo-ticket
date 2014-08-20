@@ -1,0 +1,27 @@
+.EditableText {
+
+    .content-wrap > * {
+        display: inline;
+    }
+
+    .start-edit, .start-edit:hover, .start-edit:active {
+        outline: none;
+        border: 0px;
+        border-color: transparent;
+        background-color: transparent;
+        cursor: pointer;
+    }
+
+    .start-edit {
+        color: gray;
+        &:hover, &:focus {
+            color: black;
+        }
+    }
+
+    input {
+        width: auto;
+        display: inline;
+    }
+
+}

@@ -18,6 +18,7 @@ var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
 var ProfileBadge = require("../ProfileBadge");
+var EditableText = require("../EditableText");
 
 var ToggleTagsButton = require("./ToggleTagsButton");
 var ToggleStatusButton = require("./ToggleStatusButton");
@@ -232,9 +233,24 @@ var TicketView = React.createClass({
         );
     },
 
+    changeTitle: function(e) {
+        this.setState({ fetching: true });
+        this.state.ticket.addTitle(e.value)
+        .delay(2000)
+        .bind(this)
+        .then(function() {
+            if (!this.isMounted()) return;
+            this.setState({ fetching: false });
+            this.fetchTicket();
+        })
+        .catch(captureError("Otsikon päivitys epäonnistui"));
+    },
+
 
     render: function() {
         var self = this;
+        var ticket = this.state.ticket;
+        var user = this.props.user;
         var updates = this.state.ticket.updates().filter(function(update) {
             if (!self.state.showTags && update.get("type") === "tags") {
                 return false;
@@ -242,53 +258,56 @@ var TicketView = React.createClass({
 
             return true;
         });
+
         return (
             <div className="row TicketView">
                 <div className="ticket-view col-md-8">
 
-                    <Loading visible={this.state.fetching} />
+                    <Loading visible={true} />
 
                     <div className="ticket-title ticket-updates">
                         <div className="update-buttons-wrap row">
                             <div className="badges col-md-3">
                                 <span className="badge-text">
-                                {"Tukipyyntö #" + this.state.ticket.get("id") + " "}
+                                {"Tukipyyntö #" + ticket.get("id") + " "}
                                 </span>
                                 {this.renderBadge()}
                             </div>
                             <div className="update-buttons col-md-9">
-                                {this.props.user.isManager() &&
+                                {user.isManager() &&
                                     <Button bsStyle="success" onClick={this.handleAddHandler} >
                                         <i className="fa fa-user"></i>Lisää käsittelijä
                                     </Button>
                                 }
-                                {this.props.user.isManager() &&
+                                {user.isManager() &&
                                     <ToggleTagsButton active={this.state.showTags} onClick={this.toggleTags} />
                                 }
-                                {this.state.ticket.isHandler(this.props.user) &&
-                                    <ToggleStatusButton ticket={this.state.ticket} user={this.props.user} />
+                                {ticket.isHandler(user) &&
+                                    <ToggleStatusButton ticket={ticket} user={user} />
                                 }
 
-                                <ToggleFollowButton ticket={this.state.ticket} user={this.props.user} />
+                                <ToggleFollowButton ticket={ticket} user={user} />
                             </div>
                         </div>
                         <div className="header ticket-header">
-                            <h3>
-                                {this.state.ticket.getCurrentTitle() || <Redacted>Ladataan otsikkoa</Redacted>}
-                            </h3>
+                            <EditableText onSubmit={this.changeTitle} disabled={!ticket.isHandler(user)}>
+                                <h3>
+                                    {ticket.getCurrentTitle() || <Redacted>Ladataan otsikkoa</Redacted>}
+                                </h3>
+                            </EditableText>
                             {this.renderDate()}
                         </div>
                         <div className="image">
-                            <ProfileBadge user={this.state.ticket.createdBy()} />
+                            <ProfileBadge user={ticket.createdBy()} />
                         </div>
                         <div className="message">
                              <span>
                                 <strong>
-                                    {this.state.ticket.createdBy().getFullName() || <Redacted>Matti Meikäläinen</Redacted>}
+                                    {ticket.createdBy().getFullName() || <Redacted>Matti Meikäläinen</Redacted>}
                                 </strong>
                             </span><br />
                             <span>
-                                {this.state.ticket.get("description") || <Redacted ipsum />}
+                                {ticket.get("description") || <Redacted ipsum />}
                             </span>
                         </div>
                     </div>
