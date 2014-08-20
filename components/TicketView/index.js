@@ -139,9 +139,9 @@ var TicketView = React.createClass({
                         close();
                         if (self.isMounted()) self.setState({ fetching: true });
 
-                        Promise.all(users.map(function(user) {
+                        Promise.map(users, function(user) {
                             return self.state.ticket.addHandler(user);
-                        }))
+                        })
                         .then(function() {
                             return self.fetchTicket();
                         })
