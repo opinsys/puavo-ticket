@@ -20,6 +20,7 @@ var UpdateMixin = {
      * @return {Boolean}
      */
     isUnreadBy: function(user){
+        if (user.isSame(this.createdBy())) return false;
         return this.parent.getReadAtFor(user).getTime() - this.createdAt().getTime() < 0;
     }
 
