@@ -80,6 +80,9 @@ it. Ticket will get additional visibilities when:
 - `components/`
   - UI components build with [React][]
   - These use the [React JSX preprocessor](http://facebook.github.io/react/docs/jsx-in-depth.html)
+  - Component specific stylesheets
+- `styles/`
+  - Other stylesheets that are too generic for any single component
 - `models/server/`
   - Server-side [Bookshelf][] models
 - `models/client/`
@@ -275,8 +278,30 @@ We are using Bootstrap, Bourbon and React Bootstrap. See documentation in:
   - http://bourbon.io/
   - http://react-bootstrap.github.io/
 
-Every component should have a class by its name and a corresponding style file
-in `styles/components/`.
+Every component should have a `className` prop containing the component name
+and a corresponding stylesheet next to it using the component name as a prefix
+for the component specific styles.
+
+Example:
+
+FooComponent.js
+```javascript
+var FooComponent = React.createClass({
+    render: function() {
+        return <div className="FooComponent"><a href="">foo</a></div>;
+    }
+});
+```
+
+FooComponent.scss
+```scss
+.FooComponent {
+    a {
+        color: hotpink;
+    }
+}
+```
+
 
 ## puavo-ticket API documentation
 
