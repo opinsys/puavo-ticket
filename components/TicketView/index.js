@@ -13,25 +13,45 @@ var CommentForm = require("../CommentForm");
 var captureError = require("../../utils/captureError");
 var BackboneMixin = require("../../components/BackboneMixin");
 var Ticket = require("../../models/client/Ticket");
+var User = require("../../models/client/User");
 var Loading = require("../Loading");
 var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
-var ProfileBadge = require("../ProfileBadge");
 var EditableText = require("../EditableText");
 
 var ToggleTagsButton = require("./ToggleTagsButton");
 var ToggleStatusButton = require("./ToggleStatusButton");
 var ToggleFollowButton = require("./ToggleFollowButton");
+var CommentUpdate = require("./CommentUpdate");
 
 
 // Individual components for each ticket update type
 var UPDATE_COMPONENTS = {
-    comments: require("./CommentUpdate"),
+    comments: CommentUpdate.fromUpdate,
     tags: require("./TagUpdate"),
     handlers: require("./HandlerUpdate"),
     titles: require("./TitleUpdate")
 };
+
+/**
+ * Mock user for Opinsys robot
+ *
+ * @private
+ * @static
+ * @class TicketView.opinsysRobot
+ */
+var opinsysRobot = new User({
+    externalData: {
+        first_name: "Opinsys",
+        last_name: "Oy"
+    }
+});
+
+opinsysRobot.getProfileImage = function() {
+    return "/images/support_person.png";
+};
+
 
 
 /**
@@ -283,48 +303,46 @@ var TicketView = React.createClass({
                                     {ticket.getCurrentTitle() || <Redacted>Ladataan otsikkoa</Redacted>}
                                 </h3>
                             </EditableText>
-                            {this.renderDate()}
-                        </div>
-                        <div className="image">
-                            <ProfileBadge user={ticket.createdBy()} />
-                        </div>
-                        <div className="message">
-                             <span>
-                                <strong>
-                                    {ticket.createdBy().getFullName() || <Redacted>Matti Meikäläinen</Redacted>}
-                                </strong>
-                            </span><br />
-                            <span>
-                                {ticket.get("description") || <Redacted ipsum />}
-                            </span>
                         </div>
                     </div>
 
-                    <div>
-                    {updates.map(function(update) {
-                        var UpdateComponent = UPDATE_COMPONENTS[update.get("type")];
+                    <div className="updates">
+                        <CommentUpdate
+                            id="initial"
+                            createdAt={ticket.createdAt()}
+                            createdBy={ticket.createdBy()}
+                            comment={ticket.get("description")}
+                            />
+                        <CommentUpdate
+                            id="welcome"
+                            createdAt={ticket.createdAt()}
+                            createdBy={opinsysRobot}
+                            comment="Olemme vastaan ottaneet tukipyyntösi. Voit vielä halutessasi täydentää tukipyyntöäsi."
+                            />
+                        {updates.map(function(update) {
+                            var UpdateComponent = UPDATE_COMPONENTS[update.get("type")];
 
-                        if (!UpdateComponent) {
-                            console.error("Unknown update type: " + update.get("type"));
-                            return;
-                        }
+                            if (!UpdateComponent) {
+                                console.error("Unknown update type: " + update.get("type"));
+                                return;
+                            }
 
-                        var className = classSet({
-                            unread: update.isUnreadBy(self.props.user)
-                        });
+                            var className = classSet({
+                                unread: update.isUnreadBy(self.props.user)
+                            });
 
-                        return (
-                            <div key={update.get("unique_id")} className={className}>
-                                <UpdateComponent update={update} onViewport={function(props) {
-                                    if (_.last(updates) !== props.update) return;
-                                    // Mark the ticket as read 30 seconds
-                                    // after the last update has been shown
-                                    // to the user
-                                    setTimeout(self.lazyMarkAsRead, 30*1000);
-                                }} />
-                            </div>
-                        );
-                    })}
+                            return (
+                                <div key={update.get("unique_id")} className={className}>
+                                    <UpdateComponent update={update} onViewport={function(props) {
+                                        if (_.last(updates) !== props.update) return;
+                                        // Mark the ticket as read 30 seconds
+                                        // after the last update has been shown
+                                        // to the user
+                                        setTimeout(self.lazyMarkAsRead, 30*1000);
+                                    }} />
+                                </div>
+                            );
+                        })}
                     </div>
 
                     <CommentForm onSubmit={this.saveComment} >

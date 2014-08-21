@@ -18,6 +18,12 @@ var OnViewportMixin = {
         onViewport: React.PropTypes.func.isRequired
     },
 
+    getDefaultProps: function() {
+        return {
+            onViewport: function(){}
+        };
+    },
+
     componentDidMount: function() {
         this._wasInViewport = false;
         window.addEventListener("scroll", this._emitOnViewport);

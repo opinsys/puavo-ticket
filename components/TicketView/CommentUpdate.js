@@ -3,10 +3,9 @@
 var React = require("react/addons");
 var classSet = React.addons.classSet;
 
-var Comment = require("../../models/client/Comment");
+var User = require("../../models/client/User");
 var ProfileBadge = require("../ProfileBadge");
 var OnViewportMixin = require("../OnViewportMixin");
-var UpdateMixin = require("./UpdateMixin");
 var ForcedLinebreaks = require("../ForcedLinebreaks");
 var TimeAgo = require("../TimeAgo");
 
@@ -20,13 +19,22 @@ var TimeAgo = require("../TimeAgo");
  *
  * @constructor
  * @param {Object} props
- * @param {models.client.Comment} props.update
+ * @param {models.client.User} props.createdBy
+ * @param {Date} props.createdAt
+ * @param {String} props.comment
+ * @param {String|Number} props.id Anchor link id
  */
 var CommentUpdate = React.createClass({
-    mixins: [UpdateMixin, OnViewportMixin],
+    mixins: [OnViewportMixin],
 
     propTypes: {
-        update: React.PropTypes.instanceOf(Comment).isRequired,
+        createdBy: React.PropTypes.instanceOf(User).isRequired,
+        createdAt: React.PropTypes.instanceOf(Date).isRequired,
+        comment: React.PropTypes.string.isRequired,
+        id: React.PropTypes.oneOfType([
+            React.PropTypes.string,
+            React.PropTypes.number
+        ]).isRequired
     },
 
     componentDidMount: function() {
@@ -42,8 +50,10 @@ var CommentUpdate = React.createClass({
     },
 
     render: function() {
-        var update = this.props.update;
-        var hashId = "comment-" + update.get("id");
+        var createdBy = this.props.createdBy;
+        var createdAt = this.props.createdAt;
+        var comment = this.props.comment;
+        var hashId = "comment-" + this.props.id;
         var isSelectedByAddress = window.location.hash.slice(1) === hashId;
 
         var classes = classSet({
@@ -54,19 +64,39 @@ var CommentUpdate = React.createClass({
 
         return (
             <div className={classes} id={hashId}>
-                <ProfileBadge user={update.createdBy()} />
+                <ProfileBadge user={createdBy} />
                 <div className="message">
-                    <span className="commenter-name">{update.createdBy().getFullName()}</span>
-                    <ForcedLinebreaks className="comment">{update.get("comment")}</ForcedLinebreaks>
+                    <span className="commenter-name">{createdBy.getFullName()}</span>
+                    <ForcedLinebreaks className="comment">{comment}</ForcedLinebreaks>
                 </div>
                 <div className="time">
                     <a href={"#" + hashId } onClick={this.onHashChange}>
-                        <TimeAgo date={update.createdAt()} />
+                        <TimeAgo date={createdAt} />
                     </a>
                 </div>
             </div>
         );
     },
+
+    statics: {
+
+        /**
+         * @static
+         * @method fromUpdate
+         * @param {Object} props
+         * @param {models.client.Comment} props.update
+         * @return {components.TicketView.CommentUpdate}
+         */
+        fromUpdate: function(props) {
+            return CommentUpdate({
+                createdAt: props.update.createdAt(),
+                createdBy: props.update.createdBy(),
+                comment: props.update.get("comment"),
+                id: props.update.get("id"),
+            });
+        }
+
+    }
 });
 
 module.exports = CommentUpdate;
