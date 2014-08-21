@@ -35,7 +35,7 @@ var TitleUpdate = React.createClass({
         return (
             <div className="TitleUpdate ticket-update small">
                 <span className="description">
-                    {this.getCreatorName()} vaihtoi otsikoksi
+                    {this.getCreatorName()} asetti otsikoksi
                 </span>
                 <OverlayTrigger placement="top" overlay={
                     <Tooltip>

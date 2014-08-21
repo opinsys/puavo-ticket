@@ -3,6 +3,7 @@
 var React = require("react/addons");
 var Button = require("react-bootstrap/Button");
 var Router = require("react-router");
+var Promise = require("bluebird");
 
 var captureError = require("../utils/captureError");
 var SideInfo = require("./SideInfo");
@@ -44,14 +45,14 @@ var TicketForm = React.createClass({
     handleSave: function() {
         this.setState({ saving: true });
 
-        new Ticket({
-            description: this.state.description
-        })
+        new Ticket({})
         .save()
         .bind(this)
         .then(function(savedTicket) {
-            return savedTicket.addTitle(this.state.title)
-                .then(function() { return savedTicket; });
+            return Promise.all([
+                savedTicket.addTitle(this.state.title),
+                savedTicket.addComment(this.state.description)
+            ]).return(savedTicket);
         })
         .then(function(savedTicket) {
             Router.transitionTo("ticket", { id: savedTicket.get("id") });

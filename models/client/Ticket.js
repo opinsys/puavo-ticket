@@ -6,6 +6,7 @@ var Tag = require("./Tag");
 var Handler = require("./Handler");
 var Follower = require("./Follower");
 var Comment = require("./Comment");
+var User = require("./User");
 var Title = require("./Title");
 var Tag = require("./Tag");
 var ReadTicket = require("./ReadTicket");
@@ -16,6 +17,24 @@ function byCreation(a, b) {
     if (a.createdAt().getTime() < b.createdAt().getTime()) return -1;
     return 0;
 }
+
+/**
+ * Mock user for Opinsys robot
+ *
+ * @private
+ * @static
+ * @class TicketView.opinsysRobot
+ */
+var opinsysRobot = new User({
+    externalData: {
+        first_name: "Opinsys",
+        last_name: "Oy"
+    }
+});
+
+opinsysRobot.getProfileImage = function() {
+    return "/images/support_person.png";
+};
 
 /**
  * Client ticket model
@@ -47,6 +66,29 @@ var Ticket = Base.extend({
         };
     },
 
+
+    /**
+     * Create comment which is created by a "robot". Used to insert the automatic welcome message
+     *
+     * @method createRobotComment
+     * @return {models.client.Comment}
+     */
+    createRobotComment: function(text) {
+        // Second after the ticket creation
+        var afterTicketCreation = new Date(this.createdAt().getTime() + 1000).toString();
+
+        var comment = new Comment({
+            createdAt: afterTicketCreation,
+            comment: text
+        }, { parent: this });
+
+        comment.createdBy = function() {
+            return opinsysRobot;
+        };
+
+        return comment;
+    },
+
     /**
      * Return updates for the Ticket. Calls are cached. Ie. multiple calls to
      * this method will return the same collection instance.
@@ -55,10 +97,13 @@ var Ticket = Base.extend({
      * @return {models.client.UpdatesCollection} Collection of comments wrapped in a Promise
      */
     updates: function(){
-        var updates = []
+        var welcome = this.createRobotComment(
+            "Olemme vastaan ottaneet tukipyyntösi. Voit vielä halutessasi täydentää tukipyyntöäsi."
+        );
+        var updates = [welcome]
         .concat(this.tags().slice(1))
         .concat(this.handlers().slice(1))
-        .concat(this.titles().slice(1))
+        .concat(this.titles())
         .concat(this.comments())
         ;
         return updates.sort(byCreation);

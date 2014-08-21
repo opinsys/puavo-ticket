@@ -48,7 +48,7 @@ exports.up = function(knex, Promise) {
         return knex.schema.createTable("tickets", function(table) {
             addLifecycleColumns(table);
             table.increments("id");
-            table.text("description");
+            table.text("description"); // TODO remove
         });
     })
     .then(function createTicketRelationTables() {

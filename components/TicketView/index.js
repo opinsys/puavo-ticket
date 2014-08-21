@@ -13,7 +13,6 @@ var CommentForm = require("../CommentForm");
 var captureError = require("../../utils/captureError");
 var BackboneMixin = require("../../components/BackboneMixin");
 var Ticket = require("../../models/client/Ticket");
-var User = require("../../models/client/User");
 var Loading = require("../Loading");
 var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
@@ -32,24 +31,6 @@ var UPDATE_COMPONENTS = {
     tags: require("./TagUpdate"),
     handlers: require("./HandlerUpdate"),
     titles: require("./TitleUpdate")
-};
-
-/**
- * Mock user for Opinsys robot
- *
- * @private
- * @static
- * @class TicketView.opinsysRobot
- */
-var opinsysRobot = new User({
-    externalData: {
-        first_name: "Opinsys",
-        last_name: "Oy"
-    }
-});
-
-opinsysRobot.getProfileImage = function() {
-    return "/images/support_person.png";
 };
 
 
@@ -308,18 +289,6 @@ var TicketView = React.createClass({
                     </div>
 
                     <div className="updates">
-                        <CommentUpdate
-                            id="initial"
-                            createdAt={ticket.createdAt()}
-                            createdBy={ticket.createdBy()}
-                            comment={ticket.get("description")}
-                            />
-                        <CommentUpdate
-                            id="welcome"
-                            createdAt={ticket.createdAt()}
-                            createdBy={opinsysRobot}
-                            comment="Olemme vastaan ottaneet tukipyyntösi. Voit vielä halutessasi täydentää tukipyyntöäsi."
-                            />
                         {updates.map(function(update) {
                             var UpdateComponent = UPDATE_COMPONENTS[update.get("type")];
 
