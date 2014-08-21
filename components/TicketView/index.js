@@ -258,6 +258,7 @@ var TicketView = React.createClass({
     render: function() {
         var self = this;
         var ticket = this.state.ticket;
+        var fetching = this.state.fetching;
         var user = this.props.user;
         var updates = this.state.ticket.updates().filter(function(update) {
             if (!self.state.showTags && update.get("type") === "tags") {
@@ -271,7 +272,7 @@ var TicketView = React.createClass({
             <div className="row TicketView">
                 <div className="ticket-view col-md-8">
 
-                    <Loading visible={true} />
+                    <Loading visible={fetching} />
 
                     <div className="ticket-title ticket-updates">
                         <div className="update-buttons-wrap row">
