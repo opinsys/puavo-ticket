@@ -126,9 +126,16 @@ var UserMixin = {
      * @return {String} url to the profile image
      */
     getProfileImage: function() {
-        // FIXME: call getProfileImagen after ticket loading (TicketView:133)
         if (this.get("externalData")) {
-            return "/api/puavo/v3/users/" + this.get("externalData").username + "/profile.jpg";
+            return [
+                "/api/puavo/",
+                this.getOrganisationDomain(),
+                "/v3/users/",
+                this.get("externalData").username,
+                "/profile.jpg"
+            ].join("");
+        } else {
+            return "/images/anonymous.jpg";
         }
     },
 
