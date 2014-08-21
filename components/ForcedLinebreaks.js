@@ -10,6 +10,10 @@ var React = require("react/addons");
  */
 var ForcedLinebreaks = React.createClass({
 
+    getDefaultProps: function() {
+        return { className: "" };
+    },
+
     render: function() {
         var string = this.props.children;
 
@@ -18,7 +22,7 @@ var ForcedLinebreaks = React.createClass({
         }
 
         return (
-            <p className="ForcedLinebreaks">
+            <p className={"ForcedLinebreaks " + this.props.className}>
                 {string.split("\n").map(function(line, i) {
                     return <span key={i}>{line}<br /></span>;
                 })}
