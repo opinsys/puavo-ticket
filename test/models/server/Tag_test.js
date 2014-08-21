@@ -116,7 +116,7 @@ describe("Tag model", function() {
             })
             .then(function(tags) {
                 var tag = tags.findWhere({ tag: "footag" });
-                assert(!tag);
+                assert(tag.get("deletedAt"));
             });
     });
 
@@ -177,7 +177,7 @@ describe("Tag model", function() {
                 );
 
                 var prevStatus = tags.findWhere({ tag: "status:inprogress" });
-                assert(!prevStatus, "prev status is not present");
+                assert(prevStatus.get("deletedAt"), "prev status is not present");
 
                 var otherTag = tags.findWhere({ tag: "othertag" });
                 assert(otherTag, "othertag is available");
