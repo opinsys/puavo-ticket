@@ -2,10 +2,13 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
+var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
+var Tooltip = require("react-bootstrap/Tooltip");
 
 var OnViewportMixin = require("../OnViewportMixin");
 var UpdateMixin = require("./UpdateMixin");
 var Base = require("../../models/client/Base");
+var StringDiff = require("../StringDiff");
 
 /**
  * TitleUpdate
@@ -27,14 +30,20 @@ var TitleUpdate = React.createClass({
     },
 
     render: function() {
+        var previousTitle = this.props.update.get("previousTitle");
+        var title = this.props.update.get("title");
         return (
             <div className="TitleUpdate ticket-update small">
                 <span className="description">
-                    {this.getCreatorName()} vaihtoi otsikon:
+                    {this.getCreatorName()} vaihtoi otsikoksi
                 </span>
-                <span className="new-title">
-                    {this.props.update.get("title")}
-                </span>
+                <OverlayTrigger placement="top" overlay={
+                    <Tooltip>
+                        <StringDiff previous={previousTitle} next={title} />
+                    </Tooltip>
+                    }>
+                    <span className="new-title">{title}</span>
+                </OverlayTrigger>
             </div>
         );
     }

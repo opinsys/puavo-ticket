@@ -82,8 +82,14 @@ var Ticket = Base.extend({
      */
     titles: function(){
         var self = this;
+        var previousTitle = "";
         return this.get("titles").map(function(data) {
-            return new Title(data, { parent: self });
+            var t =  new Title(_.extend(data, {
+                previousTitle: previousTitle
+            }), { parent: self });
+
+            previousTitle = t.get("title");
+            return t;
         });
     },
 
