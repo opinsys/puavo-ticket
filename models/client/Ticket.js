@@ -53,6 +53,7 @@ var Ticket = Base.extend({
         .concat(this.tagHistory())
         .concat(this.handlers())
         .concat(this.comments())
+        .concat(this.titles())
         ;
         updates.sort(function(a, b) {
             if (a.get("createdAt") > b.get("createdAt")) return 1;

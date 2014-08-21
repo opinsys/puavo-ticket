@@ -10,10 +10,6 @@
         text-align: left;
     }
 
-    .ProfileBadge {
-        margin-right: 5px;
-    }
-
     .Loading {
         text-align: right;
     }
@@ -29,6 +25,15 @@
     .TimeAgo {
         font-size: 8pt;
         color: gray;
+    }
+
+    .ticket-update {
+        padding-bottom: 20px;
+        &.small {
+            color: gray;
+            padding-bottom: 0px;
+            font-size: 80%;
+        }
     }
 
 }

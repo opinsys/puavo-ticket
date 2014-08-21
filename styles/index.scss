@@ -11,6 +11,8 @@
 @import "./components/ProfileBadge";
 @import "./components/TicketList";
 @import "./components/EditableText";
+@import "../components/TicketView/TitleUpdate.scss";
+@import "../components/TicketView/CommentUpdate.scss";
 
 
 @font-face{
@@ -271,10 +273,6 @@ table td {
 
 }
 
-.message{
-    padding-bottom: 20px;
-}
-
 .ticket-update-buttons{
     button {
         margin: 0;
@@ -296,11 +294,6 @@ table td {
 
 
 
-.tags {
-    color: gray;
-    font-size: 80%;
-    margin-left: 50px;
-}
 
 
 .similar-tickets * {
@@ -354,21 +347,9 @@ table td {
         }
     }
  }
-.ticket-updates {
-
-    .image {
-        float: left;
-    }
-
-    .message {
-        margin-left: 50px;
-    }
-}
 
 
-.ticket-update-item {
-    font-size: 75%;
-}
+
 
 .badges {
     .closed {
@@ -427,10 +408,6 @@ table td {
     .ticket-form, .ticket-view{
         margin: 0;
         padding-bottom: 1rem;
-    }
-
-    .ticket-updates {
-        margin-left: 10px;
     }
 
     .sidebar {

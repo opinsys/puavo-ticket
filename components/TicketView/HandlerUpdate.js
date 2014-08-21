@@ -18,7 +18,7 @@ var HandlerUpdate = React.createClass({
 
     render: function() {
         return (
-            <div className="tags">
+            <div className="ticket-update small">
                 <i>{this.getCreatorName()} lisäsi käsittelijäksi käyttäjän </i>
                 <span>{this.props.update.get("handler").externalData.username}</span>
             </div>

@@ -3,6 +3,7 @@
 var React = require("react/addons");
 var classSet = React.addons.classSet;
 
+var Comment = require("../../models/client/Comment");
 var ProfileBadge = require("../ProfileBadge");
 var OnViewportMixin = require("../OnViewportMixin");
 var UpdateMixin = require("./UpdateMixin");
@@ -16,9 +17,17 @@ var TimeAgo = require("../TimeAgo");
  * @class TicketView.CommentUpdate
  * @uses components.TicketView.UpdateMixin
  * @uses components.OnViewportMixin
+ *
+ * @constructor
+ * @param {Object} props
+ * @param {models.client.Comment} props.update
  */
 var CommentUpdate = React.createClass({
     mixins: [UpdateMixin, OnViewportMixin],
+
+    propTypes: {
+        update: React.PropTypes.instanceOf(Comment).isRequired,
+    },
 
     componentDidMount: function() {
         window.addEventListener("hashchange", this._onHashChange);
@@ -39,18 +48,18 @@ var CommentUpdate = React.createClass({
 
         var classes = classSet({
             CommentUpdate: true,
-            "ticket-updates": true,
+            "ticket-update": true,
             selected: isSelectedByAddress
         });
 
         return (
             <div className={classes} id={hashId}>
-                <div className="image">
-                    <ProfileBadge user={update.createdBy()} />
-                </div>
+                <ProfileBadge user={update.createdBy()} />
                 <div className="message">
-                    <strong>{update.createdBy().getFullName()} <br/></strong>
-                    <ForcedLinebreaks>{update.get("comment")}</ForcedLinebreaks>
+                    <span className="commenter-name">{update.createdBy().getFullName()}</span>
+                    <ForcedLinebreaks className="comment">{update.get("comment")}</ForcedLinebreaks>
+                </div>
+                <div className="time">
                     <a href={"#" + hashId } onClick={this.onHashChange}>
                         <TimeAgo date={update.createdAt()} />
                     </a>

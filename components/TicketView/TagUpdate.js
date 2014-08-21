@@ -16,7 +16,7 @@ var TagUpdate = React.createClass({
     mixins: [UpdateMixin, OnViewportMixin],
     render: function() {
         return (
-            <div className="tags">
+            <div className="TagUpdate ticket-update small">
                 <i>{this.getCreatorName()} lisäsi tagin: </i>
                 <span>{this.props.update.get("tag")}</span>
             </div>

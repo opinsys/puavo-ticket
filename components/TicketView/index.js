@@ -29,21 +29,9 @@ var ToggleFollowButton = require("./ToggleFollowButton");
 var UPDATE_COMPONENTS = {
     comments: require("./CommentUpdate"),
     tags: require("./TagUpdate"),
-    handlers: require("./HandlerUpdate")
+    handlers: require("./HandlerUpdate"),
+    titles: require("./TitleUpdate")
 };
-
-// Mock user object for the first automated message user receives after sending
-// a ticket
-var supportPerson = {
-    getFullName: function() {
-        return "Opinsys Oy";
-    },
-
-    getProfileImage: function() {
-        return "/images/support_person.png";
-    }
-};
-
 
 
 /**
@@ -312,15 +300,6 @@ var TicketView = React.createClass({
                         </div>
                     </div>
 
-                    <div className="ticket-updates comments">
-                        <div className="image">
-                            <ProfileBadge user={supportPerson} />
-                        </div>
-                        <div className="message">
-                            <strong>Opinsys tuki <br/></strong>
-                            <span>Olemme vastaanottaneet tukipyyntösi. Voit halutessasi täydentää sitä.</span>
-                        </div>
-                    </div>
                     <div>
                     {updates.map(function(update) {
                         var UpdateComponent = UPDATE_COMPONENTS[update.get("type")];
