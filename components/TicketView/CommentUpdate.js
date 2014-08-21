@@ -89,10 +89,12 @@ var CommentUpdate = React.createClass({
          */
         fromUpdate: function(props) {
             return CommentUpdate({
+                onViewport: props.onViewport,
                 createdAt: props.update.createdAt(),
                 createdBy: props.update.createdBy(),
                 comment: props.update.get("comment"),
                 id: props.update.get("id"),
+                update: props.update
             });
         }
 
