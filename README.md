@@ -310,6 +310,34 @@ in
 
 <http://opinsys.github.io/puavo-ticket/>
 
+### React components
+
+Document all the props. Example:
+
+```javascript
+/**
+ * YUIDoc documentation
+ *
+ * @namespace components
+ * @class FooComponent
+ * @constructor
+ * @param {Object} props
+ * @param {String} props.url Url for the link
+ **/
+var FooComponent = React.createClass({
+
+    propTypes: {
+        url: React.PropTypes.string.isRequired
+    },
+
+    render: function() {
+        return <div className="FooComponent"><a href={this.props.url}>foo</a></div>;
+    }
+
+});
+```
+
+
 REST API documentation is generated using [apiDoc][] from `resources/` and is
 available in
 
