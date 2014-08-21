@@ -28,10 +28,12 @@
     }
 
     .ticket-update {
-        padding-bottom: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
         &.small {
             color: gray;
             padding-bottom: 0px;
+            padding-top: 0px;
             font-size: 80%;
         }
     }
