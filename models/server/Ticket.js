@@ -298,11 +298,7 @@ var Ticket = Base.extend({
      * @return {Bookshelf.Collection} Bookshelf.Collection of tag models
      */
     tags: function(){
-        return this.hasMany(Tag, "ticketId").query(queries.notSoftDeleted);
-    },
-
-    tagHistory: function() {
-        return this.hasMany(Tag, "ticketId").query(queries.softDeleted);
+        return this.hasMany(Tag, "ticketId");
     },
 
     /**

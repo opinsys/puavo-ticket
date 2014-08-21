@@ -11,6 +11,12 @@ var Tag = require("./Tag");
 var ReadTicket = require("./ReadTicket");
 var _ = require("lodash");
 
+function byCreation(a, b) {
+    if (a.createdAt().getTime() > b.createdAt().getTime()) return 1;
+    if (a.createdAt().getTime() < b.createdAt().getTime()) return -1;
+    return 0;
+}
+
 /**
  * Client ticket model
  *
@@ -34,9 +40,9 @@ var Ticket = Base.extend({
             description: "",
             tags: [],
             titles: [],
-            tagHistory: [],
             comments: [],
             handlers: [],
+            followers: [],
             createdAt: new Date().toString()
         };
     },
@@ -49,19 +55,13 @@ var Ticket = Base.extend({
      * @return {models.client.UpdatesCollection} Collection of comments wrapped in a Promise
      */
     updates: function(){
-        var updates =  this.tags()
-        .concat(this.tagHistory())
-        .concat(this.handlers())
+        var updates = []
+        .concat(this.tags().slice(1))
+        .concat(this.handlers().slice(1))
+        .concat(this.titles().slice(1))
         .concat(this.comments())
-        .concat(this.titles())
         ;
-        updates.sort(function(a, b) {
-            if (a.get("createdAt") > b.get("createdAt")) return 1;
-            if (a.get("createdAt") < b.get("createdAt")) return -1;
-            return 0;
-        });
-
-        return updates;
+        return updates.sort(byCreation);
     },
 
     /**
@@ -72,7 +72,7 @@ var Ticket = Base.extend({
         var self = this;
         return this.get("tags").map(function(data) {
             return new Tag(data, { parent: self });
-        });
+        }).sort(byCreation);
     },
 
     /**
@@ -90,7 +90,7 @@ var Ticket = Base.extend({
 
             previousTitle = t.get("title");
             return t;
-        });
+        }).sort(byCreation);
     },
 
     /**
@@ -103,18 +103,11 @@ var Ticket = Base.extend({
         return !!this.get("title");
     },
 
-    tagHistory: function() {
-        var self = this;
-        return this.get("tagHistory").map(function(data) {
-            return new Tag(data, { parent: self });
-        });
-    },
-
     comments: function() {
         var self = this;
         return this.get("comments").map(function(data) {
             return new Comment(data, { parent: self });
-        });
+        }).sort(byCreation);
     },
 
     /**
@@ -211,7 +204,7 @@ var Ticket = Base.extend({
         var self = this;
         return this.get("handlers").map(function(data) {
             return new Handler(data, { parent: self });
-        });
+        }).sort(byCreation);
     },
 
 
@@ -233,10 +226,9 @@ var Ticket = Base.extend({
      */
     followers: function(){
         var self = this;
-        return [].concat(this.get("followers")).filter(Boolean)
-            .map(function(data) {
-                return new Follower(data, { parent: self });
-            });
+        return this.get("followers").filter(Boolean).map(function(data) {
+            return new Follower(data, { parent: self });
+        }).sort(byCreation);
     },
 
 
@@ -285,7 +277,7 @@ var Ticket = Base.extend({
     getCurrentStatus: function() {
 
         var statusTags = this.tags().filter(function(tag) {
-            return tag.isStatusTag();
+            return tag.isStatusTag() && !tag.get("deletedAt");
         });
 
         if (statusTags.length === 0) {
