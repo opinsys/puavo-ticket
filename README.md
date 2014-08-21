@@ -22,6 +22,7 @@ Cool new ticketing system with deep puavo integration.
 	- [Debug logging](#user-content-debug-logging)
 	- [puavo-ticket API documentation](#user-content-puavo-ticket-api-documentation)
 		- [External documentation](#user-content-external-documentation)
+
 ## Roles
 
 The system has currently only to types of users. Managers (Opinsys staff in our
