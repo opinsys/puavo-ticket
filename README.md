@@ -189,6 +189,10 @@ See <http://facebook.github.io/react/docs/tooling-integration.html#syntax-highli
 You might want to put locally installed node.js tools to your path
 
     export PATH="$(pwd)/node_modules/.bin:$PATH"
+    
+or use the shortcut
+
+    . .bash_node_modules
 
 This will give you direct access and tab completion to `mocha`, `jsxhint` and
 other tools.
@@ -264,10 +268,10 @@ debug.enable("puavo-ticket:*");
 
 ## Styles
 
-We are using Bootstrap, Flat UI and React Bootstrap. See documentation in:
+We are using Bootstrap, Bourbon and React Bootstrap. See documentation in:
 
   - http://getbootstrap.com/
-  - http://designmodo.github.io/Flat-UI/
+  - http://bourbon.io/
   - http://react-bootstrap.github.io/
 
 Every component should have a class by its name and a corresponding style file
