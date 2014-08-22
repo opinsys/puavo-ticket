@@ -48,6 +48,7 @@ var TicketView = React.createClass({
     getInitialState: function() {
         return {
             ticket: new Ticket({ id: this.props.params.id }),
+            changeTitle: false,
             fetching: true,
             saving: false,
             showTags: true,
@@ -223,14 +224,17 @@ var TicketView = React.createClass({
     },
 
     changeTitle: function(e) {
-        this.setState({ fetching: true });
+        this.setState({ changingTitle: true });
         this.state.ticket.addTitle(e.value)
         .delay(2000)
         .bind(this)
         .then(function() {
             if (!this.isMounted()) return;
-            this.setState({ fetching: false });
-            this.fetchTicket();
+            return this.fetchTicket();
+        })
+        .then(function() {
+            if (!this.isMounted()) return;
+            this.setState({ changingTitle: false });
         })
         .catch(captureError("Otsikon päivitys epäonnistui"));
     },
@@ -283,6 +287,7 @@ var TicketView = React.createClass({
                             <EditableText onSubmit={this.changeTitle} disabled={!ticket.isHandler(user)}>
                                 <h3>
                                     {ticket.getCurrentTitle() || <Redacted>Ladataan otsikkoa</Redacted>}
+                                    {this.state.changingTitle && <Loading.Spinner />}
                                 </h3>
                             </EditableText>
                         </div>
