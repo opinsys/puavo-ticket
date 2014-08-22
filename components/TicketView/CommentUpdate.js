@@ -46,7 +46,7 @@ var CommentUpdate = React.createClass({
     },
 
     _onHashChange: function() {
-        this.forceUpdate();
+        if (this.isMounted()) this.forceUpdate();
     },
 
     render: function() {
