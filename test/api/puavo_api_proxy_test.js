@@ -94,5 +94,21 @@ describe("puavo-rest api proxy", function() {
             });
     });
 
+    it("allows teachers to view profile images of other organisation users", function() {
+         nock("https://test-api.opinsys.example")
+        .matchHeader("Host", "managertesting.opinsys.net")
+        .get("/v3/users/pointyhair/profile.jpg")
+        .reply(200, [{ foo: "bar" }]);
+
+
+        return agent
+            .get("/api/puavo/managertesting.opinsys.net/v3/users/pointyhair/profile.jpg")
+            .promise()
+            .then(function(res) {
+                assert.equal(res.status, 200, res.text);
+            });
+
+    });
+
 });
 
