@@ -36,6 +36,10 @@ opinsysRobot.getProfileImage = function() {
     return "/images/support_person.png";
 };
 
+opinsysRobot.getDomainUsername = function() {
+    return "tuki@opinsys.fi";
+};
+
 /**
  * Client ticket model
  *

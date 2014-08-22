@@ -72,7 +72,14 @@ var ProfileBadge = React.createClass({
     },
 
     renderTooltip: function() {
-        return this.props.user.getFullName();
+        var user = this.props.user;
+        return (
+            <span>
+                {user.getFullName()}
+                <br />
+                {user.getDomainUsername()}
+            </span>
+        );
     },
 
     getSizeInCSS: function() {
