@@ -142,6 +142,7 @@ var CommentForm = React.createClass({
             clear: this.clear,
             scrollToCommentButton: this.scrollToCommentButton
         });
+        this.refs.textarea.getDOMNode().focus();
     },
 
     _handleCommentChange: function(e) {
@@ -191,6 +192,7 @@ var CommentForm = React.createClass({
 
                 <ElasticTextarea
                     placeholder="Kommentti..."
+                    ref="textarea"
                     className="form-control"
                     value={this.state.comment}
                     onChange={this._handleCommentChange}
