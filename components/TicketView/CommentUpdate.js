@@ -67,12 +67,10 @@ var CommentUpdate = React.createClass({
                 <ProfileBadge user={createdBy} />
                 <div className="message">
                     <span className="commenter-name">{createdBy.getFullName()}</span>
-                    <ForcedLinebreaks className="comment">{comment}</ForcedLinebreaks>
-                </div>
-                <div className="time">
-                    <a href={"#" + hashId } onClick={this.onHashChange}>
+                    <a className="since" href={"#" + hashId } onClick={this.onHashChange}>
                         <TimeAgo date={createdAt} />
                     </a>
+                    <ForcedLinebreaks className="comment">{comment}</ForcedLinebreaks>
                 </div>
             </div>
         );

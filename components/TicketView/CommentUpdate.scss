@@ -1,5 +1,7 @@
 .CommentUpdate {
 
+    $bubble-border-color: lightgray;
+
     .commenter-name {
         font-weight: bold;
     }
@@ -14,4 +16,47 @@
         margin-right: 8px;
     }
 
+    .TimeAgo {
+        margin-left: 8px;
+    }
+
+    $triangle-length: 14px;
+    $triangle-size: 4px;
+
+    .message {
+        background-color: white;
+        padding: 10px;
+        margin-left: 49px + $triangle-length;
+        border-radius: 5px;
+
+        position: relative;
+        border: 2px solid $bubble-border-color;
+        border-radius: 5px;
+
+        font-size: 10pt;
+    }
+
+
+    .message:after {
+        content: "";
+        position: absolute;
+        top: 7px;
+        left: - $triangle-length;
+        border-style: solid;
+        border-width: $triangle-size $triangle-length $triangle-size 0;
+        border-color: transparent $bubble-border-color;
+        display: block;
+        width: 0;
+        z-index: 1;
+    }
+
+
+    &.selected .message {
+        background-color: $highlight-color;
+    }
+
+}
+
+.unread .CommentUpdate .message {
+    background-color: $unread-color;
 }
