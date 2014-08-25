@@ -700,24 +700,9 @@ var Ticket = Base.extend({
     },
 
     onTicketUpdate: function(e){
-        // var self = this;
-
-        var mailOp = this.sendMailUpdateNotification(e.model);
-        // .catch(function(err) {
-        //     // Do not reject the ticket update even if the mail sending fails due
-        //     // to unavailable mail server.
-        //     console.error(
-        //         "Failed to send some or all mail update notifications for ticket \"%s\" (%s)",
-        //         self.getCurrentTitle(),
-        //         self.get("id")
-        //     );
-        //     console.error("Message:", err.message);
-        //     console.error("Stack:", err.stack);
-        // });
-
         return Promise.join(
             this.markAsUnread(e.model),
-            mailOp,
+            this.sendMailUpdateNotification(e.model),
             this.updateTimestamp()
         );
     }
