@@ -239,47 +239,44 @@ var TicketView = React.createClass({
     },
 
 
-    render: function() {
-        var self = this;
-        var ticket = this.state.ticket;
-        var fetching = this.state.fetching;
-        var user = this.props.user;
-
-        var updates = this.state.ticket.updates().reduce(function(a, next) {
-            if (next.get("type") !== "comments") {
-                a.push(next);
-                return a;
-            }
-
+    /**
+     * Get array of updates with comments merged that are created by the same
+     * user within small amount of time
+     *
+     * @method getUpdatesWithMergedComments
+     * @return {Array} of models.client.Base
+     */
+    getUpdatesWithMergedComments: function(){
+        return this.state.ticket.updates().reduce(function(a, next) {
             var prev = a.pop();
             if (!prev) {
                 a.push(next);
                 return a;
             }
 
-            if (prev.get("type") !== "comments") {
-                a.push(prev);
-                a.push(next);
+            var bothComments = (
+                prev.get("type") === "comments" &&
+                next.get("type") === "comments"
+            );
+
+            if (bothComments && prev.wasCreatedInVicinityOf(next)) {
+                a.push(prev.merge(next));
                 return a;
             }
 
-            if (prev.get("createdById") !== next.get("createdById")) {
-                a.push(prev);
-                a.push(next);
-                return a;
-            }
-
-            var diff = next.createdAt().getTime() - prev.createdAt().getTime();
-            if (diff > 60*1000) {
-                a.push(prev);
-                a.push(next);
-                return a;
-            }
-
-            a.push(prev.merge(next));
+            a.push(prev);
+            a.push(next);
             return a;
 
         }, []);
+    },
+
+    render: function() {
+        var self = this;
+        var ticket = this.state.ticket;
+        var fetching = this.state.fetching;
+        var user = this.props.user;
+        var updates = this.getUpdatesWithMergedComments();
 
         return (
             <div className="row TicketView">

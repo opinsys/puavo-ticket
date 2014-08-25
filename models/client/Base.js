@@ -145,7 +145,20 @@ var Base = Backbone.Model.extend({
      */
     dispose: function() {
         this.off();
-    }
+    },
+
+    /**
+     * Return true if the another model was created within 60 seconds of this
+     * one by the same user
+     *
+     * @method wasCreatedInVicinity
+     * @return {Boolean}
+     */
+    wasCreatedInVicinityOf: function(another) {
+        if (this.get("createdById") !== another.get("createdById")) return false;
+        var diff = Math.abs(another.createdAt().getTime() - this.createdAt().getTime());
+        return diff < 60*1000;
+    },
 
 }, {
 
