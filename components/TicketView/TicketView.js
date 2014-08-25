@@ -244,7 +244,42 @@ var TicketView = React.createClass({
         var ticket = this.state.ticket;
         var fetching = this.state.fetching;
         var user = this.props.user;
-        var updates = this.state.ticket.updates();
+
+        var updates = this.state.ticket.updates().reduce(function(a, next) {
+            if (next.get("type") !== "comments") {
+                a.push(next);
+                return a;
+            }
+
+            var prev = a.pop();
+            if (!prev) {
+                a.push(next);
+                return a;
+            }
+
+            if (prev.get("type") !== "comments") {
+                a.push(prev);
+                a.push(next);
+                return a;
+            }
+
+            if (prev.get("createdById") !== next.get("createdById")) {
+                a.push(prev);
+                a.push(next);
+                return a;
+            }
+
+            var diff = next.createdAt().getTime() - prev.createdAt().getTime();
+            if (diff > 60*1000) {
+                a.push(prev);
+                a.push(next);
+                return a;
+            }
+
+            a.push(prev.merge(next));
+            return a;
+
+        }, []);
 
         return (
             <div className="row TicketView">

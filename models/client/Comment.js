@@ -26,6 +26,25 @@ var Comment = Base.extend({
         return this.parent.url() + "/comments";
     },
 
+
+    /**
+     * Merge two comments to new one
+     *
+     * @method merge
+     * @param {models.client.Comment} another
+     * @return {models.client.Comment}
+     */
+    merge: function(another){
+        if (this.get("createdById") !== another.get("createdById")) {
+            throw new Error("Can merge comments only from the same creator");
+        }
+
+        var data = this.toJSON();
+        data.comment = data.comment.trim() + "\n" + another.get("comment").trim();
+        data.createdAt = another.get("createdAt");
+        return new Comment(data, { parent: this.parent });
+    }
+
 });
 
 _.extend(Comment.prototype, UpdateMixin);
