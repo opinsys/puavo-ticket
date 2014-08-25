@@ -19,7 +19,6 @@ var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
 var EditableText = require("../EditableText");
 
-var ToggleTagsButton = require("./ToggleTagsButton");
 var ToggleStatusButton = require("./ToggleStatusButton");
 var ToggleFollowButton = require("./ToggleFollowButton");
 var CommentUpdate = require("./CommentUpdate");
@@ -245,13 +244,7 @@ var TicketView = React.createClass({
         var ticket = this.state.ticket;
         var fetching = this.state.fetching;
         var user = this.props.user;
-        var updates = this.state.ticket.updates().filter(function(update) {
-            if (!self.state.showTags && update.get("type") === "tags") {
-                return false;
-            }
-
-            return true;
-        });
+        var updates = this.state.ticket.updates();
 
         return (
             <div className="row TicketView">
@@ -272,9 +265,6 @@ var TicketView = React.createClass({
                                     <Button bsStyle="success" onClick={this.handleAddHandler} >
                                         <i className="fa fa-user"></i>Lisää käsittelijä
                                     </Button>
-                                }
-                                {user.isManager() &&
-                                    <ToggleTagsButton active={this.state.showTags} onClick={this.toggleTags} />
                                 }
                                 {ticket.isHandler(user) &&
                                     <ToggleStatusButton ticket={ticket} user={user} />
