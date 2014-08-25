@@ -26,7 +26,7 @@ var CommentUpdate = require("./CommentUpdate");
 
 // Individual components for each ticket update type
 var UPDATE_COMPONENTS = {
-    comments: CommentUpdate.fromUpdate,
+    comments: CommentUpdate,
     tags: require("./TagUpdate"),
     handlers: require("./HandlerUpdate"),
     titles: require("./TitleUpdate")

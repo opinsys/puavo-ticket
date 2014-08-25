@@ -3,9 +3,9 @@
 var React = require("react/addons");
 var classSet = React.addons.classSet;
 
-var User = require("../../models/client/User");
 var ProfileBadge = require("../ProfileBadge");
 var OnViewportMixin = require("../OnViewportMixin");
+var UpdateMixin = require("./UpdateMixin");
 var ForcedLinebreaks = require("../ForcedLinebreaks");
 var TimeAgo = require("../TimeAgo");
 
@@ -25,17 +25,7 @@ var TimeAgo = require("../TimeAgo");
  * @param {String|Number} props.id Anchor link id
  */
 var CommentUpdate = React.createClass({
-    mixins: [OnViewportMixin],
-
-    propTypes: {
-        createdBy: React.PropTypes.instanceOf(User).isRequired,
-        createdAt: React.PropTypes.instanceOf(Date).isRequired,
-        comment: React.PropTypes.string.isRequired,
-        id: React.PropTypes.oneOfType([
-            React.PropTypes.string,
-            React.PropTypes.number
-        ]).isRequired
-    },
+    mixins: [UpdateMixin, OnViewportMixin],
 
     componentDidMount: function() {
         window.addEventListener("hashchange", this._onHashChange);
@@ -50,10 +40,13 @@ var CommentUpdate = React.createClass({
     },
 
     render: function() {
-        var createdBy = this.props.createdBy;
-        var createdAt = this.props.createdAt;
-        var comment = this.props.comment;
-        var hashId = "comment-" + this.props.id;
+
+        var firstUpdate = this.props.update;
+
+        var createdBy = firstUpdate.createdBy();
+        var createdAt = firstUpdate.createdAt();
+        var comment = firstUpdate.get("comment");
+        var hashId = "comment-" + firstUpdate.get("id");
         var isSelectedByAddress = window.location.hash.slice(1) === hashId;
 
         var classes = classSet({
@@ -76,27 +69,6 @@ var CommentUpdate = React.createClass({
         );
     },
 
-    statics: {
-
-        /**
-         * @static
-         * @method fromUpdate
-         * @param {Object} props
-         * @param {models.client.Comment} props.update
-         * @return {components.TicketView.CommentUpdate}
-         */
-        fromUpdate: function(props) {
-            return CommentUpdate({
-                onViewport: props.onViewport,
-                createdAt: props.update.createdAt(),
-                createdBy: props.update.createdBy(),
-                comment: props.update.get("comment"),
-                id: props.update.get("id"),
-                update: props.update
-            });
-        }
-
-    }
 });
 
 module.exports = CommentUpdate;
