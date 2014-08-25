@@ -79,7 +79,7 @@ var Ticket = Base.extend({
      */
     createRobotComment: function(text) {
         // Second after the ticket creation
-        var afterTicketCreation = new Date(this.createdAt().getTime() + 1000).toString();
+        var afterTicketCreation = new Date(this.createdAt().getTime() + 2000).toString();
 
         var comment = new Comment({
             createdAt: afterTicketCreation,

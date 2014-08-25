@@ -42,9 +42,33 @@ var TimeAgo = React.createClass({
         if (i > -1) mounted.splice(i, 1);
     },
 
+    /**
+     * Return true if the date given to this component is in future
+     *
+     * @method isInFuture
+     * @return {Boolean}
+     */
+    isInFuture: function() {
+        return new Date().getTime() - this.props.date.getTime() < 0;
+    },
+
+    /**
+     * Return the date. If the date is in future just return the current time.
+     * Clock skews can put the date few seconds in the future which does not
+     * make any sense on timstamps. Future dates are considered as "now".
+     *
+     * @method getDate
+     * @return {Date}
+     */
+    getDate: function() {
+        if (this.isInFuture()) return new Date();
+        return this.props.date;
+    },
+
     render: function() {
-        var fromNow = moment(this.props.date).fromNow();
-        var formatted = moment(this.props.date).format("LLL");
+        var date = this.getDate();
+        var fromNow = moment(date).fromNow();
+        var formatted = moment(date).format("LLL");
 
         return (
             <OverlayTrigger placement="top" overlay={<Tooltip>{formatted}</Tooltip>}>
