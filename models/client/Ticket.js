@@ -341,8 +341,8 @@ var Ticket = Base.extend({
     },
 
     /**
-     *
      * @method getCurrentTitle
+     * @return {String}
      */
     getCurrentTitle: function(){
         var titles = this.titles();

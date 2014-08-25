@@ -24,10 +24,11 @@ describe("Tag model", function() {
                 self.user = user;
                 self.otherUser = otherUser;
 
-                return Ticket.forge({
-                        createdById: self.user.get("id"),
-                        description: "This ticket has some tags"
-                    }).save();
+                return Ticket.create(
+                    "A title",
+                    "This ticket has some tags",
+                    self.user
+                );
             })
             .then(function(ticket) {
                 self.ticketId = ticket.get("id");
@@ -87,12 +88,11 @@ describe("Tag model", function() {
 
     it("other tickets can have the same tag", function() {
         var self = this;
-        return Ticket.forge({
-                createdById: self.user.get("id"),
-                description: "This ticket also has some tags"
-            })
-            .save()
-            .then(function(ticket) {
+        return Ticket.create(
+                "A other ticket title",
+                "This ticket also has some tags",
+                self.user
+            ).then(function(ticket) {
                 return ticket.addTag("footag", self.user)
                     .then(function() {
                         return ticket.tags().fetch();

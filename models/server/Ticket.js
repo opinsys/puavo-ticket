@@ -477,6 +477,26 @@ var Ticket = Base.extend({
     },
 
     /**
+     * Get description ie. the first comment
+     *
+     * @method getDescription
+     * @return {String}
+     */
+    getDescription: function() {
+        if (!this.relations.comments) {
+            throw new Error("'comments' relation not loaded");
+        }
+
+        if (this.relations.comments.length === 0) {
+            throw new Error("No comments - no description!");
+        }
+
+        return _.min(this.relations.comments.models,  function(m) {
+            return m.createdAt().getTime();
+        }).get("comment");
+    },
+
+    /**
      * Add device relation
      *
      * @method addDevice
@@ -615,11 +635,16 @@ var Ticket = Base.extend({
     sendMailUpdateNotification: function(updatedModel){
         var self = this;
 
-        return self.load(["titles", "followers.follower"])
-        .then(function() {
-            return updatedModel.load("createdBy");
-        }).then(function() {
-            return self.relations.followers.models;
+        return Promise.join(
+            self.load(["titles", "followers.follower"]),
+            updatedModel.load("createdBy")
+        ).then(function() {
+            // XXX: This should not be required since we use the dot notation
+            // above to load this relation too.
+            // http://bookshelfjs.org/#Model-load
+            return self.relations.followers.load("follower");
+        }).then(function(followers) {
+            return followers.models;
         }).map(function(follower) {
             return follower.related("follower");
         }).filter(function(user) {
@@ -675,29 +700,52 @@ var Ticket = Base.extend({
     },
 
     onTicketUpdate: function(e){
-        var self = this;
+        // var self = this;
 
-        var mailOp = this.sendMailUpdateNotification(e.model)
-        .catch(function(err) {
-            // Do not reject the ticket update even if the mail sending fails due
-            // to unavailable mail server.
-            console.error(
-                "Failed to send some or all mail update notifications for ticket \"%s\" (%s)",
-                self.getCurrentTitle(),
-                self.get("id")
-            );
-            console.error("Message:", err.message);
-            console.error("Stack:", err.stack);
-        });
+        var mailOp = this.sendMailUpdateNotification(e.model);
+        // .catch(function(err) {
+        //     // Do not reject the ticket update even if the mail sending fails due
+        //     // to unavailable mail server.
+        //     console.error(
+        //         "Failed to send some or all mail update notifications for ticket \"%s\" (%s)",
+        //         self.getCurrentTitle(),
+        //         self.get("id")
+        //     );
+        //     console.error("Message:", err.message);
+        //     console.error("Stack:", err.stack);
+        // });
 
-        return Promise.all([
+        return Promise.join(
             this.markAsUnread(e.model),
             mailOp,
             this.updateTimestamp()
-        ]);
+        );
     }
 
 }, {
+
+    /**
+     * Shortcut for creating ticket with a title and description.
+     *
+     * @method create
+     * @param {String} title
+     * @param {String} description
+     * @param {models.server.User|Number} createdBy
+     * @param {Object} [options]
+     * @param [options.mailTransport] custom mail transport
+     * @return {Bluebird.Promise} with models.server.Ticket
+     */
+    create: function(title, description, createdBy, opts) {
+        return this.forge({ createdById: Base.toId(createdBy) }, opts)
+            .save()
+            .then(function(ticket) {
+                return Promise.join(
+                    ticket.addTitle(title, createdBy),
+                    ticket.addComment(description, createdBy)
+                ).return(ticket);
+            });
+    },
+
     /**
      * Fetch tickets by given visibilities.
      *

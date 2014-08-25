@@ -1,5 +1,6 @@
 "use strict";
 
+var Promise = require("bluebird");
 var _ = require("lodash");
 var assert = require("assert");
 
@@ -30,18 +31,24 @@ describe("/api/tickets", function() {
 
     it("can create a ticket using POST", function() {
         var self = this;
-        return this.agent
+        return self.agent
             .post("/api/tickets")
-            .send({
-                description: "Computer does not work"
-            })
+            .send({})
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.equal(res.body.description, "Computer does not work");
                 assert.equal(res.body.createdById, self.user.get("id"));
                 assert(res.body.id, "has id");
                 self.ticket = res.body;
+
+                return Promise.join(
+                    self.agent.post("/api/tickets/" + res.body.id + "/titles")
+                        .send({ title: "A title" })
+                        .promise(),
+                    self.agent.post("/api/tickets/" + res.body.id + "/comments")
+                        .send({ comment: "Computer does not work"})
+                        .promise()
+                );
             });
 
     });
@@ -55,11 +62,16 @@ describe("/api/tickets", function() {
                 assert.equal(res.status, 200);
                 assert.equal(1, res.body.length);
                 assert.equal(self.ticket.id, res.body[0].id);
-                assert.equal("Computer does not work", res.body[0].description);
+
                 assert.equal(self.ticket.id, res.body[0].id);
                 assert(
-                    _.findWhere(res.body[0].tags, { tag: "status:open" }),
+                    _.find(res.body[0].tags, { tag: "status:open" }),
                     "has status:open tag"
+                );
+
+                assert(
+                    _.find(res.body[0].titles, { title: "A title" }),
+                    "has a title"
                 );
             });
     });
@@ -95,7 +107,10 @@ describe("/api/tickets", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(1, res.body.length);
-                assert.equal("Computer does not work", res.body[0].description);
+                assert(
+                    _.find(res.body[0].titles, { title: "A title" }),
+                    "has a title"
+                );
             });
     });
 
@@ -119,7 +134,10 @@ describe("/api/tickets", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(1, res.body.length);
-                assert.equal("Computer does not work", res.body[0].description);
+                assert(
+                    _.find(res.body[0].titles, { title: "A title" }),
+                    "has a title"
+                );
             });
     });
 
@@ -131,11 +149,21 @@ describe("/api/tickets", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(self.ticket.id, res.body.id);
-                assert.equal("Computer does not work", res.body.description);
+
+                assert(
+                    _.find(res.body.titles, { title: "A title" }),
+                    "has a title"
+                );
+
                 assert(
                     _.findWhere(res.body.tags, { tag: "status:open" }),
                     "has status:open tag"
-                  );
+                );
+
+                assert(
+                    _.find(res.body.comments, { comment: "Computer does not work"}),
+                    "has comments"
+                );
             });
     });
 

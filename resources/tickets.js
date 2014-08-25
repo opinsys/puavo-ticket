@@ -75,18 +75,12 @@ app.get("/api/tickets/:id", function(req, res, next) {
  * @api {post} /api/tickets Create ticket
  * @apiName CreateTicket
  * @apiGroup tickets
- *
- * @apiParam {String} title
- * @apiParam {String} description
  */
 app.post("/api/tickets", function(req, res, next) {
-    Ticket.forge({
-        description: req.body.description,
-        createdById: req.user.id
-    })
+    Ticket.forge({ createdById: req.user.id })
     .save()
     .then(function(ticket) {
-        res.json(ticket.toJSON());
+        res.json(ticket);
     })
     .catch(next);
 });

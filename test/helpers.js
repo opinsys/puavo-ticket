@@ -87,14 +87,15 @@ function loginAsUser(userData){
  * @return {Object}
  */
 function insertTestTickets(user) {
-    var ticket = Ticket.forge({
-        createdById: user.get("id"),
-        description: "Test ticket with comments, related users etc."
-    });
+    var ticket;
 
-    return ticket.save()
-        .then(function(ticket) {
-            return ticket.addTitle("Test ticket title", user);
+    return Ticket.create(
+            "Test ticket title",
+            "Test ticket with comments, related users etc.",
+            user
+        ).then(function(_ticket) {
+            ticket = _ticket;
+            return ticket;
         })
         .then(function addComment() {
             return Comment.forge({
@@ -115,10 +116,11 @@ function insertTestTickets(user) {
             .save();
         })
         .then(function addAnotherTicket() {
-            return Ticket.forge({
-                createdById: user.get("id"),
-                description: "Other test tickets"
-            }).save();
+            return Ticket.create(
+                "An another ticket",
+                 "Other test tickets",
+                 user
+            );
         })
         .then(function addCommentToAnotherTicket(otherTicket) {
             return Comment.forge({

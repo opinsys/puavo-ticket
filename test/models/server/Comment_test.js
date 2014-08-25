@@ -25,15 +25,11 @@ describe("Comment model", function() {
 
     it("instance can be created from Ticket", function() {
         var self = this;
-        return Ticket.forge({
-                description: "Computer does not work",
-                createdById: self.user.get("id")
-            })
-            .save()
-            .then(function(ticket) {
-                return ticket.addTitle("A title", self.user)
-                    .return(ticket);
-            })
+        return Ticket.create(
+                "A title",
+                "Computer does not work",
+                self.user
+            )
             .then(function(ticket) {
                 self.ticket = ticket;
                 return ticket.addComment("foo", self.user);
@@ -44,8 +40,9 @@ describe("Comment model", function() {
                     });
             })
             .then(function(comments) {
-                var commentCreator = comments.first().related("createdBy");
-                assert.equal("Olli", commentCreator.get("externalData").first_name);
+                assert(comments.find(function(m) {
+                    return m.get("comment") === "foo";
+                }));
             });
     });
 

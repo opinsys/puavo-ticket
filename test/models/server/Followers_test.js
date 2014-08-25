@@ -24,10 +24,11 @@ describe("Follower model", function() {
                 self.user = user;
                 self.otherUser = otherUser;
 
-                return Ticket.forge({
-                    description: "Handler test ticket",
-                    createdById: self.user.get("id")
-                }).save();
+                return Ticket.create(
+                    "A handler test title",
+                    "Handler test ticket",
+                    self.user
+                );
             })
             .then(function(ticket) {
                 self.ticket = ticket;

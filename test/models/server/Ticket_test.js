@@ -30,25 +30,21 @@ describe("Ticket model", function() {
         var self = this;
         var description = "Computer does not work :(";
 
-        return Ticket.forge({
-                description: description,
-                createdById: self.user.get("id")
-            })
-            .save()
+        return Ticket.create("A title", description, self.user)
             .then(function(ticket) {
-                return ticket.addTitle("A Title", self.user).return(ticket);
+                return Ticket.forge({ id: ticket.get("id") }).fetch({
+                    withRelated: ["comments"]
+                });
             })
             .then(function(ticket) {
-                return Ticket.forge({ id: ticket.get("id") }).fetch();
-            })
-            .then(function(ticket) {
-                assert.equal(description, ticket.get("description"), "the ticket can be fetched");
+                assert.equal(description, ticket.getDescription(), "the ticket can be fetched");
             })
             .then(function() {
-                return Ticket.forge({
-                        description: "Other ticket, by other user",
-                        createdById: self.otherUser.get("id")
-                }).save();
+                return Ticket.create(
+                    "Other ticket title",
+                    "Other ticket, by other user",
+                    self.otherUser
+                );
             });
     });
 
@@ -62,20 +58,30 @@ describe("Ticket model", function() {
 
     it("has personal visibility for the creator", function() {
         return Ticket.byVisibilities([this.user.getPersonalVisibility()])
-            .fetch()
+            .fetch({ withRelated: "comments" })
             .then(function(coll) {
-                assert(coll.findWhere({ description: "Computer does not work :(" }));
                 assert.equal(1, coll.size(), "does not list other tickets by other users");
+                assert.equal(
+                    "Computer does not work :(",
+                    coll.first().getDescription()
+                );
             });
     });
 
     it("has organisation admin visibility", function() {
         return Ticket.byVisibilities([this.user.getOrganisationAdminVisibility()])
-            .fetch()
+            .fetch({ withRelated: "comments" })
             .then(function(coll) {
-                assert(coll.findWhere({ description: "Computer does not work :(" }));
-                assert(coll.findWhere({ description: "Other ticket, by other user" }));
                 assert.equal(2, coll.size(), "does list all tickets in the organisation");
+
+                assert(coll.find(function(m) {
+                    return m.getDescription() === "Computer does not work :(";
+                }));
+
+                assert(coll.find(function(m) {
+                    return m.getDescription() === "Other ticket, by other user";
+                }));
+
             });
     });
 
@@ -101,52 +107,32 @@ describe("Ticket model", function() {
 
     it("can have comments", function() {
         var self = this;
-        var ticketId = Ticket.forge({
-            description: "computer does not work",
-            createdById: self.user.id
-        })
-        .save()
+
+        return Ticket.create(
+            "A title",
+            "computer does not work",
+            self.user
+        )
         .then(function(ticket) {
-            return ticket.addTitle("A Title", self.user).return(ticket);
+            return ticket.addComment("foo", self.user).return(ticket);
+        })
+        .then(function(ticket){
+            return Ticket.forge({ id: ticket.get("id") })
+                .fetch({ withRelated: "comments.createdBy" });
         })
         .then(function(ticket) {
-            return ticket.addComment("foo", self.user)
-                .return(ticket.get("id"));
+            assert.equal(
+                ticket.related("comments").length,
+                2,
+                "should have two comments"
+            );
+
+            assert(ticket.related("comments").find(function(m) {
+                return m.get("comment") === "foo";
+            }));
+
         });
 
-        return ticketId.then(function(id) {
-            return Ticket.forge({ id: id })
-                .fetch({ withRelated: "comments.createdBy" })
-                .then(function(ticket) {
-                    assert.equal(
-                        ticket.related("comments").length,
-                        1,
-                        "should have one comment"
-                    );
-
-                    var comment = ticket.related("comments").models[0];
-
-                    assert.equal(comment.get("comment"), "foo");
-                });
-        });
-
-    });
-
-    it("can be edited", function() {
-        var id;
-        return Ticket.collection().fetch()
-            .then(function(coll) {
-                var ticket = coll.first();
-                id = ticket.get("id");
-                ticket.set("description", "new description");
-                return ticket.save();
-            })
-            .then(function() {
-                return Ticket.forge({ id: id }).fetch();
-            })
-            .then(function(ticket) {
-                assert.equal(ticket.get("description"), "new description");
-            });
     });
 
     it("can be marked as read or unread", function() {
@@ -154,11 +140,11 @@ describe("Ticket model", function() {
 
         var testTicket = null;
 
-        return Ticket.forge({
-                description: "Will be read",
-                createdById: self.user.id
-            })
-            .save()
+        return Ticket.create(
+                "Ticket title to be read",
+                "Will be read",
+                self.user
+            )
             .then(function(ticket) {
                 return ticket.markAsRead(self.user).return(ticket);
             })

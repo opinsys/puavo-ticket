@@ -37,18 +37,12 @@ describe("Ticket email notifications", function() {
         var transport = nodemailer.createTransport(stubTransport());
         var spy = sinon.spy(transport, "sendMail");
 
-        return Ticket.forge({
-                description: "Computer does not work",
-                createdById: self.user.get("id")
-            }, {
-                mailTransport: transport
-            })
-            .save()
-            .then(function(ticket) {
-                return ticket.addTitle("A title", self.user, { silent: true })
-                    .return(ticket);
-            })
-            .then(function(ticket) {
+        return Ticket.create(
+                "A title",
+                "Computer does not work",
+                self.user,
+                { mailTransport: transport }
+            ).then(function(ticket) {
                 return ticket.addComment("foo", self.otherUser);
             })
             .then(function() {
@@ -82,21 +76,12 @@ describe("Ticket email notifications", function() {
         var transport = nodemailer.createTransport(stubTransport());
         var spy = sinon.spy(transport, "sendMail");
 
-        return Ticket.forge({
-                description: "It just doesn't",
-                createdById: self.user.get("id")
-            }, {
-                mailTransport: transport
-            })
-            .save()
-            .then(function(ticket) {
-                return ticket.addTitle(
-                    "Computer does not work",
-                    self.user,
-                    { silent: true }
-                ).return(ticket);
-            })
-            .then(function(ticket) {
+        return Ticket.create(
+                "Computer does not work",
+                "It just doesn't",
+                self.user,
+                { mailTransport: transport }
+            ).then(function(ticket) {
                 return ticket.addHandler(
                     self.otherUser,
                     self.manager
@@ -119,21 +104,12 @@ describe("Ticket email notifications", function() {
         var transport = nodemailer.createTransport(stubTransport());
         var spy = sinon.spy(transport, "sendMail");
 
-        return Ticket.forge({
-                description: "Ticket with follower",
-                createdById: self.user.get("id")
-            }, {
-                mailTransport: transport
-            })
-            .save()
-            .then(function(ticket) {
-                return ticket.addTitle(
-                    "Computer does not work",
-                    self.user,
-                    { silent: true }
-                ).return(ticket);
-            })
-            .then(function(ticket) {
+        return Ticket.create(
+                "Computer does not work",
+                "Ticket with follower",
+                self.user,
+                { mailTransport: transport }
+            ).then(function(ticket) {
                 return ticket.addFollower(
                     self.otherUser,
                     self.manager

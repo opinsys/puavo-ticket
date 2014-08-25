@@ -24,10 +24,11 @@ describe("/api/tickets/:id/followers", function() {
                 self.teacher = teacher;
                 self.manager = manager;
 
-                return Ticket.forge({
-                    description: "Ticket with followers",
-                    createdById: teacher.get("id")
-                }).save();
+                return Ticket.create(
+                    "Followers test",
+                    "Ticket with followers",
+                    teacher
+                );
             })
             .then(function(ticket) {
                 self.ticket = ticket;

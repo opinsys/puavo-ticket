@@ -33,16 +33,12 @@ describe("Title model", function() {
 
     it("instance can be created from Ticket", function() {
         var self = this;
-        return Ticket.forge({
-                description: "It just doesn't",
-                createdById: self.user.get("id")
-            })
-            .save()
-            .then(function(ticket) {
+        return Ticket.create(
+                "Computer does not work",
+                "It just doesn't",
+                self.user
+            ).then(function(ticket) {
                 self.ticket = ticket;
-                return ticket.addTitle("Computer does not work", self.user);
-            })
-            .then(function() {
                 return self.ticket.titles().fetch({
                         withRelated: "createdBy"
                     });

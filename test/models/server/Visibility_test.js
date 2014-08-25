@@ -24,10 +24,7 @@ describe("Visibility model", function() {
                 self.user = user;
                 self.otherUser = otherUser;
 
-                return Ticket.forge({
-                    description: "Desc",
-                    createdById: user.get("id")
-                }).save();
+                return Ticket.create("A title", "Desc", user);
             })
             .then(function(ticket) {
                 self.ticket = ticket;

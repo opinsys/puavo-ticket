@@ -74,9 +74,7 @@ describe("/api/tickets/:id/tags", function() {
                 );
 
 
-                var otherTicket = _.findWhere(res.body, {
-                    description: self.otherTicket.get("description")
-                });
+                var otherTicket = _.find(res.body, { id: self.otherTicket.get("id") });
                 assert(otherTicket);
                 assert(
                     _.findWhere(otherTicket.tags, { tag: "bartag" }),

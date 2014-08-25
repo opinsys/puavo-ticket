@@ -1,8 +1,10 @@
 "use strict";
+var _ = require("lodash");
+var assert = require("assert");
+
 var helpers = require("../helpers");
 var ReadTicket = require("../../models/server/ReadTicket");
 
-var assert = require("assert");
 
 
 describe("/api/tickets/:id/read", function() {
@@ -64,7 +66,7 @@ describe("/api/tickets/:id/read", function() {
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.equal("Test ticket with comments, related users etc.", res.body[0].description);
+                assert(_.find(res.body[0].titles, { title: "Test ticket title" }));
                 assert.equal(ticket.get("id"), res.body[0].readTickets[0].ticketId);
                 assert.equal(self.user.id, res.body[0].readTickets[0].readById);
             });
