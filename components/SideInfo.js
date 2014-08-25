@@ -3,42 +3,41 @@
 var React = require("react/addons");
 
 
-
 /**
  * Edit form for a ticket
  *
  * @namespace components
- * @class TicketForm
+ * @class SideInfo
  * @extends React.ReactComponent
  */
-var TicketForm = React.createClass({
+var SideInfo = React.createClass({
 
     render: function() {
         return (
-            <div>
-            <div className="contact">
-                <p>Kiireellisissä tapauksissa <br/> soita tukinumeroomme <strong>014-4591625</strong></p>
-            </div>
-                        
-            <div className="checklist">
-                <p><strong>Ilmoita nämä asiat tukipyynnössä</strong></p>
-                <ul>
-                    <li>tarkka kuvaus tuen tarpeesta</li>
-                    <li>koskeeko yhtä vai useampaa laitetta/käyttäjää</li>
-                    <li>laite</li>
-                    <li>käyttäjätunnus</li>
-                    <li>ajankohta</li>
-                </ul>
-            </div>
-        
-            <div className="ticket-form">
+            <div className="SideInfo">
+                <div className="contact">
+                    <p>Kiireellisissä tapauksissa <br/> soita tukinumeroomme <strong>014-4591625</strong></p>
+                </div>
+
+                <div className="checklist">
+                    <p><strong>Ilmoita nämä asiat tukipyynnössä</strong></p>
+                    <ul>
+                        <li>tarkka kuvaus tuen tarpeesta</li>
+                        <li>koskeeko yhtä vai useampaa laitetta/käyttäjää</li>
+                        <li>laite</li>
+                        <li>käyttäjätunnus</li>
+                        <li>ajankohta</li>
+                    </ul>
+                </div>
+
+                <div className="ticket-form">
 
 
 
-                {this.props.children}
+                    {this.props.children}
 
 
-            </div>
+                </div>
             </div>
         );
     },
@@ -46,4 +45,4 @@ var TicketForm = React.createClass({
 
 });
 
-module.exports = TicketForm;
+module.exports = SideInfo;

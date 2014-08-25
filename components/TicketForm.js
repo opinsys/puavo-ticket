@@ -102,8 +102,7 @@ var TicketForm = React.createClass({
                     </div>
                 </div>
                 <div className="sidebar col-md-4">
-                           <SideInfo>
-                            </SideInfo>
+                    <SideInfo />
                 </div>
             </div>
         );
