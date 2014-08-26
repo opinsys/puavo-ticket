@@ -28,14 +28,16 @@ var Notification = Base.extend({
                 .join("followers", function() {
                     this.on("notifications.targetId", "=", "followers.followedById");
                     this.on("notifications.ticketId", "=", "followers.ticketId");
-                    // this.on("notifications.ticketId", "=", "tickets.id");
+                })
+                .join("tickets", function() {
+                    this.on("notifications.ticketId", "=", "tickets.id");
+                    this.on("notifications.readAt", "<", "tickets.updatedAt");
                 })
                 .whereNull("followers.deletedAt")
                 .where({
                     "followers.deleted": 0,
                     "followers.followedById": Base.toId(user),
                     "notifications.targetId": Base.toId(user),
-                    "notifications.unread": true
                 });
             })
             .fetch();

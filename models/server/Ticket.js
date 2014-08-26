@@ -575,30 +575,13 @@ var Ticket = Base.extend({
             return notification.set({
                 readAt: new Date(),
                 emailSentAt: new Date(),
-                unread: false
             }).save();
         });
     },
 
-    /**
-     * Mark ticket as unread
-     *
-     * @method markAsUnread
-     * @return {Bluebird.Promise} with models.server.Notification
-     */
     markAsUnread: function(model) {
-        var self = this;
-
-        return Notification.collection()
-            .query("where", "ticketId", "=", self.get("id"))
-            .fetch()
-            .then(function(coll) { return coll.models; })
-            .map(function(notification) {
-                return notification.set({ unread: true }).save();
-            })
-            .then(function() {
-                return self.updateTimestamp();
-            });
+        console.error("Deprecated call to Ticket#markAsUnread. Use Ticket#updateTimestamp()");
+        return this.updateTimestamp();
     },
 
     /**
@@ -699,7 +682,7 @@ var Ticket = Base.extend({
 
     onTicketUpdate: function(e){
         return Promise.join(
-            this.markAsUnread(e.model),
+            this.updateTimestamp(),
             this.sendMailUpdateNotification(e.model)
         );
     }

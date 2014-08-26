@@ -98,4 +98,22 @@ describe("Ticket notifications", function() {
             });
     });
 
+    it("are not sent even if the user was once a follower", function() {
+        var self = this;
+        return self.otherTicket.addFollower(self.user, self.user)
+            .then(function() {
+                return self.otherTicket.removeFollower(self.user, self.user);
+            })
+            .then(function() {
+                return self.otherTicket.addComment("foo", self.otherUser);
+            })
+            .delay(100)
+            .then(function() {
+                return Notification.fetchFollowerNotifications(self.user);
+            })
+            .then(function(coll) {
+                assert.equal(0, coll.size());
+            });
+    });
+
 });

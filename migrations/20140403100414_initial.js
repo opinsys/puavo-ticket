@@ -153,9 +153,8 @@ exports.up = function(knex, Promise) {
                     .inTable("users");
                 table.unique(["ticketId", "targetId"]);
 
-                table.dateTime("readAt");
-                table.dateTime("emailSentAt");
-                table.boolean("unread").defaultTo(false);
+                table.dateTime("readAt").notNullable();
+                table.dateTime("emailSentAt").notNullable();
             })
 
         ]);
