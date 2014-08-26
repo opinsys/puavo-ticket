@@ -18,7 +18,7 @@ var Follower = require("./Follower");
 var Handler = require("./Handler");
 var Device = require("./Device");
 var User = require("./User");
-var ReadTicket = require("./ReadTicket");
+var Notification = require("./Notification");
 var Title = require("./Title");
 var Moment = require("moment");
 
@@ -165,8 +165,8 @@ var Ticket = Base.extend({
         return this.hasMany(Visibility, "ticketId");
     },
 
-    readTickets: function() {
-        return this.hasMany(ReadTicket, "ticketId");
+    notifications: function() {
+        return this.hasMany(Notification, "ticketId");
     },
 
     /**
@@ -556,28 +556,28 @@ var Ticket = Base.extend({
      *
      * @method markAsRead
      * @param {models.server.User|Number} user User model or id of the user
-     * @return {Bluebird.Promise} with models.server.ReadTicket
+     * @return {Bluebird.Promise} with models.server.Notification
      */
     markAsRead: function(user) {
         var self = this;
 
-        return ReadTicket.forge({
+        return Notification.forge({
             ticketId: self.get("id"),
-            readById: Base.toId(user)
+            unreadById: Base.toId(user)
         })
         .fetch()
-        .then(function(readTicket) {
-            if(readTicket) {
-                readTicket.set({
+        .then(function(notification) {
+            if(notification) {
+                notification.set({
                     readAt: new Date(),
                     unread: false
                 });
-                return readTicket.save();
+                return notification.save();
             }
 
-            return ReadTicket.forge({
+            return Notification.forge({
                 ticketId: self.get("id"),
-                readById: Base.toId(user),
+                unreadById: Base.toId(user),
                 readAt: new Date(),
                 unread: false
             }).save();
@@ -589,17 +589,17 @@ var Ticket = Base.extend({
      *
      * @method markAsUnread
      * @param {models.server.Attachment|Comment|Device|Follower|Handler|RelatedUsers|Tag}
-     * @return {Bluebird.Promise} with models.server.ReadTicket
+     * @return {Bluebird.Promise} with models.server.Notification
      */
     markAsUnread: function(model) {
         var self = this;
 
-        return ReadTicket.collection()
+        return Notification.collection()
             .query("where", "ticketId", "=", self.get("id"))
             .fetch()
             .then(function(coll) { return coll.models; })
-            .map(function(readTicket) {
-                return readTicket.set({ unread: true }).save();
+            .map(function(notification) {
+                return notification.set({ unread: true }).save();
             });
     },
 

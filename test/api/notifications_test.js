@@ -3,7 +3,7 @@ var _ = require("lodash");
 var assert = require("assert");
 
 var helpers = require("../helpers");
-var ReadTicket = require("../../models/server/ReadTicket");
+var Notification = require("../../models/server/Notification");
 
 
 
@@ -51,7 +51,7 @@ describe("/api/tickets/:id/read", function() {
                 assert.equal(res.status, 200);
             })
             .then(function() {
-                return ReadTicket.forge({ readById: self.user.id }).fetch();
+                return Notification.forge({ unreadById: self.user.id }).fetch();
             })
             .then(function(readTicket) {
                 assert.equal(readTicket.get("ticketId"), ticket.get("id"));
@@ -67,8 +67,8 @@ describe("/api/tickets/:id/read", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert(_.find(res.body[0].titles, { title: "Test ticket title" }));
-                assert.equal(ticket.get("id"), res.body[0].readTickets[0].ticketId);
-                assert.equal(self.user.id, res.body[0].readTickets[0].readById);
+                assert.equal(ticket.get("id"), res.body[0].notifications[0].ticketId);
+                assert.equal(self.user.id, res.body[0].notifications[0].unreadById);
             });
     });
 

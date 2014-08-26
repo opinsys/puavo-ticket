@@ -144,15 +144,16 @@ exports.up = function(knex, Promise) {
                 uniqueForTicket(table, "tag");
             }),
 
-            knex.schema.createTable("readTickets", function(table) {
+            knex.schema.createTable("notifications", function(table) {
+                table.increments("id");
                 addTicketRelation(table);
-                table.integer("readById")
+                table.integer("unreadById")
                     .notNullable()
                     .references("id")
                     .inTable("users");
 
-                table.increments("id");
                 table.dateTime("readAt");
+                table.dateTime("emailSentAt");
                 table.boolean("unread");
             })
 
@@ -161,8 +162,7 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-
-    return Promise.all([
+    return Promise.join(
         knex.schema.dropTableIfExists("titles"),
         knex.schema.dropTableIfExists("comments"),
         knex.schema.dropTableIfExists("visibilities"),
@@ -172,8 +172,8 @@ exports.down = function(knex, Promise) {
         knex.schema.dropTableIfExists("followers"),
         knex.schema.dropTableIfExists("tags"),
         knex.schema.dropTableIfExists("handlers"),
-        knex.schema.dropTableIfExists("readTickets")
-    ])
+        knex.schema.dropTableIfExists("notifications")
+    )
     .then(function() {
         return knex.schema.dropTableIfExists("tickets");
     })

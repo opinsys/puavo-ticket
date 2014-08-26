@@ -9,7 +9,7 @@ var Comment = require("./Comment");
 var User = require("./User");
 var Title = require("./Title");
 var Tag = require("./Tag");
-var ReadTicket = require("./ReadTicket");
+var Notification = require("./Notification");
 var _ = require("lodash");
 
 function byCreation(a, b) {
@@ -361,8 +361,8 @@ var Ticket = Base.extend({
      * @return {Boolean}
      */
     hasRead: function(userId) {
-        return this.get("readTickets").some(function(readTicket) {
-            return readTicket.readById === userId && readTicket.unread === false;
+        return this.get("notifications").some(function(readTicket) {
+            return readTicket.unreadById === userId && readTicket.unread === false;
         });
     },
 
@@ -375,12 +375,12 @@ var Ticket = Base.extend({
      */
     getReadAtFor: function(user){
         var never = new Date(0);
-        var reads = this.get("readTickets");
+        var reads = this.get("notifications");
         if (!reads || reads.length === 0) return never;
         return _(reads)
             .filter(Boolean)
             .filter(function(ob) {
-                return ob.readById === user.get("id");
+                return ob.unreadById === user.get("id");
             }).map(function(ob) {
                 return new Date(ob.readAt);
             }).max(function(readAt) {
@@ -396,7 +396,7 @@ var Ticket = Base.extend({
      */
     markAsRead: function() {
         debug("Mark ticket as read: " + this.get("title"));
-        var model = new ReadTicket({}, { parent: this });
+        var model = new Notification({}, { parent: this });
         return model.save({ dummy: 1 });
     }
 

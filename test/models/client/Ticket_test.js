@@ -12,13 +12,13 @@ describe("Ticket model", function() {
         var ticket = new Ticket({
             title: title,
             description: "It just doesn't",
-            readTickets: [ { ticketId: 487,
-                              readById: 323,
+            notifications: [ { ticketId: 487,
+                              unreadById: 323,
                               id: 60,
                               readAt: '2014-06-10T08:04:55.249Z',
                               unread: false,
-                              unique_id: 'readTickets:60',
-                              type: 'readTickets' } ]
+                              unique_id: 'notifications:60',
+                              type: 'notifications' } ]
         });
 
         assert.equal(ticket.get("title"), "Computer does not work :(");

@@ -4,7 +4,7 @@ var Promise = require("bluebird");
 var helpers = require("../../helpers");
 
 var Ticket = require("../../../models/server/Ticket");
-var ReadTicket = require("../../../models/server/ReadTicket");
+var Notification = require("../../../models/server/Notification");
 var User = require("../../../models/server/User");
 var assert = require("assert");
 
@@ -151,7 +151,7 @@ describe("Ticket model", function() {
             .then(function(ticket) {
                 testTicket = ticket;
 
-                return ReadTicket.forge({
+                return Notification.forge({
                     ticketId: ticket.get("id")
                 }).fetch({ require: true });
             })
@@ -159,7 +159,7 @@ describe("Ticket model", function() {
                 assert(read);
                 assert.equal(
                     self.user.get("id"),
-                    read.get("readById"),
+                    read.get("unreadById"),
                     "has the reader id in the readBy column"
                 );
             })
@@ -167,7 +167,7 @@ describe("Ticket model", function() {
                 return testTicket.markAsUnread().return(testTicket);
             })
             .then(function(ticket) {
-                return ReadTicket.forge({
+                return Notification.forge({
                     ticketId: ticket.get("id")
                 }).fetch({ require: true });
             })
@@ -175,8 +175,8 @@ describe("Ticket model", function() {
                 assert(read);
                 assert.equal(
                     self.user.get("id"),
-                    read.get("readById"),
-                    "has the reader id in the readById column"
+                    read.get("unreadById"),
+                    "has the reader id in the unreadById column"
                 );
                 assert.equal(read.get("unread"), true);
             });

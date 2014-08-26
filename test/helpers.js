@@ -155,7 +155,7 @@ function clearTestDatabase() {
         'followers',
         'tags',
         'handlers',
-        'readTickets',
+        'notifications',
         'titles'
  ];
 

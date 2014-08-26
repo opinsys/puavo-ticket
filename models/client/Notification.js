@@ -5,14 +5,14 @@ var Cocktail = require("backbone.cocktail");
 var Base = require("./Base");
 
 /**
- * Client ReadTicket model
+ * Client Notification model
  *
  * @namespace models.client
- * @class ReadTicket
+ * @class Notification
  * @extends models.client.Base
  * @uses models.TagMixin
  */
-var ReadTicket = Base.extend({
+var Notification = Base.extend({
 
     defaults: function() {
         return {
@@ -26,5 +26,5 @@ var ReadTicket = Base.extend({
 
 });
 
-Cocktail.mixin(ReadTicket);
-module.exports = ReadTicket;
+Cocktail.mixin(Notification);
+module.exports = Notification;

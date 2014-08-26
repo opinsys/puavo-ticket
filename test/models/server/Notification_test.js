@@ -2,10 +2,10 @@
 
 var helpers = require("../../helpers");
 
-var ReadTicket = require("../../../models/server/ReadTicket");
+var Notification = require("../../../models/server/Notification");
 var assert = require("assert");
 
-describe("ReadTicket model", function() {
+describe("Notification model", function() {
 
     before(function() {
         var self = this;
@@ -32,18 +32,18 @@ describe("ReadTicket model", function() {
     it("Instance can be created", function() {
         var self = this;
 
-        return ReadTicket.forge({
+        return Notification.forge({
                 ticketId: self.ticket.id,
-                readById: self.user.id,
+                unreadById: self.user.id,
                 readAt: new Date('2013', '01', '01'),
                 unread: true
             })
             .save()
-            .then(function(readTicket) {
-                return ReadTicket.forge({ id: readTicket.get("id") }).fetch();
+            .then(function(notification) {
+                return Notification.forge({ id: notification.get("id") }).fetch();
             })
-            .then(function(readTicket) {
-                assert.equal(new Date('2013', '01', '01').toString(), readTicket.get("readAt").toString());
+            .then(function(notification) {
+                assert.equal(new Date('2013', '01', '01').toString(), notification.get("readAt").toString());
             });
 
 

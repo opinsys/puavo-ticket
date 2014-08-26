@@ -24,8 +24,8 @@ app.get("/api/tickets", function(req, res, next) {
             "handlers.handler",
             "tags",
             "titles",
-            { readTickets: function(qb) {
-                qb.where({ readById: req.user.get("id") });
+            { notifications: function(qb) {
+                qb.where({ unreadById: req.user.get("id") });
             }}
         ]
     })
@@ -56,8 +56,8 @@ app.get("/api/tickets/:id", function(req, res, next) {
             "relatedUsers.user",
             "relatedUsers.createdBy",
             "titles.createdBy",
-            { readTickets: function(qb) {
-                qb.where({ readById: req.user.get("id") });
+            { notifications: function(qb) {
+                qb.where({ unreadById: req.user.get("id") });
             }}
         ],
         require: true
