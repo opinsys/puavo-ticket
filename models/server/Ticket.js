@@ -131,11 +131,11 @@ var Ticket = Base.extend({
                 user
             );
 
-            return Promise.all([
+            return Promise.join(
                 isOpen,
                 creatorCanView,
                 organisationAdminCanView
-            ]);
+            );
         });
     },
 
@@ -222,7 +222,10 @@ var Ticket = Base.extend({
         .then(function(comment) {
             return this.addFollower(user, user).return(comment);
         })
-        .then(triggerUpdate(opts, this));
+        .then(triggerUpdate(opts, this))
+        .then(function() {
+            return this.markAsRead(user);
+        });
     },
 
 
@@ -558,27 +561,20 @@ var Ticket = Base.extend({
      * @param {models.server.User|Number} user User model or id of the user
      * @return {Bluebird.Promise} with models.server.Notification
      */
-    markAsRead: function(user) {
+    markAsRead: function(user, opts) {
         var self = this;
-
-        return Notification.forge({
+        var id = {
             ticketId: self.get("id"),
-            unreadById: Base.toId(user)
-        })
+            targetId: Base.toId(user)
+        };
+
+        return Notification.forge(id)
         .fetch()
         .then(function(notification) {
-            if(notification) {
-                notification.set({
-                    readAt: new Date(),
-                    unread: false
-                });
-                return notification.save();
-            }
-
-            return Notification.forge({
-                ticketId: self.get("id"),
-                unreadById: Base.toId(user),
+            notification = notification || Notification.forge(id);
+            return notification.set({
                 readAt: new Date(),
+                emailSentAt: new Date(),
                 unread: false
             }).save();
         });
@@ -588,7 +584,6 @@ var Ticket = Base.extend({
      * Mark ticket as unread
      *
      * @method markAsUnread
-     * @param {models.server.Attachment|Comment|Device|Follower|Handler|RelatedUsers|Tag}
      * @return {Bluebird.Promise} with models.server.Notification
      */
     markAsUnread: function(model) {
@@ -600,6 +595,9 @@ var Ticket = Base.extend({
             .then(function(coll) { return coll.models; })
             .map(function(notification) {
                 return notification.set({ unread: true }).save();
+            })
+            .then(function() {
+                return self.updateTimestamp();
             });
     },
 
@@ -696,14 +694,13 @@ var Ticket = Base.extend({
      * @return {Bluebird.Promise}
      */
     updateTimestamp: function() {
-        this.set("updatedAt", new Date()).save();
+        return this.set("updatedAt", new Date()).save();
     },
 
     onTicketUpdate: function(e){
         return Promise.join(
             this.markAsUnread(e.model),
-            this.sendMailUpdateNotification(e.model),
-            this.updateTimestamp()
+            this.sendMailUpdateNotification(e.model)
         );
     }
 
@@ -752,6 +749,7 @@ var Ticket = Base.extend({
                 .whereNull("visibilities.deletedAt");
             });
     },
+
 
     /**
      * Query tickets with visibilities of the user

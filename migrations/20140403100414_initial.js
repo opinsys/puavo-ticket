@@ -147,14 +147,15 @@ exports.up = function(knex, Promise) {
             knex.schema.createTable("notifications", function(table) {
                 table.increments("id");
                 addTicketRelation(table);
-                table.integer("unreadById")
+                table.integer("targetId")
                     .notNullable()
                     .references("id")
                     .inTable("users");
+                table.unique(["ticketId", "targetId"]);
 
                 table.dateTime("readAt");
                 table.dateTime("emailSentAt");
-                table.boolean("unread");
+                table.boolean("unread").defaultTo(false);
             })
 
         ]);

@@ -12,11 +12,11 @@ describe("Title model", function() {
         var self = this;
         return helpers.clearTestDatabase()
             .then(function() {
-                return Promise.all([
+                return Promise.join(
                     User.ensureUserFromJWTToken(helpers.user.manager),
                     User.ensureUserFromJWTToken(helpers.user.teacher),
                     User.ensureUserFromJWTToken(helpers.user.teacher2)
-                ]);
+                );
             })
             .spread(function(manager, user, otherUser) {
                 self.manager = manager;

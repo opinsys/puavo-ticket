@@ -361,8 +361,8 @@ var Ticket = Base.extend({
      * @return {Boolean}
      */
     hasRead: function(userId) {
-        return this.get("notifications").some(function(readTicket) {
-            return readTicket.unreadById === userId && readTicket.unread === false;
+        return this.get("notifications").some(function(notification) {
+            return notification.targetId === userId && notification.unread === false;
         });
     },
 
@@ -380,7 +380,7 @@ var Ticket = Base.extend({
         return _(reads)
             .filter(Boolean)
             .filter(function(ob) {
-                return ob.unreadById === user.get("id");
+                return ob.targetId === user.get("id");
             }).map(function(ob) {
                 return new Date(ob.readAt);
             }).max(function(readAt) {

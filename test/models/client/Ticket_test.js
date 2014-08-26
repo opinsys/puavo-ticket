@@ -13,7 +13,7 @@ describe("Ticket model", function() {
             title: title,
             description: "It just doesn't",
             notifications: [ { ticketId: 487,
-                              unreadById: 323,
+                              targetId: 323,
                               id: 60,
                               readAt: '2014-06-10T08:04:55.249Z',
                               unread: false,
