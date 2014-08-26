@@ -29,10 +29,10 @@ drop-db:
 	sudo -u postgres psql -c "drop database \"puavo-ticket-test\"";
 
 drop-tables:
-	sudo -u postgres psql -c "DROP TABLE attachments,attachments,titles,comments,devices,followers,handlers,knex_migrations, \
-		\"readTickets\",\"relatedUsers\",tags,tickets,users,visibilities" puavo-ticket
-	sudo -u postgres psql -c "DROP TABLE attachments,attachments,titles,comments,devices,followers,handlers,knex_migrations, \
-		\"readTickets\",\"relatedUsers\",tags,tickets,users,visibilities" puavo-ticket-test
+	sudo -u postgres psql -c "DROP TABLE IF EXISTS attachments,attachments,titles,comments,devices,followers,handlers,knex_migrations, \
+		\"notifications\",\"relatedUsers\",tags,tickets,users,visibilities CASCADE" puavo-ticket
+	sudo -u postgres psql -c "DROP TABLE IF EXISTS attachments,attachments,titles,comments,devices,followers,handlers,knex_migrations, \
+		\"notifications\",\"relatedUsers\",tags,tickets,users,visibilities CASCADE" puavo-ticket-test
 
 rollback:
 	knex migrate:rollback
