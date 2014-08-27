@@ -53,7 +53,7 @@ describe("/api/tickets/:id/read", function() {
     });
 
 
-    it("can mark ticket as read", function() {
+    it("marks ticket as read", function() {
         var self = this;
         return this.agent
             .post("/api/tickets/" + self.ticket.get("id") + "/read")
@@ -72,7 +72,7 @@ describe("/api/tickets/:id/read", function() {
             });
     });
 
-    it("can see is ticket as read", function() {
+    it("makes the ticket as read in /api/tickets", function() {
         var self = this;
         return this.agent
             .get("/api/tickets")
@@ -84,5 +84,6 @@ describe("/api/tickets/:id/read", function() {
                 assert.equal(self.user.get("id"), res.body[0].notifications[0].targetId);
             });
     });
+
 
 });
