@@ -108,6 +108,7 @@ describe("/api/tickets/:id/read", function() {
                     var data = res.body[0];
 
                     assert(data.titles, "has titles relation");
+                    assert(data.titles[0], "has at least one title");
                     assert.equal("The Ticket", data.titles[0].title);
 
                     assert(data.comments, "has comments relation");
@@ -140,6 +141,32 @@ describe("/api/tickets/:id/read", function() {
                 });
         });
 
+        it("can list multiple tickets", function() {
+            var self = this;
+            return self.otherTicket.addFollower(self.user, self.user)
+                .then(function() {
+                    return self.otherTicket.markAsRead(self.user);
+                })
+                .then(function() {
+                    return self.otherTicket.addComment("Comment for the other ticket", self.otherUser);
+                })
+                .then(function() {
+                    return self.agent.get("/api/notifications").promise();
+                })
+                .then(function(res) {
+                    assert.equal(res.status, 200, res.text);
+                    assert.equal(2, res.body.length);
+
+                    assert.equal(1, res.body[0].titles.length, "first ticket has one title loaded");
+                    assert.equal(1, res.body[1].titles.length, "second ticket has one title loaded");
+
+                    assert.equal(1, res.body[0].comments.length, "first ticket has one comment loaded");
+                    assert.equal(1, res.body[1].comments.length, "second ticket has one comment loaded");
+
+                });
+        });
+
     });
+
 
 });

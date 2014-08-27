@@ -41,8 +41,12 @@ app.post("/api/tickets/:id/read", function(req, res, next) {
  * @apiGroup notifications
  */
 app.get("/api/notifications", function(req, res, next) {
-    Ticket.withUnreadComments(req.user).fetch({
-        withRelated: [
+    Ticket.withUnreadComments(req.user).fetch()
+    .then(function(coll) {
+        return coll.models;
+    })
+    .map(function(ticket) {
+        return ticket.load([
             { titles: function(q) {
                 q.orderBy("createdAt", "desc").limit(1);
             }},
@@ -50,7 +54,7 @@ app.get("/api/notifications", function(req, res, next) {
                 q.orderBy("createdAt", "desc").limit(1);
             }},
             "comments.createdBy"
-        ]
+        ]);
     })
     .then(function(tickets) {
         res.json(tickets);
