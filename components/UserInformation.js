@@ -7,14 +7,22 @@ var DropdownButton = require("react-bootstrap/DropdownButton");
 var MenuItem = require("react-bootstrap/MenuItem");
 
 var ProfileBadge = require("./ProfileBadge");
+var User = require("app/models/client/User");
 
 /**
  * User information and logout
  *
  * @namespace components
  * @class UserInformation
+ * @constructor
+ * @param {Object} props
+ * @param {models.client.User} props.user
  */
 var UserInformation = React.createClass({
+
+    propTypes: {
+        user: React.PropTypes.instanceOf(User).isRequired,
+    },
 
 
     render: function() {

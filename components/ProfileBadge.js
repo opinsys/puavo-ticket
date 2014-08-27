@@ -2,9 +2,10 @@
 "use strict";
 
 var React = require("react/addons");
-
 var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
 var Tooltip = require("react-bootstrap/Tooltip");
+
+var User = require("app/models/client/User");
 
 /**
  * Display profile image in badge which is constrained by maxWidth and
@@ -23,10 +24,7 @@ var Tooltip = require("react-bootstrap/Tooltip");
 var ProfileBadge = React.createClass({
 
     propTypes: {
-        user: React.PropTypes.shape({
-            getFullName: React.PropTypes.func.isRequired,
-            getProfileImage: React.PropTypes.func.isRequired
-        }).isRequired,
+        user: React.PropTypes.instanceOf(User).isRequired,
         size: React.PropTypes.number,
         padding: React.PropTypes.number,
         tipPlacement: React.PropTypes.string
