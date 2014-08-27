@@ -29,9 +29,9 @@ var Notification = Base.extend({
                     this.on("notifications.targetId", "=", "followers.followedById");
                     this.on("notifications.ticketId", "=", "followers.ticketId");
                 })
-                .join("tickets", function() {
-                    this.on("notifications.ticketId", "=", "tickets.id");
-                    this.on("notifications.readAt", "<", "tickets.updatedAt");
+                .join("comments", function() {
+                    this.on("notifications.ticketId", "=", "comments.ticketId");
+                    this.on("notifications.readAt", "<", "comments.createdAt");
                 })
                 .whereNull("followers.deletedAt")
                 .where({
