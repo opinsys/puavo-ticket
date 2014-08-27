@@ -421,8 +421,8 @@ var Ticket = Base.extend({
  *
  * Client-side collection if tickets
  *
- * @namespace models.client.Ticket
- * @class Collection
+ * @namespace models.client
+ * @class Ticket.Collection
  * @extends models.client.Base.Collection
  */
 var Collection = Base.Collection.extend({
@@ -440,18 +440,36 @@ var Collection = Base.Collection.extend({
     model: Ticket,
 
 
+    /**
+     * Select tickets that are closed
+     *
+     * @method selectClosed
+     * @return {Array} of models.client.Ticket
+     */
     selectClosed: function() {
         return this.filter(function(t) {
             return t.getCurrentStatus() === "closed";
         });
     },
 
+    /**
+     * Select tickets that are open
+     *
+     * @method selectOpen
+     * @return {Array} of models.client.Ticket
+     */
     selectOpen: function() {
         return this.filter(function(t) {
             return t.getCurrentStatus() === "open";
         });
     },
 
+    /**
+     * Select tickets that have no manager handler
+     *
+     * @method selectPending
+     * @return {Array} of models.client.Ticket
+     */
     selectPending: function() {
         return this.selectOpen().filter(function(t) {
             // None of the handlers are manager
@@ -461,6 +479,13 @@ var Collection = Base.Collection.extend({
         });
     },
 
+    /**
+     * Select tickets that handled by the given user
+     *
+     * @method selectHandledBy
+     * @param {models.client.User} user
+     * @return {Array} of models.client.Ticket
+     */
     selectHandledBy: function(user) {
         return this.selectOpen().filter(function(t) {
             // One of the handlers is me
@@ -470,6 +495,13 @@ var Collection = Base.Collection.extend({
         });
     },
 
+    /**
+     * Select tickets that handled by other managers than the given one
+     *
+     * @method selectHandledByOtherManagers
+     * @param {models.client.User} user
+     * @return {Array} of models.client.Ticket
+     */
     selectHandledByOtherManagers: function(user) {
         return this.selectOpen().filter(function(t) {
 
