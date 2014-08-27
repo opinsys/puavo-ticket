@@ -1,6 +1,9 @@
 "use strict";
 var debug = require("debug")("puavo-ticket:models/client/Ticket");
 var Promise = require("bluebird");
+var _ = require("lodash");
+var $ = require("jquery");
+
 var Base = require("./Base");
 var Tag = require("./Tag");
 var Handler = require("./Handler");
@@ -10,7 +13,6 @@ var User = require("./User");
 var Title = require("./Title");
 var Tag = require("./Tag");
 var Notification = require("./Notification");
-var _ = require("lodash");
 
 function byCreation(a, b) {
     if (a.createdAt().getTime() > b.createdAt().getTime()) return 1;
@@ -414,6 +416,22 @@ var Ticket = Base.extend({
     collection: function() {
         return new Collection();
     },
+
+    /**
+     * Return list of ticketi in a promise that have unread comments by the
+     * current user
+     *
+     * @static
+     * @method fetchWithUnreadComments
+     * @return {Bluebird.Promise} with array models.client.Ticket instances
+     */
+    fetchWithUnreadComments: function() {
+        return Promise.cast($.get("/api/notifications"))
+            .map(function(data) {
+                return new Ticket(data);
+            });
+    },
+
 
 });
 

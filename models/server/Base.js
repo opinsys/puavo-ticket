@@ -96,6 +96,7 @@ var Base = Bookshelf.DB.Model.extend({
      * @return {Number}
      */
     toId: function(model) {
+        if (!model) throw new Error("Cannot get id for a falsy value!");
         return this.toAttr(model, "id");
     },
 

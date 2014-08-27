@@ -5,11 +5,13 @@ var React = require("react/addons");
 var Backbone = require("backbone");
 var Link = require("react-router").Link;
 var Modal = require("react-bootstrap/Modal");
+var ButtonGroup = require("react-bootstrap/ButtonGroup");
 
 var User = require("../models/client/User");
 var BackboneMixin = require("./BackboneMixin");
 var ErrorMessage = require("./ErrorMessage");
 var UserInformation = require("./UserInformation");
+var NotificationsHub = require("./NotificationsHub");
 
 
 /**
@@ -86,15 +88,16 @@ var Main = React.createClass({
                     </div>
 
                     <div className="top-buttons">
+                        <ButtonGroup>
+                            <Link className="btn btn-default top-button" to="new">
+                                <i className="fa fa-pencil-square-o"></i>Uusi tukipyyntö
+                            </Link>
 
-                        <Link className="btn btn-default top-button" to="new">
-                            <i className="fa fa-pencil-square-o"></i>Uusi tukipyyntö
-                        </Link>
-
-                        <Link className="btn btn-default top-button" to="tickets">
-                            <i className="fa fa-home"></i>Omat tukipyynnöt
-                        </Link>
-
+                            <Link className="btn btn-default top-button" to="tickets">
+                                <i className="fa fa-home"></i>Omat tukipyynnöt
+                            </Link>
+                            <NotificationsHub user={this.state.user} />
+                        </ButtonGroup>
                     </div>
                 </div>
 
