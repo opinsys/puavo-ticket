@@ -1,8 +1,8 @@
 "use strict";
 
-var helpers = require("../../helpers");
+var helpers = require("app/test/helpers");
+var Attachment = require("app/models/server/Attachment");
 
-var Attachment = require("../../../models/server/Attachment");
 var assert = require("assert");
 var fs = require("fs");
 var crypto = require('crypto');

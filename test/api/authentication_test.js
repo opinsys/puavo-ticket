@@ -1,7 +1,8 @@
 "use strict";
 var _ = require("lodash");
 var assert = require("assert");
-var helpers = require("../helpers");
+
+var helpers = require("app/test/helpers");
 
 describe("Authentication", function() {
 

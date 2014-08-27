@@ -4,13 +4,11 @@ var Promise = require("bluebird");
 var nodemailer = require("nodemailer");
 var stubTransport = require("nodemailer-stub-transport");
 var sinon = require("sinon");
-
-var helpers = require("../../helpers");
-
-var Ticket = require("../../../models/server/Ticket");
-var User = require("../../../models/server/User");
 var assert = require("assert");
 
+var helpers = require("app/test/helpers");
+var Ticket = require("app/models/server/Ticket");
+var User = require("app/models/server/User");
 
 describe("Ticket email notifications", function() {
 

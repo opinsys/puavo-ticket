@@ -3,9 +3,9 @@ var assert = require("assert");
 var _ = require("lodash");
 var Promise = require("bluebird");
 
-var helpers = require("../helpers");
-var User = require("../../models/server/User");
-var Ticket = require("../../models/server/Ticket");
+var helpers = require("app/test/helpers");
+var User = require("app/models/server/User");
+var Ticket = require("app/models/server/Ticket");
 
 
 describe("/api/tickets/:id/followers", function() {

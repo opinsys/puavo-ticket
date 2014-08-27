@@ -1,9 +1,10 @@
 "use strict";
-var helpers = require("../helpers");
 
 var assert = require("assert");
+var nock = require("nock");
 
-var nock = require('nock');
+var helpers = require("app/test/helpers");
+
 
 describe("puavo-rest api proxy", function() {
 

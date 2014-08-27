@@ -1,12 +1,10 @@
 "use strict";
 
 var assert = require("assert");
+var nock = require("nock");
 
-var helpers = require("../helpers");
-
-var nock = require('nock');
-
-var User = require("../../models/server/User");
+var helpers = require("app/test/helpers");
+var User = require("app/models/server/User");
 
 function mockJoeBloggsAPI() {
     nock("https://test-api.opinsys.example")

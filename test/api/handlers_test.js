@@ -5,8 +5,8 @@ var Promise = require("bluebird");
 var nock = require("nock");
 var _ = require("lodash");
 
-var helpers = require("../helpers");
-var User = require("../../models/server/User");
+var helpers = require("app/test/helpers");
+var User = require("app/models/server/User");
 
 
 

@@ -106,9 +106,7 @@ app.use(function(req, res, next) {
 });
 
 
-app.get("/bundle.js", browserify("./client.js", {
-    transform: ["reactify"]
-}));
+app.get("/bundle.js", browserify("./client.js"));
 
 
 app.get("/logout", function(req, res) {

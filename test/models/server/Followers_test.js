@@ -3,9 +3,9 @@
 var Promise = require("bluebird");
 var assert = require("assert");
 
-var helpers = require("../../helpers");
-var Ticket = require("../../../models/server/Ticket");
-var User = require("../../../models/server/User");
+var helpers = require("app/test/helpers");
+var Ticket = require("app/models/server/Ticket");
+var User = require("app/models/server/User");
 
 describe("Follower model", function() {
 

@@ -3,10 +3,10 @@ var _ = require("lodash");
 var assert = require("assert");
 var Promise = require("bluebird");
 
-var helpers = require("../helpers");
-var Notification = require("../../models/server/Notification");
-var User = require("../../models/server/User");
-var Ticket = require("../../models/server/Ticket");
+var helpers = require("app/test/helpers");
+var Notification = require("app/models/server/Notification");
+var User = require("app/models/server/User");
+var Ticket = require("app/models/server/Ticket");
 
 
 

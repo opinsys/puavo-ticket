@@ -1,9 +1,9 @@
 "use strict";
 
-var helpers = require("../../helpers");
-
-var Device = require("../../../models/server/Device");
 var assert = require("assert");
+
+var helpers = require("app/test/helpers");
+var Device = require("app/models/server/Device");
 
 describe("Device model", function() {
 

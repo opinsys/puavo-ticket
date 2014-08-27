@@ -1,5 +1,5 @@
 "use strict";
-var helpers = require("../helpers");
+var helpers = require("app/test/helpers");
 
 var assert = require("assert");
 var _ = require("lodash");

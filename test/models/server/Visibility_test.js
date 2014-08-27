@@ -3,10 +3,10 @@
 var assert = require("assert");
 var Promise = require("bluebird");
 
-var helpers = require("../../helpers");
-var Visibility= require("../../../models/server/Visibility");
-var Ticket = require("../../../models/server/Ticket");
-var User = require("../../../models/server/User");
+var helpers = require("app/test/helpers");
+var Visibility= require("app/models/server/Visibility");
+var Ticket = require("app/models/server/Ticket");
+var User = require("app/models/server/User");
 
 
 describe("Visibility model", function() {

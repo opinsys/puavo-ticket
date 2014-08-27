@@ -1,9 +1,8 @@
 "use strict";
-var helpers = require("../../helpers");
-
-// var Comment = require("../../../models/server/Comment");
-var Ticket = require("../../../models/server/Ticket");
 var assert = require("assert");
+
+var helpers = require("app/test/helpers");
+var Ticket = require("app/models/server/Ticket");
 
 describe("Comment model", function() {
 
