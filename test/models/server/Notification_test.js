@@ -4,7 +4,6 @@ var assert = require("assert");
 var Promise = require("bluebird");
 
 var helpers = require("../../helpers");
-var Notification = require("../../../models/server/Notification");
 var Ticket = require("../../../models/server/Ticket");
 var User = require("../../../models/server/User");
 
@@ -32,7 +31,7 @@ describe("Ticket notifications", function() {
                         self.user
                     ),
                     Ticket.create(
-                        "Other ticket",
+                        "An other ticket",
                         "This is other ticket without any notifications for the user",
                         self.otherUser
                     )
@@ -46,7 +45,7 @@ describe("Ticket notifications", function() {
 
     it("are empty for new own tickets", function() {
         var self = this;
-        return Notification.fetchFollowerNotifications(self.user)
+        return Ticket.withUnreadComments(self.user).fetch()
             .then(function(coll) {
                 assert.equal(
                     0, coll.size(),
@@ -75,14 +74,11 @@ describe("Ticket notifications", function() {
                 );
             })
             .then(function() {
-                return Notification.fetchFollowerNotifications(self.user);
+                return Ticket.withUnreadComments(self.user).fetch();
             })
             .then(function(coll) {
                 assert.equal(1, coll.size());
-                assert(
-                    coll.findWhere({ ticketId: self.ticket.get("id") }),
-                    "didn't get the notification about the followed ticket"
-                );
+                assert(coll.findWhere({ id: self.ticket.get("id") }));
             });
     });
 
@@ -91,29 +87,39 @@ describe("Ticket notifications", function() {
         return self.ticket.markAsRead(self.user)
             .delay(100)
             .then(function() {
-                return Notification.fetchFollowerNotifications(self.user);
+                return Ticket.withUnreadComments(self.user).fetch();
             })
             .then(function(coll) {
                 assert.equal(0, coll.size(), "no notifications after marking as read");
             });
     });
 
-    it("are not sent even if the user was once a follower", function() {
+    it("are sent to the user if the user is only a follower - not a creator", function() {
         var self = this;
         return self.otherTicket.addFollower(self.user, self.user)
-            .then(function() {
-                return self.otherTicket.removeFollower(self.user, self.user);
-            })
             .then(function() {
                 return self.otherTicket.addComment("foo", self.otherUser);
             })
             .delay(100)
             .then(function() {
-                return Notification.fetchFollowerNotifications(self.user);
+                return Ticket.withUnreadComments(self.user).fetch();
+            })
+            .then(function(coll) {
+                assert.equal(1, coll.size());
+                assert(coll.findWhere({ id: self.otherTicket.get("id") }));
+            });
+    });
+
+    it("are not sent if the use is not a follower anymore", function() {
+        var self = this;
+        return self.otherTicket.removeFollower(self.user, self.user)
+            .then(function() {
+                return Ticket.withUnreadComments(self.user).fetch();
             })
             .then(function(coll) {
                 assert.equal(0, coll.size());
             });
     });
+
 
 });

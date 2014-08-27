@@ -763,6 +763,36 @@ var Ticket = Base.extend({
         }).fetchOne(_.extend({ require: true }, opts));
     },
 
+    /**
+     * Return collection of tickets that have comments unread by the user
+     *
+     * @method withUnreadComments
+     * @param {models.client.User|Number} user
+     * @return {Bookshelf.Collection}
+     */
+    withUnreadComments: function(user) {
+        return this.byUserVisibilities(user)
+            .query(function(qb) {
+                qb
+                .distinct()
+                .join("followers", function() {
+                    this.on("tickets.id", "=", "followers.ticketId");
+                })
+                .join("notifications", function() {
+                    this.on("tickets.id", "=", "notifications.ticketId");
+                })
+                .join("comments", function() {
+                    this.on("tickets.id", "=", "comments.ticketId");
+                    this.on("notifications.readAt", "<", "comments.createdAt");
+                })
+                .whereNull("followers.deletedAt")
+                .where({
+                    "followers.deleted": 0,
+                    "followers.followedById": Base.toId(user),
+                    "notifications.targetId": Base.toId(user),
+                });
+            });
+    },
 });
 
 /**
