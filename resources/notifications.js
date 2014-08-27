@@ -27,8 +27,8 @@ app.post("/api/tickets/:id/read", function(req, res, next) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
         return ticket.markAsRead(req.user);
     })
-    .then(function() {
-        res.json({ ok: true });
+    .then(function(notification) {
+        res.json(notification);
     })
     .catch(next);
 });

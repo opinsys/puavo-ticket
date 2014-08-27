@@ -41,20 +41,20 @@ describe("/api/tickets/:id/read", function() {
 
 
     it("can mark ticket as read", function() {
-        var self = this;
-
         return this.agent
             .post("/api/tickets/" + ticket.get("id") + "/read")
             .send()
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200);
+                assert.equal(res.status, 200, res.text);
+                // The Notification object is returned
+                assert.equal("notifications", res.body.type);
             })
             .then(function() {
-                return Notification.forge({ targetId: self.user.id }).fetch();
+                return Notification.forge({ ticketId: ticket.get("id") }).fetch();
             })
-            .then(function(readTicket) {
-                assert.equal(readTicket.get("ticketId"), ticket.get("id"));
+            .then(function(notification) {
+                assert.equal(notification.get("ticketId"), ticket.get("id"));
             });
     });
 
