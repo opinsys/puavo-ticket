@@ -4,7 +4,6 @@ var Promise = require("bluebird");
 var helpers = require("../../helpers");
 
 var Ticket = require("../../../models/server/Ticket");
-var Notification = require("../../../models/server/Notification");
 var User = require("../../../models/server/User");
 var assert = require("assert");
 
@@ -135,52 +134,6 @@ describe("Ticket model", function() {
 
     });
 
-    it("can be marked as read or unread", function() {
-        var self = this;
-
-        var testTicket = null;
-
-        return Ticket.create(
-                "Ticket title to be read",
-                "Will be read",
-                self.user
-            )
-            .then(function(ticket) {
-                return ticket.markAsRead(self.user).return(ticket);
-            })
-            .then(function(ticket) {
-                testTicket = ticket;
-
-                return Notification.forge({
-                    ticketId: ticket.get("id")
-                }).fetch({ require: true });
-            })
-            .then(function(read) {
-                assert(read);
-                assert.equal(
-                    self.user.get("id"),
-                    read.get("targetId"),
-                    "has the reader id in the readBy column"
-                );
-            })
-            .then(function() {
-                return testTicket.markAsUnread().return(testTicket);
-            })
-            .then(function(ticket) {
-                return Notification.forge({
-                    ticketId: ticket.get("id")
-                }).fetch({ require: true });
-            })
-            .then(function(read) {
-                assert(read);
-                assert.equal(
-                    self.user.get("id"),
-                    read.get("targetId"),
-                    "has the reader id in the targetId column"
-                );
-                assert.equal(read.get("unread"), true);
-            });
-    });
 
 });
 
