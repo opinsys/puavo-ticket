@@ -203,31 +203,42 @@ var Ticket = Base.extend({
     },
 
     /**
+     * @method triggerUpdate
+     * @param {models.server.Base} model Any ticket relation model
+     * @return {Bluebird.Promise}
+     */
+    triggerUpdate: function(model) {
+        return this.triggerThen("update", {
+            model: model
+        }).return(model);
+    },
+
+
+    /**
      * Add comment to the ticket
      *
      * @method addComment
      * @param {String} comment
      * @param {models.server.User|Number} user Creator of the tag
-     * @param {Boolean} opts.silent Set to true to disable update notifications
+     * @param {Boolean} [opts]
+     * @param {Boolean} [opts.silent=false] Set to true to disable update notifications
      * @return {Bluebird.Promise} with models.server.Comment
      */
     addComment: function(comment, user, opts) {
-        return Comment.forge({
-            ticketId: this.get("id"),
-            comment: comment,
-            createdById: Base.toId(user)
-        })
-        .save()
-        .bind(this)
-        .then(function(comment) {
-            return this.addFollower(user, user).return(comment);
-        })
-        .then(triggerUpdate(opts, this))
-        .then(function() {
-            return this.markAsRead(user);
+        return Promise.join(
+            Comment.forge({
+                ticketId: this.get("id"),
+                comment: comment,
+                createdById: Base.toId(user)
+            }).save(),
+            this.addFollower(user, user),
+            this.markAsRead(user)
+        ).bind(this)
+        .spread(function(comment) {
+            if (opts && opts.silent === false) return comment;
+            return this.triggerUpdate(comment);
         });
     },
-
 
     /**
      * Add title to the ticket
@@ -244,8 +255,13 @@ var Ticket = Base.extend({
             ticketId: this.get("id"),
             title: title,
             createdById: Base.toId(user)
-        }).save()
-        .then(triggerUpdate(opts, this));
+        })
+        .save()
+        .bind(this)
+        .then(function(title) {
+            if (opts && opts.silent === false) return title;
+            return this.triggerUpdate(title);
+        });
     },
 
     /**
@@ -795,26 +811,6 @@ var Ticket = Base.extend({
     },
 });
 
-/**
- * Trigger update for the promise value
- *
- * @private
- * @static
- * @method triggerUpdate
- * @param {Boolean} opts.silent Set to true to disable the notification
- * @param {Object} context Se the context of the returned function
- * @return {Function}
- */
-function triggerUpdate(opts, context) {
-    return function(updateModel) {
-        if (opts && opts.silent) return updateModel;
-
-        return this.triggerThen("update", {
-            model: updateModel
-        }).return(updateModel);
-
-    }.bind(context);
-}
 
 /**
  * Render email update template

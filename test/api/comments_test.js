@@ -39,7 +39,7 @@ describe("/api/tickets/:id/comments", function() {
     });
 
 
-    it("can create new comment to ticket", function() {
+    it("can create new comment for the ticket", function() {
         var self = this;
         return this.agent
             .post("/api/tickets/" + ticket.get("id") + "/comments")
