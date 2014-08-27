@@ -782,9 +782,10 @@ var Ticket = Base.extend({
     /**
      * Return collection of tickets that have comments unread by the user
      *
+     * @static
      * @method withUnreadComments
      * @param {models.client.User|Number} user
-     * @return {Bookshelf.Collection}
+     * @return {Bookshelf.Collection} of models.server.Ticket
      */
     withUnreadComments: function(user) {
         return this.byUserVisibilities(user)
