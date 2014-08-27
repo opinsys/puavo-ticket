@@ -13,7 +13,7 @@ var app = express.Router();
 /**
  * @api {post} /api/tickets/:id/read Mark ticket as read
  * @apiName CreateReadTicket
- * @apiGroup readTickets
+ * @apiGroup notifications
  */
 app.post("/api/tickets/:id/read", function(req, res, next) {
     debug(
@@ -29,6 +29,31 @@ app.post("/api/tickets/:id/read", function(req, res, next) {
     })
     .then(function(notification) {
         res.json(notification);
+    })
+    .catch(next);
+});
+
+/**
+ * @api {post} /api/notifications List tickets that have unread comment by the
+ * current user. The response will only contain the latest ticket title and
+ * comment
+ * @apiName ListUnreadTickets
+ * @apiGroup notifications
+ */
+app.get("/api/notifications", function(req, res, next) {
+    Ticket.withUnreadComments(req.user).fetch({
+        withRelated: [
+            { titles: function(q) {
+                q.orderBy("createdAt", "desc").limit(1);
+            }},
+            { comments: function(q) {
+                q.orderBy("createdAt", "desc").limit(1);
+            }},
+            "comments.createdBy"
+        ]
+    })
+    .then(function(tickets) {
+        res.json(tickets);
     })
     .catch(next);
 });
