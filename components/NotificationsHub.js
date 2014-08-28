@@ -40,6 +40,7 @@ var NotificationsHub = React.createClass({
 
     componentDidMount: function() {
         this.fetchNotifications();
+        Ticket.on("markedAsRead", this.fetchNotifications);
         window.addEventListener("focus", this.fetchNotifications);
         this.poller = setInterval(this.fetchNotifications, 1000*30);
     },
@@ -47,6 +48,7 @@ var NotificationsHub = React.createClass({
 
     componentWillUnmount: function() {
         window.removeEventListener("focus", this.fetchNotifications);
+        Ticket.off("markedAsRead", this.fetchNotifications);
         clearInterval(this.poller);
     },
 

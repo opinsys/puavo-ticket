@@ -399,7 +399,11 @@ var Ticket = Base.extend({
     markAsRead: function() {
         debug("Mark ticket as read: " + this.get("title"));
         var model = new Notification({}, { parent: this });
-        return model.save({ dummy: 1 });
+        return model.save({ dummy: 1 })
+            .bind(this)
+            .then(function() {
+                Ticket.trigger("markedAsRead", this);
+            });
     }
 
 
