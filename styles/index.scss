@@ -1,3 +1,19 @@
+/*
+===========================
+DO NOT ADD ANY STYLES HERE!
+===========================
+
+Instead add them to the component specific style files.
+
+If you need to edit any styles currently here rather than editing it move it to
+the correct component and edit it there.
+
+If you need to add a style which affects multiple components it might belong
+here but components/Main.scss might be better still.
+
+Please read https://github.com/opinsys/puavo-ticket#styles
+
+*/
 @import "./spinner";
 @import "./colors";
 @import "./node_modules/bourbon/dist/bourbon";
