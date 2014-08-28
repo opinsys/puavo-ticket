@@ -122,7 +122,8 @@ var Ticket = Base.extend({
             var isOpen = ticket.setStatus("open", user, {
                 force: true
             });
-            var creatorCanView = ticket.addHandler(
+
+            var creatorIsHandler = ticket.addHandler(
                 user,
                 user
             );
@@ -133,7 +134,7 @@ var Ticket = Base.extend({
 
             return Promise.join(
                 isOpen,
-                creatorCanView,
+                creatorIsHandler,
                 organisationAdminCanView
             );
         });
@@ -231,8 +232,7 @@ var Ticket = Base.extend({
                 comment: comment,
                 createdById: Base.toId(user)
             }).save(),
-            this.addFollower(user, user),
-            this.markAsRead(user)
+            this.addFollower(user, user)
         ).bind(this)
         .spread(function(comment) {
             if (opts && opts.silent === false) return comment;
@@ -371,29 +371,26 @@ var Ticket = Base.extend({
     addFollower: function(follower, addedBy) {
         var self = this;
 
-        return Follower.forge({
+        var followerOp = Follower.forge({
             ticketId: self.get("id"),
             followedById: Base.toId(follower)
         })
         .query(queries.notSoftDeleted)
         .fetch()
-        .then(function(rel) {
-            if (rel) return rel;
+        .then(function(followerRelation) {
+            if (followerRelation) return followerRelation;
+            return Follower.forge({
+                ticketId: self.get("id"),
+                followedById: Base.toId(follower),
+                createdById: Base.toId(addedBy)
+            }).save();
+        });
 
-            return Promise.all([
-                Follower.forge({
-                    ticketId: self.get("id"),
-                    followedById: Base.toId(follower),
-                    createdById: Base.toId(addedBy)
-                }).save(),
-                self.addVisibility(
-                    follower.getPersonalVisibility(),
-                    addedBy
-                )
-            ])
-            .spread(function(followerRelation, visibility) {
-                return followerRelation;
-            });
+        return Promise.join(
+            followerOp,
+            self.addVisibility(follower.getPersonalVisibility(), addedBy)
+        ).spread(function(followerRelation) {
+            return followerRelation;
         });
 
     },
@@ -413,7 +410,7 @@ var Ticket = Base.extend({
         else handler = User.byId(handler).fetch({ require: true });
 
         return handler.then(function(handler) {
-            return Promise.all([
+            return Promise.join(
 
                 Handler.forge({
                     ticketId: self.get("id"),
@@ -421,11 +418,10 @@ var Ticket = Base.extend({
                     handler: Base.toId(handler)
                 }).save(),
 
-                self.addFollower(handler, addedBy),
-
-            ]);
+                self.addFollower(handler, addedBy)
+            );
         })
-        .spread(function(handler, visibility) {
+        .spread(function(handler) {
             return handler;
         });
 

@@ -56,9 +56,11 @@ describe("Ticket notifications", function() {
 
     it("are given to followers only", function() {
         var self = this;
-        // Mark otherTicket as read
-        return self.otherTicket.markAsRead(self.user)
-            .then(function() {
+        // Mark tickets as read
+        return Promise.join(
+                self.otherTicket.markAsRead(self.user),
+                self.ticket.markAsRead(self.user)
+            ).then(function() {
                 // Comment in the other ticket does not trigger notification
                 // because the user is not following it
                 return self.otherTicket.addComment(
@@ -96,7 +98,10 @@ describe("Ticket notifications", function() {
 
     it("are sent to the user if the user is only a follower - not a creator", function() {
         var self = this;
-        return self.otherTicket.addFollower(self.user, self.user)
+        return Promise.join(
+                self.otherTicket.addFollower(self.user, self.user),
+                self.otherTicket.markAsRead(self.user)
+            ).delay(100)
             .then(function() {
                 return self.otherTicket.addComment("foo", self.otherUser);
             })

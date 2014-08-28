@@ -58,7 +58,8 @@ describe("Ticket model", function() {
         return Ticket.byVisibilities([this.user.getPersonalVisibility()])
             .fetch({ withRelated: "comments" })
             .then(function(coll) {
-                assert.equal(1, coll.size(), "does not list other tickets by other users");
+                // does not list other tickets by other users
+                assert.equal(1, coll.size());
                 assert.equal(
                     "Computer does not work :(",
                     coll.first().getDescription()
