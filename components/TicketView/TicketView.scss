@@ -54,18 +54,13 @@
                 margin: 0.5rem 0 0;
                 text-align: left;
                 button {
+                    width: 32%;
+                    height: 100%;
                     &:first-of-type {
                         margin: 0;
                     }
                 }
             }
-        }
-    }
-
-    @include only-on(tablets-and-smaller) {
-        .update-buttons-wrap .update-buttons button {
-            width: 32%;
-            height: 100%;
         }
     }
 
