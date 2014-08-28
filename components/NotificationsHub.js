@@ -55,22 +55,49 @@ var NotificationsHub = React.createClass({
         var tickets = this.state.tickets;
         var count = "("+tickets.length+")";
 
+        var items = <MenuItem header>Ei lukemattomia päivityksiä</MenuItem>;
+
+        if (tickets.length > 0) {
+            items = tickets.map(function(ticket) {
+                return <NotificationItem ticket={ticket} />;
+            });
+        }
+
         return this.transferPropsTo(
             <DropdownButton title={"Ilmoitukset " + count}>
-                {tickets.map(function(ticket) {
-                    var comment = ticket.comments()[0];
-
-                    var updateText = comment.createdBy().getFullName() +
-                        " lisäsi kommentin tukipyyntöön \"" +
-                        ticket.getCurrentTitle() + "\"";
-
-                    return (
-                        <MenuItem header>
-                            <Link to="ticket" id={ticket.get("id")}>{updateText}</Link>
-                        </MenuItem>
-                    );
-                })}
+                {items}
             </DropdownButton>
+        );
+    }
+});
+
+/**
+ * NotificationItem
+ *
+ * @namespace components
+ * @class NotificationsHub.NotificationItem
+ * @constructor
+ * @param {Object} props
+ * @param {models.client.Ticket} props.ticket
+ */
+var NotificationItem = React.createClass({
+
+    propTypes: {
+        ticket: React.PropTypes.instanceOf(Ticket).isRequired,
+    },
+
+    render: function() {
+        var ticket = this.props.ticket;
+        var comment = ticket.comments()[0];
+
+        var updateText = comment.createdBy().getFullName() +
+            " lisäsi kommentin tukipyyntöön \"" +
+            ticket.getCurrentTitle() + "\"";
+
+        return (
+            <MenuItem header>
+                <Link to="ticket" id={ticket.get("id")}>{updateText}</Link>
+            </MenuItem>
         );
     }
 });
