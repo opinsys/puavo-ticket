@@ -1,0 +1,13 @@
+
+@mixin only-on($media) {
+  @if $media == phones-and-smaller {
+    @media screen and (max-width: 560px) { @content; }
+  }
+  @else if $media == phablets-and-smaller {
+    @media screen and (max-width: 768px) { @content; }
+  }
+  @else if $media == tablets-and-smaller {
+    @media screen and (max-width: 992px) { @content; }
+  }
+}
+

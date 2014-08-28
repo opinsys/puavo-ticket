@@ -18,6 +18,7 @@ Please read https://github.com/opinsys/puavo-ticket#styles
 @import "./colors";
 @import "./node_modules/bourbon/dist/bourbon";
 
+@import "./media-queries";
 @import "./bootstrap-overrides";
 @import "../components/Main.scss";
 @import "../components/ErrorMessage.scss";
@@ -320,42 +321,5 @@ table td {
         margin: 0 0.3rem 0 0;
     }
 }
-
-@media screen and (max-width: 992px) {
-    .selectuser {
-        min-height: 400px;
-    }
-    .adddevice{
-        min-height: 540px;
-    }
-    .main-wrap {
-        margin: 0 auto;
-    }
-
-    .ticket-form, .ticket-view{
-        margin: 0;
-        padding-bottom: 1rem;
-    }
-
-    .sidebar {
-        border:none;
-        margin: 1rem 0 0;
-    }
-    .main-content {
-        width: 100%;
-    }
-}
-
-@media screen and (max-height: 800px) {
-    .selectuser{
-        min-height: 400px;
-    }
-    .adddevice{
-        min-height: 440px;
-    }
-}
-
-
-
 
 

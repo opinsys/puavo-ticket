@@ -163,34 +163,3 @@ input.form-control, textarea.form-control {
     background-color: #999;
     border-radius: 10px;
 }
-@media screen and (max-width: 992px) {
-    .badge-text {
-        &:after{
-            display:inline;
-        }
-    }
-}
-@media (max-width: 767px) {
-    .table-responsive {
-        display: block;
-        overflow-x: auto;
-    }
-}
-@media screen and (max-width: 680px) {
-    .btn {
-        height: 50px;
-        padding: 0.5rem;
-    }
-     .pull-right {
-        float: none !important;
-    }
-}
-
-@media screen and (max-width: 560px) {
-    .btn {
-        margin: 0.5rem 0 0 0;
-    }
-     .pull-right {
-        float: none !important;
-    }
-}

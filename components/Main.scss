@@ -2,6 +2,7 @@
     .top-buttons {
         padding-left: 0px;
         padding-right: 0px;
+        margin-right: 1em;
         .top-button {
             font-weight: bold;
             &:first-of-type {
@@ -16,11 +17,7 @@
         padding: 1rem;
     }
 
-
-}
-
-@media screen and (max-width: 680px) {
-    .Main {
+    @include only-on(phablets-and-smaller) {
         padding: 0;
 
         .user-info button {
@@ -38,10 +35,8 @@
             }
         }
     }
-}
 
-@media screen and (max-width: 560px) {
-    .Main {
+    @include only-on(phones-and-smaller) {
         .top-buttons {
             width: 100%;
             .top-button, .btn-group {
@@ -51,3 +46,4 @@
         }
     }
 }
+
