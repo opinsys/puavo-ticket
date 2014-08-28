@@ -4,6 +4,7 @@ var React = require("react/addons");
 var DropdownButton = require("react-bootstrap/DropdownButton");
 var MenuItem = require("react-bootstrap/MenuItem");
 var Link = require("react-router").Link;
+var _ = require("lodash");
 
 var User = require("app/models/client/User");
 var Ticket = require("app/models/client/Ticket");
@@ -39,6 +40,7 @@ var NotificationsHub = React.createClass({
     },
 
     componentDidMount: function() {
+        this.fetchNotifications = _.throttle(this.fetchNotifications, 2000);
         this.fetchNotifications();
         Ticket.on("markedAsRead", this.fetchNotifications);
         window.addEventListener("focus", this.fetchNotifications);
