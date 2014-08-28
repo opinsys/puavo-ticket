@@ -78,7 +78,7 @@ var Main = React.createClass({
 
     render: function() {
         return (
-            <div className="wrapper container-fluid">
+            <div className="Main wrapper container-fluid">
                 <h1 className="site-header">Opinsys tukipalvelu</h1>
                 {this.state.renderModalContent && this.state.renderModalContent()}
                 <div className="topmenu row">
@@ -87,22 +87,20 @@ var Main = React.createClass({
                         <UserInformation user={this.state.user} />
                     </div>
 
-                    <div className="top-buttons">
-                        <ButtonGroup>
-                            <Link className="btn btn-default top-button" to="new">
-                                <i className="fa fa-pencil-square-o"></i>Uusi tukipyyntö
-                            </Link>
+                    <ButtonGroup className="top-buttons">
+                        <Link className="btn btn-default top-button" to="new">
+                            <i className="fa fa-pencil-square-o"></i>Uusi tukipyyntö
+                        </Link>
 
-                            <Link className="btn btn-default top-button" to="tickets">
-                                <i className="fa fa-home"></i>Omat tukipyynnöt
-                            </Link>
-                            <NotificationsHub user={this.state.user} />
-                        </ButtonGroup>
-                    </div>
+                        <Link className="btn btn-default top-button" to="tickets">
+                            <i className="fa fa-home"></i>Omat tukipyynnöt
+                        </Link>
+                        <NotificationsHub user={this.state.user} className="top-button" />
+                    </ButtonGroup>
                 </div>
 
                 <div className="main-wrap clearfix" >
-                    <div className="main">
+                    <div className="main-content">
 
                         <this.props.activeRouteHandler
                             renderInModal={this.renderInModal}

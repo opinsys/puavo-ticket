@@ -55,7 +55,7 @@ var NotificationsHub = React.createClass({
         var tickets = this.state.tickets;
         var count = "("+tickets.length+")";
 
-        return (
+        return this.transferPropsTo(
             <DropdownButton title={"Ilmoitukset " + count}>
                 {tickets.map(function(ticket) {
                     var comment = ticket.comments()[0];

@@ -1,0 +1,53 @@
+.Main {
+    .top-buttons {
+        padding-left: 0px;
+        padding-right: 0px;
+        .top-button {
+            font-weight: bold;
+            &:first-of-type {
+                margin: 0;
+             }
+        }
+    }
+    .topmenu {
+        background-color: #e3decd;
+        border-radius: 5px;
+        margin: 0;
+        padding: 1rem;
+    }
+
+
+}
+
+@media screen and (max-width: 680px) {
+    .Main {
+        padding: 0;
+
+        .user-info button {
+            height: 40px;
+        }
+
+        .topmenu, .main-content {
+            padding: 1rem;
+        }
+
+        .top-buttons {
+            margin-top: 0.5rem;
+            .top-button, .btn-group {
+                height: 100% ;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 560px) {
+    .Main {
+        .top-buttons {
+            width: 100%;
+            .top-button, .btn-group {
+                margin-top: 0.5rem;
+                width: 100%;
+            }
+        }
+    }
+}

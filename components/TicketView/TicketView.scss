@@ -36,5 +36,49 @@
         margin-right: 5px;
     }
 
+    .update-buttons-wrap{
+        margin-top: -27px;
+        padding: 0 0 0.5rem;
+        .update-buttons {
+            text-align: right;
+            button {
+                font-size: 80%;
+                font-weight: 400;
+            }
+        }
+    }
+
 }
 
+@media screen and (max-width: 992px) {
+    .TicketView {
+        .update-buttons-wrap {
+            .update-buttons {
+                margin: 0.5rem 0 0;
+                text-align: left;
+                button {
+                    &:first-of-type {
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 680px) {
+    .TicketView {
+        .update-buttons-wrap .update-buttons button {
+            width: 32%;
+            height: 100%;
+        }
+    }
+}
+
+@media screen and (max-width: 560px) {
+    .TicketView {
+        .update-buttons-wrap .update-buttons button {
+            width: 100%
+        }
+    }
+}

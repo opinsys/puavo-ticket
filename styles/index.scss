@@ -3,6 +3,7 @@
 @import "./node_modules/bourbon/dist/bourbon";
 
 @import "./bootstrap-overrides";
+@import "../components/Main.scss";
 @import "../components/ErrorMessage.scss";
 @import "../components/SideInfo.scss";
 @import "../components/UserInformation.scss";
@@ -95,7 +96,7 @@ table td {
 .site-header{
     display: inline-block;
 }
-.main {
+.main-content {
     background-color: #f0eee1;
     background-clip:padding-box;
     border: 5px solid #ed7113;
@@ -193,7 +194,7 @@ table td {
     margin: 0 0 0.5rem;
     padding: 0.5rem;
     ul li {
-    padding: 5px 0 5px 0;
+        padding: 5px 0 5px 0;
     }
     strong {
         font-size: 150%;
@@ -221,20 +222,6 @@ table td {
     }
 }
 
-.topmenu {
-    background-color: #e3decd;
-    border-radius: 5px;
-    margin: 0;
-    padding: 1rem;
-}
-
-
-.top-button {
-    font-weight: bold;
-    &:first-of-type{
-        margin: 0;
-     }
-}
 
 .header{
     h3 {
@@ -274,29 +261,6 @@ table td {
     }
 
 }
-
-.ticket-update-buttons{
-    button {
-        margin: 0;
-        width: 100%;
-    }
-}
-
-.update-buttons-wrap{
-    margin-top: -27px;
-    padding: 0 0 0.5rem;
-    .update-buttons{
-        text-align: right;
-        button{
-            font-size: 80%;
-            font-weight: 400;
-        }
-    }
-}
-
-
-
-
 
 .similar-tickets * {
     font-size: 9pt;
@@ -342,19 +306,6 @@ table td {
 }
 
 @media screen and (max-width: 992px) {
-    .update-buttons-wrap {
-        .update-buttons {
-            margin: 0.5rem 0 0;
-            text-align: left;
-            button {
-                &:first-of-type {
-                    margin: 0;
-                }
-            }
-        }
-    }
-    .ticket-division{
-    }
     .selectuser {
         min-height: 400px;
     }
@@ -374,7 +325,7 @@ table td {
         border:none;
         margin: 1rem 0 0;
     }
-    .main {
+    .main-content {
         width: 100%;
     }
 }
@@ -388,52 +339,7 @@ table td {
     }
 }
 
-.top-buttons {
-    padding-left: 0px;
-    padding-right: 0px;
-}
 
 
-@media screen and (max-width: 680px) {
-    .user-info{
-        button{
-            height: 40px;
-        }
-    }
-    .wrapper {
-        padding: 0;
-    }
-    .topmenu, .main {
-        padding: 1rem;
-    }
-    .top-buttons{
-        margin: 0.5rem 0 0;
-    }
-    .top-button {
-        width: 49%;
-        height: 100% ;
-    }
-    .update-buttons-wrap {
-         .update-buttons {
-            button{
-                width: 32%;
-                height: 100% ;
-            }
-        }
-    }
-}
 
-
-@media screen and (max-width: 560px) {
-    .top-button {
-        width: 100%;
-    }
-    .update-buttons-wrap {
-         .update-buttons {
-            button {
-                width: 100%
-            }
-        }
-    }
-}
 
