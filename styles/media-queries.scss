@@ -9,5 +9,10 @@
   @else if $media == tablets-and-smaller {
     @media screen and (max-width: 992px) { @content; }
   }
+  @else {
+      *:after {
+          content: " Unknown media query \"" + $media + "\"! Check styles/media-queries.scss " !important;
+      }
+  }
 }
 
