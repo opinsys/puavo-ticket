@@ -348,7 +348,7 @@ var TicketView = React.createClass({
 
                 </div>
 
-                <div className="sidebar col-md-4">
+                <div className="col-md-4">
                     <SideInfo />
                 </div>
             </div>

@@ -181,31 +181,6 @@ table td {
     }
 }
 
-
-.sidebar {
-    border-left: 1px solid lightgrey;
-    text-align: left;
-    word-break: break-word;
-    ul {
-        list-style-type: disc;
-    }
-    ul li {
-        margin-left: -20px;
-        margin-right: -15px;
-    }
-    p {
-        margin-bottom: 0;
-        padding: 5px;
-    }
-    h2 {
-        font-size: 1em;
-        background-color: white;
-    }
-        a:hover {
-        background-color: lightgrey;
-    }
-}
-
 .contact, .checklist {
     background-color: white;
     border-radius: 5px;
