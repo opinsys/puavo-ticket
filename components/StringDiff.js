@@ -34,7 +34,7 @@ var StringDiff = React.createClass({
                         removed: part.removed
                     });
 
-                    return <span className={className}>{part.value}</span>;
+                    return <span key={part.value} className={className}>{part.value}</span>;
                 })}
             </span>
         );
