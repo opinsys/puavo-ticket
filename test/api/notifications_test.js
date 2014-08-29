@@ -38,13 +38,20 @@ describe("/api/tickets/:id/read", function() {
                         "This is other ticket without any notifications for the user",
                         self.otherUser
                     ),
+                    Ticket.create(
+                        "Yet another ticket",
+                        "This is an yet another ticket",
+                        self.otherUser
+                    ),
                     helpers.loginAsUser(helpers.user.teacher)
                 );
             })
-            .spread(function(ticket, otherTicket, agent) {
+            .spread(function(ticket, otherTicket, yetAnother, agent) {
                 self.ticket = ticket;
                 self.otherTicket = otherTicket;
                 self.agent = agent;
+
+                return yetAnother.addComment("yet another ticket has a random comment", self.otherUser);
             });
     });
 

@@ -34,12 +34,18 @@ describe("Ticket notifications", function() {
                         "An other ticket",
                         "This is other ticket without any notifications for the user",
                         self.otherUser
+                    ),
+                    Ticket.create(
+                        "Yet another ticket",
+                        "This is an yet another ticket",
+                        self.otherUser
                     )
                 );
             })
-            .spread(function(ticket, otherTicket) {
+            .spread(function(ticket, otherTicket, yetAnother) {
                 self.ticket = ticket;
                 self.otherTicket = otherTicket;
+                self.yetAnother = yetAnother;
             });
     });
 
@@ -124,6 +130,33 @@ describe("Ticket notifications", function() {
             .then(function(coll) {
                 assert.equal(0, coll.size());
             });
+    });
+
+    it("are sent for multiple tickets", function() {
+        var self = this;
+
+        return Promise.cast([
+           self.ticket,
+           self.otherTicket,
+           self.yetAnother
+        ])
+        .map(function(ticket) {
+            return Promise.join(
+                ticket.addFollower(self.user, self.user),
+                ticket.markAsRead(self.user)
+            ).return(ticket);
+        })
+        .delay(100)
+        .map(function(ticket) {
+            return ticket.addComment("a comment for every ticket", self.otherUser);
+        })
+        .then(function() {
+            return Ticket.withUnreadComments(self.user).fetch();
+        })
+        .then(function(coll) {
+            assert.equal(3, coll.size());
+        });
+
     });
 
 
