@@ -335,7 +335,7 @@ var TicketView = React.createClass({
                                         // Mark the ticket as read 30 seconds
                                         // after the last update has been shown
                                         // to the user
-                                        setTimeout(self.lazyMarkAsRead, 30*1000);
+                                        setTimeout(self.lazyMarkAsRead, 10*1000);
                                     }} />
                                 </div>
                             );
