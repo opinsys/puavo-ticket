@@ -115,7 +115,7 @@ describe("Ticket notifications", function() {
             });
     });
 
-    it("are not sent if the use is not a follower anymore", function() {
+    it("are not sent if the user is not a follower anymore", function() {
         var self = this;
         return self.otherTicket.removeFollower(self.user, self.user)
             .then(function() {
