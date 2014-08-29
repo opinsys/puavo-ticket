@@ -3,11 +3,13 @@
 
 var React = require("react/addons");
 var Backbone = require("backbone");
+var _ = require("lodash");
 var Link = require("react-router").Link;
 var Modal = require("react-bootstrap/Modal");
 var ButtonGroup = require("react-bootstrap/ButtonGroup");
 
-var User = require("../models/client/User");
+var User = require("app/models/client/User");
+var Ticket = require("app/models/client/Ticket");
 var BackboneMixin = require("./BackboneMixin");
 var ErrorMessage = require("./ErrorMessage");
 var UserInformation = require("./UserInformation");
@@ -28,15 +30,26 @@ var Main = React.createClass({
     getInitialState: function() {
         return {
             user: new User(window.USER),
-            ticket: null
+            unreadTickets: Ticket.collection()
         };
     },
 
+    fetchUnreadTickets: function() {
+        return this.state.unreadTickets.fetchWithUnreadComments();
+    },
+
     componentDidMount: function() {
+        this.fetchUnreadTickets = _.throttle(this.fetchUnreadTickets, 2000);
+        this.fetchUnreadTickets();
+        Ticket.on("markedAsRead", this.fetchUnreadTickets);
+        window.addEventListener("focus", this.fetchUnreadTickets);
+        this.poller = setInterval(this.fetchUnreadTickets, 1000*30);
+
         Backbone.on("error", this.handleUnhandledError);
     },
 
     componentWillUnmount: function() {
+        window.removeEventListener("focus", this.fetchUnreadTickets);
         Backbone.off("error", this.handleUnhandledError);
     },
 
@@ -77,6 +90,9 @@ var Main = React.createClass({
     },
 
     render: function() {
+        var user = this.state.user;
+        var unreadTickets = this.state.unreadTickets;
+
         return (
             <div className="Main wrapper container-fluid">
                 <h1 className="site-header">Opinsys tukipalvelu</h1>
@@ -84,7 +100,7 @@ var Main = React.createClass({
                 <div className="topmenu row">
 
                     <div className="user-info pull-right">
-                        <UserInformation user={this.state.user} />
+                        <UserInformation user={user} />
                     </div>
 
                     <ButtonGroup className="top-buttons">
@@ -95,7 +111,7 @@ var Main = React.createClass({
                         <Link className="btn btn-default top-button" to="tickets">
                             <i className="fa fa-home"></i>Omat tukipyynnöt
                         </Link>
-                        <NotificationsHub user={this.state.user} className="top-button" />
+                        <NotificationsHub user={user} tickets={unreadTickets} className="top-button" />
                     </ButtonGroup>
                 </div>
 
@@ -104,6 +120,7 @@ var Main = React.createClass({
 
                         <this.props.activeRouteHandler
                             renderInModal={this.renderInModal}
+                            unreadTickets={unreadTickets}
                             user={this.state.user} />
 
                     </div>

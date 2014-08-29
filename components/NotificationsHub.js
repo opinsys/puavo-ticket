@@ -4,7 +4,6 @@ var React = require("react/addons");
 var DropdownButton = require("react-bootstrap/DropdownButton");
 var MenuItem = require("react-bootstrap/MenuItem");
 var Link = require("react-router").Link;
-var _ = require("lodash");
 
 var User = require("app/models/client/User");
 var Ticket = require("app/models/client/Ticket");
@@ -22,41 +21,11 @@ var NotificationsHub = React.createClass({
 
     propTypes: {
         user: React.PropTypes.instanceOf(User).isRequired,
+        tickets: React.PropTypes.instanceOf(Ticket.Collection).isRequired
     },
-
-    getInitialState: function() {
-        return {
-            tickets: []
-        };
-    },
-
-    fetchNotifications: function() {
-        return Ticket.fetchWithUnreadComments()
-            .bind(this)
-            .then(function(tickets) {
-                if (!this.isMounted()) return;
-                this.setState({ tickets: tickets });
-            });
-    },
-
-    componentDidMount: function() {
-        this.fetchNotifications = _.throttle(this.fetchNotifications, 2000);
-        this.fetchNotifications();
-        Ticket.on("markedAsRead", this.fetchNotifications);
-        window.addEventListener("focus", this.fetchNotifications);
-        this.poller = setInterval(this.fetchNotifications, 1000*30);
-    },
-
-
-    componentWillUnmount: function() {
-        window.removeEventListener("focus", this.fetchNotifications);
-        Ticket.off("markedAsRead", this.fetchNotifications);
-        clearInterval(this.poller);
-    },
-
 
     render: function() {
-        var tickets = this.state.tickets;
+        var tickets = this.props.tickets;
         var count = "("+tickets.length+")";
 
         var items = <MenuItem header>Ei lukemattomia päivityksiä</MenuItem>;

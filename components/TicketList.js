@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
+var classSet = React.addons.classSet;
 var Link = require("react-router").Link;
 var Badge = require("react-bootstrap/Badge");
 
@@ -25,20 +26,15 @@ var TimeAgo = require("./TimeAgo");
  * @param {models.client.User} props.user The current user. Used to render
  * unread highlights
  * @param {Array} props.tickets Array of models.client.Ticket
+ * @param {models.client.Ticket.Collection} props.unreadTickets
  */
 var TitleList = React.createClass({
 
     propTypes: {
         title: React.PropTypes.string.isRequired,
         user: React.PropTypes.instanceOf(User).isRequired,
-        tickets: React.PropTypes.array.isRequired
-    },
-
-    getTitleClass: function(ticket, userId) {
-        if (ticket.hasRead( userId )) {
-            return "read";
-        }
-        return "unread";
+        tickets: React.PropTypes.array.isRequired,
+        unreadTickets: React.PropTypes.instanceOf(Ticket.Collection).isRequired
     },
 
     renderTicketMetaInfo: function(ticket) {
@@ -67,6 +63,8 @@ var TitleList = React.createClass({
     render: function() {
         var self = this;
         var tickets = this.props.tickets;
+        var unreadTickets = this.props.unreadTickets;
+
         return (
             <div className="ticket-division col-md-12">
                 <div className="header">
@@ -86,8 +84,14 @@ var TitleList = React.createClass({
                             </tr>
 
                             {this.props.tickets.map(function(ticket) {
+                                var read = !unreadTickets.get(ticket);
+                                var className = classSet({
+                                    unread: !read,
+                                    read: read
+                                });
+
                                 return (
-                                    <tr key={ticket.get("id")} className={ self.getTitleClass(ticket, self.props.user.get("id")) }>
+                                    <tr key={ticket.get("id")} className={className}>
                                         <td>#{ticket.get("id")}</td>
                                         <td>
                                             <Link to="ticket" id={ticket.get("id")}>
@@ -121,11 +125,13 @@ var TitleList = React.createClass({
  * @constructor
  * @param {Object} props
  * @param {models.client.User} props.user
+ * @param {models.client.Ticket.Collection} props.unreadTickets
  */
 var TicketList = React.createClass({
 
     propTypes: {
         user: React.PropTypes.instanceOf(User).isRequired,
+        unreadTickets: React.PropTypes.instanceOf(Ticket.Collection).isRequired
     },
 
     mixins: [BackboneMixin],
@@ -147,6 +153,7 @@ var TicketList = React.createClass({
     },
 
     render: function() {
+        var unreadTickets = this.props.unreadTickets;
         var coll = this.state.ticketCollection;
         var pending = coll.selectPending();
         var myTickets = coll.selectHandledBy(this.props.user);
@@ -156,10 +163,10 @@ var TicketList = React.createClass({
         return (
             <div className="TicketList ticket-wrap row">
                 <Loading visible={this.state.fetching} />
-                <TitleList title="Odottavat tukipyynnöt" tickets={pending} user={this.props.user} />
-                <TitleList title="Minun tukipyynnöt" tickets={myTickets} user={this.props.user} />
-                <TitleList title="Muiden tukipyynnöt" tickets={others} user={this.props.user} />
-                <TitleList title="Käsitellyt tukipyynnöt" tickets={closed} user={this.props.user} />
+                <TitleList title="Odottavat tukipyynnöt" tickets={pending} unreadTickets={unreadTickets} user={this.props.user} />
+                <TitleList title="Minun tukipyynnöt" tickets={myTickets} unreadTickets={unreadTickets} user={this.props.user} />
+                <TitleList title="Muiden tukipyynnöt" tickets={others} unreadTickets={unreadTickets} user={this.props.user} />
+                <TitleList title="Käsitellyt tukipyynnöt" tickets={closed} unreadTickets={unreadTickets} user={this.props.user} />
             </div>
         );
     }

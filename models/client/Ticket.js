@@ -404,7 +404,7 @@ var Ticket = Base.extend({
             .then(function() {
                 Ticket.trigger("markedAsRead", this);
             });
-    }
+    },
 
 
 }, {
@@ -413,29 +413,14 @@ var Ticket = Base.extend({
     /**
      * Return empty collection of tickets
      *
-     * @method collection
      * @static
+     * @method collection
+     * @param {Array} models of models.client.Ticket
      * @return {models.client.Ticket.Collection}
      */
     collection: function() {
         return new Collection();
-    },
-
-    /**
-     * Return list of ticketi in a promise that have unread comments by the
-     * current user
-     *
-     * @static
-     * @method fetchWithUnreadComments
-     * @return {Bluebird.Promise} with array models.client.Ticket instances
-     */
-    fetchWithUnreadComments: function() {
-        return Promise.cast($.get("/api/notifications"))
-            .map(function(data) {
-                return new Ticket(data);
-            });
-    },
-
+    }
 
 });
 
@@ -461,6 +446,26 @@ var Collection = Base.Collection.extend({
      */
     model: Ticket,
 
+    /**
+     * Return list of ticketi in a promise that have unread comments by the
+     * current user
+     *
+     * @method fetchWithUnreadComments
+     * @return {Bluebird.Promise} with array models.client.Ticket instances
+     */
+    fetchWithUnreadComments: function() {
+        var op = Promise.cast($.get("/api/notifications"))
+        .bind(this)
+        .map(function(data) {
+            return new Ticket(data);
+        })
+        .then(function(tickets) {
+            return new this.constructor(tickets);
+        });
+
+        this.trigger("replace", op);
+        return op;
+    },
 
     /**
      * Select tickets that are closed
