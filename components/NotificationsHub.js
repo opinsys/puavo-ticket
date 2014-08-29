@@ -32,7 +32,7 @@ var NotificationsHub = React.createClass({
 
         if (tickets.length > 0) {
             items = tickets.map(function(ticket) {
-                return <NotificationItem ticket={ticket} />;
+                return <NotificationItem key={ticket.get("id")} ticket={ticket} />;
             });
         }
 

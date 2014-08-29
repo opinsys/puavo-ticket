@@ -328,8 +328,9 @@ var TicketView = React.createClass({
                                 unread: update.isUnreadBy(self.props.user)
                             });
 
+
                             return (
-                                <div key={update.get("unique_id")} className={className}>
+                                <div key={update.getUniqueId()} className={className}>
                                     <UpdateComponent update={update} onViewport={function(props) {
                                         if (_.last(updates) !== props.update) return;
                                         // Mark the ticket as read 30 seconds
