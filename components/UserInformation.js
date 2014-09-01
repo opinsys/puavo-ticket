@@ -36,13 +36,13 @@ var UserInformation = React.createClass({
                 <DropdownButton className="menu" bsSize="xsmall"  title={this.props.user.getFullName()} pullRight>
 
                     {/* TODO: redirect to puavo profile edit */}
-                    <MenuItem>
+                    <MenuItem header>
                         <a href={linkToProfile} target="_blank">
                             <i className="fa fa-cog"></i> Muokkaa profiiliasi
                         </a>
                     </MenuItem>
 
-                    <MenuItem>
+                    <MenuItem header>
                         <a href={linkToLogout}>
                             <i className="fa fa-sign-out"></i> Kirjaudu ulos
                         </a>
