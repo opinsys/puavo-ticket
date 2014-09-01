@@ -37,7 +37,7 @@ var NotificationsHub = React.createClass({
         }
 
         return this.transferPropsTo(
-            <DropdownButton title={"Ilmoitukset " + count}>
+            <DropdownButton pullRight title={"Ilmoitukset " + count}>
                 {items}
             </DropdownButton>
         );
