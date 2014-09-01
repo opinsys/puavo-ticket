@@ -86,7 +86,7 @@ var Ticket = Base.extend({
         var comment = new Comment({
             createdAt: afterTicketCreation,
             comment: text,
-            id: "robot"
+            id: "welcome"
         }, { parent: this });
 
         comment.createdBy = function() {
