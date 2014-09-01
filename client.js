@@ -30,7 +30,7 @@ React.renderComponent(
         <Route handler={Main}>
             <Route name="new" handler={TicketForm} />
             <Route name="tickets" path="/" handler={TicketList} />
-            <Route name="ticket" path="/tickets/:id" handler={TicketView} />
+            <Route name="ticket" path="/tickets/:id" handler={TicketView} preserveScrollPosition />
         </Route>
     </Routes>, document.body);
 

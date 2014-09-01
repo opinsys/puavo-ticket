@@ -94,7 +94,7 @@ var TitleList = React.createClass({
                                     <tr key={ticket.get("id")} className={className}>
                                         <td>#{ticket.get("id")}</td>
                                         <td>
-                                            <Link to="ticket" id={ticket.get("id")}>
+                                            <Link to="ticket" params={{ id: ticket.get("id")}}>
                                                 {ticket.getCurrentTitle()}
 
                                                 <Badge className="unread-comments" title="Uusia kommentteja">

@@ -117,6 +117,17 @@ var Ticket = Base.extend({
     },
 
     /**
+     * @method firstUnreadUpdateFor
+     * @param {models.client.User} user
+     * @return {models.client.Base}
+     */
+    firstUnreadUpdateFor: function(user) {
+        return _.find(this.comments().sort(byCreation), function(update) {
+            return update.isUnreadBy(user);
+        });
+    },
+
+    /**
      * @method tags
      * @return {Array} Array of Tag models
      */

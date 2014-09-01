@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
+var Router = require("react-router");
 var classSet = React.addons.classSet;
 var _ = require("lodash");
 var Promise = require("bluebird");
@@ -44,14 +45,58 @@ var TicketView = React.createClass({
 
     mixins: [BackboneMixin],
 
-    getInitialState: function() {
+    createInitialState: function(props) {
         return {
-            ticket: new Ticket({ id: this.props.params.id }),
+            ticket: new Ticket({ id: props.params.id }),
             changeTitle: false,
             fetching: true,
             saving: false,
             showTags: true,
+            scrolled: false
         };
+    },
+
+    getInitialState: function() {
+        return this.createInitialState(this.props);
+    },
+
+    componentWillReceiveProps: function(nextProps) {
+        if (this.props.params.id === nextProps.params.id) return;
+        this.setBackbone(this.createInitialState(nextProps), this.fetchTicket);
+    },
+
+    componentDidMount: function() {
+        window.scrollTo(0, 0);
+        this.fetchTicket();
+        window.addEventListener("focus", this.handleOnFocus);
+
+        /**
+         * Lazy version of the `markAsRead()` method. It will mark the ticket
+         * as read at max once in 10 seconds
+         *
+         * @method lazyMarkAsRead
+         */
+        this.lazyMarkAsRead = _.throttle(this.markAsRead, 10*1000);
+    },
+
+    componentDidUpdate: function() {
+        this.scrollToAnchoredElement();
+    },
+
+    componentWillUnmount: function() {
+        window.removeEventListener("focus", this.handleOnFocus);
+    },
+
+    /**
+     * Set window.location.hash to unique id of the first unread ticket comment
+     *
+     * @private
+     * @method _redirectToFirstUnread
+     */
+    _redirectToFirstUnread: function() {
+        var unread = this.state.ticket.firstUnreadUpdateFor(this.props.user);
+        if (!unread) return;
+        window.location.hash = unread.getUniqueId();
     },
 
     /**
@@ -62,22 +107,26 @@ var TicketView = React.createClass({
      * @method scrollToAnchoredElement
      */
     scrollToAnchoredElement: function() {
+
+        // Remove ?scrollTo=firstUnread query string and set
+        // window.location.hash
+        if (this.props.query.scrollTo === "firstUnread") {
+            Router.replaceWith(this.props.name, this.props.params);
+            this._redirectToFirstUnread();
+        }
+
         // Nothing selected
         if (!window.location.hash) return;
 
         // No need to scroll multiple times
-        if (this._scrolled) return;
+        if (this.state.scrolled) return;
 
         var el = document.getElementById(window.location.hash.slice(1));
         // Element not rendered yet - or it just does not exists
         if (!el) return;
 
         el.scrollIntoView();
-        this._scrolled = true;
-    },
-
-    componentDidUpdate: function() {
-        this.scrollToAnchoredElement();
+        this.setState({ scrolled: true });
     },
 
     /**
@@ -183,22 +232,6 @@ var TicketView = React.createClass({
     },
 
 
-    componentDidMount: function() {
-        this.fetchTicket();
-        window.addEventListener("focus", this.handleOnFocus);
-
-        /**
-         * Lazy version of the `markAsRead()` method. It will mark the ticket
-         * as read at max once in 10 seconds
-         *
-         * @method lazyMarkAsRead
-         */
-        this.lazyMarkAsRead = _.throttle(this.markAsRead, 10*1000);
-    },
-
-    componentWillUnmount: function() {
-        window.removeEventListener("focus", this.handleOnFocus);
-    },
 
     renderBadge: function() {
         var status = this.state.ticket.getCurrentStatus();

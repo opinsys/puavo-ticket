@@ -69,7 +69,9 @@ var NotificationItem = React.createClass({
 
         return (
             <MenuItem header>
-                <Link to="ticket" id={ticket.get("id")}>{updateText}</Link>
+                <Link to="ticket"
+                      query={{scrollTo: "firstUnread" }}
+                      params={{id: ticket.get("id")}}>{updateText}</Link>
             </MenuItem>
         );
     }
