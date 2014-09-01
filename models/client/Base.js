@@ -113,9 +113,10 @@ var Base = Backbone.Model.extend({
      * @return {String}
      */
     getUniqueId: function() {
-        var uniqueId = this.get("type") + this.get("id");
-        if (!uniqueId) throw new Error("bad unique id");
-        return uniqueId;
+        var type = this.get("type");
+        var id = this.get("id");
+        if (!id || !type) throw new Error("bad unique id");
+        return type + "-" + id;
     },
 
 

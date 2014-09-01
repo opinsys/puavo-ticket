@@ -46,7 +46,7 @@ var CommentUpdate = React.createClass({
         var createdBy = firstUpdate.createdBy();
         var createdAt = firstUpdate.createdAt();
         var comment = firstUpdate.get("comment");
-        var hashId = "comment-" + firstUpdate.get("id");
+        var hashId = firstUpdate.getUniqueId();
         var isSelectedByAddress = window.location.hash.slice(1) === hashId;
 
         var classes = classSet({
