@@ -7,6 +7,7 @@ if (process.env.NODE_ENV !== "production") {
 require("./db");
 var browserify = require("browserify-middleware");
 var express = require("express");
+var Server = require("http").Server;
 
 var serveStatic = require("serve-static");
 var bodyParser = require("body-parser");
@@ -17,6 +18,7 @@ var RedisStore = require("connect-redis")(session);
 
 var User = require("./models/server/User");
 
+var config = require("./config");
 /**
  * http://expressjs.com/4x/api.html#req.params
  *
@@ -31,8 +33,39 @@ var User = require("./models/server/User");
  * @class Response
  */
 var app = express();
+var server = Server(app);
+var sio = require("socket.io")(server);
+app.sio = sio;
 
-var config = require("./config");
+var sessionMiddleware = session({
+    store: new RedisStore(config.redis),
+    secret: "keyboard cat", // XXX
+});
+
+sio.use(function(socket, next) {
+    sessionMiddleware(socket.request, socket.request.res, next);
+});
+
+sio.use(function(socket, next) {
+    var req = socket.request;
+    User.byExternalId(req.session.jwt.id).fetch({ require: true })
+    .then(function(user) {
+        socket.user = user;
+        console.log(user.getDomainUsername() + " authenticated for socket.io");
+    })
+    .then(next.bind(this, null))
+    .catch(function(err) {
+        console.error("Socket.IO socket init failed", err);
+        next(err);
+    });
+});
+
+sio.sockets.on("connection", function(socket) {
+    console.log("socket connected", socket.user.getFullName()); // win!
+    socket.join("user:" + socket.user.get("id"));
+});
+
+app.use(sessionMiddleware);
 
 app.use(require("./utils/middleware/createSlowInternet")());
 app.use(require("./utils/middleware/createResponseLogger")());
@@ -40,11 +73,7 @@ app.use(bodyParser());
 app.use(require("./utils/middleware/createMultipartMiddleware")());
 app.use(cookieParser());
 
-
-app.use(session({
-    store: new RedisStore(config.redis),
-    secret: "keyboard cat", // XXX
-}));
+app.use(sessionMiddleware);
 
 app.use(jwtsso({
 
@@ -99,6 +128,7 @@ app.use(function(req, res, next) {
         if (!user) {
             throw new Error("Unknown external_id: " + req.session.jwt.id);
         }
+        req.sio = sio;
         req.user = user;
     })
     .then(next.bind(this, null))
@@ -143,7 +173,7 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 if (require.main === module) {
-    var server = app.listen(config.port, function() {
+    server.listen(config.port, function() {
         console.log("Javascript API docs http://opinsys.github.io/puavo-ticket/");
         console.log("REST API docs http://opinsys.github.io/puavo-ticket/rest");
 

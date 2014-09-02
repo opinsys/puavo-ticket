@@ -23,6 +23,14 @@ var Follower = Base.extend({
         };
     },
 
+    /**
+     * @method getSocketIORoom
+     * @return {String}
+     */
+    getSocketIORoom: function() {
+        return "user:" + this.get("followedById");
+    },
+
     follower: function() {
         return this.belongsTo(User, "followedById");
     },

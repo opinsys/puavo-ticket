@@ -6,6 +6,12 @@ Promise.longStackTraces();
 var $ = require("jquery");
 var Backbone = require("backbone");
 Backbone.$ = $;
+var io = require("socket.io-client")();
+window.io = io;
+
+io.on("connect", function(s) {
+    console.log("Socket.IO connected");
+});
 
 // Load Finnish locale for Moment
 require("moment/locale/fi");
@@ -30,7 +36,7 @@ React.renderComponent(
         <Route handler={Main}>
             <Route name="new" handler={TicketForm} />
             <Route name="tickets" path="/" handler={TicketList} />
-            <Route name="ticket" path="/tickets/:id" handler={TicketView} preserveScrollPosition />
+            <Route name="ticket" path="/tickets/:id" handler={TicketView} io={io} preserveScrollPosition />
         </Route>
     </Routes>, document.body);
 

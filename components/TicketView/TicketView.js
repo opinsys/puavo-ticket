@@ -14,6 +14,7 @@ var CommentForm = require("../CommentForm");
 var captureError = require("../../utils/captureError");
 var BackboneMixin = require("../../components/BackboneMixin");
 var Ticket = require("../../models/client/Ticket");
+var User = require("../../models/client/User");
 var Loading = require("../Loading");
 var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
@@ -40,10 +41,24 @@ var UPDATE_COMPONENTS = {
  *
  * @namespace components
  * @class TicketView
+ * @constructor
+ * @param {Object} props
+ * @param {models.client.User} props.user
+ * @param {Socket.IO} props.io Socket.IO socket
+ * @param {Function} props.renderInModal
  */
 var TicketView = React.createClass({
 
     mixins: [BackboneMixin],
+
+    propTypes: {
+        user: React.PropTypes.instanceOf(User).isRequired,
+        renderInModal: React.PropTypes.instanceOf(User).isRequired,
+        io: React.PropTypes.shape({
+            on: React.PropTypes.func.isRequired,
+            off: React.PropTypes.func.isRequired
+        }).isRequired
+    },
 
     createInitialState: function(props) {
         return {
@@ -65,10 +80,24 @@ var TicketView = React.createClass({
         this.setBackbone(this.createInitialState(nextProps), this.fetchTicket);
     },
 
+    /**
+     * Called when a new live comment message is received from socket.io
+     *
+     * @private
+     * @method _onLiveComment
+     */
+    _onLiveComment: function(comment) {
+        if (comment.ticketId === this.state.ticket.get("id")) {
+            this.fetchTicket();
+        }
+    },
+
+
     componentDidMount: function() {
         window.scrollTo(0, 0);
         this.fetchTicket();
         window.addEventListener("focus", this.handleOnFocus);
+        this.props.io.on("comment", this._onLiveComment);
 
         /**
          * Lazy version of the `markAsRead()` method. It will mark the ticket
@@ -85,6 +114,7 @@ var TicketView = React.createClass({
 
     componentWillUnmount: function() {
         window.removeEventListener("focus", this.handleOnFocus);
+        this.props.io.off("comment", this.onLiveComment);
     },
 
     /**

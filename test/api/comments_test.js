@@ -3,15 +3,23 @@
 var assert = require("assert");
 var Promise = require("bluebird");
 var _ = require("lodash");
+var sinon = require("sinon");
 
 var helpers = require("app/test/helpers");
 var User = require("app/models/server/User");
 var Ticket = require("app/models/server/Ticket");
+var server = require("app/server");
 
 describe("/api/tickets/:id/comments", function() {
 
     before(function() {
         var self = this;
+
+        self.emitSpy = sinon.spy();
+
+        self.toStub = sinon.stub(server.sio.sockets, "to", function() {
+            return { emit: self.emitSpy };
+        });
 
         return helpers.clearTestDatabase()
             .then(function() {
@@ -21,39 +29,34 @@ describe("/api/tickets/:id/comments", function() {
                     User.ensureUserFromJWTToken(helpers.user.teacher2)
                 );
             })
-            .spread(function(manager, user, otherUser) {
+            .spread(function(manager, teacher, otherTeacher) {
                 self.manager = manager;
-                self.user = user;
-                self.otherUser = otherUser;
+                self.teacher = teacher;
+                self.otherTeacher = otherTeacher;
 
                 return Promise.join(
                     Ticket.create(
                         "The Ticket",
                         "Will get notifications (first comment)",
-                        self.user
-                    ),
-                    Ticket.create(
-                        "An other ticket",
-                        "This is other ticket without any notifications for the user",
-                        self.otherUser
+                        self.teacher
                     ),
                     helpers.loginAsUser(helpers.user.teacher)
                 );
             })
-            .spread(function(ticket, otherTicket, agent) {
+            .spread(function(ticket, agent) {
                 self.ticket = ticket;
-                self.otherTicket = otherTicket;
                 self.agent = agent;
             });
 
     });
 
     after(function() {
+        this.toStub.restore();
         return this.agent.logout();
     });
 
 
-    it("can create new comment for the ticket", function() {
+    it("can create a new comment for the ticket", function() {
         var self = this;
         return this.agent
             .post("/api/tickets/" + self.ticket.get("id") + "/comments")
@@ -65,11 +68,11 @@ describe("/api/tickets/:id/comments", function() {
                 assert.equal(res.status, 200);
                 assert.equal(res.body.comment, "another test comment");
                 assert.equal(res.body.ticketId, self.ticket.get("id"));
-                assert.equal(res.body.createdById, self.user.id);
+                assert.equal(res.body.createdById, self.teacher.id);
             });
     });
 
-    it("are visible in the tickets api", function() {
+    it("the comments are visible in the tickets api", function() {
         var self = this;
         return this.agent
             .get("/api/tickets/" + self.ticket.get("id"))
@@ -82,6 +85,53 @@ describe("/api/tickets/:id/comments", function() {
                 assert(comment.createdBy);
                 assert.equal("olli.opettaja", comment.createdBy.externalData.username);
             });
+    });
+
+    it("socket.io messages are sent to the followers about new comments", function() {
+        var self = this;
+
+
+
+        return self.ticket.addFollower(self.otherTeacher, self.otherTeacher)
+        .then(function() {
+            return self.agent
+                .post("/api/tickets/" + self.ticket.get("id") + "/comments")
+                .send({
+                    comment: "socket.io message is sent about this comment"
+                })
+                .promise()
+                // The socket.io message sending is sent outside of the request
+                // promise chain. Wait for it to complete.
+                .delay(100)
+                .then(function(res) {
+                    assert.equal(res.status, 200, res.text);
+
+                    assert.equal(
+                        1, self.toStub.callCount,
+                        "req.sio.sockets.to was not called once: " + self.toStub.callCount
+                    );
+
+                    // Message about the comment is sent to room of otherTeacher
+                    assert.equal(
+                        "user:" + self.otherTeacher.get("id"),
+                        self.toStub.lastCall.args[0]
+                    );
+
+                    // A comment message is emitted to socket.io
+                    assert.equal("comment", self.emitSpy.lastCall.args[0]);
+
+                    assert(
+                        self.emitSpy.lastCall.args[1],
+                        "An actual comment object is passed in"
+                    );
+
+                    assert.equal(
+                        "socket.io message is sent about this comment",
+                        self.emitSpy.lastCall.args[1].comment
+                    );
+
+                });
+        });
     });
 
 
