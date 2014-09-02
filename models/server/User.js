@@ -28,6 +28,16 @@ var User = Base.extend({
     },
 
     /**
+     * Same as models.server.Follower#getSocketIORoom()
+     *
+     * @method getSocketIORoom
+     * @return {String}
+     */
+    getSocketIORoom: function() {
+        return "user:" + this.get("id");
+    },
+
+    /**
      * Return true if the user a manager
      *
      * @method isManager

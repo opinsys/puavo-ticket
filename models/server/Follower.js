@@ -24,6 +24,8 @@ var Follower = Base.extend({
     },
 
     /**
+     * Same as models.server.User#getSocketIORoom()
+     *
      * @method getSocketIORoom
      * @return {String}
      */

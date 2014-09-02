@@ -33,7 +33,7 @@ var TicketList = require("./components/TicketList");
 
 React.renderComponent(
     <Routes location="history">
-        <Route handler={Main}>
+        <Route handler={Main} io={io}>
             <Route name="new" handler={TicketForm} />
             <Route name="tickets" path="/" handler={TicketList} />
             <Route name="ticket" path="/tickets/:id" handler={TicketView} io={io} preserveScrollPosition />

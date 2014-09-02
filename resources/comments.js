@@ -34,7 +34,6 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
         }).fetch()
         .then(function(followers) {
             followers.forEach(function(follower) {
-                console.log("sending to ", follower.getSocketIORoom());
                 req.sio.sockets.to(follower.getSocketIORoom()).emit("comment", comment.toJSON());
             });
         })

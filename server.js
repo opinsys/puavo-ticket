@@ -62,7 +62,7 @@ sio.use(function(socket, next) {
 
 sio.sockets.on("connection", function(socket) {
     console.log("socket connected", socket.user.getFullName()); // win!
-    socket.join("user:" + socket.user.get("id"));
+    socket.join(socket.user.getSocketIORoom());
 });
 
 app.use(sessionMiddleware);

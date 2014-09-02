@@ -22,10 +22,20 @@ var NotificationsHub = require("./NotificationsHub");
  * @namespace components
  * @class Main
  * @extends react.ReactComponent
+ * @constructor
+ * @param {Object} props
+ * @param {Socket.IO} props.io Socket.IO socket
  */
 var Main = React.createClass({
 
     mixins: [BackboneMixin],
+
+    propTypes: {
+        io: React.PropTypes.shape({
+            on: React.PropTypes.func.isRequired,
+            off: React.PropTypes.func.isRequired
+        }).isRequired
+    },
 
     getInitialState: function() {
         return {
@@ -43,14 +53,14 @@ var Main = React.createClass({
         this.fetchUnreadTickets();
         Ticket.on("markedAsRead", this.fetchUnreadTickets);
         window.addEventListener("focus", this.fetchUnreadTickets);
-        this.poller = setInterval(this.fetchUnreadTickets, 1000*30);
-
         Backbone.on("error", this.handleUnhandledError);
+        this.props.io.on("comment", this.fetchUnreadTickets);
     },
 
     componentWillUnmount: function() {
         window.removeEventListener("focus", this.fetchUnreadTickets);
         Backbone.off("error", this.handleUnhandledError);
+        this.props.io.off("comment", this.fetchUnreadTickets);
     },
 
     handleUnhandledError: function(error, customMessage) {

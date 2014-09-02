@@ -172,11 +172,7 @@ var CommentForm = React.createClass({
         }
 
         var $el = $(this.refs.commentButton.getDOMNode());
-        if (isScrolledIntoView($el, 10)) {
-            console.log("no need to scroll");
-            return;
-        }
-        console.log("!!Scrolling!", $el.get(0));
+        if (isScrolledIntoView($el, 10)) return;
         scrollElBottom($el, 50);
     },
 

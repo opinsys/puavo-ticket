@@ -113,7 +113,7 @@ describe("/api/tickets/:id/comments", function() {
 
                     // Message about the comment is sent to room of otherTeacher
                     assert.equal(
-                        "user:" + self.otherTeacher.get("id"),
+                        self.otherTeacher.getSocketIORoom(),
                         self.toStub.lastCall.args[0]
                     );
 

@@ -53,7 +53,7 @@ var TicketView = React.createClass({
 
     propTypes: {
         user: React.PropTypes.instanceOf(User).isRequired,
-        renderInModal: React.PropTypes.instanceOf(User).isRequired,
+        renderInModal: React.PropTypes.func.isRequired,
         io: React.PropTypes.shape({
             on: React.PropTypes.func.isRequired,
             off: React.PropTypes.func.isRequired
