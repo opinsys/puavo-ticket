@@ -606,15 +606,11 @@ var Ticket = Base.extend({
      */
     markAsRead: function(user, opts) {
         var self = this;
-        var id = {
+        return Notification.fetchOrCreate({
             ticketId: self.get("id"),
             targetId: Base.toId(user)
-        };
-
-        return Notification.forge(id)
-        .fetch()
+        })
         .then(function(notification) {
-            notification = notification || Notification.forge(id);
             return notification.set({
                 readAt: new Date(),
                 emailSentAt: new Date(),
