@@ -75,6 +75,23 @@ var Base = Bookshelf.DB.Model.extend({
 }, {
 
     /**
+     * Fetch or create a model uniquely identified by the columns defined in
+     * the `identifier`
+     *
+     * @method fetchOrCreate
+     * @param {Object} identifier Object of table columns
+     * @return {Bluebird.Promise} with the model instance
+     */
+    fetchOrCreate: function(identifier) {
+        var self = this;
+        return self.forge(identifier)
+        .fetch()
+        .then(function(model) {
+            return model || self.forge(identifier);
+        });
+    },
+
+    /**
      * Shortcut for getting models by id
      *
      * @static
