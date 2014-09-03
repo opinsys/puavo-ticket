@@ -21,13 +21,12 @@ var ForcedLinebreaks = React.createClass({
             throw new Error("Only string children are supported");
         }
 
-        return (
+        return this.transferPropsTo(
             <p className={"ForcedLinebreaks " + this.props.className}>
                 {string.split("\n").map(function(line, i) {
                     return <span key={i}>{line}<br /></span>;
                 })}
             </p>
-
         );
 
     }

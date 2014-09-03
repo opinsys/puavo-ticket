@@ -41,13 +41,21 @@ var CommentUpdate = React.createClass({
 
     render: function() {
 
-        var firstUpdate = this.props.update;
+        var comment = this.props.update;
 
-        var createdBy = firstUpdate.createdBy();
-        var createdAt = firstUpdate.createdAt();
-        var comment = firstUpdate.get("comment");
-        var hashId = firstUpdate.getUniqueId();
-        var isSelectedByAddress = window.location.hash.slice(1) === hashId;
+        var createdBy = comment.createdBy();
+        var createdAt = comment.createdAt();
+        var commentString = comment.get("comment");
+        var hashId = comment.getUniqueId();
+        var mergedComments = comment.mergedComments();
+
+        var currentHashId = window.location.hash.slice(1);
+
+        // Highlight this comment if the unique id of it or from its merged
+        // matches with the current url anchor
+        var isSelectedByAddress =  currentHashId === hashId || mergedComments.some(function(c) {
+            return c.getUniqueId() === currentHashId;
+        });
 
         var classes = classSet({
             CommentUpdate: true,
@@ -63,7 +71,14 @@ var CommentUpdate = React.createClass({
                     <a className="since" href={"#" + hashId } onClick={this.onHashChange}>
                         <TimeAgo date={createdAt} />
                     </a>
-                    <ForcedLinebreaks className="comment">{comment}</ForcedLinebreaks>
+                    <ForcedLinebreaks className="comment">{commentString}</ForcedLinebreaks>
+                    {mergedComments.map(function(c) {
+                        return (
+                            <ForcedLinebreaks id={c.getUniqueId()} className="comment">
+                            {c.get("comment")}
+                            </ForcedLinebreaks>
+                        );
+                    })}
                 </div>
             </div>
         );

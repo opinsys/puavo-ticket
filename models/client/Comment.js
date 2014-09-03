@@ -18,7 +18,8 @@ var Comment = Base.extend({
     defaults: function() {
         return {
             type: "comments",
-            createdAt: new Date().toString()
+            createdAt: new Date().toString(),
+            merged: []
         };
     },
 
@@ -26,6 +27,12 @@ var Comment = Base.extend({
         return this.parent.url() + "/comments";
     },
 
+    mergedComments: function() {
+        var self = this;
+        return this.get("merged").map(function(data) {
+            return new Comment(data, { parent: self.parent });
+        });
+    },
 
     /**
      * Merge two comments to new one
@@ -40,7 +47,9 @@ var Comment = Base.extend({
         }
 
         var data = this.toJSON();
-        data.comment = data.comment.trim() + "\n" + another.get("comment").trim();
+        data.merged = data.merged.concat(another.toJSON());
+
+        // Use the last timestamp for the whole merged comment
         data.createdAt = another.get("createdAt");
         return new Comment(data, { parent: this.parent });
     }
