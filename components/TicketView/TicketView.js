@@ -149,18 +149,6 @@ var TicketView = React.createClass({
 
 
     /**
-     * Set window.location.hash to unique id of the first unread ticket comment
-     *
-     * @private
-     * @method _redirectToFirstUnread
-     */
-    _redirectToFirstUnread: function() {
-        var unread = this.state.ticket.firstUnreadUpdateFor(this.props.user);
-        if (!unread) return;
-        window.location.hash = unread.getUniqueId();
-    },
-
-    /**
      * Anchor links (eg. #foobar) does not work on dynamically loaded elements
      * because they are not present at load time. This method manually scrolls
      * to the linked element when they appear.
@@ -168,12 +156,14 @@ var TicketView = React.createClass({
      * @method scrollToAnchoredElement
      */
     scrollToAnchoredElement: function() {
+        var unread = this.state.ticket.firstUnreadUpdateFor(this.props.user);
 
         // Remove ?scrollTo=firstUnread query string and set
         // window.location.hash
-        if (this.props.query.scrollTo === "firstUnread") {
+        if (unread && this.props.query.scrollTo === "firstUnread") {
+            console.log("removing firstUnread");
             Router.replaceWith(this.props.name, this.props.params);
-            this._redirectToFirstUnread();
+            window.location.hash = unread.getUniqueId();
         }
 
         // Nothing selected

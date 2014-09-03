@@ -122,8 +122,8 @@ var Ticket = Base.extend({
      * @return {models.client.Base}
      */
     firstUnreadUpdateFor: function(user) {
-        return _.find(this.comments().sort(byCreation), function(update) {
-            return update.isUnreadBy(user);
+        return _.find(this.comments().sort(byCreation), function(comment) {
+            return comment.isUnreadBy(user);
         });
     },
 
