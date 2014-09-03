@@ -388,11 +388,42 @@ var Ticket = Base.extend({
 
         return Promise.join(
             followerOp,
-            self.addVisibility(follower.getPersonalVisibility(), addedBy)
+            self.addVisibility(follower.getPersonalVisibility(), addedBy),
+            self.ensureNotification(follower)
         ).spread(function(followerRelation) {
             return followerRelation;
         });
 
+    },
+
+    /**
+     * Ensure notification relation for a user
+     *
+     * @method ensureNotification
+     * @param {models.server.User|Number} user
+     * @return {Bluebird.Promise} with models.server.Notification
+     */
+    ensureNotification: function(user) {
+        var self = this;
+
+        return Notification.forge({
+            ticketId: this.get("id"),
+            targetId: Base.toId(user)
+        })
+        .fetch()
+        .then(function(notification) {
+            if (notification) return notification;
+
+            // if relation does not exists create one with zero date i.e. the
+            // user has never read the ticket. This makes this ticket visible
+            // in notifications api.
+            return Notification.forge({
+                ticketId: self.get("id"),
+                targetId: Base.toId(user),
+                readAt: new Date(0),
+                emailSentAt: new Date(0),
+            }).save();
+        });
     },
 
     /**
