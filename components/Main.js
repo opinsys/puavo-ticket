@@ -10,10 +10,12 @@ var ButtonGroup = require("react-bootstrap/ButtonGroup");
 
 var User = require("app/models/client/User");
 var Ticket = require("app/models/client/Ticket");
+var Comment = require("app/models/client/Comment");
 var BackboneMixin = require("./BackboneMixin");
 var ErrorMessage = require("./ErrorMessage");
 var UserInformation = require("./UserInformation");
 var NotificationsHub = require("./NotificationsHub");
+var NotificationBox = require("./NotificationBox");
 
 
 /**
@@ -40,12 +42,26 @@ var Main = React.createClass({
     getInitialState: function() {
         return {
             user: new User(window.USER),
-            unreadTickets: Ticket.collection()
+            unreadTickets: Ticket.collection(),
+            lastUpdate: null
         };
     },
 
     fetchUnreadTickets: function() {
         return this.state.unreadTickets.fetchWithUnreadComments();
+    },
+
+    handleFollowerUpdate: function(update) {
+        this.fetchUnreadTickets();
+        var comment = new Comment(update);
+        this.setState({ lastUpdate: comment });
+
+        var self = this;
+        setTimeout(function() {
+            if (!self.isMounted()) return;
+            if (comment !== self.state.lastUpdate) return;
+            self.dismissNotificationBox();
+        }, 1000*10);
     },
 
     componentDidMount: function() {
@@ -54,13 +70,13 @@ var Main = React.createClass({
         Ticket.on("markedAsRead", this.fetchUnreadTickets);
         window.addEventListener("focus", this.fetchUnreadTickets);
         Backbone.on("error", this.handleUnhandledError);
-        this.props.io.on("followerUpdate", this.fetchUnreadTickets);
+        this.props.io.on("followerUpdate", this.handleFollowerUpdate);
     },
 
     componentWillUnmount: function() {
         window.removeEventListener("focus", this.fetchUnreadTickets);
         Backbone.off("error", this.handleUnhandledError);
-        this.props.io.off("followerUpdate", this.fetchUnreadTickets);
+        this.props.io.off("followerUpdate", this.handleFollowerUpdate);
     },
 
     handleUnhandledError: function(error, customMessage) {
@@ -99,42 +115,69 @@ var Main = React.createClass({
         this.setState({ renderModalContent: null });
     },
 
+    /**
+     * Remove the NotificationBox from the the view
+     *
+     * @method dismissNotificationBox
+     */
+    dismissNotificationBox: function() {
+        this.setState({ lastUpdate: null });
+    },
+
+    renderNotificationBox: function() {
+        var comment = this.state.lastUpdate;
+        var ticket = comment.ticket();
+        var creator = comment.createdBy();
+        return (
+            <NotificationBox onDismiss={this.dismissNotificationBox}>
+                <Link to="ticket" onClick={this.dismissNotificationBox} params={{id: comment.get("ticketId") }}>
+                    <b>{creator.getFullName()}</b> lisäsi kommentin <b>{comment.get("comment")}</b> tukipyyntöön <b>{ticket.getCurrentTitle()}</b>
+                </Link>
+            </NotificationBox>
+        );
+    },
+
     render: function() {
         var user = this.state.user;
         var unreadTickets = this.state.unreadTickets;
 
         return (
-            <div className="Main wrapper container-fluid">
-                <h1 className="site-header">Opinsys tukipalvelu</h1>
-                {this.state.renderModalContent && this.state.renderModalContent()}
-                <div className="topmenu row">
+            <div className="Main">
 
-                    <div className="user-info pull-right">
-                        <UserInformation user={user} />
+                {this.state.lastUpdate && this.renderNotificationBox()}
+
+                <div className="wrapper container-fluid">
+                    <h1 className="site-header">Opinsys tukipalvelu</h1>
+                    {this.state.renderModalContent && this.state.renderModalContent()}
+                    <div className="topmenu row">
+
+                        <div className="user-info pull-right">
+                            <UserInformation user={user} />
+                        </div>
+
+                        <ButtonGroup className="top-buttons">
+                            <Link className="btn btn-default top-button" to="new">
+                                <i className="fa fa-pencil-square-o"></i>Uusi tukipyyntö
+                            </Link>
+
+                            <Link className="btn btn-default top-button" to="tickets">
+                                <i className="fa fa-home"></i>Omat tukipyynnöt
+                            </Link>
+                            <NotificationsHub user={user} tickets={unreadTickets} className="top-button" />
+                        </ButtonGroup>
                     </div>
 
-                    <ButtonGroup className="top-buttons">
-                        <Link className="btn btn-default top-button" to="new">
-                            <i className="fa fa-pencil-square-o"></i>Uusi tukipyyntö
-                        </Link>
+                    <div className="main-wrap clearfix" >
+                        <div className="main-content">
 
-                        <Link className="btn btn-default top-button" to="tickets">
-                            <i className="fa fa-home"></i>Omat tukipyynnöt
-                        </Link>
-                        <NotificationsHub user={user} tickets={unreadTickets} className="top-button" />
-                    </ButtonGroup>
-                </div>
+                            <this.props.activeRouteHandler
+                                renderInModal={this.renderInModal}
+                                unreadTickets={unreadTickets}
+                                user={this.state.user} />
 
-                <div className="main-wrap clearfix" >
-                    <div className="main-content">
-
-                        <this.props.activeRouteHandler
-                            renderInModal={this.renderInModal}
-                            unreadTickets={unreadTickets}
-                            user={this.state.user} />
+                        </div>
 
                     </div>
-
                 </div>
             </div>
         );

@@ -33,13 +33,23 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
 
         req.sio.sockets.to(
             ticket.getSocketIORoom()
-        ).emit("watcherUpdate", comment.toJSON());
+        ).emit("watcherUpdate", {
+            ticketId: ticket.get("id"),
+            commentId: comment.get("id")
+        });
 
         // Intentionally do this outside of the current Promise chain.
         ticket.followers().query(function(q) {
             q.where("followedById", "!=", req.user.get("id"));
         })
         .fetch()
+        .then(function(followers) {
+            return comment.load([
+                "createdBy",
+                "ticket",
+                "ticket.titles",
+            ]).return(followers);
+        })
         .then(function(followers) {
             debug(
                 "%s sending update to followers %s",

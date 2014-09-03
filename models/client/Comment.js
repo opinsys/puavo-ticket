@@ -35,6 +35,15 @@ var Comment = Base.extend({
     },
 
     /**
+     * @method ticket
+     * @return {models.client.Ticket}
+     */
+    ticket: function() {
+        var Ticket = require("./Ticket");
+        return new Ticket(this.rel("ticket"));
+    },
+
+    /**
      * Merge two comments to new one
      *
      * @method merge

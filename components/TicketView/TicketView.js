@@ -161,7 +161,6 @@ var TicketView = React.createClass({
         // Remove ?scrollTo=firstUnread query string and set
         // window.location.hash
         if (unread && this.props.query.scrollTo === "firstUnread") {
-            console.log("removing firstUnread");
             Router.replaceWith(this.props.name, this.props.params);
             window.location.hash = unread.getUniqueId();
         }

@@ -119,6 +119,23 @@ var Base = Backbone.Model.extend({
         return type + "-" + id;
     },
 
+    /**
+     * Return relation data for given key or throw if it's not loaded
+     *
+     * @method rel
+     * @param {String} key
+     * @return {Object|Array} Relation data
+     */
+    rel: function(key){
+        var data = this.get(key);
+        if (!data) {
+            var err =  new Error("Relation for key '" + key + "' is not loaded for '" + this.get("type") + "' model");
+            err.model = this;
+            throw err;
+        }
+        return data;
+    },
+
 
     /**
      * Save model to server

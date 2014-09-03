@@ -386,6 +386,7 @@ var Ticket = Base.extend({
             }).save();
         });
 
+
         return Promise.join(
             followerOp,
             self.addVisibility(follower.getPersonalVisibility(), addedBy),

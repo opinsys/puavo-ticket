@@ -2,8 +2,8 @@
 
 require("../../db");
 
-var User = require("./User");
 var Base = require("./Base");
+var User = require("./User");
 
 /**
  * Comment for {{#crossLink "models.server.Ticket"}}{{/crossLink}}
@@ -25,6 +25,11 @@ var Comment = Base.extend({
 
   createdBy: function() {
       return this.belongsTo(User, "createdById");
+  },
+
+  ticket: function() {
+      var Ticket = require("./Ticket");
+      return this.belongsTo(Ticket, "ticketId");
   },
 
   /**
