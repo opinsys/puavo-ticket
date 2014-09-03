@@ -1,4 +1,4 @@
-
+"use strict";
 
 /**
  *
@@ -14,7 +14,11 @@ var TicketMixin = {
      */
     methodFromMixin: function() {
     
-    }
+    },
+
+    toString: function() {
+        return "<Ticket " + this.get("id") + ">";
+    },
 
 };
 

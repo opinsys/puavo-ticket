@@ -5,6 +5,7 @@
 
 var Promise = require("bluebird");
 var express = require("express");
+var debug = require("debug")("puavo-ticket:live");
 
 var Ticket = require("../models/server/Ticket");
 
@@ -28,14 +29,29 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
     })
     .spread(function(comment, ticket) {
 
+        debug("%s sending watcherUpdate to %s", req.user, ticket.get("id"));
+
+        req.sio.sockets.to(
+            ticket.getSocketIORoom()
+        ).emit("watcherUpdate", comment.toJSON());
+
         // Intentionally do this outside of the current Promise chain.
         ticket.followers().query(function(q) {
             q.where("followedById", "!=", req.user.get("id"));
-        }).fetch()
+        })
+        .fetch()
         .then(function(followers) {
-            followers.forEach(function(follower) {
-                req.sio.sockets.to(follower.getSocketIORoom()).emit("comment", comment.toJSON());
-            });
+            debug(
+                "%s sending update to followers %s",
+                req.user, followers.pluck("followedById")
+            );
+
+            return followers.models;
+        })
+        .each(function(follower) {
+            req.sio.sockets.to(
+                follower.getSocketIORoom()
+            ).emit("followerUpdate", comment.toJSON());
         })
         .catch(console.error);
 

@@ -697,6 +697,14 @@ var Ticket = Base.extend({
             this.updateTimestamp(),
             this.sendMailUpdateNotification(e.model)
         );
+    },
+
+    /**
+     * @method getSocketIORoom
+     * @return {String}
+     */
+    getSocketIORoom: function() {
+        return "ticket:" + this.get("id");
     }
 
 }, {

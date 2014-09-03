@@ -139,6 +139,10 @@ var UserMixin = {
         }
     },
 
+    toString: function() {
+        return "<User " + this.getDomainUsername() + " (" + this.get("id") + ")>";
+    }
+
 };
 
 

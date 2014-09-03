@@ -84,20 +84,46 @@ var TicketView = React.createClass({
      * Called when a new live comment message is received from socket.io
      *
      * @private
-     * @method _onLiveComment
+     * @method _handleWatcherUpdate
      */
-    _onLiveComment: function(comment) {
+    _handleWatcherUpdate: function(comment) {
         if (comment.ticketId === this.state.ticket.get("id")) {
             this.fetchTicket();
         }
     },
 
+    /**
+     * Subscribe to the ticket updates
+     *
+     * @method startWatching
+     */
+    startWatching: function() {
+        this.props.io.emit("startWatching", {
+            ticketId: this.state.ticket.get("id")
+        });
+    },
+
+    /**
+     * Called when socket reconnects while the user is still watching it
+     *
+     * Restarts watching and refreshes the ticket
+     *
+     * @private
+     * @method _handleSocketConnect
+     */
+    _handleSocketConnect: function() {
+        this.startWatching();
+        this.fetchTicket();
+    },
 
     componentDidMount: function() {
         window.scrollTo(0, 0);
         this.fetchTicket();
         window.addEventListener("focus", this.handleOnFocus);
-        this.props.io.on("comment", this._onLiveComment);
+        this.props.io.on("watcherUpdate", this._handleWatcherUpdate);
+        this.startWatching();
+
+        this.props.io.on("connect", this._handleSocketConnect);
 
         /**
          * Lazy version of the `markAsRead()` method. It will mark the ticket
@@ -108,14 +134,19 @@ var TicketView = React.createClass({
         this.lazyMarkAsRead = _.throttle(this.markAsRead, 10*1000);
     },
 
+    componentWillUnmount: function() {
+        window.removeEventListener("focus", this.handleOnFocus);
+        this.props.io.emit("stopWatching", {
+            ticketId: this.state.ticket.get("id")
+        });
+        this.props.io.off("watcherUpdate", this._handleWatcherUpdate);
+        this.props.io.off("connect", this._handleSocketConnect);
+    },
+
     componentDidUpdate: function() {
         this.scrollToAnchoredElement();
     },
 
-    componentWillUnmount: function() {
-        window.removeEventListener("focus", this.handleOnFocus);
-        this.props.io.off("comment", this.onLiveComment);
-    },
 
     /**
      * Set window.location.hash to unique id of the first unread ticket comment

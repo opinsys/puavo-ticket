@@ -9,6 +9,7 @@ var browserify = require("browserify-middleware");
 var express = require("express");
 var Server = require("http").Server;
 
+var debug = require("debug")("puavo-ticket:live");
 var serveStatic = require("serve-static");
 var bodyParser = require("body-parser");
 var jwtsso = require("jwtsso");
@@ -17,6 +18,7 @@ var session = require("express-session");
 var RedisStore = require("connect-redis")(session);
 
 var User = require("./models/server/User");
+var Ticket = require("./models/server/Ticket");
 
 var config = require("./config");
 /**
@@ -51,7 +53,7 @@ sio.use(function(socket, next) {
     User.byExternalId(req.session.jwt.id).fetch({ require: true })
     .then(function(user) {
         socket.user = user;
-        console.log(user.getDomainUsername() + " authenticated for socket.io");
+        debug("%s authenticated with socket.io", user);
     })
     .then(next.bind(this, null))
     .catch(function(err) {
@@ -61,8 +63,36 @@ sio.use(function(socket, next) {
 });
 
 sio.sockets.on("connection", function(socket) {
-    console.log("socket connected", socket.user.getFullName()); // win!
     socket.join(socket.user.getSocketIORoom());
+
+    socket.on("startWatching", function(ob) {
+        Ticket.fetchByIdConstrained(socket.user, ob.ticketId)
+        .then(function(ticket) {
+            socket.join(ticket.getSocketIORoom());
+
+            debug(
+                "%s started watching ticket %s",
+                socket.user, ticket.get("id")
+            );
+        })
+        .catch(console.error);
+    });
+
+    socket.on("stopWatching", function(ob) {
+        socket.leave("ticket:" + ob.ticketId);
+        debug(
+            "%s stopped watching ticket %s",
+            socket.user, ob.ticketId
+        );
+    });
+
+    socket.on("disconnect", function() {
+        debug(
+            "%s disconnected from socket.io",
+            socket.user
+        );
+    });
+
 });
 
 app.use(sessionMiddleware);

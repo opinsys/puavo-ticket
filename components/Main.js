@@ -54,13 +54,13 @@ var Main = React.createClass({
         Ticket.on("markedAsRead", this.fetchUnreadTickets);
         window.addEventListener("focus", this.fetchUnreadTickets);
         Backbone.on("error", this.handleUnhandledError);
-        this.props.io.on("comment", this.fetchUnreadTickets);
+        this.props.io.on("followerUpdate", this.fetchUnreadTickets);
     },
 
     componentWillUnmount: function() {
         window.removeEventListener("focus", this.fetchUnreadTickets);
         Backbone.off("error", this.handleUnhandledError);
-        this.props.io.off("comment", this.fetchUnreadTickets);
+        this.props.io.off("followerUpdate", this.fetchUnreadTickets);
     },
 
     handleUnhandledError: function(error, customMessage) {
