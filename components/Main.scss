@@ -18,7 +18,10 @@
     }
 
     @include only-on(phablets-and-smaller) {
-        padding: 0;
+
+        .wrapper {
+            padding: 0;
+        }
 
         .user-info button {
             height: 40px;
