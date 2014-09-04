@@ -31,6 +31,8 @@ var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
 var TicketList = require("./components/TicketList");
 
+// Clear spinners
+document.body.innerHTML = "";
 React.renderComponent(
     <Routes location="history">
         <Route handler={Main} io={io}>

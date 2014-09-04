@@ -301,3 +301,7 @@ table td {
 }
 
 
+// Change spinner color once the application css is loaded
+.initial-spinner > * {
+    background-color: $highlight-color !important;
+}
