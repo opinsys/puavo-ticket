@@ -50,6 +50,11 @@ describe("/api/tickets/:id/comments", function() {
 
     });
 
+    beforeEach(function() {
+        this.toStub.reset();
+        this.emitSpy.reset();
+    });
+
     after(function() {
         this.toStub.restore();
         return this.agent.logout();
@@ -90,8 +95,6 @@ describe("/api/tickets/:id/comments", function() {
     it("socket.io messages are sent to the followers about new comments", function() {
         var self = this;
 
-
-
         return self.ticket.addFollower(self.otherTeacher, self.otherTeacher)
         .then(function() {
             return self.agent
@@ -106,9 +109,9 @@ describe("/api/tickets/:id/comments", function() {
                 .then(function(res) {
                     assert.equal(res.status, 200, res.text);
 
-                    assert.equal(
-                        1, self.toStub.callCount,
-                        "req.sio.sockets.to was not called once: " + self.toStub.callCount
+                    assert(
+                        _.find(self.toStub.args, [ self.ticket.getSocketIORoom() ]),
+                        "message is emitted to ticket specific room"
                     );
 
                     // Message about the comment is sent to room of otherTeacher
@@ -117,8 +120,8 @@ describe("/api/tickets/:id/comments", function() {
                         self.toStub.lastCall.args[0]
                     );
 
-                    // A comment message is emitted to socket.io
-                    assert.equal("comment", self.emitSpy.lastCall.args[0]);
+                    // A comment message is emitted to socket.io as a followerUpdate
+                    assert.equal("followerUpdate", self.emitSpy.lastCall.args[0]);
 
                     assert(
                         self.emitSpy.lastCall.args[1],
