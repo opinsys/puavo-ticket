@@ -123,7 +123,10 @@ var Main = React.createClass({
         var creator = comment.createdBy();
         return (
             <NotificationBox onDismiss={this.dismissNotificationBox} timeout={1000*10}>
-                <Link to="ticket" onClick={this.dismissNotificationBox} params={{id: comment.get("ticketId") }}>
+                <Link to="ticket"
+                    onClick={this.dismissNotificationBox}
+                    params={{id: comment.get("ticketId") }}
+                    query={{scrollTo: "firstUnread" }}>
                     <b>{creator.getFullName()}</b> lisäsi kommentin <b>{comment.get("comment")}</b> tukipyyntöön <b>{ticket.getCurrentTitle()}</b>
                 </Link>
             </NotificationBox>
