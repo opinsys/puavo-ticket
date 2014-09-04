@@ -52,7 +52,7 @@ var NotificationBox = React.createClass({
 
     render: function() {
         return (
-            <div className="NotificationBox">
+            <div className="NotificationBox animated bounceInDown">
                 <Alert onDismiss={this.props.onDismiss}>
                     {this.props.children}
                 </Alert>
