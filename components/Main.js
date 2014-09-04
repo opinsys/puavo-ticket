@@ -121,13 +121,17 @@ var Main = React.createClass({
         var comment = this.state.lastUpdate;
         var ticket = comment.ticket();
         var creator = comment.createdBy();
+        var commentString = comment.get("comment");
+        if (commentString.length > 100) {
+            commentString = commentString.slice(0, 100) + "...";
+        }
         return (
             <NotificationBox onDismiss={this.dismissNotificationBox} timeout={1000*10}>
                 <Link to="ticket"
                     onClick={this.dismissNotificationBox}
                     params={{id: comment.get("ticketId") }}
                     query={{scrollTo: "firstUnread" }}>
-                    <b>{creator.getFullName()}</b> lisäsi kommentin <b>{comment.get("comment")}</b> tukipyyntöön <b>{ticket.getCurrentTitle()}</b>
+                    <b>{creator.getFullName()}</b> lisäsi kommentin <b>{commentString}</b> tukipyyntöön <b>{ticket.getCurrentTitle()}</b>
                 </Link>
             </NotificationBox>
         );
