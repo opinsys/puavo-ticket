@@ -55,13 +55,6 @@ var Main = React.createClass({
         this.fetchUnreadTickets();
         var comment = new Comment(update);
         this.setState({ lastUpdate: comment });
-
-        var self = this;
-        setTimeout(function() {
-            if (!self.isMounted()) return;
-            if (comment !== self.state.lastUpdate) return;
-            self.dismissNotificationBox();
-        }, 1000*10);
     },
 
     componentDidMount: function() {
@@ -129,7 +122,7 @@ var Main = React.createClass({
         var ticket = comment.ticket();
         var creator = comment.createdBy();
         return (
-            <NotificationBox onDismiss={this.dismissNotificationBox}>
+            <NotificationBox onDismiss={this.dismissNotificationBox} timeout={1000*10}>
                 <Link to="ticket" onClick={this.dismissNotificationBox} params={{id: comment.get("ticketId") }}>
                     <b>{creator.getFullName()}</b> lisäsi kommentin <b>{comment.get("comment")}</b> tukipyyntöön <b>{ticket.getCurrentTitle()}</b>
                 </Link>
