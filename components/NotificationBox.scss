@@ -8,4 +8,13 @@
         opacity: 1;
     }
     font-size: 8pt;
+
+    .alert-info {
+        background-color: $unread-color;
+        border-color: $unread-border-color;
+    }
+
+    a, a:hover, a:active {
+        color: black;
+    }
 }

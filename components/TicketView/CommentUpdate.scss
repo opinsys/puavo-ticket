@@ -49,8 +49,11 @@
     }
 
 
+    &.selected .message:after {
+        border-color: transparent $highlight-color;
+    }
     &.selected .message {
-        background-color: $highlight-color;
+        border-color: $highlight-color;
     }
 
 }
