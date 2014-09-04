@@ -6,6 +6,7 @@ if (process.env.NODE_ENV !== "production") {
 
 require("./db");
 var browserify = require("browserify-middleware");
+var Promise = require("bluebird");
 var express = require("express");
 var Server = require("http").Server;
 
@@ -50,7 +51,9 @@ sio.use(function(socket, next) {
 
 sio.use(function(socket, next) {
     var req = socket.request;
-    User.byExternalId(req.session.jwt.id).fetch({ require: true })
+    Promise.resolve().then(function() {
+        return User.byExternalId(req.session.jwt.id).fetch({ require: true });
+    })
     .then(function(user) {
         socket.user = user;
         debug("%s authenticated with socket.io", user);
