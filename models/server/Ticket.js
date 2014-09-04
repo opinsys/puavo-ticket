@@ -119,23 +119,10 @@ var Ticket = Base.extend({
 
     _setInitialTicketState: function (ticket) {
         return ticket.createdBy().fetch().then(function(user) {
-            var isOpen = ticket.setStatus("open", user, {
-                force: true
-            });
-
-            var creatorIsHandler = ticket.addHandler(
-                user,
-                user
-            );
-            var organisationAdminCanView = ticket.addVisibility(
-                user.getOrganisationAdminVisibility(),
-                user
-            );
-
             return Promise.join(
-                isOpen,
-                creatorIsHandler,
-                organisationAdminCanView
+                ticket.setStatus("open", user, { force: true }),
+                ticket.addHandler(user, user),
+                ticket.addVisibility(user.getOrganisationAdminVisibility(), user)
             );
         });
     },
@@ -226,17 +213,20 @@ var Ticket = Base.extend({
      * @return {Bluebird.Promise} with models.server.Comment
      */
     addComment: function(comment, user, opts) {
+        var self = this;
         return Promise.join(
             Comment.forge({
-                ticketId: this.get("id"),
+                ticketId: self.get("id"),
                 comment: comment,
                 createdById: Base.toId(user)
             }).save(),
-            this.addFollower(user, user)
-        ).bind(this)
+            self.addFollower(user, user)
+        ).then(function(comment) {
+            return self.markAsRead(user).return(comment);
+        })
         .spread(function(comment) {
             if (opts && opts.silent === false) return comment;
-            return this.triggerUpdate(comment);
+            return self.triggerUpdate(comment);
         });
     },
 

@@ -141,10 +141,10 @@ describe("Ticket notifications", function() {
            self.yetAnother
         ])
         .map(function(ticket) {
-            return Promise.join(
-                ticket.addFollower(self.user, self.user),
-                ticket.markAsRead(self.user)
-            ).return(ticket);
+            return ticket.addFollower(self.user, self.user)
+            .then(function() {
+                return ticket.markAsRead(self.user);
+            }).return(ticket);
         })
         .delay(100)
         .map(function(ticket) {

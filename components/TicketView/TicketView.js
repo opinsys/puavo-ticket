@@ -192,7 +192,7 @@ var TicketView = React.createClass({
         this.state.ticket.addComment(e.comment)
         .bind(this)
         .then(function() {
-            return this.markAsRead();
+            return this.fetchTicket();
         })
         .then(function() {
             if (!this.isMounted()) return;
