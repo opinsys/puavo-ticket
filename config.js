@@ -45,4 +45,8 @@ if (process.env.NODE_ENV === "test") {
 config.database.debug = !!process.env.SQL;
 config.database.client = "pg";
 
+if (!config.sessionSecret) {
+    throw Error("sessionSecret is missing from the configuration!");
+}
+
 module.exports = config;

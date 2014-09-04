@@ -42,7 +42,7 @@ app.sio = sio;
 
 var sessionMiddleware = session({
     store: new RedisStore(config.redis),
-    secret: "keyboard cat", // XXX
+    secret: config.sessionSecret
 });
 
 sio.use(function(socket, next) {
