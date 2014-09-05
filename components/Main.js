@@ -17,6 +17,7 @@ var UserInformation = require("./UserInformation");
 var NotificationsHub = require("./NotificationsHub");
 var NotificationBox = require("./NotificationBox");
 var BrowserTitle = require("app/utils/BrowserTitle");
+var captureError = require("app/utils/captureError");
 
 
 /**
@@ -51,7 +52,8 @@ var Main = React.createClass({
     },
 
     fetchUnreadTickets: function() {
-        return this.state.unreadTickets.fetchWithUnreadComments();
+        return this.state.unreadTickets.fetchWithUnreadComments()
+            .catch(captureError("Ilmoitusten lataaminen epäonnistui"));
     },
 
     handleFollowerUpdate: function(update) {
