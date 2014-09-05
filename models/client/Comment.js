@@ -49,7 +49,7 @@ var Comment = Base.extend({
     /**
      * Return comments that are merged to this comment using Comment#merge(...)
      *
-     * @method getMergedComment
+     * @method getMergedComments
      * @return {Array} of models.client.Comment
      */
     getMergedComments: function() {
