@@ -65,6 +65,8 @@ describe("BrowserTitle", function() {
         bt.setTitle("second");
         bt.activateOnNextTick();
 
+        assert(!doc.title, "title is not set on this tick");
+
         setTimeout(function() {
             assert.equal("second - bar", doc.title);
             assert.equal(1, bt.activateNow.callCount);
