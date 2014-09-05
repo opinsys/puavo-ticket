@@ -47,7 +47,7 @@ var CommentUpdate = React.createClass({
         var createdAt = comment.createdAt();
         var commentString = comment.toHTML();
         var hashId = comment.getUniqueId();
-        var mergedComments = comment.mergedComments();
+        var mergedComments = comment.getMergedComments();
 
         var currentHashId = window.location.hash.slice(1);
 

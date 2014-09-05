@@ -46,7 +46,13 @@ var Comment = Base.extend({
         return this._htmlCache;
     },
 
-    mergedComments: function() {
+    /**
+     * Return comments that are merged to this comment using Comment#merge(...)
+     *
+     * @method getMergedComment
+     * @return {Array} of models.client.Comment
+     */
+    getMergedComments: function() {
         var self = this;
         return this.get("merged").map(function(data) {
             return new Comment(data, { parent: self.parent });
