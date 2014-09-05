@@ -32,6 +32,7 @@ if (process.env.NODE_ENV === "test") {
     config.puavo.username = "puavo-ticket";
     config.puavo.password = "password";
     config.managerOrganisationDomain = "managertesting.opinsys.net";
+    config.sessionSecret = "secret";
 
 } else {
     var productionConfig = require("./_config");
