@@ -16,6 +16,7 @@ var ErrorMessage = require("./ErrorMessage");
 var UserInformation = require("./UserInformation");
 var NotificationsHub = require("./NotificationsHub");
 var NotificationBox = require("./NotificationBox");
+var BrowserTitle = require("app/utils/BrowserTitle");
 
 
 /**
@@ -27,12 +28,14 @@ var NotificationBox = require("./NotificationBox");
  * @constructor
  * @param {Object} props
  * @param {Socket.IO} props.io Socket.IO socket
+ * @param {BrowserTitle} props.title BrowserTitle instance
  */
 var Main = React.createClass({
 
     mixins: [BackboneMixin],
 
     propTypes: {
+        title: React.PropTypes.instanceOf(BrowserTitle).isRequired,
         io: React.PropTypes.shape({
             on: React.PropTypes.func.isRequired,
             off: React.PropTypes.func.isRequired
@@ -140,6 +143,8 @@ var Main = React.createClass({
     render: function() {
         var user = this.state.user;
         var unreadTickets = this.state.unreadTickets;
+        this.props.title.setNotificationCount(unreadTickets.size());
+        this.props.title.activateOnNextTick();
 
         return (
             <div className="Main">

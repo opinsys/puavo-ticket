@@ -30,15 +30,19 @@ var Main = require("./components/Main");
 var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
 var TicketList = require("./components/TicketList");
+var BrowserTitle = require("./utils/BrowserTitle");
+
+var title = new BrowserTitle({ trailingTitle: window.document.title });
 
 // Clear spinners
 document.body.innerHTML = "";
+
 React.renderComponent(
     <Routes location="history">
-        <Route handler={Main} io={io}>
+        <Route handler={Main} io={io} title={title}>
             <Route name="new" handler={TicketForm} />
             <Route name="tickets" path="/" handler={TicketList} />
-            <Route name="ticket" path="/tickets/:id" handler={TicketView} io={io} preserveScrollPosition />
+            <Route name="ticket" path="/tickets/:id" handler={TicketView} io={io} title={title} preserveScrollPosition />
         </Route>
     </Routes>, document.body);
 

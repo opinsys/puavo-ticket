@@ -20,6 +20,7 @@ var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
 var EditableText = require("../EditableText");
+var BrowserTitle = require("app/utils/BrowserTitle");
 
 var ToggleStatusButton = require("./ToggleStatusButton");
 var ToggleFollowButton = require("./ToggleFollowButton");
@@ -46,12 +47,14 @@ var UPDATE_COMPONENTS = {
  * @param {models.client.User} props.user
  * @param {Socket.IO} props.io Socket.IO socket
  * @param {Function} props.renderInModal
+ * @param {BrowserTitle} props.title BrowserTitle instance
  */
 var TicketView = React.createClass({
 
     mixins: [BackboneMixin],
 
     propTypes: {
+        title: React.PropTypes.instanceOf(BrowserTitle).isRequired,
         user: React.PropTypes.instanceOf(User).isRequired,
         renderInModal: React.PropTypes.func.isRequired,
         io: React.PropTypes.shape({
@@ -141,6 +144,8 @@ var TicketView = React.createClass({
         });
         this.props.io.off("watcherUpdate", this._handleWatcherUpdate);
         this.props.io.off("connect", this._handleSocketConnect);
+        this.props.title.setTitle("");
+        this.props.title.activateOnNextTick();
     },
 
     componentDidUpdate: function() {
@@ -360,6 +365,10 @@ var TicketView = React.createClass({
         var fetching = this.state.fetching;
         var user = this.props.user;
         var updates = this.getUpdatesWithMergedComments();
+        var title = ticket.getCurrentTitle();
+
+        this.props.title.setTitle(title);
+        this.props.title.activateOnNextTick();
 
         return (
             <div className="row TicketView">
@@ -391,7 +400,7 @@ var TicketView = React.createClass({
                         <div className="header ticket-header">
                             <EditableText onSubmit={this.changeTitle} disabled={!ticket.isHandler(user)}>
                                 <h3>
-                                    {ticket.getCurrentTitle() || <Redacted>Ladataan otsikkoa</Redacted>}
+                                    {title || <Redacted>Ladataan otsikkoa</Redacted>}
                                     {this.state.changingTitle && <Loading.Spinner />}
                                 </h3>
                             </EditableText>

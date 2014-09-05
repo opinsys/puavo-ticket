@@ -95,7 +95,7 @@ test-browsers-watch: browserify-test
 	$(KARMA) start
 
 test-server: jshint
-	mocha test/models/server/*_test.js test/api/*_test.js
+	mocha test/models/server/*_test.js test/api/*_test.js test/utils/BrowserTitle_test.js
 
 .PHONY: test
 test:
