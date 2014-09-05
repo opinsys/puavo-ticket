@@ -77,7 +77,7 @@ jshint: $(js_files)
 	$(JSHINT) $?
 
 browserify-test: jshint
-	browserify -d -t reactify test/client.js -o test/bundle.js
+	browserify test/client.js -o test/bundle.js
 
 export CHROME_BIN := chromium-browser
 test-chrome: browserify-test
