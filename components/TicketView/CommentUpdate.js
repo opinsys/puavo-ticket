@@ -72,10 +72,11 @@ var CommentUpdate = React.createClass({
                     <a className="since" href={"#" + hashId } onClick={this.onHashChange}>
                         <TimeAgo date={createdAt} />
                     </a>
-                    <div className="comment" dangerouslySetInnerHTML={{__html: toMd(commentString)}} />
+                    <div className="comment" key={hashId} dangerouslySetInnerHTML={{__html: toMd(commentString)}} />
                     {mergedComments.map(function(c) {
+                        var hashId = c.getUniqueId();
                         return (
-                            <div className="comment" dangerouslySetInnerHTML={{__html: toMd(c.get("comment"))}} />
+                            <div id={hashId} key={hashId} className="comment" dangerouslySetInnerHTML={{__html: toMd(c.get("comment"))}} />
                         );
                     })}
                 </div>
