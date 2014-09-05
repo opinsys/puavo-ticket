@@ -134,7 +134,7 @@ var TicketView = React.createClass({
          *
          * @method lazyMarkAsRead
          */
-        this.lazyMarkAsRead = _.throttle(this.markAsRead, 10*1000);
+        this.lazyMarkAsRead = _.throttle(this.markAsRead, 5*1000);
     },
 
     componentWillUnmount: function() {
@@ -425,10 +425,10 @@ var TicketView = React.createClass({
                                 <div key={update.getUniqueId()} className={className}>
                                     <UpdateComponent update={update} onViewport={function(props) {
                                         if (_.last(updates) !== props.update) return;
-                                        // Mark the ticket as read 30 seconds
+                                        // Mark the ticket as read 5 seconds
                                         // after the last update has been shown
                                         // to the user
-                                        setTimeout(self.lazyMarkAsRead, 10*1000);
+                                        setTimeout(self.lazyMarkAsRead, 5*1000);
                                     }} />
                                 </div>
                             );
