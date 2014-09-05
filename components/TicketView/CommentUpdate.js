@@ -2,12 +2,13 @@
 "use strict";
 var React = require("react/addons");
 var classSet = React.addons.classSet;
+var marked = require("marked");
 
 var ProfileBadge = require("../ProfileBadge");
 var OnViewportMixin = require("../OnViewportMixin");
 var UpdateMixin = require("./UpdateMixin");
-var ForcedLinebreaks = require("../ForcedLinebreaks");
 var TimeAgo = require("../TimeAgo");
+
 
 /**
  * Renders ticket comment
@@ -71,12 +72,10 @@ var CommentUpdate = React.createClass({
                     <a className="since" href={"#" + hashId } onClick={this.onHashChange}>
                         <TimeAgo date={createdAt} />
                     </a>
-                    <ForcedLinebreaks className="comment">{commentString}</ForcedLinebreaks>
+                    <div className="comment" dangerouslySetInnerHTML={{__html: toMd(commentString)}} />
                     {mergedComments.map(function(c) {
                         return (
-                            <ForcedLinebreaks id={c.getUniqueId()} className="comment">
-                            {c.get("comment")}
-                            </ForcedLinebreaks>
+                            <div className="comment" dangerouslySetInnerHTML={{__html: toMd(c.get("comment"))}} />
                         );
                     })}
                 </div>
@@ -85,5 +84,20 @@ var CommentUpdate = React.createClass({
     },
 
 });
+
+
+/**
+ * Convert string to Markdown
+ *
+ * @static
+ * @method toMd
+ * @param {String} s
+ * @return {String}
+ */
+function toMd(s) {
+    // Configure options here
+    // https://github.com/chjj/marked
+    return marked(s);
+}
 
 module.exports = CommentUpdate;
