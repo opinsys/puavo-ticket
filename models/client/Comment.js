@@ -1,5 +1,6 @@
 "use strict";
 var _ = require("lodash");
+var marked = require("marked");
 
 var Base = require("./Base");
 var UpdateMixin = require("./UpdateMixin");
@@ -15,16 +16,34 @@ var UpdateMixin = require("./UpdateMixin");
  */
 var Comment = Base.extend({
 
+    _htmlCache: null,
+
     defaults: function() {
         return {
             type: "comments",
             createdAt: new Date().toString(),
+            comment: "",
             merged: []
         };
     },
 
     url: function() {
         return this.parent.url() + "/comments";
+    },
+
+    /**
+     * Convert comment string to a HTML string assuming it is a Markdown string
+     *
+     * @method toHTML
+     * @return {String}
+     */
+    toHTML: function(){
+        // Because our client side models are immutable we can safely cache
+        // this per model forever. i.e. the comment string will never change
+        // during the lifetime of this model.
+        if (this._htmlCache) return this._htmlCache;
+        this._htmlCache = toMd(this.get("comment"));
+        return this._htmlCache;
     },
 
     mergedComments: function() {
@@ -64,6 +83,20 @@ var Comment = Base.extend({
     }
 
 });
+
+/**
+ * Convert Markdown string to HTML
+ *
+ * @static
+ * @method toMd
+ * @param {String} s
+ * @return {String}
+ */
+function toMd(s) {
+    // Configure options here
+    // https://github.com/chjj/marked
+    return marked(s);
+}
 
 _.extend(Comment.prototype, UpdateMixin);
 

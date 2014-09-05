@@ -2,7 +2,6 @@
 "use strict";
 var React = require("react/addons");
 var classSet = React.addons.classSet;
-var marked = require("marked");
 
 var ProfileBadge = require("../ProfileBadge");
 var OnViewportMixin = require("../OnViewportMixin");
@@ -46,7 +45,7 @@ var CommentUpdate = React.createClass({
 
         var createdBy = comment.createdBy();
         var createdAt = comment.createdAt();
-        var commentString = comment.get("comment");
+        var commentString = comment.toHTML();
         var hashId = comment.getUniqueId();
         var mergedComments = comment.mergedComments();
 
@@ -72,11 +71,11 @@ var CommentUpdate = React.createClass({
                     <a className="since" href={"#" + hashId } onClick={this.onHashChange}>
                         <TimeAgo date={createdAt} />
                     </a>
-                    <div className="comment" key={hashId} dangerouslySetInnerHTML={{__html: toMd(commentString)}} />
+                    <div className="comment" key={hashId} dangerouslySetInnerHTML={{__html: commentString}} />
                     {mergedComments.map(function(c) {
                         var hashId = c.getUniqueId();
                         return (
-                            <div id={hashId} key={hashId} className="comment" dangerouslySetInnerHTML={{__html: toMd(c.get("comment"))}} />
+                            <div id={hashId} key={hashId} className="comment" dangerouslySetInnerHTML={{__html: c.toHTML()}} />
                         );
                     })}
                 </div>
@@ -86,19 +85,5 @@ var CommentUpdate = React.createClass({
 
 });
 
-
-/**
- * Convert string to Markdown
- *
- * @static
- * @method toMd
- * @param {String} s
- * @return {String}
- */
-function toMd(s) {
-    // Configure options here
-    // https://github.com/chjj/marked
-    return marked(s);
-}
 
 module.exports = CommentUpdate;
