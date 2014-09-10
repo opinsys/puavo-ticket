@@ -20,6 +20,7 @@ function createMultipartMiddleware() {
 
         var form = new multiparty.Form();
         form.parse(req, function(err, fields, files){
+            if (err) return next(err);
             req.files = files;
             next();
         });
