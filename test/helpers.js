@@ -151,7 +151,6 @@ function clearTestDatabase() {
         'visibilities',
         'relatedUsers',
         'devices',
-        'attachments',
         'followers',
         'tags',
         'handlers',
@@ -159,9 +158,12 @@ function clearTestDatabase() {
         'titles'
  ];
 
-    return Promise.all(tables.map(function(table) {
-        return DB.knex(table).del();
-    }))
+    return DB.knex("attachments").del()
+    .then(function() {
+        return Promise.all(tables.map(function(table) {
+            return DB.knex(table).del();
+        }));
+    })
     .then(function() {
         return DB.knex("tickets").del();
     })

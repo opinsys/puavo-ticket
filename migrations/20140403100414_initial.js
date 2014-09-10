@@ -115,12 +115,16 @@ exports.up = function(knex, Promise) {
 
             knex.schema.createTable("attachments", function(table) {
                 addLifecycleColumns(table);
-                addTicketRelation(table);
+
+                table.integer("commentId")
+                    .notNullable()
+                    .references("id")
+                    .inTable("comments");
 
                 table.increments("id");
                 table.binary("data").notNullable();
+                table.string("filename").notNullable();
                 table.string("dataType");
-                table.string("filename");
             }),
 
             knex.schema.createTable("followers", function(table) {

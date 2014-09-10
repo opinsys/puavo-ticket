@@ -4,6 +4,7 @@ require("../../db");
 
 var Base = require("./Base");
 var User = require("./User");
+var Attachment = require("./Attachment");
 
 /**
  * Comment for {{#crossLink "models.server.Ticket"}}{{/crossLink}}
@@ -42,6 +43,36 @@ var Comment = Base.extend({
         var self = this;
 
         return self.get("comment");
+    },
+
+    /**
+     * Get all attachments of this comment
+     *
+     * @method attachments
+     * @return {Bookshelf.Collection} Bookshelf.Collection of Attachment models
+     */
+    attachments: function() {
+        return this.hasMany(Attachment, "commentId");
+    },
+
+
+    /**
+     * Add file attachment to a ticket comment
+     *
+     * @method addAttachment
+     * @param {Buffer|String} data
+     * @param {String} filename
+     * @param {String} dataType
+     * @param {models.server.User} user
+     */
+    addAttachment: function(data, filename, dataType, createdBy){
+        return Attachment.forge({
+            createdById: Base.toId(createdBy),
+            commentId: this.get("id"),
+            data: data,
+            filename: filename,
+            dataType: dataType
+        }).save();
     }
 
 });

@@ -13,7 +13,6 @@ var Comment = require("./Comment");
 var Tag = require("./Tag");
 var RelatedUser = require("./RelatedUser");
 var Visibility = require("./Visibility");
-var Attachment = require("./Attachment");
 var Follower = require("./Follower");
 var Handler = require("./Handler");
 var Device = require("./Device");
@@ -339,16 +338,6 @@ var Ticket = Base.extend({
             });
     },
 
-
-    /**
-     * Get all attachments to this ticket
-     *
-     * @method attachments
-     * @return {Bookshelf.Collection} Bookshelf.Collection of Attachment models
-     */
-    attachments: function() {
-        return this.hasMany(Attachment, "ticketId").query(queries.notSoftDeleted);
-    },
 
     /**
      * Add follower to a ticket. Also adds a visibility for the follower.

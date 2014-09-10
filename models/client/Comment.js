@@ -1,4 +1,5 @@
 "use strict";
+var Promise = require("bluebird");
 var _ = require("lodash");
 var marked = require("marked");
 

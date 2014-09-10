@@ -103,7 +103,6 @@ app.use(sessionMiddleware);
 app.use(require("./utils/middleware/createSlowInternet")());
 app.use(require("./utils/middleware/createResponseLogger")());
 app.use(bodyParser());
-app.use(require("./utils/middleware/createMultipartMiddleware")());
 app.use(cookieParser());
 
 app.use(sessionMiddleware);
