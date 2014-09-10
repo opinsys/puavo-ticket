@@ -14,35 +14,35 @@ var User = require("./User");
  */
 var Comment = Base.extend({
 
-  tableName: "comments",
+    tableName: "comments",
 
-  defaults: function() {
-      return {
-          createdAt: new Date(),
-          updatedAt: new Date()
-      };
-  },
+    defaults: function() {
+        return {
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+    },
 
-  createdBy: function() {
-      return this.belongsTo(User, "createdById");
-  },
+    createdBy: function() {
+        return this.belongsTo(User, "createdById");
+    },
 
-  ticket: function() {
-      var Ticket = require("./Ticket");
-      return this.belongsTo(Ticket, "ticketId");
-  },
+    ticket: function() {
+        var Ticket = require("./Ticket");
+        return this.belongsTo(Ticket, "ticketId");
+    },
 
-  /**
-   * Text for email notification when this model has changed
-   *
-   * @method textToEmail
-   * @return {String}
-   */
-  textToEmail: function() {
-      var self = this;
+    /**
+     * Text for email notification when this model has changed
+     *
+     * @method textToEmail
+     * @return {String}
+     */
+    textToEmail: function() {
+        var self = this;
 
-      return self.get("comment");
-  }
+        return self.get("comment");
+    }
 
 });
 
