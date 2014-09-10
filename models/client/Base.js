@@ -33,7 +33,7 @@ function createReplaceMixin(parentPrototype) {
             var op = Promise.cast($.get(_.result(this, "url")))
             .bind(this)
             .then(function(res) {
-                return new this.constructor(res);
+                return new this.constructor(res, { parent: this.parent });
             });
 
             this.trigger("replace", op);
@@ -150,7 +150,7 @@ var Base = Backbone.Model.extend({
         return Promise.cast($.post(_.result(this, "url"), this.toJSON()))
             .bind(this)
             .then(function(res) {
-                return new this.constructor(res);
+                return new this.constructor(res, { parent: this.parent });
             });
 
     },
