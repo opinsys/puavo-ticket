@@ -8,9 +8,10 @@ var Promise = require("bluebird");
 
 var Button = require("react-bootstrap/Button");
 var Badge = require("react-bootstrap/Badge");
+
 var Loading = require("../Loading");
 var CommentForm = require("../CommentForm");
-
+var AttachmentsForm = require("../AttachmentsForm");
 var captureError = require("../../utils/captureError");
 var BackboneMixin = require("../../components/BackboneMixin");
 var Ticket = require("../../models/client/Ticket");
@@ -196,6 +197,12 @@ var TicketView = React.createClass({
 
         this.state.ticket.addComment(e.comment)
         .bind(this)
+        .then(function(comment) {
+            var files = this.refs.attachments.getFiles();
+            if (files.length > 0) {
+                return comment.addAttachments(files);
+            }
+        })
         .then(function() {
             return this.fetchTicket();
         })
@@ -438,7 +445,7 @@ var TicketView = React.createClass({
                     <CommentForm onSubmit={this.saveComment} >
                         Lähetä {this.state.saving && <Loading.Spinner />}
                     </CommentForm>
-
+                    <AttachmentsForm ref="attachments" />
                 </div>
 
                 <div className="col-md-4">

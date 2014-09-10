@@ -29,6 +29,7 @@ var UserInformation = React.createClass({
         var linkToProfile = "https://" + this.props.user.get("externalData").organisation_domain + "/users/profile/edit";
         var linkToLogout = window.location.origin + "/logout";
 
+
         return (
             <div className="UserInformation">
 

@@ -70,6 +70,37 @@ var Comment = Base.extend({
     },
 
     /**
+     * @method addAttachments
+     * @param {Array} files Array of HTML5 file objects
+     * @param {Function} progressHandler Called multiple times during the upload progress
+     * @param {Number} progressHandler.progress Progress of the upload
+     * @return {Bluebird.Promise}
+     */
+    addAttachments: function(files, progressHandler) {
+        var ticketId = this.parent.get("id");
+        var commentId = this.get("id");
+        var url = "/api/tickets/" + ticketId +
+            "/comments/" + commentId + "/attachments";
+
+        return new Promise(function(resolve, reject){
+            var formData = new FormData();
+            files.forEach(function(file, i) {
+                formData.append("file" + i, file);
+            });
+
+            var xhr = new XMLHttpRequest();
+            xhr.onload = resolve;
+            xhr.onerror = reject;
+            // TODO: call progressHandler on progress
+            // https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
+
+            xhr.open("POST", url, true);
+            xhr.send(formData);
+        });
+
+    },
+
+    /**
      * Merge two comments to new one
      *
      * @method merge
