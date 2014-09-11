@@ -109,7 +109,7 @@ describe("/api/tickets/:ticketId/comments/:commentId/attachments", function() {
                 assert.equal(TEST_IMAGE_DATA.length, attachment.size);
 
 
-                self.attachmentId = attachment.id;
+                self.attachment = attachment;
             });
     });
 
@@ -119,7 +119,8 @@ describe("/api/tickets/:ticketId/comments/:commentId/attachments", function() {
             .get("/api/tickets/" +
                   self.ticket.get("id") +
                   "/comments/" + this.comment.get("id") +
-                  "/attachments/" + self.attachmentId
+                  "/attachments/" + self.attachment.id + "/" +
+                  self.attachment.filename
              ).promise()
              .then(function(res) {
                 assert.equal(200, res.status, res.text);

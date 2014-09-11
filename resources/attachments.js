@@ -73,7 +73,7 @@ app.post("/api/tickets/:ticketId/comments/:commentId/attachments", function(req,
 
 });
 
-app.get("/api/tickets/:ticketId/comments/:commentId/attachments/:attachmentId", function(req, res, next) {
+app.get("/api/tickets/:ticketId/comments/:commentId/attachments/:attachmentId/:filename", function(req, res, next) {
     Ticket.fetchByIdConstrained(req.user, req.params.ticketId)
     .then(function(ticket) {
         return Attachment.byId(req.params.attachmentId).fetch({ require: true });
