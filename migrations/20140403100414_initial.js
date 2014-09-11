@@ -124,6 +124,7 @@ exports.up = function(knex, Promise) {
                 table.increments("id");
                 table.binary("data").notNullable();
                 table.string("filename").notNullable();
+                table.integer("size").notNullable();
                 table.string("dataType");
             }),
 

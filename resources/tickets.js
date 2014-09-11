@@ -49,7 +49,7 @@ app.get("/api/tickets/:id", function(req, res, next) {
             "comments.createdBy",
             {"comments.attachments": function(q) {
                 // Omit the data column
-                q.column("id", "commentId", "filename", "dataType");
+                q.column("id", "commentId", "filename", "dataType", "size");
             }},
             "handlers",
             "tags.createdBy",

@@ -70,6 +70,7 @@ var Comment = Base.extend({
             createdById: Base.toId(createdBy),
             commentId: this.get("id"),
             data: data,
+            size: data.length,
             filename: filename,
             dataType: dataType
         }).save();

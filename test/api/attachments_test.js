@@ -72,6 +72,7 @@ describe("/api/tickets/:ticketId/comments/:commentId/attachments", function() {
 
                 assert.equal("test.jpg", fileRes.filename);
                 assert.equal("image/jpeg", fileRes.dataType);
+                assert.equal(TEST_IMAGE_DATA.length, fileRes.size);
 
                 // Data is not sent back
                 assert(!fileRes.data);
@@ -105,6 +106,9 @@ describe("/api/tickets/:ticketId/comments/:commentId/attachments", function() {
                 assert.equal("image/jpeg", attachment.dataType);
 
                 assert(attachment.id, "has id prop");
+
+                // Has file size
+                assert.equal(TEST_IMAGE_DATA.length, attachment.size);
 
                 assert(!attachment.data, "does not have the data");
 
