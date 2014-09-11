@@ -5,6 +5,7 @@ require("../../db");
 var Base = require("./Base");
 var User = require("./User");
 var Attachment = require("./Attachment");
+var Chunk = require("./Chunk");
 
 /**
  * Comment for {{#crossLink "models.server.Ticket"}}{{/crossLink}}
@@ -69,11 +70,18 @@ var Comment = Base.extend({
         return Attachment.forge({
             createdById: Base.toId(createdBy),
             commentId: this.get("id"),
-            data: data,
             size: data.length,
             filename: filename,
             dataType: dataType
-        }).save();
+        }).save()
+        .then(function(attachment) {
+            return Chunk.forge({
+                id: attachment.getUniqueId(),
+                chunk: data
+            })
+            .save({}, { method: "insert" })
+            .return(attachment);
+        });
     }
 
 });

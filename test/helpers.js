@@ -158,7 +158,10 @@ function clearTestDatabase() {
         'titles'
  ];
 
-    return DB.knex("attachments").del()
+    return DB.knex("chunks").del()
+    .then(function() {
+        return DB.knex("attachments").del();
+    })
     .then(function() {
         return Promise.all(tables.map(function(table) {
             return DB.knex(table).del();

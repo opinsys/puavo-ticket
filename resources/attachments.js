@@ -67,10 +67,7 @@ app.post("/api/tickets/:ticketId/comments/:commentId/attachments", function(req,
     })
     .then(function(attachments) {
         debug("files ok");
-        res.json(attachments.map(function(a) {
-            // do not send the data back
-            return a.omit("data");
-        }));
+        res.json(attachments);
     })
     .catch(next);
 
@@ -79,18 +76,17 @@ app.post("/api/tickets/:ticketId/comments/:commentId/attachments", function(req,
 app.get("/api/tickets/:ticketId/comments/:commentId/attachments/:attachmentId", function(req, res, next) {
     Ticket.fetchByIdConstrained(req.user, req.params.ticketId)
     .then(function(ticket) {
-        return Attachment.byId(req.params.attachmentId)
-            .fetch({ require: true });
+        return Attachment.byId(req.params.attachmentId).fetch({ require: true });
     })
     .then(function(attachment) {
-        var data = attachment.get("data");
-        res.set({
+        res.writeHead(200, {
             "Content-Type": attachment.get("dataType"),
-            "Content-Length": data.length
+            "Content-Length": attachment.get("size")
         });
-
-        res.write(data);
-        res.end();
+        return attachment.fetchContent();
+    })
+    .then(function(data) {
+        res.end(data);
     })
     .catch(next);
 });

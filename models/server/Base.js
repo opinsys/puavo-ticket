@@ -55,6 +55,17 @@ var Base = Bookshelf.DB.Model.extend({
     },
 
     /**
+     * @method uniqueId
+     * @return {String}
+     */
+    getUniqueId: function() {
+        var type = this.tableName;
+        var id = this.get("id");
+        if (!id || !type) throw new Error("bad unique id");
+        return type + "-" + id;
+    },
+
+    /**
      * Set timestamp to deletedAt
      *
      * @method softDelete

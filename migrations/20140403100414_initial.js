@@ -122,10 +122,24 @@ exports.up = function(knex, Promise) {
                     .inTable("comments");
 
                 table.increments("id");
-                table.binary("data").notNullable();
                 table.string("filename").notNullable();
                 table.integer("size").notNullable();
                 table.string("dataType");
+            }),
+
+            // Save files to separate chunks table instead of incorporating them
+            // in to the attachments table. This makes backups a little bit
+            // easier and adds possibility to actually save the attachments in
+            // chunks to multiple chunks rows which would make possible to
+            // stream the files.
+            //
+            // Currently we just save the files in to a single chunk which has
+            // obvious memory and performance limitations.
+            knex.schema.createTable("chunks", function(table) {
+                table.string("id").notNullable();
+                table.binary("chunk").notNullable();
+                table.integer("sequence").defaultTo(1).notNullable();
+                table.unique(["id", "sequence"]);
             }),
 
             knex.schema.createTable("followers", function(table) {
@@ -167,18 +181,23 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-    return Promise.join(
-        knex.schema.dropTableIfExists("titles"),
-        knex.schema.dropTableIfExists("comments"),
-        knex.schema.dropTableIfExists("visibilities"),
-        knex.schema.dropTableIfExists("relatedUsers"),
-        knex.schema.dropTableIfExists("devices"),
-        knex.schema.dropTableIfExists("attachments"),
-        knex.schema.dropTableIfExists("followers"),
-        knex.schema.dropTableIfExists("tags"),
-        knex.schema.dropTableIfExists("handlers"),
-        knex.schema.dropTableIfExists("notifications")
-    )
+    return knex.schema.dropTableIfExists("files")
+    .then(function() {
+        return knex.schema.dropTableIfExists("attachments");
+    })
+    .then(function() {
+        return Promise.join(
+            knex.schema.dropTableIfExists("titles"),
+            knex.schema.dropTableIfExists("comments"),
+            knex.schema.dropTableIfExists("visibilities"),
+            knex.schema.dropTableIfExists("relatedUsers"),
+            knex.schema.dropTableIfExists("devices"),
+            knex.schema.dropTableIfExists("followers"),
+            knex.schema.dropTableIfExists("tags"),
+            knex.schema.dropTableIfExists("handlers"),
+            knex.schema.dropTableIfExists("notifications")
+        );
+    })
     .then(function() {
         return knex.schema.dropTableIfExists("tickets");
     })
