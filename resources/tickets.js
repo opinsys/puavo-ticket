@@ -47,10 +47,7 @@ app.get("/api/tickets/:id", function(req, res, next) {
         withRelated: [
             "createdBy",
             "comments.createdBy",
-            {"comments.attachments": function(q) {
-                // Omit the data column
-                q.column("id", "commentId", "filename", "dataType", "size");
-            }},
+            "comments.attachments",
             "handlers",
             "tags.createdBy",
             "handlers.handler",
