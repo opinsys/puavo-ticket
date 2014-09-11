@@ -158,12 +158,16 @@ app.use(function(req, res, next) {
     User.byExternalId(req.session.jwt.id).fetch()
     .then(function(user) {
         if (!user) {
-            throw new Error("Unknown external_id: " + req.session.jwt.id);
+            // The database was probably destroyed during development and the
+            // user in the session has disappeared. Just destroy the session
+            // and redirect to front page.
+            req.session.destroy();
+            return res.redirect("/");
         }
         req.sio = sio;
         req.user = user;
+        next();
     })
-    .then(next.bind(this, null))
     .catch(next);
 });
 
