@@ -80,7 +80,7 @@ app.get("/api/tickets/:ticketId/comments/:commentId/attachments/:attachmentId/:f
     })
     .then(function(attachment) {
         res.writeHead(200, {
-            "Content-Type": attachment.get("dataType"),
+            "Content-Type": attachment.getContentType(),
             "Content-Length": attachment.get("size")
         });
         return attachment.fetchContent();

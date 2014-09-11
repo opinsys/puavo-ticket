@@ -25,6 +25,14 @@
         background-color: lightgrey;
     }
 
+    ul li {
+        padding: 5px 0 15px 0;
+    }
+    ul li:first-child{
+        border-top: 0;
+        margin-top: 25px;
+    }
+
     @include only-on(tablets-and-smaller) {
         margin-top: 1em;
     }

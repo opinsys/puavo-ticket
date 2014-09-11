@@ -1,0 +1,24 @@
+.AttachmentsForm {
+
+    .FileItem, .select-button {
+        font-size: 12pt;
+    }
+
+    .remove-button {
+        margin: 2px;
+        margin-right: 10px;
+        color: black;
+    }
+
+
+    ul {
+        list-style-type: none;
+        padding: 0px;
+        margin: 0px;
+
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 1em;
+    }
+
+}

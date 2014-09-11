@@ -200,6 +200,7 @@ var TicketView = React.createClass({
         .then(function(comment) {
             var files = this.refs.attachments.getFiles();
             if (files.length > 0) {
+                this.refs.attachments.clear();
                 return comment.addAttachments(files);
             }
         })

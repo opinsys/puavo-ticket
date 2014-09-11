@@ -5,6 +5,7 @@ var marked = require("marked");
 
 var Base = require("./Base");
 var UpdateMixin = require("./UpdateMixin");
+var Attachment = require("./Attachment");
 
 /**
  * Client Comment model
@@ -70,6 +71,28 @@ var Comment = Base.extend({
     },
 
     /**
+     * @method hasAttachments
+     * @return {Boolean}
+     */
+    hasAttachments: function(){
+        var a = this.get("attachments");
+        return a && a.length > 0;
+    },
+
+
+    /**
+     * @method attachments
+     * @return {Array} of models.client.Attachment
+     */
+    attachments: function() {
+        var self = this;
+        return this.rel("attachments").map(function(data) {
+            return new Attachment(data, { parent: self });
+        });
+    },
+
+
+    /**
      * @method addAttachments
      * @param {Array} files Array of HTML5 file objects
      * @param {Function} progressHandler Called multiple times during the upload progress
@@ -83,6 +106,7 @@ var Comment = Base.extend({
             "/comments/" + commentId + "/attachments";
 
         return new Promise(function(resolve, reject){
+            // XXX https://github.com/francois2metz/html5-formdata
             var formData = new FormData();
             files.forEach(function(file, i) {
                 formData.append("file" + i, file);

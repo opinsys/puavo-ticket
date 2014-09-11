@@ -18,6 +18,14 @@
         margin-left: 8px;
     }
 
+    .FileItem {
+        color: $comment-secondary;
+    }
+
+    .FileItem:hover {
+        color: black;
+    }
+
     $triangle-length: 14px;
     $triangle-size: 4px;
 
@@ -61,6 +69,21 @@
         border-color: $highlight-color;
     }
 
+    .attachment-list {
+        list-style-type: none;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .attachment {
+        padding: 0px;
+        float: left;
+        margin-right: 10px;
+    }
+
+    a:hover {
+        text-decoration: none;
+    }
 }
 
 .unread .CommentUpdate .message {

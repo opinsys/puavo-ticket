@@ -23,6 +23,21 @@ var Attachment = Base.extend({
     },
 
     /**
+     * Get attachment content-type ensuring utf-8 if it is a text type
+     * charset=utf-8
+     *
+     * @method getContentType
+     * @return {String}
+     */
+    getContentType: function(){
+        var type = this.get("dataType");
+        if (type === "text/plain") {
+            return type + "; charset=utf-8";
+        }
+        return type;
+    },
+
+    /**
      * @method chunks
      * @return {Bookshelf.Collection} Collection of model.server.Chunk
      */

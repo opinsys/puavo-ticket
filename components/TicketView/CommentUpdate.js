@@ -7,6 +7,7 @@ var ProfileBadge = require("../ProfileBadge");
 var OnViewportMixin = require("../OnViewportMixin");
 var UpdateMixin = require("./UpdateMixin");
 var TimeAgo = require("../TimeAgo");
+var FileItem = require("app/components/FileItem");
 
 
 /**
@@ -48,6 +49,9 @@ var CommentUpdate = React.createClass({
         var commentString = comment.toHTML();
         var hashId = comment.getUniqueId();
         var mergedComments = comment.getMergedComments();
+        var attachments = comment.attachments().concat(mergedComments.reduce(function(a, comment) {
+            return a.concat(comment.attachments());
+        }, []));
 
         var currentHashId = window.location.hash.slice(1);
 
@@ -78,6 +82,16 @@ var CommentUpdate = React.createClass({
                             <div id={hashId} key={hashId} className="comment" dangerouslySetInnerHTML={{__html: c.toHTML()}} />
                         );
                     })}
+                    {attachments.length > 0 &&
+                        <ul className="attachment-list clearfix" >
+                            {attachments.map(function(a) {
+                                return <li key={a.get("id")} className="attachment" >
+                                    <a href={a.toURL()} target="_blank">
+                                        <FileItem mime={a.get("dataType")} name={a.get("filename")} size={a.get("size")} />
+                                    </a>
+                                </li>;
+                            })}
+                        </ul>}
                 </div>
             </div>
         );

@@ -86,6 +86,7 @@ var Ticket = Base.extend({
         var comment = new Comment({
             createdAt: afterTicketCreation,
             comment: text,
+            attachments: [],
             id: "welcome"
         }, { parent: this });
 
@@ -168,7 +169,7 @@ var Ticket = Base.extend({
 
     comments: function() {
         var self = this;
-        return this.get("comments").map(function(data) {
+        return this.rel("comments").map(function(data) {
             return new Comment(data, { parent: self });
         }).sort(byCreation);
     },

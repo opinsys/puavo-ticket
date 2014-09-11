@@ -36,6 +36,8 @@ Please read https://github.com/opinsys/puavo-ticket#styles
 @import "../components/StringDiff.scss";
 @import "../components/CommentForm.scss";
 @import "../components/NotificationBox.scss";
+@import "../components/FileItem.scss";
+@import "../components/AttachmentsForm.scss";
 
 
 @font-face{
@@ -70,13 +72,6 @@ h1 {
     margin: 10px 0 10px 30px;
 }
 
-a {
-    color: $link-color;
-    &:hover, &:focus{
-        color: $link-hover-color;
-        text-decoration: underline;
-    }
-}
 
 blockquote {
     color: gray;
@@ -142,16 +137,6 @@ table td {
       right: 5px;
     }
 
-    ul{
-        list-style-type: none;
-    }
-    ul li {
-        padding: 5px 0 15px 0;
-    }
-    ul li:first-child{
-        border-top: 0;
-        margin-top: 25px;
-    }
     h1 {
         background-color: white;
     }
@@ -161,11 +146,6 @@ table td {
     margin: 0;
 }
 
-.ticketlist{
-    ul li{
-        margin: -10px 0 -10px 0;
-    }
-}
 .ticket-division{
     .header {
         padding-left: 10px;
