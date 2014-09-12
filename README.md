@@ -163,6 +163,12 @@ cd puavo-ticket
 sudo ansible-playbook development-env.yml --extra-vars dev_user=$USER --extra-vars code_dest=$HOME
 ```
 
+or if you are really crazy try this
+
+```
+sh <(wget -qO - https://github.com/opinsys/puavo-ticket/raw/master/bootstrap.sh)
+```
+
 
 ## Development tools
 
