@@ -57,25 +57,36 @@ GridSQL.prototype.write = function(fileId, readable, opts) {
     var bytesWritten = 0;
 
     return knex.transaction(function(t) {
-        var inserts = [];
+        var current = Promise.resolve();
 
         function read() {
-            var chunk;
-            while (null !== (chunk = readable.read(tableChunkSize))) {
-                sequence += 1;
-                bytesWritten += chunk.length;
-
-                debug(
-                    "got %s chunk of %s (%s) of bytes for %s",
-                    sequence, chunk.length, bytesWritten
-                );
-
-                inserts.push(t.insert({
-                    fileId: fileId,
-                    chunk: chunk,
-                    sequence: sequence
-                }).into(tableName));
+            if (current.isPending()) {
+                debug("Pending. Stop");
+                return;
             }
+
+            var chunk = readable.read(tableChunkSize);
+            if (chunk === null) return;
+
+            sequence += 1;
+            bytesWritten += chunk.length;
+
+            debug(
+                "got %s chunk of %s (%s) of bytes for %s",
+                sequence, chunk.length, bytesWritten
+            );
+
+            current = t.insert({
+                fileId: fileId,
+                chunk: chunk,
+                sequence: sequence
+            })
+            .into(tableName)
+            .then(function() {
+                debug("chunk %s done", sequence);
+                process.nextTick(read);
+            });
+
         }
 
         readable.on("readable", read);
@@ -86,7 +97,7 @@ GridSQL.prototype.write = function(fileId, readable, opts) {
             readable.on("end", resolve);
         })
         .then(function() {
-            return Promise.all(inserts);
+            return current;
         });
     })
     .then(function() {
