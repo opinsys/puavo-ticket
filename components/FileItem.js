@@ -61,15 +61,24 @@ var FileItem = React.createClass({
         return "fa-file-o";
     },
 
+    isStillUploading: function() {
+        return this.props.size === -1;
+    },
+
+    getHumanFilesize: function() {
+        var size = this.props.size;
+        if (this.isStillUploading()) return "Latautuu...";
+        return filesize(size);
+    },
+
     render: function() {
         var name = this.props.name;
-        var size = this.props.size;
 
         return (
             <span className="FileItem">
                 <i className={"fa " + this.getFAIcon()} />
                 {name}
-                <span className="size">({filesize(size)})</span>
+                <span className="size">({this.getHumanFilesize()})</span>
             </span>
         );
     }

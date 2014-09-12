@@ -136,10 +136,10 @@ exports.up = function(knex, Promise) {
             // Currently we just save the files in to a single chunk which has
             // obvious memory and performance limitations.
             knex.schema.createTable("chunks", function(table) {
-                table.string("id").notNullable();
+                table.string("fileId").notNullable();
                 table.binary("chunk").notNullable();
                 table.integer("sequence").defaultTo(1).notNullable();
-                table.unique(["id", "sequence"]);
+                table.unique(["fileId", "sequence"]);
             }),
 
             knex.schema.createTable("followers", function(table) {
@@ -181,7 +181,7 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-    return knex.schema.dropTableIfExists("files")
+    return knex.schema.dropTableIfExists("chunks")
     .then(function() {
         return knex.schema.dropTableIfExists("attachments");
     })

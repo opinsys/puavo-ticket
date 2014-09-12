@@ -56,6 +56,15 @@ var Comment = Base.extend({
         return this.hasMany(Attachment, "commentId");
     },
 
+    addAttachmentMeta: function(filename, dataType, fileSize, createdBy) {
+        return Attachment.forge({
+            createdById: Base.toId(createdBy),
+            commentId: this.get("id"),
+            size: fileSize,
+            filename: filename,
+            dataType: dataType
+        }).save();
+    },
 
     /**
      * Add file attachment to a ticket comment
