@@ -48,6 +48,8 @@
     "nodemailer-smtp-transport": "~0.1.12",
     "nodemailer-stub-transport": "~0.1.4",
     "pg": "~3.4.0",
+    "pg-query-stream": "^0.6.0",
+    "pretty-ms": "^1.0.0",
     "promisepipe": "~1.0.1",
     "react": "~0.11.1",
     "react-bootstrap": "~0.11.0",

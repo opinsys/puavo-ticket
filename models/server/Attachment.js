@@ -44,9 +44,25 @@ var Attachment = Base.extend({
     chunks: function() {
         var self = this;
         return Chunk.collection().query(function(q) {
-            q.where({ id: self.getUniqueId() });
+            q.where({ fileId: self.getUniqueId() });
             q.orderBy("sequence", "asc");
         });
+    },
+
+    /**
+     * @method isStillUploading
+     * @return {Boolean}
+     */
+    isStillUploading: function() {
+        return this.get("size") === -1;
+    },
+
+    /**
+     * @method getFileId
+     * @return {String}
+     */
+    getFileId: function(){
+        return "attachmentfile:" + this.getUniqueId();
     },
 
     /**
@@ -58,7 +74,11 @@ var Attachment = Base.extend({
     fetchContent: function() {
         return this.chunks().fetch()
             .then(function(chunks) {
-                return Buffer.concat(chunks.pluck("chunk"));
+                console.log("sending count chunks", chunks.length);
+
+                var b =Buffer.concat(chunks.pluck("chunk")); 
+                console.log("data size", b.length);
+                return b;
             });
     },
 

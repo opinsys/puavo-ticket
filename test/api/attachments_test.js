@@ -127,7 +127,12 @@ describe("/api/tickets/:ticketId/comments/:commentId/attachments", function() {
 
                 assert.equal("image/jpeg", res.headers["content-type"]);
                 assert.equal(TEST_IMAGE_DATA.length, res.headers["content-length"]);
-                assert.equal(TEST_IMAGE_DATA.toString(), res.text);
+                // assert.equal(TEST_IMAGE_DATA.length, res.text.length);
+
+                assert(
+                    TEST_IMAGE_DATA.toString() === res.text,
+                    "saved data was corrupted: Size: " + res.text.length
+                );
              });
     });
 
