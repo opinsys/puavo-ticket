@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -eu
+
 cd ~
 
 sudo apt-get install -y python-software-properties git
