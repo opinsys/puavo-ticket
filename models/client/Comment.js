@@ -115,6 +115,12 @@ var Comment = Base.extend({
             var xhr = new XMLHttpRequest();
             xhr.onload = resolve;
             xhr.onerror = reject;
+            xhr.upload.addEventListener("progress", function(e) {
+                 if (e.lengthComputable) {
+                       var percentage = Math.round((e.loaded * 100) / e.total);
+                       console.log("Uploaded", percentage, e.loaded, "/", e.total);
+                 }
+            });
             // TODO: call progressHandler on progress
             // https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 
