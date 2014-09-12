@@ -49,7 +49,7 @@ var AttachmentsForm = React.createClass({
      */
     handleFileChange: function(e) {
         this.setState({
-            files: this.state.files.concat(_.toArray(e.target.files))
+            files: _.uniq(this.state.files.concat(_.toArray(e.target.files)), toUniqueId)
         });
         // http://stackoverflow.com/a/13351234/153718
         this.refs.form.getDOMNode().reset();
@@ -91,7 +91,7 @@ var AttachmentsForm = React.createClass({
 
                 <ul>
                     {files.map(function(f) {
-                        return <li key={f.name}  >
+                        return <li key={toUniqueId(f)}  >
                             <Button className="remove-button" bsStyle="danger" bsSize="xsmall" onClick={self.removeFile.bind(self, f)} >×</Button>
                             <FileItem mime={f.type} name={f.name} size={f.size} />
                         </li>;
@@ -103,5 +103,20 @@ var AttachmentsForm = React.createClass({
         );
     }
 });
+
+/**
+ * Figure out an unique id for a HTML 5 File Object
+ *
+ * Not perfect...
+ *
+ * @static
+ * @private
+ * @method toUniqueId
+ * @param {HTML5 File Object} file
+ * @return {String}
+ */
+function toUniqueId(file) {
+    return file.name + (file.lastModifiedDate || "") + String(file.size);
+}
 
 module.exports = AttachmentsForm;
