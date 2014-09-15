@@ -1,7 +1,7 @@
 "use strict";
 var Promise = require("bluebird");
 var stream = require("stream");
-var debug = require("debug")("app/utils/GridSQL");
+var debug = require("debug")("app:utils/GridSQL");
 var util = require("util");
 
 /**

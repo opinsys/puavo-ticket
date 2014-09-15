@@ -264,19 +264,19 @@ name can be used.
 Example:
 
 ```javascript
-var debug = require("debug")("puavo-ticket:resources/tickets");
-var debugMail = require("debug")("puavo-ticket:mail");
+var debug = require("debug")("app:resources/tickets");
+var debugMail = require("debug")("app:mail");
 ```
 
-Using the `puavo-ticket:` prefix we can enable debug logging for puavo-ticket
+Using the `app:` prefix we can enable debug logging for puavo-ticket
 server with a `DEBUG` environment variable:
 
-    DEBUG=puavo-ticket:* node server.js
+    DEBUG=app:* node server.js
 
 or for the browser using a Javascript console:
 
 ```javascript
-debug.enable("puavo-ticket:*");
+debug.enable("app:*");
 ```
 
 ## Styles
