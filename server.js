@@ -10,7 +10,8 @@ var Promise = require("bluebird");
 var express = require("express");
 var Server = require("http").Server;
 
-var debug = require("debug")("puavo-ticket:live");
+var debug = require("debug")("app:live");
+var debugMem = require("debug")("app:memory");
 var serveStatic = require("serve-static");
 var bodyParser = require("body-parser");
 var jwtsso = require("jwtsso");
@@ -216,4 +217,12 @@ if (require.main === module) {
         var addr = server.address();
         console.log('Listening on  http://%s:%d', addr.address, addr.port);
     });
+}
+
+
+if (debugMem.name === "enabled") {
+    var filesize = require("filesize");
+    setInterval(function() {
+        debugMem("Memory usage %s", filesize(process.memoryUsage().rss));
+    }, 500);
 }
