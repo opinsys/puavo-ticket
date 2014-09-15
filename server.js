@@ -222,7 +222,16 @@ if (require.main === module) {
 
 if (debugMem.name === "enabled") {
     var filesize = require("filesize");
+    var last = process.memoryUsage().rss;
     setInterval(function() {
-        debugMem("Memory usage %s", filesize(process.memoryUsage().rss));
+        var current = process.memoryUsage().rss;
+        var change = current - last;
+        last = current;
+
+        if (Math.abs(change) < 1024) return;
+        debugMem(
+            "Memory usage %s change from last %s",
+            filesize(current), filesize(change)
+        );
     }, 500);
 }
