@@ -96,7 +96,7 @@ var TicketForm = React.createClass({
                         value={this.state.title}
                         placeholder="Tukipyyntöä kuvaava otsikko" />
                     <ElasticTextarea
-                        minRows="10"
+                        minRows={10}
                         className="form-control"
                         disabled={this.state.saving}
                         ref="description"
