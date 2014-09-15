@@ -4,6 +4,7 @@
 var _ = require("lodash");
 var React = require("react/addons");
 var Button = require("react-bootstrap/Button");
+var filesize = require("filesize");
 
 var FileItem = require("app/components/FileItem");
 
@@ -81,6 +82,9 @@ var AttachmentsForm = React.createClass({
     render: function() {
         var self = this;
         var files = this.state.files;
+        var totalSize = files.reduce(function(total, f) {
+            return total + f.size;
+        }, 0);
 
         return (
             <div className="AttachmentsForm" style={{ display: "block" }}>
@@ -96,7 +100,11 @@ var AttachmentsForm = React.createClass({
                             <FileItem mime={f.type} name={f.name} size={f.size} />
                         </li>;
                     })}
+                    {files.length > 1 && <li className="total">
+                        Yhteensä {filesize(totalSize)}
+                    </li>}
                 </ul>
+
 
                 <a className="select-button" href="#" onClick={this.openFileDialog}>Liitä tiedosto...</a>
             </div>
