@@ -111,16 +111,21 @@ app.get("/api/tickets/:ticketId/comments/:commentId/attachments/:attachmentId/:f
 
         return new Promise(function(resolve, reject){
             var start = Date.now();
+            var filename = attachment.get("filename");
+            var size = attachment.get("size");
+            debug(
+                "Reading %s with %s",
+                filename, filesize(size)
+            );
             var file = db.gridSQL.read(attachment.getFileId());
             file.on("error", reject);
-
             file.on("end", function() {
                 var duration = Date.now() - start;
-                debug("File read in %s", prettyMs(duration));
-            });
-
-            res.on("end", function() {
-                debug("res END");
+                var speed = size / (duration / 1000);
+                debug(
+                    "%s read in %s (%s/s)",
+                    filename, prettyMs(duration), filesize(speed)
+                );
             });
 
             file.pipe(res);
