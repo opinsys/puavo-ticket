@@ -8,7 +8,6 @@ var Promise = require("bluebird");
 
 var Button = require("react-bootstrap/Button");
 var Badge = require("react-bootstrap/Badge");
-var ProgressBar = require("react-bootstrap/ProgressBar");
 
 var Loading = require("../Loading");
 var CommentForm = require("../CommentForm");
@@ -23,6 +22,7 @@ var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
 var EditableText = require("../EditableText");
 var BrowserTitle = require("app/utils/BrowserTitle");
+var UploadProgress = require("app/components/UploadProgress");
 
 var ToggleStatusButton = require("./ToggleStatusButton");
 var ToggleFollowButton = require("./ToggleFollowButton");
@@ -379,7 +379,6 @@ var TicketView = React.createClass({
         var user = this.props.user;
         var updates = this.getUpdatesWithMergedComments();
         var title = ticket.getCurrentTitle();
-        var uploadProgress = this.state.uploadProgress;
 
         this.props.title.setTitle(title);
         this.props.title.activateOnNextTick();
@@ -452,10 +451,7 @@ var TicketView = React.createClass({
                     <CommentForm onSubmit={this.saveComment} >
                         Lähetä {this.state.saving && <Loading.Spinner />}
                     </CommentForm>
-                    {uploadProgress &&  <div className="upload-progress">
-                        <ProgressBar now={uploadProgress.percentage} label="%(percent)s%" />
-                    </div>}
-
+                    <UploadProgress progress={this.state.uploadProgress} />
                     <AttachmentsForm ref="attachments" />
                 </div>
 

@@ -9,6 +9,8 @@ var captureError = require("../utils/captureError");
 var SideInfo = require("./SideInfo");
 var Loading = require("./Loading");
 var ElasticTextarea = require("./ElasticTextarea");
+var AttachmentsForm = require("./AttachmentsForm");
+var UploadProgress = require("app/components/UploadProgress");
 
 var BackboneMixin = require("../components/BackboneMixin");
 var Ticket = require("../models/client/Ticket");
@@ -28,7 +30,8 @@ var TicketForm = React.createClass({
         return {
             saving: false,
             description: "",
-            title: ""
+            title: "",
+            uploadProgress: null
         };
     },
 
@@ -43,18 +46,30 @@ var TicketForm = React.createClass({
      * @method handleSave
      */
     handleSave: function() {
-        this.setState({ saving: true });
+        var self = this;
+        self.setState({ saving: true });
 
         new Ticket({})
         .save()
-        .bind(this)
         .then(function(savedTicket) {
-            return Promise.all([
-                savedTicket.addTitle(this.state.title),
-                savedTicket.addComment(this.state.description)
-            ]).return(savedTicket);
+            return Promise.join(
+                savedTicket.addComment(self.state.description),
+                savedTicket.addTitle(self.state.title)
+            ).spread(function(comment) {
+                var files = self.refs.attachments.getFiles();
+
+                if (files.length > 0) {
+                    self.refs.attachments.clear();
+                    return comment.addAttachments(files, { onProgress: function(e) {
+                        self.setState({ uploadProgress: e });
+                    }}).return(savedTicket);
+                }
+
+                return savedTicket;
+            });
         })
         .then(function(savedTicket) {
+            self.setState({ uploadProgress: null });
             Router.transitionTo("ticket", { id: savedTicket.get("id") });
         })
         .catch(captureError("Tukipyynnön tallennus epäonnistui"));
@@ -80,8 +95,6 @@ var TicketForm = React.createClass({
                         onChange={this.handleChange}
                         value={this.state.title}
                         placeholder="Tukipyyntöä kuvaava otsikko" />
-
-
                     <ElasticTextarea
                         minRows="10"
                         className="form-control"
@@ -100,6 +113,8 @@ var TicketForm = React.createClass({
                             Lähetä {this.state.saving && <Loading.Spinner />}
                         </Button>
                     </div>
+                    <UploadProgress progress={this.state.uploadProgress} />
+                    <AttachmentsForm ref="attachments" />
                 </div>
 
                 <div className="col-md-4">
