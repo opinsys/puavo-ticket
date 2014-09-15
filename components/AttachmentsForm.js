@@ -3,6 +3,7 @@
 
 var _ = require("lodash");
 var React = require("react/addons");
+var classSet = React.addons.classSet;
 var Button = require("react-bootstrap/Button");
 var filesize = require("filesize");
 
@@ -15,13 +16,32 @@ var FileItem = require("app/components/FileItem");
  * @class AttachmentsForm
  * @constructor
  * @param {Object} props
+ * @param {Number} [props] maxSize Max size for a single file to be uploaded
  */
 var AttachmentsForm = React.createClass({
+
+    propTypes: {
+        maxSize: React.PropTypes.number
+    },
+
+    getDefaultProps: function() {
+        // 50mb
+        return { maxSize: 5e+7 };
+    },
 
     getInitialState: function() {
         return {
             files: []
         };
+    },
+
+    /**
+     * @method isUnderSizeLimit
+     * @param {HTML5 File Object} file
+     * @return Boolean
+     */
+    isUnderSizeLimit: function(file) {
+        return file.size < this.props.maxSize;
     },
 
     /**
@@ -31,7 +51,7 @@ var AttachmentsForm = React.createClass({
      * @return {Array} of HTML 5 File objects
      */
     getFiles: function() {
-        return this.state.files;
+        return this.state.files.filter(this.isUnderSizeLimit);
     },
 
     /**
@@ -95,9 +115,21 @@ var AttachmentsForm = React.createClass({
 
                 <ul>
                     {files.map(function(f) {
-                        return <li key={toUniqueId(f)}  >
+                        var isTooLarge = !self.isUnderSizeLimit(f);
+                        var classes = classSet({
+                            "too-large": isTooLarge
+                        });
+
+                        return <li key={toUniqueId(f)} >
                             <Button className="remove-button" bsStyle="danger" bsSize="xsmall" onClick={self.removeFile.bind(self, f)} >×</Button>
-                            <FileItem mime={f.type} name={f.name} size={f.size} />
+                            <span className={classes} >
+                                <FileItem mime={f.type} name={f.name} size={f.size} />
+                            </span>
+                            {isTooLarge &&
+                                <div className="size-error-message">
+                                    Tiedosto on liian suuri ladattavaksi.
+                                    Suurin mahdollinen koko on {filesize(self.props.maxSize)}
+                                </div>}
                         </li>;
                     })}
                     {files.length > 1 && <li className="total">
