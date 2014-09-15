@@ -96,10 +96,11 @@ var Comment = Base.extend({
      * @method addAttachments
      * @param {Array} files Array of HTML5 file objects
      * @param {Function} progressHandler Called multiple times during the upload progress
-     * @param {Number} progressHandler.progress Progress of the upload
+     * @param {Object} [options}
+     * @param {Function} [options.onProgress] Called periodically when the upload progresses
      * @return {Bluebird.Promise}
      */
-    addAttachments: function(files, progressHandler) {
+    addAttachments: function(files, options) {
         var ticketId = this.parent.get("id");
         var commentId = this.get("id");
         var url = "/api/tickets/" + ticketId +
@@ -116,13 +117,18 @@ var Comment = Base.extend({
             xhr.onload = resolve;
             xhr.onerror = reject;
             xhr.upload.addEventListener("progress", function(e) {
-                 if (e.lengthComputable) {
-                       var percentage = Math.round((e.loaded * 100) / e.total);
-                       console.log("Uploaded", percentage, e.loaded, "/", e.total);
-                 }
+                 if (!e.lengthComputable) return;
+                 if (!options) return;
+                 if (typeof options.onProgress !== "function") return;
+                 var percentage = Math.round((e.loaded * 100) / e.total);
+                 console.log("Uploaded", percentage, e.loaded, "/", e.total);
+                 options.onProgress({
+                     percentage: percentage,
+                     loaded: e.loaded,
+                     total: e.total,
+                     originalEvent: e
+                 });
             });
-            // TODO: call progressHandler on progress
-            // https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 
             xhr.open("POST", url, true);
             xhr.send(formData);

@@ -8,6 +8,7 @@ var Promise = require("bluebird");
 
 var Button = require("react-bootstrap/Button");
 var Badge = require("react-bootstrap/Badge");
+var ProgressBar = require("react-bootstrap/ProgressBar");
 
 var Loading = require("../Loading");
 var CommentForm = require("../CommentForm");
@@ -71,7 +72,8 @@ var TicketView = React.createClass({
             fetching: true,
             saving: false,
             showTags: true,
-            scrolled: false
+            scrolled: false,
+            uploadProgress: null
         };
     },
 
@@ -192,24 +194,27 @@ var TicketView = React.createClass({
      * @method saveComment
      */
     saveComment: function(e) {
+        var self = this;
         e.clear();
-        this.setState({ saving: true });
+        self.setState({ saving: true });
 
-        this.state.ticket.addComment(e.comment)
-        .bind(this)
+        self.state.ticket.addComment(e.comment)
         .then(function(comment) {
-            var files = this.refs.attachments.getFiles();
+            var files = self.refs.attachments.getFiles();
             if (files.length > 0) {
-                this.refs.attachments.clear();
-                return comment.addAttachments(files);
+                self.refs.attachments.clear();
+                return comment.addAttachments(files, { onProgress: function(e) {
+                    self.setState({ uploadProgress: e });
+                }});
             }
         })
         .then(function() {
-            return this.fetchTicket();
+            self.setState({ uploadProgress: null });
+            return self.fetchTicket();
         })
         .then(function() {
-            if (!this.isMounted()) return;
-            this.setState({ saving: false });
+            if (!self.isMounted()) return;
+            self.setState({ saving: false });
             process.nextTick(e.scrollToCommentButton);
         })
         .catch(captureError("Kommentin tallennus epäonnistui"));
@@ -374,6 +379,7 @@ var TicketView = React.createClass({
         var user = this.props.user;
         var updates = this.getUpdatesWithMergedComments();
         var title = ticket.getCurrentTitle();
+        var uploadProgress = this.state.uploadProgress;
 
         this.props.title.setTitle(title);
         this.props.title.activateOnNextTick();
@@ -446,6 +452,10 @@ var TicketView = React.createClass({
                     <CommentForm onSubmit={this.saveComment} >
                         Lähetä {this.state.saving && <Loading.Spinner />}
                     </CommentForm>
+                    {uploadProgress &&  <div className="upload-progress">
+                        <ProgressBar now={uploadProgress.percentage} label="%(percent)s%" />
+                    </div>}
+
                     <AttachmentsForm ref="attachments" />
                 </div>
 
