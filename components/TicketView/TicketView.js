@@ -305,11 +305,11 @@ var TicketView = React.createClass({
         var status = this.state.ticket.getCurrentStatus();
         switch (status) {
             case "open":
-                return <Badge className={status}>Ratkaisematon</Badge>;
+                return <Badge className="ticket-status ticket-open">Avoin</Badge>;
             case "closed":
-                return <Badge className={status}>Ratkaistu</Badge>;
+                return <Badge className="ticket-status ticket-closed">Ratkaistu</Badge>;
             default:
-                return <Badge><Redacted>Unknown</Redacted></Badge>;
+                return <Badge className="ticket-status"> <Redacted>Unknown</Redacted></Badge>;
         }
     },
 

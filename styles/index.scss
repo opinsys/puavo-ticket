@@ -250,30 +250,6 @@ table td {
 
 
 
-.badges {
-    .closed {
-        background-color:  #13B458;
-        p {
-            margin: 0 0 1em 0 ;
-        }
-    }
-    .open {
-        background-color: #FF4700;
-    }
-}
-
-.badge-text {
-    font-size: 100%;
-    font-weight: bold;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    &:after {
-        content: '';
-        display: block;
-    }
-}
 .btn{
     i {
         margin: 0 0.3rem 0 0;

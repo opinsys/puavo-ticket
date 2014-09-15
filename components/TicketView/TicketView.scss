@@ -60,6 +60,22 @@
         }
     }
 
+    .ticket-status {
+        font-size: 150%;
+        padding: 10px;
+    }
+
+    .ticket-closed {
+        background-color:  $closed-ticket-color;
+        p {
+            margin: 0 0 1em 0 ;
+        }
+    }
+    .ticket-open {
+        background-color: $open-ticket-color;
+    }
+
+
     @include only-on(tablets-and-smaller) {
         .update-buttons-wrap {
             .update-buttons {
