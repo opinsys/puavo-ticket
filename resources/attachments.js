@@ -69,7 +69,8 @@ app.post("/api/tickets/:ticketId/comments/:commentId/attachments", function(req,
                             part.filename
                         );
                         return attachment.set({
-                            size: info.bytesWritten
+                            size: info.bytesWritten,
+                            chunkCount: info.chunkCount
                         }).save();
                     });
                 }));

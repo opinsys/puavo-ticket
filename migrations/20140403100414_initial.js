@@ -124,6 +124,7 @@ exports.up = function(knex, Promise) {
                 table.increments("id");
                 table.string("filename").notNullable();
                 table.integer("size").notNullable();
+                table.integer("chunkCount").defaultTo(0).notNullable();
                 table.string("dataType");
             }),
 
