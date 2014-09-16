@@ -8,6 +8,7 @@ var Promise = require("bluebird");
 
 var Button = require("react-bootstrap/Button");
 var Badge = require("react-bootstrap/Badge");
+var Alert = require("react-bootstrap/Alert");
 
 var Loading = require("../Loading");
 var CommentForm = require("../CommentForm");
@@ -296,6 +297,11 @@ var TicketView = React.createClass({
             .then(function() {
                 if (this.isMounted()) this.setState({ fetching: false });
             })
+            .catch(Ticket.NotFound, function(err) {
+                this.setState({
+                    notFound: err
+                });
+            })
             .catch(captureError("Tukipyynnön tilan päivitys epäonnistui"));
     },
 
@@ -376,6 +382,13 @@ var TicketView = React.createClass({
     },
 
     render: function() {
+        if (this.state.notFound) {
+            return <Alert bsStyle="danger">
+                Hakemaasi tukipyyntöä ei ole olemassa.
+            </Alert>;
+        }
+
+
         var self = this;
         var ticket = this.state.ticket;
         var fetching = this.state.fetching;

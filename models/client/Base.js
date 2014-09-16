@@ -30,8 +30,15 @@ function createReplaceMixin(parentPrototype) {
                 throw new Error("fetch() without id makes no sense on a model");
             }
 
-            var op = Promise.cast($.get(_.result(this, "url")))
+            var url = _.result(this, "url");
+            var op = Promise.cast($.get(url))
             .bind(this)
+            .catch(function(err) {
+                if (err && err.status === 404) {
+                    throw new NotFound("404 response from API", url, err);
+                }
+                throw err;
+            })
             .then(function(res) {
                 return new this.constructor(res, { parent: this.parent });
             });
@@ -55,6 +62,22 @@ function disabledMethod(name) {
     };
 }
 
+/**
+ * Not found error class for 404 api errors
+ *
+ * @class Base.NotFound
+ * @constructor
+ * @param {String} message
+ * @param {String} url
+ * @param {Object} xhr The ajax request
+ */
+function NotFound(message, url, xhr) {
+    this.name = "NotFound";
+    this.url = url;
+    this.xhr = xhr;
+    this.message = message;
+}
+NotFound.prototype = new Error();
 
 /**
  * Base class for client models
@@ -189,6 +212,8 @@ var Base = Backbone.Model.extend({
 
 }, {
 
+    NotFound: NotFound,
+
     /**
      * Create instance of models.client.Base.Collection with this model class
      * as the `model` property
@@ -244,6 +269,7 @@ Base.Collection = Backbone.Collection.extend({
 
 
 });
+
 
 
 Cocktail.mixin(Base, BaseMixin);
