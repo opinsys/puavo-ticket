@@ -302,12 +302,15 @@ var TicketView = React.createClass({
 
 
     renderBadge: function() {
+
+        var id = "#" + this.state.ticket.get("id");
+
         var status = this.state.ticket.getCurrentStatus();
         switch (status) {
             case "open":
-                return <Badge className="ticket-status ticket-open">Avoin</Badge>;
+                return <Badge className="ticket-status ticket-open">Avoin {id}</Badge>;
             case "closed":
-                return <Badge className="ticket-status ticket-closed">Ratkaistu</Badge>;
+                return <Badge className="ticket-status ticket-closed">Ratkaistu {id}</Badge>;
             default:
                 return <Badge className="ticket-status"> <Redacted>Unknown</Redacted></Badge>;
         }
@@ -385,35 +388,35 @@ var TicketView = React.createClass({
 
         return (
             <div className="row TicketView">
+
                 <div className="ticket-view col-md-8">
 
                     <Loading visible={fetching} />
 
-                    <div className="ticket-title ticket-updates">
-                        <div className="update-buttons-wrap row">
-                            <div className="badges col-md-3">
-                                <span className="badge-text">
-                                {"Tukipyyntö #" + ticket.get("id") + " "}
-                                </span>
-                                {this.renderBadge()}
-                            </div>
-                            <div className="update-buttons col-md-9">
-                                {user.isManager() &&
-                                    <Button bsStyle="success" onClick={this.handleAddHandler} >
-                                        <i className="fa fa-user"></i>Lisää käsittelijä
-                                    </Button>
-                                }
-                                {ticket.isHandler(user) &&
-                                    <ToggleStatusButton ticket={ticket} user={user} />
-                                }
+                    <div className="row ticket-actions-row">
+                        <div className="col-md-12">
+                            {user.isManager() &&
+                                <Button bsStyle="primary" onClick={this.handleAddHandler} >
+                                    <i className="fa fa-user"></i>Lisää käsittelijä
+                                </Button>
+                            }
+                            {ticket.isHandler(user) &&
+                                <ToggleStatusButton ticket={ticket} user={user} />
+                            }
 
-                                <ToggleFollowButton ticket={ticket} user={user} />
-                            </div>
+                            <ToggleFollowButton ticket={ticket} user={user} />
                         </div>
-                        <div className="header ticket-header">
-                            <EditableText onSubmit={this.changeTitle} disabled={!ticket.isHandler(user)}>
+                    </div>
+
+                    <div className="row title-row">
+                        <div className="col-md-12">
+                            <EditableText onSubmit={this.changeTitle} text={title} disabled={!ticket.isHandler(user)}>
                                 <h3>
-                                    {title || <Redacted>Ladataan otsikkoa</Redacted>}
+                                    {this.renderBadge()}
+
+                                    <span className="ticket-title">
+                                        {title || <Redacted>Ladataan otsikkoa</Redacted>}
+                                    </span>
                                     {this.state.changingTitle && <Loading.Spinner />}
                                 </h3>
                             </EditableText>

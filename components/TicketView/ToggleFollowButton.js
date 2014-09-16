@@ -50,13 +50,12 @@ var ToggleFollowButton = React.createClass({
     render: function() {
         var isFollower = this.props.ticket.isFollower(this.props.user);
 
-        var bsStyle = isFollower ? "success" : "default";
         var icon = "fa " + (isFollower ? "fa-check-square-o" : "fa-square-o");
         if (this.state.fetching) icon = "fa fa-spinner";
 
 
         return (
-            <Button bsStyle={bsStyle} onClick={this.onClick}>
+            <Button bsStyle="primary" onClick={this.onClick}>
                 <i className={icon}></i> Seuraa
             </Button>
         );

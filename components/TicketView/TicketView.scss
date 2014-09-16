@@ -11,7 +11,8 @@
     }
 
     .Loading {
-        text-align: right;
+        position: absolute;
+        right: 0px;
     }
 
 
@@ -28,6 +29,7 @@
             padding-bottom: 0px;
             padding-top: 0px;
             font-size: 80%;
+            margin-left: 65px;
         }
     }
 
@@ -36,23 +38,24 @@
         margin-right: 5px;
     }
 
-    .update-buttons-wrap{
-        margin-top: -27px;
-        padding: 0 0 0.5rem;
-        .update-buttons {
-            text-align: right;
-            button {
-                font-size: 80%;
-                font-weight: 400;
-            }
-        }
-    }
 
 
     .ticket-status {
-        font-size: 150%;
         padding: 10px;
+        vertical-align: middle;
+        font-size: 20px;
+        margin-bottom: 8px;
     }
+
+    .ticket-title {
+        padding: 10px;
+        font-size: 24px;
+    }
+
+    .title-row {
+        margin-bottom: 10px;
+    }
+
 
     .ticket-closed {
         background-color:  $closed-ticket-color;
@@ -64,27 +67,24 @@
         background-color: $open-ticket-color;
     }
 
+    .ticket-header {
+        float: left;
+    }
 
-    @include only-on(tablets-and-smaller) {
-        .update-buttons-wrap {
-            .update-buttons {
-                margin: 0.5rem 0 0;
-                text-align: left;
-                button {
-                    width: 32%;
-                    height: 100%;
-                    &:first-of-type {
-                        margin: 0;
-                    }
-                }
-            }
+    .ticket-actions-row {
+        margin-bottom: 10px;
+        .btn {
+            margin: 0 0.3rem 0 0;
         }
     }
 
     @include only-on(phones-and-smaller) {
-        .update-buttons-wrap .update-buttons button {
+        .ticket-actions-row .btn {
             width: 100%;
             margin: 0.5rem 0 0 0;
+        }
+        .update-buttons {
+            margin-bottom: 10px;
         }
     }
 }

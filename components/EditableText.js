@@ -6,7 +6,6 @@ var Glyphicon = require("react-bootstrap/Glyphicon");
 var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
 var Tooltip = require("react-bootstrap/Tooltip");
 var Button = require("react-bootstrap/Button");
-var $ = require("jquery");
 
 /**
  * EditableText
@@ -22,11 +21,13 @@ var EditableText = React.createClass({
 
     propTypes: {
         onSubmit: React.PropTypes.func,
+        text: React.PropTypes.string,
         disabled: React.PropTypes.bool
     },
 
     getDefaultProps: function() {
         return {
+            text: "",
             disabled: false,
             onSubmit: function(){}
         };
@@ -40,10 +41,9 @@ var EditableText = React.createClass({
     },
 
     startEditing: function() {
-        var initialValue = $(this.refs.content.getDOMNode()).text();
         this.setState({
             editing: true,
-            value: initialValue
+            value: this.props.text
         });
     },
 

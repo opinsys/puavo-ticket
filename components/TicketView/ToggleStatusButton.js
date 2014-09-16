@@ -57,7 +57,7 @@ var ToggleStatusButton = React.createClass({
 
         if (this.getTicketStatus() === "open") return (
             <Button
-                bsStyle="success"
+                bsStyle="primary"
                 className="close-ticket"
                 onClick={this.handleChangeState} >
                 <i className="fa fa-check"></i>Aseta ratkaistuksi</Button>
@@ -65,7 +65,7 @@ var ToggleStatusButton = React.createClass({
 
         return (
             <Button
-                bsStyle="warning"
+                bsStyle="primary"
                 className="reopen-ticket"
                 onClick={this.handleChangeState} >
                 <i className="fa fa-refresh"></i>Avaa uudelleen</Button>

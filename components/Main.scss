@@ -17,6 +17,10 @@
         padding: 1rem;
     }
 
+    .btn .fa {
+        margin-right: 7px;
+    }
+
     @include only-on(phablets-and-smaller) {
 
         .wrapper {
