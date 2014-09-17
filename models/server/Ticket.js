@@ -136,6 +136,31 @@ var Ticket = Base.extend({
     },
 
     /**
+     * Get unread comments for given user. Use `options.byEmail` to get those
+     * comments that have not been sent out as email.
+     *
+     * @method unreadComments
+     * @param {models.server.User|Number} user or user id
+     * @param {options} [options]
+     * @param {options} [options.byEmail] get comments that are not emailed
+     * @return {Bookshelf.Collection}
+     */
+    unreadComments: function(user, options){
+        var attr = "readAt";
+        if (options && options.byEmail) {
+            attr = "emailSentAt";
+        }
+
+        return this.comments().query(function(q) {
+            q.join("notifications", function() {
+                this.on("notifications.ticketId", "=", "comments.ticketId");
+                this.on("notifications." + attr, "<", "comments.createdAt");
+            });
+            q.where({ "notifications.targetId": Base.toId(user) });
+        });
+    },
+
+    /**
      *
      * @method titles
      * @return {Bookshelf.Collection} Bookshelf.Collection of Ticket title models
