@@ -821,9 +821,16 @@ var Ticket = Base.extend({
      * @static
      * @method withUnreadComments
      * @param {models.client.User|Number} user
+     * @param {Object} [options]
+     * @param {Object} [options.byEmail=false] Get tickets by unsent email notifications
      * @return {Bookshelf.Collection} of models.server.Ticket
      */
-    withUnreadComments: function(user) {
+    withUnreadComments: function(user, options) {
+        var attr = "readAt";
+        if (options && options.byEmail) {
+            attr = "emailSentAt";
+        }
+
         return this.byUserVisibilities(user)
             .query(function(qb) {
                 qb
@@ -836,7 +843,7 @@ var Ticket = Base.extend({
                 })
                 .join("comments", function() {
                     this.on("tickets.id", "=", "comments.ticketId");
-                    this.on("notifications.readAt", "<", "comments.createdAt");
+                    this.on("notifications." + attr, "<", "comments.createdAt");
                 })
                 .whereNull("followers.deletedAt")
                 .where({
