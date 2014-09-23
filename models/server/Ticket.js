@@ -23,7 +23,7 @@ var Moment = require("moment");
 
 
 if (config.smtp) {
-    var mailTransport = nodemailer.createTransport( smtpTransport(config.smtp));
+    var mailTransport = nodemailer.createTransport(smtpTransport(config.smtp));
 } else {
     console.warn("'smtp' config is missing from config. Email sending is disabled.");
     var mailTransport = nodemailer.createTransport(stubTransport());

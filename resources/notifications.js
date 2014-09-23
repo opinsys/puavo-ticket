@@ -46,7 +46,7 @@ app.get("/api/notifications", function(req, res, next) {
         return coll.models;
     })
     .map(function loadLatestComment(ticket) {
-        // XXX: This is not very effiecient as seperate query is issued for
+        // XXX: This is not very efficient as separate query is issued for
         // each ticket. See extra/latestcomments.sql for better solution
         return ticket.load([
             { titles: function(q) {
