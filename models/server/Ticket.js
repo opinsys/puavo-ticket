@@ -2,12 +2,9 @@
 var fs = require("fs");
 var _ = require("lodash");
 var Promise = require("bluebird");
-var nodemailer = require("nodemailer");
-var stubTransport = require("nodemailer-stub-transport");
-var smtpTransport = require("nodemailer-smtp-transport");
 var debugMail = require("debug")("puavo-ticket:mail");
 
-var config = require("../../config");
+var config = require("app/config");
 var Base = require("./Base");
 var Comment = require("./Comment");
 var Tag = require("./Tag");
@@ -22,12 +19,6 @@ var Title = require("./Title");
 var Moment = require("moment");
 
 
-if (config.smtp) {
-    var mailTransport = nodemailer.createTransport(smtpTransport(config.smtp));
-} else {
-    console.warn("'smtp' config is missing from config. Email sending is disabled.");
-    var mailTransport = nodemailer.createTransport(stubTransport());
-}
 
 /**
  * Knex query helpers
@@ -86,7 +77,7 @@ var Ticket = Base.extend({
      * @property _mailTransport
      * @type Object
      */
-    _mailTransport: mailTransport,
+    _mailTransport: config.mailTransport,
 
     /**
      *

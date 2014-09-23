@@ -1,4 +1,7 @@
 var _ = require("lodash");
+var nodemailer = require("nodemailer");
+var stubTransport = require("nodemailer-stub-transport");
+var smtpTransport = require("nodemailer-smtp-transport");
 
 if (typeof window !== "undefined") {
     throw new Error("config.js is not allowed in the browser");
@@ -50,4 +53,10 @@ if (!config.sessionSecret) {
     throw Error("sessionSecret is missing from the configuration!");
 }
 
+if (config.smtp) {
+    config.mailTransport = nodemailer.createTransport(smtpTransport(config.smtp));
+} else {
+    console.warn("'smtp' config is missing from config. Email sending is disabled.");
+    config.mailTransport = nodemailer.createTransport(stubTransport());
+}
 module.exports = config;
