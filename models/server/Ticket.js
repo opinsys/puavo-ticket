@@ -641,6 +641,36 @@ var Ticket = Base.extend({
     },
 
     /**
+     * @method sendBufferedEmailNotifications
+     * @param {models.server.User|Number} user User model or id of the user
+     * @return {Bluebird.Promise}
+     */
+    sendBufferedEmailNotifications: function(user){
+        var self = this;
+        var id = this.get("id");
+        var email = user.getEmail();
+        var title = this.getCurrentTitle();
+
+        return this.unreadComments(user, { byEmail: true }).fetch()
+        .then(function(coll) {
+
+            // XXX Build proper email body
+            var comments = coll.map(function(comment) {
+                return comment.get("comment");
+
+            }).join("\n");
+
+            return self.sendMail({
+                from: "Opinsys tukipalvelu <noreply@opinsys.fi>",
+                to: email,
+                subject: "Tukipyyntö " + id + ": " + title,
+                text: "Kommentit " + comments
+            });
+        });
+
+    },
+
+    /**
      * Send email notifications about the updateModel to the handlers of this
      * ticket.
      *

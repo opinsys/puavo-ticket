@@ -141,6 +141,7 @@ app.use("/bootstrap", serveStatic(__dirname + "/node_modules/bootstrap"));
 app.use("/flat-ui", serveStatic(__dirname + "/node_modules/flat-ui"));
 app.use(serveStatic(__dirname + "/public"));
 app.use("/doc", serveStatic(__dirname + "/doc"));
+app.use(require("./resources/emails"));
 
 
 /**
