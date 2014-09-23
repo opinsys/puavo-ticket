@@ -2,7 +2,6 @@
 var fs = require("fs");
 var _ = require("lodash");
 var Promise = require("bluebird");
-var debugMail = require("debug")("puavo-ticket:mail");
 
 var config = require("app/config");
 var Base = require("./Base");
@@ -16,7 +15,6 @@ var Device = require("./Device");
 var User = require("./User");
 var Notification = require("./Notification");
 var Title = require("./Title");
-var Moment = require("moment");
 
 
 
@@ -86,6 +84,7 @@ var Ticket = Base.extend({
      * @param [options.mailTransport] custom mail transport
      */
     initialize: function(attrs, options) {
+        var self = this;
         // tests can override the mail transport
         if (options && options.mailTransport) {
             this._mailTransport = options.mailTransport;
@@ -93,14 +92,20 @@ var Ticket = Base.extend({
 
         /**
          * See nodemailer module docs
+         * https://github.com/andris9/Nodemailer#sending-mail
          *
          * @method sendMail
          * @param {Object} options
          * @return {Bluebird.Promise}
          * */
-        this.sendMail = Promise.promisify(
-            this._mailTransport.sendMail.bind(this._mailTransport)
-        );
+        this.sendMail = function(options) {
+            return new Promise(function(resolve, reject){
+                self._mailTransport.sendMail(options, function(err, res) {
+                    if (err) return reject(err);
+                    resolve(res);
+                });
+            });
+        };
 
         this.on("created", this._setInitialTicketState.bind(this));
         this.on("update", this.onTicketUpdate.bind(this));
@@ -598,24 +603,30 @@ var Ticket = Base.extend({
      *
      * @method markAsRead
      * @param {models.server.User|Number} user User model or id of the user
+     * @param {Object} [options]
+     * @param {Object} [options.emailOnly] Set to true to mark as read from email
      * @return {Bluebird.Promise} with models.server.Notification
      */
-    markAsRead: function(user, opts) {
+    markAsRead: function(user, options) {
         var self = this;
         return Notification.fetchOrCreate({
             ticketId: self.get("id"),
             targetId: Base.toId(user)
         })
         .then(function(notification) {
-            return notification.set({
-                readAt: new Date(),
-                emailSentAt: new Date(),
-            }).save();
+            var now = new Date();
+
+            notification.set({ emailSentAt: now });
+
+            if (!options || !options.emailOnly) {
+                notification.set({ readAt: now });
+            }
+
+            return notification.save();
         });
     },
 
     markAsUnread: function(model) {
-        console.error("Deprecated call to Ticket#markAsUnread. Use Ticket#updateTimestamp()");
         return this.updateTimestamp();
     },
 
@@ -641,68 +652,52 @@ var Ticket = Base.extend({
     },
 
     /**
-     * Send email notifications about the updateModel to the handlers of this
-     * ticket.
-     *
-     * @method sendMailUpdateNotification
-     * @param {models.server.Base} updatedModel
+     * @method sendBufferedEmailNotifications
+     * @param {models.server.User|Number} user User model or id of the user
      * @return {Bluebird.Promise}
      */
-    sendMailUpdateNotification: function(updatedModel){
+    sendBufferedEmailNotifications: function(user){
         var self = this;
+        var id = this.get("id");
+        var email = user.getEmail();
+        var title = this.getCurrentTitle();
+        var url = "https://support.opinsys.fi/tickets/" + id;
+        var subject = "Tukipyyntö \"" + title + "\" (" + id + ") on päivittynyt";
 
-        return Promise.join(
-            self.load(["titles", "followers.follower"]),
-            updatedModel.load("createdBy")
-        ).then(function() {
-            // XXX: This should not be required since we use the dot notation
-            // above to load this relation too.
-            // http://bookshelfjs.org/#Model-load
-            return self.relations.followers.load("follower");
-        }).then(function(followers) {
-            return followers.models;
-        }).map(function(follower) {
-            return follower.related("follower");
-        }).filter(function(user) {
-            // Do not send update notifications to the update creator
-            return user.get("id") !== updatedModel.get("createdById");
+        return this.unreadComments(user, { byEmail: true }).fetch({
+            withRelated: ["createdBy"]
         })
-        .map(function(user) {
-            if (!user.getEmail()) {
-                console.error(
-                    "Warning! User",
-                    user.getDomainUsername(),
-                    "has no email address"
-                 );
+        .then(function(coll) {
+
+            var lastComment = coll.max(function(comment) {
+                return comment.createdAt();
+            });
+
+            var age = Date.now() - lastComment.createdAt().getTime();
+
+            if (age < 1000 * 60 * 5) {
+                return;
             }
-            return user.getEmail();
-        })
-        .filter(Boolean)
-        .map(function(email) {
-            var title = self.getCurrentTitle();
-            var id = self.get("id");
 
-            debugMail(
-                "Would send update email to %s about \"%s\" (%s)",
-                email, title, id
-            );
+            var comments = coll.map(function(comment) {
+                return comment.toPlainText();
+            }).join("\n");
 
             return self.sendMail({
                 from: "Opinsys tukipalvelu <noreply@opinsys.fi>",
                 to: email,
-                subject: "Tukipyyntö " + id + ": " + title,
-                text: renderUpdateEmail({
-                    title: self.getCurrentTitle(),
-                    ticketId: self.get("id"),
-                    name: updatedModel.relations.createdBy.getFullName(),
-                    timestamp: Moment().format('D.M.YYYY H:mm'),
-                    message: updatedModel.textToEmail(),
-                    url: "https://support.opinsys.fi/tickets/" + self.get("id")
+                subject: subject,
+                text: renderEmailBufferedTemplate({
+                    comments: comments,
+                    url: url
                 })
+            })
+            .then(function() {
+                return self.markAsRead(user, { emailOnly: true });
             });
         });
-    },
 
+    },
 
     /**
      * Update `updatedAt` column to current time. Should be called when ever a
@@ -716,10 +711,7 @@ var Ticket = Base.extend({
     },
 
     onTicketUpdate: function(e){
-        return Promise.join(
-            this.updateTimestamp(),
-            this.sendMailUpdateNotification(e.model)
-        );
+        return this.updateTimestamp();
     },
 
     /**
@@ -807,7 +799,7 @@ var Ticket = Base.extend({
     },
 
     /**
-     * Return collection of tickets that have comments unread by the user
+     * Return collection of tickets that have unread comments by the user
      *
      * @static
      * @method withUnreadComments
@@ -848,16 +840,16 @@ var Ticket = Base.extend({
 
 
 /**
- * Render email update template
+ * Render buffered email update
  *
  * @private
  * @static
- * @method renderUpdateEmail
+ * @method renderEmailBufferedTemplate
  * @param {Object} context
  * @return {String}
  */
-var renderUpdateEmail = _.template(
-    fs.readFileSync(__dirname + "/email_update_template.txt").toString()
+var renderEmailBufferedTemplate = _.template(
+    fs.readFileSync(__dirname + "/email_buffered_template.txt").toString()
 );
 
 

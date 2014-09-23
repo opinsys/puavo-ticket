@@ -67,6 +67,20 @@ var Comment = Base.extend({
     },
 
     /**
+     * Render model to plain text for email or similar usage
+     *
+     * @method toPlainText
+     * @return {String}
+     */
+    toPlainText: function(){
+        if (!this.relations.createdBy) {
+            throw new Error("'createdBy' relation not loaded");
+        }
+
+        return this.relations.createdBy.getFullName() + ": " + this.get("comment");
+    },
+
+    /**
      * Add file attachment to a ticket comment
      *
      * @method addAttachment

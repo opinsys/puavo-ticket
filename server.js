@@ -142,6 +142,10 @@ app.use("/flat-ui", serveStatic(__dirname + "/node_modules/flat-ui"));
 app.use(serveStatic(__dirname + "/public"));
 app.use("/doc", serveStatic(__dirname + "/doc"));
 
+// Must be set here before the `ensureAuthentication` middleware because it
+// must be accessed without Puavo credentials
+app.use(require("./resources/emails"));
+
 
 /**
  * Set an instance of models.User to the request object when user has been
@@ -150,7 +154,7 @@ app.use("/doc", serveStatic(__dirname + "/doc"));
  * @for server.Request
  * @property {models.User} user
  */
-app.use(function(req, res, next) {
+app.use(function ensureAuthentication(req, res, next) {
     if (!req.session.jwt) {
         console.log("Not auth!");
         return res.requestJwt();

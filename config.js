@@ -36,6 +36,7 @@ if (process.env.NODE_ENV === "test") {
     config.puavo.password = "password";
     config.managerOrganisationDomain = "managertesting.opinsys.net";
     config.sessionSecret = "secret";
+    config.emailJobSecret = "secret";
 
 } else {
     var productionConfig = require("./_config");
@@ -50,7 +51,12 @@ config.database.debug = !!process.env.SQL;
 config.database.client = "pg";
 
 if (!config.sessionSecret) {
-    throw Error("sessionSecret is missing from the configuration!");
+    throw new Error("config.sessionSecret is not set");
+}
+
+if (!config.emailJobSecret) {
+    // Used for the buffered email sending api. See resources/emails.js
+    throw new Error("config.emailJobSecret is not set");
 }
 
 if (config.smtp) {

@@ -3,7 +3,7 @@
  * REST resources documented with http://apidocjs.com/
  */
 
-var debug = require("debug")("puavo-ticket:resources/read_tickets");
+var debug = require("debug")("app:resources/read_tickets");
 var express = require("express");
 
 var Ticket = require("../models/server/Ticket");
