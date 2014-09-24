@@ -1,8 +1,7 @@
 "use strict";
 var Promise = require("bluebird");
-var stream = require("stream");
 var debug = require("debug")("app:utils/GridSQL");
-var util = require("util");
+var through2 = require("through2");
 
 /**
  * MongoDB's GridFS inspired data storage for Knex. The given file is saved to
@@ -48,7 +47,18 @@ GridSQL.prototype.read = function(fileId) {
     .orderBy("sequence", "asc")
     .stream({highWaterMark: 5});
 
-    return rowStream.pipe(new Row2Buffer());
+
+    return rowStream.pipe(through2.obj(function (row, enc, cb) {
+        if (!row || !Buffer.isBuffer(row.chunk)) {
+            var err = new Error("Invalid GridSQL row");
+            err.row = row;
+            return cb(err);
+        }
+
+        debug("Reading chunk %s byte chunk", row.chunk.length);
+        this.push(row.chunk);
+        cb();
+    }));
 };
 
 
@@ -125,32 +135,6 @@ GridSQL.prototype.write = function(fileId, readable, options) {
         };
     });
 
-};
-
-/**
- * Transform stream to transform Knex row objects to binary stream
- *
- * @private
- * @class Row2Buffer
- */
-function Row2Buffer(){
-    stream.Transform.call(this);
-    this._writableState.objectMode = true;
-    this._readableState.objectMode = false;
-}
-
-util.inherits(Row2Buffer, stream.Transform);
-
-Row2Buffer.prototype._transform = function(row, encoding, cb) {
-    if (!row || !Buffer.isBuffer(row.chunk)) {
-        var err = new Error("Invalid GridSQL row");
-        err.row = row;
-        return cb(err);
-    }
-
-    debug("Reading chunk %s byte chunk", row.chunk.length);
-    this.push(row.chunk);
-    cb();
 };
 
 

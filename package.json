@@ -60,6 +60,7 @@
     "socket.io": "^1.0.6",
     "socket.io-client": "^1.0.6",
     "sqlite3": "~2.2.4",
+    "through2": "^0.6.2",
     "uglify-js": "~2.4.15",
     "underscore": "~1.6.0",
     "watchify": "~0.10.2",
