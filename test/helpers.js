@@ -139,39 +139,54 @@ function insertTestTickets(user) {
 }
 
 /**
+ * Delete all rows from given tables in series.
+ *
+ * The rows must have an id sequence which will be restarted
+ *
+ * @static
+ * @private
+ * @method deleteAndReset
+ * @param {Array} tables Tables names
+ */
+function deleteAndReset(tables) {
+    if (tables.length === 0) return;
+
+    var tableName = tables[0];
+
+    return DB.knex(tableName).del()
+    .then(function() {
+        return DB.knex.raw("ALTER SEQUENCE \"" + tableName + "_id_seq\" RESTART");
+    })
+    .then(function() {
+        return deleteAndReset(tables.slice(1));
+    });
+}
+
+/**
  * Ensure empty database for testing
  *
- * @method clearTestDatabase
  * @static
+ * @method clearTestDatabase
  * @return {Bluebird.Promise}
  */
 function clearTestDatabase() {
-    var tables = [
-        'comments',
-        'visibilities',
-        'relatedUsers',
-        'devices',
-        'followers',
-        'tags',
-        'handlers',
-        'notifications',
-        'titles'
- ];
-
+    // the chunks table has no incrementing id column
     return DB.knex("chunks").del()
     .then(function() {
-        return DB.knex("attachments").del();
-    })
-    .then(function() {
-        return Promise.all(tables.map(function(table) {
-            return DB.knex(table).del();
-        }));
-    })
-    .then(function() {
-        return DB.knex("tickets").del();
-    })
-    .then(function() {
-        return DB.knex("users").del();
+        return deleteAndReset([
+            "attachments",
+            "comments",
+            "visibilities",
+            "relatedUsers",
+            "devices",
+            "followers",
+            "tags",
+            "handlers",
+            "notifications",
+            "titles",
+            "tickets",
+            "users"
+        ]);
     });
 }
 
