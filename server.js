@@ -131,10 +131,6 @@ app.use(jwtsso({
 }));
 
 
-app.use(require("./utils/middleware/createSassMiddleware")({
-    url: "/styles/index.css",
-    file: __dirname + "/styles/index.scss"
-}));
 app.use("/styles", serveStatic(__dirname + "/styles"));
 app.use("/bootstrap", serveStatic(__dirname + "/node_modules/bootstrap"));
 app.use("/flat-ui", serveStatic(__dirname + "/node_modules/flat-ui"));

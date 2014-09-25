@@ -80,7 +80,9 @@
     "nock": "~0.44.3",
     "sinon": "~1.10.3",
     "superagent": "0.18.0",
-    "supertest": "~0.13.0"
+    "supertest": "~0.13.0",
+    "glob-watcher": "0.0.6",
+    "clean-css": "~2.2.16"
   },
   "jshintConfig": {
     "undef": true,
