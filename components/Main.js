@@ -154,7 +154,7 @@ var Main = React.createClass({
                 {this.state.lastUpdate && this.renderNotificationBox()}
 
                 <div className="wrapper container-fluid">
-                    <h1 className="site-header">Opinsys tukipalvelu</h1>
+                    <h1 className="site-header"><a href="/">Opinsys tukipalvelu</a></h1>
                     {this.state.renderModalContent && this.state.renderModalContent()}
                     <div className="topmenu row">
 

@@ -1,4 +1,12 @@
 .Main {
+    h1 a {
+        color: #616161;
+        margin: 10px 0 10px 30px;
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
     .top-buttons {
         padding-left: 0px;
         padding-right: 0px;
