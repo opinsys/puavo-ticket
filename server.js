@@ -5,7 +5,6 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 require("./db");
-var browserify = require("browserify-middleware");
 var Promise = require("bluebird");
 var express = require("express");
 var Server = require("http").Server;
@@ -177,9 +176,6 @@ app.use(function ensureAuthentication(req, res, next) {
 });
 
 
-app.get("/bundle.js", browserify("./client.js"));
-
-
 app.get("/logout", function(req, res) {
     req.session.destroy();
     res.redirect("/");
@@ -220,6 +216,11 @@ if (require.main === module) {
 
         var addr = server.address();
         console.log('Listening on  http://%s:%d', addr.address, addr.port);
+    });
+
+    // Reload browser when the client side code changes
+    require("./devmode").on("update", function() {
+        sio.sockets.emit("reload");
     });
 }
 

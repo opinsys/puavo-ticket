@@ -7,7 +7,7 @@ prefix ?= /usr/local
 JSHINT=jsxhint
 KARMA=node_modules/karma/bin/karma
 
-all: npm doc install-git-hooks protip
+all: npm doc install-git-hooks js protip
 	@echo
 	@echo All OK!
 	@echo
@@ -76,6 +76,11 @@ js_files=$(shell git ls-files "*.js" | grep -v test/vendor)
 jshint: $(js_files)
 	$(JSHINT) $?
 
+js:
+	mkdir -p public/build
+	browserify client.js > public/build/_bundle.js
+	uglifyjs public/build/_bundle.js --source-map public/build/bundle.map.json --prefix 2 --source-map-url bundle.map.json > public/build/bundle.js
+
 browserify-test: jshint
 	browserify test/client.js -o test/bundle.js
 
@@ -110,7 +115,7 @@ serve-tests: browserify-test
 	node test/server.js
 
 clean:
-	rm -rf doc node_modules
+	rm -rf doc node_modules public/build/*.js public/build/*.json
 
 install-dirs:
 	mkdir -p mkdir -p $(DESTDIR)$(prefix)/lib/node_modules/puavo-ticket

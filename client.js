@@ -13,6 +13,10 @@ io.on("connect", function(s) {
     console.log("Socket.IO connected");
 });
 
+io.on("reload", function() {
+    window.location.reload();
+});
+
 // Load Finnish locale for Moment
 require("moment/locale/fi");
 
