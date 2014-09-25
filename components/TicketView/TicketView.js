@@ -413,13 +413,13 @@ var TicketView = React.createClass({
                             {user.isManager() &&
                                 <Button bsStyle="primary" onClick={this.handleAddHandler} >
                                     <i className="fa fa-user"></i>Lisää käsittelijä
-                                </Button>
-                            }
-                            {ticket.isHandler(user) &&
-                                <ToggleStatusButton ticket={ticket} user={user} />
-                            }
+                                </Button> }
 
-                            <ToggleFollowButton ticket={ticket} user={user} />
+                            {ticket.isHandler(user) &&
+                                <ToggleStatusButton ticket={ticket} user={user} />}
+
+                            {!ticket.createdBy().isSame(user) &&
+                                <ToggleFollowButton ticket={ticket} user={user} />}
                         </div>
                     </div>
 
