@@ -1,6 +1,9 @@
 "use strict";
+var PRODUCTION = process.env.NODE_ENV === "production";
 
-if (process.env.NODE_ENV !== "production") {
+if (!PRODUCTION) {
+    // Use environment variable to set the Bluebird long stack traces in order
+    // to enable it from libraries too
     process.env.BLUEBIRD_DEBUG = "true";
 }
 
@@ -131,10 +134,6 @@ app.use(jwtsso({
 }));
 
 
-app.use(require("./utils/middleware/createSassMiddleware")({
-    url: "/styles/index.css",
-    file: __dirname + "/styles/index.scss"
-}));
 app.use("/styles", serveStatic(__dirname + "/styles"));
 app.use("/bootstrap", serveStatic(__dirname + "/node_modules/bootstrap"));
 app.use(serveStatic(__dirname + "/public"));
@@ -217,10 +216,16 @@ if (require.main === module) {
         console.log('Listening on  http://%s:%d', addr.address, addr.port);
     });
 
-    // Reload browser when the client side code changes
-    require("./devmode").on("update", function() {
-        sio.sockets.emit("reload");
-    });
+    if (!PRODUCTION) {
+        var devmode = require("./devmode");
+        // pipe js/css changes to the browser
+        ["assetchange", "jschange", "csschange"].forEach(function(eventName) {
+            devmode.on(eventName, function() {
+                sio.sockets.emit(eventName);
+            });
+        });
+
+    }
 }
 
 

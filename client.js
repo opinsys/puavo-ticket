@@ -13,8 +13,20 @@ io.on("connect", function(s) {
     console.log("Socket.IO connected");
 });
 
-io.on("reload", function() {
+io.on("jschange", function() {
     window.location.reload();
+});
+
+io.on("csschange", function() {
+    // Refresh stylesheets when css has been changed
+    var links = document.getElementsByTagName("link");
+    var queryString = "?reload=" + new Date().getTime();
+    for (var i = 0; i < links.length;i++) {
+        var link = links[i];
+        if (link.rel === "stylesheet") {
+            link.href = link.href.replace(/\?.*|$/, queryString);
+        }
+    }
 });
 
 // Load Finnish locale for Moment
