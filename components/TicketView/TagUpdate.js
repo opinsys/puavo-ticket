@@ -15,12 +15,26 @@ var UpdateMixin = require("./UpdateMixin");
 var TagUpdate = React.createClass({
     mixins: [UpdateMixin, OnViewportMixin],
     render: function() {
-        return (
-            <div className="TagUpdate ticket-update small">
-                <i>{this.getCreatorName()} lisäsi tagin: </i>
-                <span>{this.props.update.get("tag")}</span>
-            </div>
-        );
+        var tag = this.props.update.get("tag");
+
+        var msg = "";
+
+        switch (tag) {
+            case "status:open":
+                msg = <i>{this.getCreatorName()} avasi tukipyynnön</i>;
+                break;
+            case "status:closed":
+                msg = <i>{this.getCreatorName()} asetti tukipyynnön ratkaistuksi</i>;
+                break;
+            default:
+                msg =
+                    <span>
+                        <i>{this.getCreatorName()} lisäsi tagin: </i>
+                        {this.props.update.get("tag")}
+                    </span>;
+        }
+
+        return <div className="TagUpdate ticket-update small">{msg}</div>;
     },
 });
 
