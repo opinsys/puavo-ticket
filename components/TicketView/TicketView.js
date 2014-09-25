@@ -5,6 +5,7 @@ var Router = require("react-router");
 var classSet = React.addons.classSet;
 var _ = require("lodash");
 var Promise = require("bluebird");
+var debug = require("debug")("app:read");
 
 var Button = require("react-bootstrap/Button");
 var Badge = require("react-bootstrap/Badge");
@@ -273,6 +274,7 @@ var TicketView = React.createClass({
         if (!this.isMounted()) return;
 
         this.setState({ fetching: true });
+        debug("Actually marking as read");
         return this.state.ticket.markAsRead()
             .bind(this)
             .then(function() {
@@ -457,7 +459,10 @@ var TicketView = React.createClass({
                                         // Mark the ticket as read 5 seconds
                                         // after the last update has been shown
                                         // to the user
-                                        setTimeout(self.lazyMarkAsRead, 5*1000);
+                                        debug("Last comment is visible. Going to mark it read soon!");
+                                        setTimeout(function() {
+                                            self.lazyMarkAsRead();
+                                        }, 5*1000);
                                     }} />
                                 </div>
                             );
