@@ -1,0 +1,5 @@
+${comments}
+
+----------------------------------------------
+Pääset tarkastelemaan tukipyyntöä kokonaisuudessaan osoitteessa ${url}
+Tämä viesti on lähetetty Opinsysin tukipalvelusta
