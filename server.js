@@ -135,6 +135,7 @@ app.use(jwtsso({
 
 
 app.use("/styles", serveStatic(__dirname + "/styles"));
+app.use("/components", serveStatic(__dirname + "/components"));
 app.use("/bootstrap", serveStatic(__dirname + "/node_modules/bootstrap"));
 app.use(serveStatic(__dirname + "/public"));
 app.use("/doc", serveStatic(__dirname + "/doc"));

@@ -83,7 +83,7 @@ js:
 	uglifyjs public/build/_bundle.js --source-map public/build/bundle.map.json --prefix 2 --source-map-url bundle.map.json > public/build/bundle.js
 
 css:
-	node-sass --source-comments map styles/index.scss public/build/styles.css
+	node-sass --source-map styles.css.map --source-comments map styles/index.scss public/build/styles.css
 
 css-min: css
 	cleancss public/build/styles.css > public/build/.styles.css
