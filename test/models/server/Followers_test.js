@@ -50,8 +50,8 @@ describe("Follower model", function() {
 
                 // Creator and the new follower is present
                 assert.deepEqual(
-                    ["olli.opettaja", "matti.meikalainen"],
-                    usernames
+                    ["olli.opettaja", "matti.meikalainen"].sort(),
+                    usernames.sort()
                 );
             });
     });
