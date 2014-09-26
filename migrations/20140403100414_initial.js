@@ -67,6 +67,7 @@ exports.up = function(knex, Promise) {
 
                 table.increments("id");
                 table.text("comment").notNullable();
+                table.text("type").defaultTo("text").notNullable();
                 table.string("zendeskCommentId").unique();
             }),
 
