@@ -37,25 +37,41 @@ var TitleList = React.createClass({
         unreadTickets: React.PropTypes.instanceOf(Ticket.Collection).isRequired
     },
 
-    renderTicketMetaInfo: function(ticket) {
+    renderTicketMetaInfo: function(ticket, read) {
+
+        var className = classSet({
+            unread: !read,
+            read: read
+        });
 
         var creator = ticket.createdBy();
         var handlers = ticket.handlers();
 
-        return(
-            <span>
-            <td className="ticket-creator">
-                {creator.getFullName()}
-            </td>
-            <td className="ticket-updated">
-                <TimeAgo date={ticket.updatedAt()} />
-            </td>
-            <td className="ticket-handlers">
-                {handlers.map(function(handler) {
-                    return <ProfileBadge tipPlacement="left" size={40} user={handler.getUser()} />;
-                })}
-            </td>
-            </span>
+        return (
+            <tr key={ticket.get("id")} className={className}>
+                <td>#{ticket.get("id")}</td>
+                <td>
+                    <Link to="ticket" params={{ id: ticket.get("id")}}>
+                        {ticket.getCurrentTitle()}
+
+                        <Badge className="unread-comments" title="Uusia kommentteja">
+                            <i className="fa fa-comment-o"></i>
+                        </Badge>
+
+                    </Link>
+                </td>
+                <td className="ticket-creator">
+                    {creator.getFullName()}
+                </td>
+                <td className="ticket-updated">
+                    <TimeAgo date={ticket.updatedAt()} />
+                </td>
+                <td className="ticket-handlers">
+                    {handlers.map(function(handler) {
+                        return <ProfileBadge tipPlacement="left" size={40} user={handler.getUser()} />;
+                    })}
+                </td>
+            </tr>
         );
     },
 
@@ -85,27 +101,7 @@ var TitleList = React.createClass({
 
                             {this.props.tickets.map(function(ticket) {
                                 var read = !unreadTickets.get(ticket);
-                                var className = classSet({
-                                    unread: !read,
-                                    read: read
-                                });
-
-                                return (
-                                    <tr key={ticket.get("id")} className={className}>
-                                        <td>#{ticket.get("id")}</td>
-                                        <td>
-                                            <Link to="ticket" params={{ id: ticket.get("id")}}>
-                                                {ticket.getCurrentTitle()}
-
-                                                <Badge className="unread-comments" title="Uusia kommentteja">
-                                                    <i className="fa fa-comment-o"></i>
-                                                </Badge>
-
-                                            </Link>
-                                        </td>
-                                         {self.renderTicketMetaInfo(ticket)}
-                                    </tr>
-                                );
+                                return self.renderTicketMetaInfo(ticket, read);
                             })}
                         </tbody>
                     </table>
