@@ -7,7 +7,7 @@ prefix ?= /usr/local
 JSHINT=jsxhint
 KARMA=node_modules/karma/bin/karma
 
-all: npm doc install-git-hooks js css-min protip
+all: npm doc install-git-hooks js css protip
 	@echo
 	@echo All OK!
 	@echo
