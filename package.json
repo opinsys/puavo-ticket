@@ -27,6 +27,7 @@
     "debug": "~1.0.4",
     "diff": "^1.0.8",
     "ejs": "~1.0.0",
+    "exorcist": "^0.1.6",
     "express": "~4.6.1",
     "express-session": "~1.6.5",
     "filesize": "^2.0.3",
