@@ -13,6 +13,10 @@ var Tag = require("app/models/server/Tag");
 
 
 function addTicket(rawTicket) {
+    if (!rawTicket.title) {
+        console.log("Ticket has no title", rawTicket.zendesk_id);
+        return Promise.resolve();
+    }
     return User.byExternalId(rawTicket.submitter.external_id)
     .fetch({ require: true })
     .then(function(creator) {
@@ -134,7 +138,9 @@ function processTickets(tickets) {
     return addTicket(tickets[0])
     .then(function(ticket) {
         count++;
-        console.log(count, "id:", ticket.get("id"));
+        if (ticket) {
+            console.log(count, "id:", ticket.get("id"));
+        }
         return processTickets(tickets.slice(1));
     });
 }
