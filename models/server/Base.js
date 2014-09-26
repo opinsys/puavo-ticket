@@ -94,11 +94,11 @@ var Base = Bookshelf.DB.Model.extend({
      * @return {Bluebird.Promise} with the model instance
      */
     fetchOrCreate: function(identifier) {
-        var self = this;
-        return self.forge(identifier)
-        .fetch()
-        .then(function(model) {
-            return model || self.forge(identifier);
+        // XXX: handle soft deleted items
+        var model =  this.forge(identifier);
+        return model.fetch()
+        .then(function(existing) {
+            return existing || model;
         });
     },
 
