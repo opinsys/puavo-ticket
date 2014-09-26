@@ -1,5 +1,7 @@
 "use strict";
 var PRODUCTION = process.env.NODE_ENV === "production";
+// XXX: release version would be better
+var cacheKey = Date.now();
 
 if (!PRODUCTION) {
     // Use environment variable to set the Bluebird long stack traces in order
@@ -198,6 +200,7 @@ app.use("/api/puavo", require("./resources/puavo_api_proxy")(config));
 
 app.get("/*", function(req, res) {
     res.render("index.ejs", {
+        cacheKey: cacheKey,
         user: req.user.toJSON()
     });
 });
