@@ -66,9 +66,6 @@ function addTicket(rawTicket) {
                 .fetch({ require: true })
                 .then(function(user) {
                     return ticket.addHandler(user, creator);
-                    // .catch(function(err) {
-                    //     // console.log("Failed to add handler", external_id, err);
-                    // });
                 });
             }).return(ticket);
         })
@@ -79,6 +76,7 @@ function addTicket(rawTicket) {
             })
             .then(function(title) {
                 title.set({
+                    createdAt: rawTicket.created_at,
                     title: rawTicket.title,
                 });
                 return title.save();
