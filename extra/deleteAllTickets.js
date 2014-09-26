@@ -1,4 +1,10 @@
 "use strict";
+
+
+// We not want to run this by accident. Comment this out when you use this but
+// do not commit it
+process.exit(1);
+
 var DB = require("app/db");
 /**
  * Delete all rows from given tables in series.
