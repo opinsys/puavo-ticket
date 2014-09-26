@@ -15,6 +15,7 @@ Cool new ticketing system with deep puavo integration.
 	- [Development tools](#user-content-development-tools)
 		- [Editors](#user-content-editors)
 		- [Setup PATH](#user-content-setup-path)
+	- [Bookshelf REPL](#user-content-bookshelf-repl)
 	- [Running tests](#user-content-running-tests)
 	- [Debug browser Javascript](#user-content-debug-browser-javascript)
 	- [Debug server Javascript](#user-content-debug-server-javascript)
@@ -25,6 +26,7 @@ Cool new ticketing system with deep puavo integration.
 	- [puavo-ticket API documentation](#user-content-puavo-ticket-api-documentation)
 		- [React components](#user-content-react-components)
 		- [External documentation](#user-content-external-documentation)
+
 
 ## Roles
 
@@ -209,6 +211,10 @@ or use the shortcut
 
 This will give you direct access and tab completion to `mocha`, `jsxhint` and
 other tools.
+
+## Bookshelf REPL
+
+Start repl with `make repl`. All models should be in scope. The repl is based on [repl-promised](https://github.com/tlrobinson/node-repl-promised).
 
 ## Running tests
 

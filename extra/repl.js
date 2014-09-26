@@ -21,6 +21,7 @@ console.log();
 
 var repl = require("repl").start({});
 repl.context.db = require("../db");
+repl.context.Puavo = require("app/utils/Puavo");
 models.forEach(function(modelName) {
     repl.context[modelName] = require("../models/server/" + modelName);
 });
