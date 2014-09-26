@@ -210,6 +210,10 @@ or use the shortcut
 This will give you direct access and tab completion to `mocha`, `jsxhint` and
 other tools.
 
+## Bookshelf REPL
+
+Start repl with `make repl`. All models should be in scope. The repl is based on [repl-promised](https://github.com/tlrobinson/node-repl-promised).
+
 ## Running tests
 
 Use
