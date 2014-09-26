@@ -7,7 +7,7 @@ prefix ?= /usr/local
 JSHINT=jsxhint
 KARMA=node_modules/karma/bin/karma
 
-all: npm doc install-git-hooks js css protip
+all: npm doc install-git-hooks js css-min protip
 	@echo
 	@echo All OK!
 	@echo
@@ -81,10 +81,14 @@ js:
 	browserify --debug client.js | exorcist public/build/_bundle.map.json > public/build/_bundle.js
 	uglifyjs public/build/_bundle.js --in-source-map public/build/_bundle.map.json --source-map public/build/bundle.map.json --prefix 2 --mangle --source-map-url bundle.map.json > public/build/bundle.js
 
-css:
-	node-sass --source-map styles.css.map --source-comments map styles/index.scss > public/build/styles.css
 
-css-min: css
+css:
+	node-sass --source-map styles.css.map --source-comments map styles/index.scss --output styles.css
+	mv styles.css public/build/
+	mv styles.css.map public/build/
+
+css-min:
+	node-sass styles/index.scss > public/build/styles.css
 	cleancss public/build/styles.css > public/build/.styles.css
 	mv public/build/.styles.css public/build/styles.css
 
