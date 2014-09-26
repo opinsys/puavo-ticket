@@ -52,7 +52,7 @@
         </style>
         <link href="/font-awesome/css/font-awesome.min.css?cache=<%= cacheKey %>" rel="stylesheet">
         <link href="/bootstrap/dist/css/bootstrap.min.css?cache=<%= cacheKey %>" rel="stylesheet">
-        <link href="/build/styles.css?cache=<%= cacheKey %>" rel="stylesheet">
+        <link href="<%= cssBundle %>?cache=<%= cacheKey %>" rel="stylesheet">
     </head>
     <body>
         <div class="initial-spinner">
@@ -63,6 +63,6 @@
         <script charset="utf-8">
         window.USER = <%- JSON.stringify(user, null, "    ") %>;
         </script>
-        <script src="/build/bundle.js?cache=<%= cacheKey %>" charset="utf-8"></script>
+        <script src="<%= jsBundle %>?cache=<%= cacheKey %>" charset="utf-8"></script>
     </body>
 </html>

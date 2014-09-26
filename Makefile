@@ -78,19 +78,19 @@ jshint: $(js_files)
 	$(JSHINT) $?
 
 js:
-	browserify --debug client.js | exorcist public/build/_bundle.map.json > public/build/_bundle.js
-	uglifyjs public/build/_bundle.js --in-source-map public/build/_bundle.map.json --source-map public/build/bundle.map.json --prefix 2 --mangle --source-map-url bundle.map.json > public/build/bundle.js
+	browserify --debug client.js | exorcist public/build/bundle.map.json > public/build/bundle.js
+	uglifyjs public/build/bundle.js --in-source-map public/build/bundle.map.json --source-map public/build/bundle.min.map.json --prefix 2 --mangle --source-map-url bundle.min.map.json > public/build/bundle.min.js
 
 
 css:
 	node-sass --source-map styles.css.map --source-comments map styles/index.scss --output styles.css
 	mv styles.css public/build/
 	mv styles.css.map public/build/
+	cleancss public/build/styles.css > public/build/styles.min.css
 
 css-min:
 	node-sass styles/index.scss > public/build/styles.css
-	cleancss public/build/styles.css > public/build/.styles.css
-	mv public/build/.styles.css public/build/styles.css
+	cleancss public/build/styles.css > public/build/styles.min.css
 
 browserify-test: jshint
 	browserify test/client.js -o test/bundle.js

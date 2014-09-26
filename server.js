@@ -183,6 +183,11 @@ app.get("/logout", function(req, res) {
     res.redirect("/");
 });
 
+app.get("/debugmode", function(req, res) {
+    req.session.debugmode = !req.session.debugmode;
+    res.json({ debugmode: req.session.debugmode });
+});
+
 app.use(require("./resources/tickets"));
 app.use(require("./resources/related_users"));
 app.use(require("./resources/comments"));
@@ -199,7 +204,19 @@ app.use("/api/puavo", require("./resources/puavo_api_proxy")(config));
 
 
 app.get("/*", function(req, res) {
+
+    var jsBundle = "/build/bundle.min.js";
+    var cssBundle = "/build/styles.min.css";
+
+    if (req.session.debugmode || !PRODUCTION) {
+        console.log("Using debugmode for", req.user.getDomainUsername());
+        jsBundle = "/build/bundle.js";
+        cssBundle = "/build/styles.css";
+    }
+
     res.render("index.ejs", {
+        jsBundle: jsBundle,
+        cssBundle: cssBundle,
         cacheKey: cacheKey,
         user: req.user.toJSON()
     });
