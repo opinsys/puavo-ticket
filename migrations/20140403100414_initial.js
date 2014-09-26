@@ -48,6 +48,7 @@ exports.up = function(knex, Promise) {
         return knex.schema.createTable("tickets", function(table) {
             addLifecycleColumns(table);
             table.increments("id");
+            table.string("zendeskTicketId").unique();
         });
     })
     .then(function createTicketRelationTables() {
@@ -66,6 +67,7 @@ exports.up = function(knex, Promise) {
 
                 table.increments("id");
                 table.text("comment").notNullable();
+                table.string("zendeskCommentId").unique();
             }),
 
             knex.schema.createTable("visibilities", function(table) {
