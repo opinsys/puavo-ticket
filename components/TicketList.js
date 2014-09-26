@@ -9,6 +9,7 @@ var Ticket = require("../models/client/Ticket");
 var User = require("../models/client/User");
 
 var Loading = require("./Loading");
+var ProfileBadge = require("./ProfileBadge");
 var captureError = require("../utils/captureError");
 var BackboneMixin = require("./BackboneMixin");
 var TimeAgo = require("./TimeAgo");
@@ -39,6 +40,7 @@ var TitleList = React.createClass({
     renderTicketMetaInfo: function(ticket) {
 
         var creator = ticket.createdBy();
+        var handlers = ticket.handlers();
 
         return(
             <span>
@@ -47,6 +49,11 @@ var TitleList = React.createClass({
             </td>
             <td className="ticket-updated">
                 <TimeAgo date={ticket.updatedAt()} />
+            </td>
+            <td className="ticket-handlers">
+                {handlers.map(function(handler) {
+                    return <ProfileBadge tipPlacement="left" size={40} user={handler.getUser()} />;
+                })}
             </td>
             </span>
         );
@@ -73,6 +80,7 @@ var TitleList = React.createClass({
                                 <th data-column-id="subject">Aihe</th>
                                 <th data-column-id="creator">Lähettäjä</th>
                                 <th data-column-id="updated">Viimeisin päivitys</th>
+                                <th data-column-id="handlers">Käsittelijä(t)</th>
                             </tr>
 
                             {this.props.tickets.map(function(ticket) {
