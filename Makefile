@@ -121,7 +121,13 @@ test:
 serve-tests: browserify-test
 	node test/server.js
 
-clean:
+clean-build:
+	rm -f public/build/*.json
+	rm -f public/build/*.js
+	rm -f public/build/*.map
+	rm -f public/build/*.css
+
+clean: clean-build
 	rm -rf doc node_modules public/build/*.js public/build/*.json
 
 install-dirs:
