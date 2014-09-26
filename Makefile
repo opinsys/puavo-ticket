@@ -20,6 +20,7 @@ protip:
 
 npm:
 	npm install
+	rm -f node_modules/app && ln -sf .. node_modules/app
 
 migrate:
 	knex migrate:latest
