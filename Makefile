@@ -18,6 +18,9 @@ protip:
 	@echo '    . .bash_node_modules'
 	@echo
 
+repl:
+	@node extra/repl.js
+
 npm:
 	npm install
 	rm -f node_modules/app && ln -sf .. node_modules/app
