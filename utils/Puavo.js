@@ -39,9 +39,13 @@ Puavo.prototype.request = function(pathname) {
                 'user': config.puavo.username,
                 'pass': config.puavo.password
             },
+            pool: {},
             headers: {
-                host: this.domain
-            }
+                host: this.domain,
+                referer: this.domain
+            },
+            // XXX: How to use our cert auth?
+            strictSSL: false
         })
         .spread(function(res, body) {
             return JSON.parse(body);
