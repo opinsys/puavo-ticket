@@ -185,7 +185,7 @@ app.get("/logout", function(req, res) {
 
 app.get("/debugmode", function(req, res) {
     req.session.debugmode = !req.session.debugmode;
-    res.json({ debugmode: req.session.debugmode });
+    res.render("debugmode.ejs", { debugmode: req.session.debugmode });
 });
 
 app.use(require("./resources/tickets"));

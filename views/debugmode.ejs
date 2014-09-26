@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>debugmode</title>
+    </head>
+    <body>
+        <h1>debugmode</h1>
+        <pre>is now <%= debugmode %></pre>
+        <p>redirecting...</p>
+        <script charset="utf-8">
+            setTimeout(function(){
+                window.location = document.referrer || "/";
+            }, 3000);
+        </script>
+    </body>
+</html>
