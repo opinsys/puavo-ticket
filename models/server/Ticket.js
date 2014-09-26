@@ -444,11 +444,18 @@ var Ticket = Base.extend({
         return handler.then(function(handler) {
             return Promise.join(
 
-                Handler.forge({
+                Handler.fetchOrCreate({
                     ticketId: self.get("id"),
-                    createdById: Base.toId(addedBy),
                     handler: Base.toId(handler)
-                }).save(),
+                })
+                .then(function(h) {
+                    if (h.isNew()) {
+                        h.set({
+                            createdById: Base.toId(addedBy),
+                        });
+                        return h.save();
+                    }
+                }),
 
                 self.addFollower(handler, addedBy)
             );
