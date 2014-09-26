@@ -34,7 +34,7 @@ var BackboneMixin = {
                     if (!self.isMounted()) return;
                     var o = {};
                     o[stateKey] = replaceModel;
-                    setTimeout(self.setBackbone.bind(self, o), 0);
+                    self.setBackbone(o);
                 }, self);
 
             });
