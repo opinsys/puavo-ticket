@@ -418,7 +418,8 @@ var TicketView = React.createClass({
                             {ticket.isHandler(user) &&
                                 <ToggleStatusButton ticket={ticket} user={user} />}
 
-                            {!ticket.createdBy().isSame(user) &&
+
+                            {ticket.createdBy().get("id") !== user.get("id") &&
                                 <ToggleFollowButton ticket={ticket} user={user} />}
                         </div>
                     </div>
