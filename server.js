@@ -189,9 +189,7 @@ app.get("/debugmode", function(req, res) {
 });
 
 app.use(require("./resources/tickets"));
-app.use(require("./resources/related_users"));
 app.use(require("./resources/comments"));
-app.use(require("./resources/devices"));
 app.use(require("./resources/attachments"));
 app.use(require("./resources/followers"));
 app.use(require("./resources/visibilities"));

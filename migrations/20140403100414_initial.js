@@ -82,19 +82,6 @@ exports.up = function(knex, Promise) {
                 uniqueForTicket(table, "entity");
             }),
 
-            knex.schema.createTable("relatedUsers", function(table) {
-                addLifecycleColumns(table);
-                addTicketRelation(table);
-
-                table.increments("id");
-                table.integer("user")
-                    .notNullable()
-                    .references("id")
-                    .inTable("users");
-
-                uniqueForTicket(table, "user");
-            }),
-
             knex.schema.createTable("handlers", function(table) {
                 addLifecycleColumns(table);
                 addTicketRelation(table);
@@ -106,15 +93,6 @@ exports.up = function(knex, Promise) {
                     .inTable("users");
 
                 uniqueForTicket(table, "handler");
-            }),
-
-            knex.schema.createTable("devices", function(table) {
-                addLifecycleColumns(table);
-                addTicketRelation(table);
-
-                table.increments("id");
-                table.string("hostname").notNullable();
-                table.string("externalId");
             }),
 
             knex.schema.createTable("attachments", function(table) {
@@ -195,8 +173,6 @@ exports.down = function(knex, Promise) {
             knex.schema.dropTableIfExists("titles"),
             knex.schema.dropTableIfExists("comments"),
             knex.schema.dropTableIfExists("visibilities"),
-            knex.schema.dropTableIfExists("relatedUsers"),
-            knex.schema.dropTableIfExists("devices"),
             knex.schema.dropTableIfExists("followers"),
             knex.schema.dropTableIfExists("tags"),
             knex.schema.dropTableIfExists("handlers"),

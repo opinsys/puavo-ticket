@@ -177,8 +177,6 @@ function clearTestDatabase() {
             "attachments",
             "comments",
             "visibilities",
-            "relatedUsers",
-            "devices",
             "followers",
             "tags",
             "handlers",

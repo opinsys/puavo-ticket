@@ -45,8 +45,6 @@ function deleteAllTickets() {
             "attachments",
             "comments",
             "visibilities",
-            "relatedUsers",
-            "devices",
             "followers",
             "tags",
             "handlers",
