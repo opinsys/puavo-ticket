@@ -693,7 +693,7 @@ var Ticket = Base.extend({
 
             var comments = coll.map(function(comment) {
                 return comment.toPlainText();
-            }).join("\n");
+            }).join("\n----------------------------------------------\n");
 
             debugEmail(
                 "Sending notification email about ticket %s for %s (%s)",

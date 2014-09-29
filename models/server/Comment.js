@@ -77,7 +77,7 @@ var Comment = Base.extend({
             throw new Error("'createdBy' relation not loaded");
         }
 
-        return this.relations.createdBy.getFullName() + ": " + this.get("comment");
+        return this.relations.createdBy.getFullName() + "\n" + this.get("comment");
     },
 
     /**

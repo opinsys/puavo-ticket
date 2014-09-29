@@ -1,3 +1,5 @@
+Tukipyyntösi on päivittynyt seuraavin kommentein
+
 ${comments}
 
 ----------------------------------------------

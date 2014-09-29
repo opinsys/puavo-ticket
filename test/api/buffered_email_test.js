@@ -110,8 +110,13 @@ describe("buffered email sending", function() {
             );
 
             assert.equal(multiline.stripIndent(function(){/*
-                Matti Meikäläinen: A comment by another teacher
-                Matti Meikäläinen: A second comment by another teacher
+                Tukipyyntösi on päivittynyt seuraavin kommentein
+
+                Matti Meikäläinen
+                A comment by another teacher
+                ----------------------------------------------
+                Matti Meikäläinen
+                A second comment by another teacher
 
                 ----------------------------------------------
                 Pääset tarkastelemaan tukipyyntöä kokonaisuudessaan osoitteessa https://support.opinsys.fi/tickets/1
