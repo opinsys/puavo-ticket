@@ -138,6 +138,17 @@ function addTicket(rawTicket) {
                     });
                 });
             }).return(ticket);
+        })
+        .then(function setUpdatedAt(ticket) {
+            return ticket.comments().query(function(q) {
+                q.orderBy("createdAt", "desc");
+                q.limit(1);
+            })
+            .fetchOne()
+            .then(function(comment) {
+                ticket.set({ updatedAt: comment.get("createdAt") });
+                return ticket.save();
+            }).return(ticket);
         });
     });
 
