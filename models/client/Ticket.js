@@ -106,7 +106,7 @@ var Ticket = Base.extend({
      */
     updates: function(){
         var welcome = this.createRobotComment(
-            "Olemme vastaan ottaneet tukipyyntösi. Voit vielä halutessasi täydentää tukipyyntöäsi."
+            "Olemme vastaanottaneet tukipyyntösi. Voit vielä halutessasi täydentää tukipyyntöäsi."
         );
         var updates = [welcome]
         .concat(this.tags().slice(1))
