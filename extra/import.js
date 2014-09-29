@@ -1,5 +1,6 @@
 "use strict";
 
+require("colors");
 process.env.BLUEBIRD_DEBUG = "true";
 
 var _ = require("lodash");
@@ -21,11 +22,14 @@ function generateIdForComment(rawComment) {
 
 function addTicket(rawTicket) {
     if (!rawTicket.title) {
-        console.log("Ticket has no title", rawTicket.zendesk_id);
+        console.log("Ticket has no title".red, rawTicket.zendesk_id);
         return Promise.resolve();
     }
     return User.byExternalId(rawTicket.submitter.external_id)
     .fetch({ require: true })
+    .catch(function(err) {
+        throw new Error("Cannot find user for " + JSON.stringify(rawTicket.submitter));
+    })
     .then(function(creator) {
         return Ticket.fetchOrCreate({
             createdById: creator.get("id"),
@@ -33,12 +37,19 @@ function addTicket(rawTicket) {
             zendeskTicketId: rawTicket.zendesk_id
         })
         .then(function(ticket) {
+
+            if (ticket.isNew()) {
+                console.log("Adding new ticket from zendesk id".yellow, ticket.get("zendeskTicketId"));
+            } else {
+                console.log("Updating existing ticket".green, ticket.get("id"), ticket.get("zendeskTicketId"));
+            }
+
             return ticket.save();
         })
         .then(function setStatus(ticket) {
             var status = rawTicket.status;
             if (!status) {
-                console.error("Invalid status in", rawTicket.zendesk_id);
+                console.error("Invalid status in".red, rawTicket.zendesk_id);
                 status = "open";
             }
 
@@ -120,6 +131,9 @@ function addTicket(rawTicket) {
                         zendeskCommentId: ticket.get("id") + ":" + generateIdForComment(rawComment)
                     })
                     .then(function(comment) {
+                        if (comment.isNew()) {
+                            console.log("Adding new comment for".yellow, ticket.get("id"), "by", commenter.get("id"));
+                        }
                         return comment.save();
                     });
                 });
@@ -138,7 +152,7 @@ function processTickets(tickets) {
     .then(function(ticket) {
         count++;
         if (ticket) {
-            console.log(count, "id:", ticket.get("id"), ticket.get("zendeskTicketId"));
+            console.log("Sync ok for", "ticket", ticket.get("id"), ticket.get("zendeskTicketId"));
         }
         return processTickets(tickets.slice(1));
     });
