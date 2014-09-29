@@ -4,6 +4,7 @@ process.env.BLUEBIRD_DEBUG = "true";
 
 var _ = require("lodash");
 var Promise = require("bluebird");
+var crypto = require('crypto');
 
 var Ticket = require("app/models/server/Ticket");
 var User = require("app/models/server/User");
@@ -11,6 +12,12 @@ var Comment = require("app/models/server/Comment");
 var Title = require("app/models/server/Title");
 var Tag = require("app/models/server/Tag");
 
+function generateIdForComment(rawComment) {
+    var shasum = crypto.createHash('sha1');
+    shasum.update(rawComment.created_at);
+    shasum.update(rawComment.commenter.external_id);
+    return shasum.digest('hex');
+}
 
 function addTicket(rawTicket) {
     if (!rawTicket.title) {
@@ -51,14 +58,23 @@ function addTicket(rawTicket) {
             .return(ticket);
         })
         .then(function addHandlers(ticket) {
-            var handlers = [rawTicket.submitter.external_id];
+
+            function getExternalId(user) {
+                if (!user.external_id) {
+                    throw new Error("User has no external_id: " + JSON.stringify(user));
+                }
+                return user.external_id;
+
+            }
+
+            var handlers = [getExternalId(rawTicket.submitter)];
 
             if (rawTicket.requester) {
-                handlers.push(rawTicket.requester.external_id);
+                handlers.push(getExternalId(rawTicket.requester));
             }
 
             if (rawTicket.assignee) {
-                handlers.push(rawTicket.assignee.external_id);
+                handlers.push(getExternalId(rawTicket.assignee));
             }
 
             return Promise.map(_.uniq(handlers), function(external_id) {
@@ -82,22 +98,7 @@ function addTicket(rawTicket) {
                 return title.save();
             }).return(ticket);
         })
-        .then(function addDescriptionComment(ticket) {
-
-            return Comment.fetchOrCreate({
-                ticketId: ticket.get("id"),
-                zendeskCommentId: "description:" + ticket.get("id")
-            })
-            .then(function(comment) {
-                comment.set({
-                    createdById: creator.get("id"),
-                    createdAt: rawTicket.created_at,
-                    comment: rawTicket.description,
-                });
-                return comment.save();
-            }).return(ticket);
-        })
-        .then(function addOtherComments(ticket) {
+        .then(function addComments(ticket) {
             return Promise.map(rawTicket.comments, function addOtherComment(rawComment) {
 
                 if (!rawComment.commenter) {
@@ -116,7 +117,7 @@ function addTicket(rawTicket) {
                         createdById: commenter.get("id"),
                         createdAt: rawComment.created_at,
                         comment: rawComment.comment,
-                        // zendeskCommentId: ticket.get("id") + ":" + rawComment.zendesk_id
+                        zendeskCommentId: ticket.get("id") + ":" + generateIdForComment(rawComment)
                     })
                     .then(function(comment) {
                         return comment.save();
@@ -137,7 +138,7 @@ function processTickets(tickets) {
     .then(function(ticket) {
         count++;
         if (ticket) {
-            console.log(count, "id:", ticket.get("id"));
+            console.log(count, "id:", ticket.get("id"), ticket.get("zendeskTicketId"));
         }
         return processTickets(tickets.slice(1));
     });
