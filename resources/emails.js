@@ -1,6 +1,6 @@
 "use strict";
 var express = require("express");
-var debug = require("debug")("app:resources/emails");
+var debug = require("debug")("app:email");
 
 var config = require("app/config");
 var Ticket = require("app/models/server/Ticket");
@@ -21,20 +21,12 @@ app.post("/api/send_emails", function(req, res, next) {
     })
     .map(function(user) {
         if (!user.getEmail()) {
-            debug(
-                "Warning! User %s has no email address",
-                user.getDomainUsername()
-             );
              return;
         }
 
         return Ticket.withUnreadComments(user, { byEmail: true }).fetch({
             withRelated: "titles"
         }).then(function(coll) {
-            debug(
-                "Sending email updates for %s about %s tickets",
-                user.getDomainUsername(), coll.length
-            );
             return coll.models;
         })
         .map(function(ticket) {

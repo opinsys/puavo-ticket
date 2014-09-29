@@ -16,6 +16,7 @@ var User = require("./User");
 var Notification = require("./Notification");
 var Title = require("./Title");
 
+var debugEmail = require("debug")("app:email");
 
 
 /**
@@ -683,12 +684,21 @@ var Ticket = Base.extend({
             var age = Date.now() - lastComment.createdAt().getTime();
 
             if (age < 1000 * 60 * 5) {
+                debugEmail(
+                    "Ticket %s has comments added within last 5min. Skipping email send for %s",
+                    id, user.getDomainUsername()
+                );
                 return;
             }
 
             var comments = coll.map(function(comment) {
                 return comment.toPlainText();
             }).join("\n");
+
+            debugEmail(
+                "Sending notification email about ticket %s for %s (%s)",
+                id, user.getDomainUsername(), user.getEmail()
+            );
 
             return self.sendMail({
                 from: "Opinsys tukipalvelu <noreply@opinsys.fi>",
