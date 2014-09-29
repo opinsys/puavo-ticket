@@ -8,6 +8,7 @@ var OnViewportMixin = require("../OnViewportMixin");
 var UpdateMixin = require("./UpdateMixin");
 var TimeAgo = require("../TimeAgo");
 var FileItem = require("app/components/FileItem");
+var ForcedLinebreaks = require("app/components/ForcedLinebreaks");
 
 
 /**
@@ -46,7 +47,7 @@ var CommentUpdate = React.createClass({
 
         var createdBy = comment.createdBy();
         var createdAt = comment.createdAt();
-        var commentString = comment.toHTML();
+        var commentString = comment.get("comment");
         var hashId = comment.getUniqueId();
         var mergedComments = comment.getMergedComments();
         var attachments = comment.attachments().concat(mergedComments.reduce(function(a, comment) {
@@ -75,11 +76,15 @@ var CommentUpdate = React.createClass({
                     <a className="since" href={"#" + hashId } onClick={this.onHashChange}>
                         <TimeAgo date={createdAt} />
                     </a>
-                    <div className="comment" key={hashId} dangerouslySetInnerHTML={{__html: commentString}} />
+                    <ForcedLinebreaks className="comment" key={hashId} id={hashId} >
+                        {commentString}
+                    </ForcedLinebreaks>
                     {mergedComments.map(function(c) {
                         var hashId = c.getUniqueId();
                         return (
-                            <div id={hashId} key={hashId} className="comment" dangerouslySetInnerHTML={{__html: c.toHTML()}} />
+                            <ForcedLinebreaks className="comment" key={hashId} id={hashId} >
+                                {c.get("comment")}
+                            </ForcedLinebreaks>
                         );
                     })}
                     {attachments.length > 0 &&
