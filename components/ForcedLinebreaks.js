@@ -23,8 +23,11 @@ var ForcedLinebreaks = React.createClass({
 
         return (
             <p className={"ForcedLinebreaks " + this.props.className} id={this.props.id} >
-                {string.split("\n").map(function(line, i) {
-                    return <span key={i}>{line}<br /></span>;
+                {string.trim().split("\n").map(function(line, i) {
+                    // Non Breaking Space. React does render &nbsp; literaly as
+                    // "&nbsp;" so use the actual character
+                    var nbsp = " ";
+                    return <span key={i}>{line.trim() || nbsp}</span>;
                 })}
             </p>
 
