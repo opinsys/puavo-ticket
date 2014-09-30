@@ -634,9 +634,6 @@ var Ticket = Base.extend({
         });
     },
 
-    markAsUnread: function(model) {
-        return this.updateTimestamp();
-    },
 
     /**
      * Return the current title. Requires `titles` relation
