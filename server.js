@@ -289,7 +289,7 @@ if (debugMem.name === "enabled") {
 
 exec("dpkg -s puavo-ticket", function(err, stdout) {
     if (err) {
-        return console.err("Failed to read puavo-ticket deb package version");
+        return console.error("Failed to read puavo-ticket deb package version");
     }
     var re = /^Version: *(.+)/;
 
