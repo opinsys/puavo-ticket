@@ -160,7 +160,7 @@ var TicketList = React.createClass({
             <div className="TicketList ticket-wrap row">
                 <Loading visible={this.state.fetching} />
                 <TitleList title="Odottavat tukipyynnöt" tickets={pending} unreadTickets={unreadTickets} user={this.props.user} />
-                <TitleList title="Minun tukipyynnöt" tickets={myTickets} unreadTickets={unreadTickets} user={this.props.user} />
+                <TitleList title="Minun tukipyyntöni" tickets={myTickets} unreadTickets={unreadTickets} user={this.props.user} />
                 {others.length > 0 &&
                     <TitleList title="Muiden tukipyynnöt" tickets={others} unreadTickets={unreadTickets} user={this.props.user} />}
                 <TitleList title="Käsitellyt tukipyynnöt" tickets={closed} unreadTickets={unreadTickets} user={this.props.user} />
