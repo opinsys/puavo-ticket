@@ -34,9 +34,9 @@ drop-db:
 
 drop-tables:
 	sudo -u postgres psql -c "DROP TABLE IF EXISTS attachments,attachments,titles,comments,devices,followers,handlers,knex_migrations, \
-		\"notifications\",\"relatedUsers\",tags,tickets,users,visibilities CASCADE" puavo-ticket
+		\"notifications\",\"relatedUsers\",tags,tickets,users,visibilities,chunks CASCADE" puavo-ticket
 	sudo -u postgres psql -c "DROP TABLE IF EXISTS attachments,attachments,titles,comments,devices,followers,handlers,knex_migrations, \
-		\"notifications\",\"relatedUsers\",tags,tickets,users,visibilities CASCADE" puavo-ticket-test
+		\"notifications\",\"relatedUsers\",tags,tickets,users,visibilities,chunks CASCADE" puavo-ticket-test
 
 rollback:
 	knex migrate:rollback
