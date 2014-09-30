@@ -64,12 +64,12 @@ describe("/api/tickets/:id/tags", function() {
             .then(function(res) {
                 assert.equal(2, res.body.length);
 
-                var ticket = _.findWhere(res.body, {
-                    description: self.ticket.get("description")
+                var ticket = _.find(res.body, {
+                    id: self.ticket.get("id")
                 });
                 assert(ticket);
                 assert(
-                    _.findWhere(ticket.tags, { tag: "footag" }),
+                    _.find(ticket.tags, { tag: "footag" }),
                     "footag"
                 );
 
