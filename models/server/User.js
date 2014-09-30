@@ -71,16 +71,18 @@ var User = Base.extend({
     ensureUserFromJWTToken: function(token) {
         return User.byExternalId(token.id).fetch()
             .then(function(user) {
-                if (!user) {
-                    return User.forge({
-                            externalId: token.id,
-                            externalData: token
-                        }).save();
+                if (!user) user = User.forge({});
+
+                user.set({
+                    externalId: token.id,
+                    externalData: token
+                });
+
+                if (token.email) {
+                    user.set({ email: token.email });
                 }
-                else {
-                    user.set("externalData", token);
-                    return user.save();
-                }
+
+                return user.save();
 
             });
     },
