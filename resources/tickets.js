@@ -18,7 +18,11 @@ var app = express.Router();
  * @apiSuccess {Object[]} . List of tickets
  */
 app.get("/api/tickets", function(req, res, next) {
-    Ticket.byUserVisibilities(req.user).fetch({
+    Ticket.byUserVisibilities(req.user)
+    .query(function(q) {
+        q.orderBy("updatedAt", "desc");
+    })
+    .fetch({
         withRelated: [
             "createdBy",
             "handlers.handler",
