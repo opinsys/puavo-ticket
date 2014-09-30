@@ -1,6 +1,7 @@
 "use strict";
 var express = require("express");
 var debug = require("debug")("app:email");
+var prettyMs = require("pretty-ms");
 
 var config = require("app/config");
 var Ticket = require("app/models/server/Ticket");
@@ -13,6 +14,7 @@ app.post("/api/send_emails", function(req, res, next) {
     if (req.body.secret !== config.emailJobSecret) {
         return res.status(403).json({ error: "permission denied" });
     }
+    var started = Date.now();
 
     User.collection().fetch()
     .then(function(coll) {
@@ -34,7 +36,14 @@ app.post("/api/send_emails", function(req, res, next) {
         });
     })
     .then(function() {
-        res.json({ ok: true });
+        var duration = Date.now() - started;
+
+        debug("emails processed in %s", prettyMs(duration));
+        res.json({
+            ok: true,
+            duration: duration,
+            durationPretty: prettyMs(duration),
+        });
     })
     .catch(next);
 });
