@@ -1,7 +1,9 @@
 "use strict";
 var PRODUCTION = process.env.NODE_ENV === "production";
-// XXX: release version would be better
-var cacheKey = Date.now();
+var CACHE_KEY = Date.now();
+var STARTED = Date.now();
+var VERSION = "loading";
+var HOSTNAME = require("os").hostname();
 
 if (!PRODUCTION) {
     // Use environment variable to set the Bluebird long stack traces in order
@@ -13,6 +15,9 @@ require("./db");
 var Promise = require("bluebird");
 var express = require("express");
 var Server = require("http").Server;
+var prettyMs = require("pretty-ms");
+var exec = require("child_process").exec;
+var crypto = require("crypto");
 
 var debug = require("debug")("app:live");
 var debugMem = require("debug")("app:memory");
@@ -46,6 +51,9 @@ var sio = require("socket.io")(server);
 app.sio = sio;
 
 var sessionMiddleware = session({
+    name: "puavo-ticket-sid",
+    resave: true,
+    saveUninitialized: true,
     store: new RedisStore(config.redis),
     secret: config.sessionSecret
 });
@@ -103,8 +111,6 @@ sio.sockets.on("connection", function(socket) {
 
 });
 
-app.use(sessionMiddleware);
-
 app.use(require("./utils/middleware/createSlowInternet")());
 app.use(require("./utils/middleware/createResponseLogger")());
 app.use(bodyParser());
@@ -131,6 +137,7 @@ app.use(jwtsso({
     }
 
 }));
+
 
 
 app.use("/styles", serveStatic(__dirname + "/styles"));
@@ -174,15 +181,27 @@ app.use(function ensureAuthentication(req, res, next) {
     .catch(next);
 });
 
+app.use(function setDebugMode(req, res, next) {
+    req.debugMode = !PRODUCTION;
+    if (req.session.forceDebugMode) {
+        req.debugMode = true;
+    }
+    next();
+});
 
 app.get("/logout", function(req, res) {
     req.session.destroy();
     res.redirect("/");
 });
 
-app.get("/debugmode", function(req, res) {
-    req.session.debugmode = !req.session.debugmode;
-    res.render("debugmode.ejs", { debugmode: req.session.debugmode });
+app.get("/debugmode", function(req, res, next) {
+
+    req.session.forceDebugMode = !req.session.forceDebugMode;
+    console.log("forceDebugMode is now", req.session.forceDebugMode);
+    // req.session.save(function(err) {
+    //     if (err) return next(err);
+        res.render("debugmode.ejs", { debugmode: req.session.forceDebugMode });
+    // });
 });
 
 app.use(require("./resources/tickets"));
@@ -202,18 +221,24 @@ app.get("/*", function(req, res) {
 
     var jsBundle = "/build/bundle.min.js";
     var cssBundle = "/build/styles.min.css";
+    var cacheKey = CACHE_KEY;
 
-    if (req.session.debugmode || !PRODUCTION) {
+    if (req.debugMode) {
         console.log("Using debugmode for", req.user.getDomainUsername());
         jsBundle = "/build/bundle.js";
         cssBundle = "/build/styles.css";
+        cacheKey = Date.now();
     }
 
     res.render("index.ejs", {
         jsBundle: jsBundle,
         cssBundle: cssBundle,
         cacheKey: cacheKey,
-        user: req.user.toJSON()
+        user: req.user.toJSON(),
+        serverHostname: HOSTNAME,
+        uptime: prettyMs(Date.now() - STARTED),
+        ptVersion: VERSION,
+        debugMode: req.debugMode,
     });
 });
 
@@ -261,3 +286,21 @@ if (debugMem.name === "enabled") {
         );
     }, 500);
 }
+
+exec("dpkg -s puavo-ticket", function(err, stdout) {
+    if (err) {
+        return console.err("Failed to read puavo-ticket deb package version");
+    }
+    var re = /^Version: *(.+)/;
+
+    VERSION = stdout.split("\n").filter(function(line) {
+        return re.test(line);
+    }).map(function(line) {
+        return re.exec(line)[1];
+    })[0];
+
+    if (!PRODUCTION) return;
+
+    var shasum = crypto.createHash("sha1");
+    CACHE_KEY = shasum.update(VERSION).digest("hex");
+});

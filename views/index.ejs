@@ -49,17 +49,36 @@
                 -webkit-transform: scale(1.0);
               }
             }
+
+            .meta {
+                color: transparent;
+                background-color: transparent;
+                border: 0;
+                padding: 0;
+                margin: 0;
+                font-size: 8pt;
+            }
         </style>
         <link href="/font-awesome/css/font-awesome.min.css?cache=<%= cacheKey %>" rel="stylesheet">
         <link href="/bootstrap/dist/css/bootstrap.min.css?cache=<%= cacheKey %>" rel="stylesheet">
         <link href="<%= cssBundle %>?cache=<%= cacheKey %>" rel="stylesheet">
     </head>
     <body>
-        <div class="initial-spinner">
-            <div class="bounce1"></div>
-            <div class="bounce2"></div>
-            <div class="bounce3"></div>
+        <div id="app">
+            <div class="initial-spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+            </div>
         </div>
+
+        <pre class="meta" >
+            server hostname: <%= serverHostname %>
+            version: <%= ptVersion %>
+            uptime: <%= uptime %>
+            debug mode: <%= debugMode %>
+        </pre>
+
         <script charset="utf-8">
         window.USER = <%- JSON.stringify(user, null, "    ") %>;
         </script>
