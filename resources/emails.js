@@ -140,6 +140,7 @@ app.post("/api/emails/new", function(req, res, next) {
         return User.ensureUserByEmail(parsed.fields.sender, firstName, lastName)
         .then(function(user) {
             response.userId = user.get("id");
+
             return Ticket.create(title, description, user)
             .then(function(ticket) {
                 response.ticketId = ticket.get("id");
@@ -159,11 +160,11 @@ app.post("/api/emails/new", function(req, res, next) {
                         return fs.unlinkAsync(file.path);
                     });
                 });
-            })
-            .then(function() {
-                res.json(response);
             });
         });
+    })
+    .then(function() {
+        res.json(response);
     })
     .catch(next);
 });
