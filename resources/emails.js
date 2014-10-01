@@ -128,6 +128,7 @@ app.post("/api/emails/send", sendEmails);
 
 
 app.post("/api/emails/new", function(req, res, next) {
+    var response = {};
     parseBody(req).then(function(parsed) {
         var userOb = parseOneAddress(parsed.fields.from);
 
@@ -138,12 +139,15 @@ app.post("/api/emails/new", function(req, res, next) {
 
         return User.ensureUserByEmail(parsed.fields.sender, firstName, lastName)
         .then(function(user) {
+            response.userId = user.get("id");
             return Ticket.create(title, description, user)
             .then(function(ticket) {
+                response.ticketId = ticket.get("id");
                 return ticket.load("comments");
             })
             .then(function(ticket) {
                 var comment = ticket.relations.comments.first();
+                response.commentId = comment.get("id");
 
                 return Promise.map(parsed.files, function(file) {
                     return comment.addAttachment(
@@ -154,13 +158,10 @@ app.post("/api/emails/new", function(req, res, next) {
                     ).then(function() {
                         return fs.unlinkAsync(file.path);
                     });
-                }).return(ticket);
-            })
-            .then(function(ticket) {
-                res.json({
-                    userId: user.get("id"),
-                    ticketId: ticket.get("id")
                 });
+            })
+            .then(function() {
+                res.json(response);
             });
         });
     })

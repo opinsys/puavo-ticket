@@ -48,6 +48,7 @@ describe("Email handler", function() {
             assert.equal(res.status, 200, res.text);
             assert.equal(1, res.body.userId);
             assert.equal(1, res.body.ticketId);
+            assert.equal(1, res.body.commentId);
 
             return Ticket.byId(res.body.ticketId).fetch({
                 require: true,
@@ -99,6 +100,7 @@ describe("Email handler", function() {
             assert.equal(res.status, 200, res.text);
             assert.equal(1, res.body.userId);
             assert.equal(2, res.body.ticketId);
+            assert.equal(2, res.body.commentId);
 
             return Ticket.byId(res.body.ticketId).fetch({
                 require: true,
