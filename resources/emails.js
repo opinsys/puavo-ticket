@@ -2,6 +2,7 @@
 var express = require("express");
 var debug = require("debug")("app:email");
 var prettyMs = require("pretty-ms");
+var parseOneAddress = require("email-addresses").parseOneAddress;
 
 var config = require("app/config");
 var Ticket = require("app/models/server/Ticket");
@@ -52,11 +53,27 @@ app.post("/api/send_emails", function(req, res, next) {
     console.log("Call to deprecated /api/send_emails");
     sendEmails(req, res, next);
 });
-app.post("/api/send_emails", sendEmails);
+app.post("/api/emails/send", sendEmails);
 
 
 app.post("/api/emails/new", function(req, res, next) {
-    res.status(501).end("not implemented");
+    var userOb = parseOneAddress(req.body.from);
+    var firstName = "";
+    var lastName = userOb.name;
+    var title = req.body.subject;
+    var description = req.body["stripped-text"];
+
+    User.ensureUserByEmail(req.body.sender, firstName, lastName)
+    .then(function(user) {
+        return Ticket.create(title, description, user)
+        .then(function(ticket) {
+            res.json({
+                userId: user.get("id"),
+                ticketId: ticket.get("id")
+            });
+        });
+    })
+    .catch(next);
 });
 
 app.post("/api/emails/reply", function(req, res, next) {
