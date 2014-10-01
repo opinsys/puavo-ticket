@@ -9,7 +9,7 @@ var User = require("app/models/server/User");
 
 var app = express.Router();
 
-app.post("/api/send_emails", function(req, res, next) {
+function sendEmails(req, res, next) {
 
     if (req.body.secret !== config.emailJobSecret) {
         return res.status(403).json({ error: "permission denied" });
@@ -46,7 +46,21 @@ app.post("/api/send_emails", function(req, res, next) {
         });
     })
     .catch(next);
+}
+
+app.post("/api/send_emails", function(req, res, next) {
+    console.log("Call to deprecated /api/send_emails");
+    sendEmails(req, res, next);
+});
+app.post("/api/send_emails", sendEmails);
+
+
+app.post("/api/emails/new", function(req, res, next) {
+    res.status(501).end("not implemented");
 });
 
+app.post("/api/emails/reply", function(req, res, next) {
+    res.status(501).end("not implemented");
+});
 
 module.exports = app;
