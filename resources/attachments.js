@@ -48,33 +48,12 @@ app.post("/api/tickets/:ticketId/comments/:commentId/attachments", function(req,
                     return;
                 }
 
-                fileOps.push(comment.addAttachmentMeta(
+                fileOps.push(comment.addAttachment(
                     part.filename,
                     part.headers["content-type"],
-                    -1,
+                    part,
                     req.user
-                ).then(function(attachment) {
-                    var start = Date.now();
-                    debug("Starting database write for %s", part.filename);
-                    return db.gridSQL.write(attachment.getFileId(), part)
-                    .then(function(info) {
-                        var duration = Date.now() - start;
-                        var speed = info.bytesWritten / (duration / 1000);
-                        debug(
-                            "Wrote %s in %s (%s/s) using %s chunks for %s",
-                            filesize(info.bytesWritten),
-                            prettyMs(duration),
-                            filesize(speed),
-                            info.chunkCount,
-                            part.filename
-                        );
-                        return attachment.set({
-                            size: info.bytesWritten,
-                            chunkCount: info.chunkCount
-                        }).save();
-                    });
-                }));
-
+                ));
 
             });
 

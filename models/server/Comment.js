@@ -1,12 +1,15 @@
 "use strict";
 
-require("../../db");
+var db = require("app/db");
 
+var filesize = require("filesize");
+var prettyMs = require("pretty-ms");
+var debugAttachment = require("debug")("app:attachments");
+
+
+var Attachment = require("./Attachment");
 var Base = require("./Base");
 var User = require("./User");
-var Attachment = require("./Attachment");
-var Chunk = require("./Chunk");
-
 /**
  * Comment for {{#crossLink "models.server.Ticket"}}{{/crossLink}}
  *
@@ -87,23 +90,31 @@ var Comment = Base.extend({
      * @param {Buffer|String} data
      * @param {String} filename
      * @param {String} dataType
+     * @param {stream.Readable} stream Node.js readable stream
      * @param {models.server.User} user
      */
-    addAttachment: function(data, filename, dataType, createdBy){
-        return Attachment.forge({
-            createdById: Base.toId(createdBy),
-            commentId: this.get("id"),
-            size: data.length,
-            filename: filename,
-            dataType: dataType
-        }).save()
+    addAttachment: function(filename, dataType, stream, createdBy){
+        return this.addAttachmentMeta(filename, dataType, -1, createdBy)
         .then(function(attachment) {
-            return Chunk.forge({
-                id: attachment.getUniqueId(),
-                chunk: data
-            })
-            .save({}, { method: "insert" })
-            .return(attachment);
+            var start = Date.now();
+            debugAttachment("Starting database write for %s", filename);
+            return db.gridSQL.write(attachment.getFileId(), stream)
+            .then(function(info) {
+                var duration = Date.now() - start;
+                var speed = info.bytesWritten / (duration / 1000);
+                debugAttachment(
+                    "Wrote %s in %s (%s/s) using %s chunks for %s",
+                    filesize(info.bytesWritten),
+                    prettyMs(duration),
+                    filesize(speed),
+                    info.chunkCount,
+                    filename
+                );
+                return attachment.set({
+                    size: info.bytesWritten,
+                    chunkCount: info.chunkCount
+                }).save();
+            });
         });
     }
 
