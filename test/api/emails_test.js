@@ -33,11 +33,13 @@ function streamFixture2Req(name, req) {
     });
 }
 
-before(function() {
-    return helpers.clearTestDatabase();
-});
 
 describe("Email handler", function() {
+
+    before(function() {
+        return helpers.clearTestDatabase();
+    });
+
     it("can create new ticket from emails", function() {
 
         var req = request(app).post("/api/emails/new");
