@@ -4,6 +4,7 @@ var Promise = require("bluebird");
 var assert = require("assert");
 var fs = require("fs");
 var request = require("supertest");
+var concat = require("concat-stream");
 
 var helpers = require("app/test/helpers");
 var Ticket = require("app/models/server/Ticket");
@@ -87,6 +88,73 @@ describe("Email handler", function() {
             );
 
         });
+    });
+
+    it("can create new tickets with attachments", function() {
+        var req = request(app).post("/api/emails/new");
+        req.set("Content-Type", "multipart/form-data; boundary=385945c4-8dad-45e8-9249-84a0424a83ed");
+
+        return streamFixture2Req("new_outlook_with_attachment", req)
+        .then(function(res) {
+            assert.equal(res.status, 200, res.text);
+            assert.equal(1, res.body.userId);
+            assert.equal(2, res.body.ticketId);
+
+            return Ticket.byId(res.body.ticketId).fetch({
+                require: true,
+                withRelated: [
+                    "createdBy",
+                    "titles",
+                    "comments",
+                    "comments.createdBy",
+                    "comments.attachments",
+                ]
+            });
+        })
+        .then(function(ticket) {
+            assert(ticket);
+            assert.equal("Test issue with an attachment", ticket.getCurrentTitle());
+            assert.equal(
+                "Esa-Matti Suuronen",
+                ticket.relations.createdBy.getFullName()
+            );
+            assert.equal(
+                "esa-matti.suuronen@outlook.com",
+                ticket.relations.createdBy.getEmail()
+            );
+
+            var firstComment = ticket.relations.comments.first();
+            assert(firstComment, "has first comment");
+            assert.equal(
+                "This is from outlook.com.",
+                firstComment.get("comment")
+            );
+
+            assert.equal(
+                "Esa-Matti Suuronen",
+                firstComment.relations.createdBy.getFullName()
+            );
+            assert.equal(
+                "esa-matti.suuronen@outlook.com",
+                firstComment.relations.createdBy.getEmail()
+            );
+
+            assert.equal(1, firstComment.relations.attachments.length);
+            var attachment = firstComment.relations.attachments.first();
+
+            return new Promise(function(resolve, reject){
+                attachment.readStream()
+                .pipe(concat(resolve))
+                .on("error", reject);
+            });
+        })
+        .then(function(data) {
+            assert.equal(
+                "This is an attachment.\n",
+                data.toString()
+            );
+        });
+
     });
 
 });
