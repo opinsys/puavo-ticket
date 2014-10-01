@@ -1,11 +1,9 @@
 "use strict";
 
-var db = require("app/db");
 
 var filesize = require("filesize");
 var prettyMs = require("pretty-ms");
 var debugAttachment = require("debug")("app:attachments");
-
 
 var Attachment = require("./Attachment");
 var Base = require("./Base");
@@ -94,27 +92,25 @@ var Comment = Base.extend({
      * @param {models.server.User} user
      */
     addAttachment: function(filename, dataType, stream, createdBy){
+        var start;
         return this.addAttachmentMeta(filename, dataType, -1, createdBy)
         .then(function(attachment) {
-            var start = Date.now();
             debugAttachment("Starting database write for %s", filename);
-            return db.gridSQL.write(attachment.getFileId(), stream)
-            .then(function(info) {
-                var duration = Date.now() - start;
-                var speed = info.bytesWritten / (duration / 1000);
-                debugAttachment(
-                    "Wrote %s in %s (%s/s) using %s chunks for %s",
-                    filesize(info.bytesWritten),
-                    prettyMs(duration),
-                    filesize(speed),
-                    info.chunkCount,
-                    filename
-                );
-                return attachment.set({
-                    size: info.bytesWritten,
-                    chunkCount: info.chunkCount
-                }).save();
-            });
+            start = Date.now();
+            return attachment.writeStream(stream);
+        })
+        .then(function(attachment) {
+            var duration = Date.now() - start;
+            var speed = attachment.get("size") / (duration / 1000);
+            debugAttachment(
+                "Wrote %s in %s (%s/s) using %s chunks for %s",
+                filesize(attachment.get("size")),
+                prettyMs(duration),
+                filesize(speed),
+                attachment.get("chunkCount"),
+                filename
+            );
+            return attachment;
         });
     }
 

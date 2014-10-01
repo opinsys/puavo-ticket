@@ -11,7 +11,6 @@ var multiparty = require("multiparty");
 var filesize = require("filesize");
 var prettyMs = require("pretty-ms");
 
-var db = require("app/db");
 var Ticket = require("../models/server/Ticket");
 var Comment = require("../models/server/Comment");
 var Attachment = require("../models/server/Attachment");
@@ -97,7 +96,7 @@ app.get("/api/tickets/:ticketId/comments/:commentId/attachments/:attachmentId/:f
                 "Reading %s with %s",
                 filename, filesize(size)
             );
-            var file = db.gridSQL.read(attachment.getFileId());
+            var file = attachment.readStream();
             file.on("error", reject);
             file.on("end", function() {
                 var duration = Date.now() - start;

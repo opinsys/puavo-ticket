@@ -1,6 +1,7 @@
 "use strict";
 
-require("app/db");
+var db = require("app/db");
+
 var Base = require("./Base");
 var Chunk = require("./Chunk");
 
@@ -63,6 +64,35 @@ var Attachment = Base.extend({
      */
     getFileId: function(){
         return "attachmentfile:" + this.getUniqueId();
+    },
+
+    /**
+     * Write readable stream to this attachment. The returned promise is
+     * resolved when the stream has been fully written.
+     *
+     * @method writeStream
+     * @param {stream.Readable} stream Node.js readable stream
+     * @return {Bluebird.Promise}
+     */
+    writeStream: function(stream) {
+        var self = this;
+        return db.gridSQL.write(self.getFileId(), stream)
+        .then(function(info) {
+            return self.set({
+                size: info.bytesWritten,
+                chunkCount: info.chunkCount
+            }).save();
+        });
+    },
+
+    /**
+     * Return readable stream for this ticket data
+     *
+     * @method readStream
+     * @return {stream.Readable}
+     */
+    readStream: function() {
+        return db.gridSQL.read(this.getFileId());
     },
 
     /**
