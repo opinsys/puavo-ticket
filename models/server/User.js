@@ -143,18 +143,14 @@ var User = Base.extend({
     ensureUserByEmail: function(emailAddress, first_name, last_name) {
         return User.byEmailAddress(emailAddress).fetch()
             .then(function(user) {
-                if (!user) {
-                    return User.forge({
-                        externalData: JSON.stringify( {
-                            first_name: first_name,
-                            last_name: last_name,
-                            email: emailAddress
-                        })
-                    }).save();
-                }
-                else {
-                    return user;
-                }
+                if (user) return user;
+                return User.forge({
+                    externalData: {
+                        first_name: first_name,
+                        last_name: last_name,
+                        email: emailAddress
+                    }
+                }).save();
             });
     },
 
