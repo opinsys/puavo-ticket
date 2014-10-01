@@ -36,6 +36,22 @@ describe("User model", function() {
             });
     });
 
+    it("can be initiated by email address", function() {
+        var email = "joe.bloggs@foobar.com";
+        var first_name = "Joe";
+        var last_name  = "Bloggs";
+
+        return User.ensureUserByEmail(email, first_name, last_name)
+            .then(function(user) {
+                return User.byEmailAddress(email).fetch();
+            })
+            .then(function(user) {
+                assert.equal("Joe", user.get("externalData").first_name);
+                assert.equal("Bloggs", user.get("externalData").last_name);
+                assert.equal("joe.bloggs@foobar.com", user.get("externalData").email);
+            });
+    });
+
 });
 
 describe("UserMixin", function() {

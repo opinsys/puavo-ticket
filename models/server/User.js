@@ -97,6 +97,21 @@ var User = Base.extend({
     },
 
     /**
+     * Shortcut for getting user models by the email address
+     *
+     * @static
+     * @method byEmailAddress
+     * @param {String} emailAddress
+     * @return {models.server.User}
+     */
+    byEmailAddress: function(emailAddress) {
+        return this.forge()
+            .query(function(qb) {
+                qb.where( Bookshelf.DB.knex.raw( "\"externalData\"->>'email' = ?",  [emailAddress] ) );
+            });
+    },
+
+    /**
      * Fetch user from puavo-rest, save it to the local SQL DB and return it in
      * a Promise.
      *
@@ -113,6 +128,33 @@ var User = Base.extend({
         return puavo.fetchUserByUsername(username)
             .then(function(userdata) {
                 return User.ensureUserFromJWTToken(userdata);
+            });
+    },
+
+    /**
+     * Ensure that user exists for this email address
+     *
+     * @method ensureUserByEmail
+     * @param {String} emailAddress
+     * @param {String} first_name
+     * @param {String} last_name
+     * @return {Bluebird.Promise} models.server.User
+     */
+    ensureUserByEmail: function(emailAddress, first_name, last_name) {
+        return User.byEmailAddress(emailAddress).fetch()
+            .then(function(user) {
+                if (!user) {
+                    return User.forge({
+                        externalData: JSON.stringify( {
+                            first_name: first_name,
+                            last_name: last_name,
+                            email: emailAddress
+                        })
+                    }).save();
+                }
+                else {
+                    return user;
+                }
             });
     },
 
