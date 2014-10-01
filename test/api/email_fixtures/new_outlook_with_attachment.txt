@@ -1,0 +1,158 @@
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="Content-Type"
+
+multipart/mixed; boundary="_f92f26d6-b128-4df3-b849-e2e19891c209_"
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="Date"
+
+Wed, 1 Oct 2014 13:20:27 +0300
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="From"
+
+Esa-Matti Suuronen <esa-matti.suuronen@outlook.com>
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="Importance"
+
+Normal
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="Message-Id"
+
+<COL127-W57C6E8EB061E9E5CD8703C6B80@phx.gbl>
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="Mime-Version"
+
+1.0
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="Received"
+
+from COL004-OMC1S8.hotmail.com (col004-omc1s8.hotmail.com [65.55.34.18]) by mxa.mailgun.org with ESMTP id 542bd56c.7f1da1eefc30-in3; Wed, 01 Oct 2014 10:20:28 -0000 (UTC)
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="Received"
+
+from COL127-W5 ([65.55.34.8]) by COL004-OMC1S8.hotmail.com with Microsoft SMTPSVC(7.5.7601.22724);	 Wed, 1 Oct 2014 03:20:27 -0700
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="Return-Path"
+
+esa-matti.suuronen@outlook.com
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="Subject"
+
+Test issue with an attachment
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="To"
+
+"staging-tukipyynto@tuki.opinsys.fi" <staging-tukipyynto@tuki.opinsys.fi>
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="X-Envelope-From"
+
+<esa-matti.suuronen@outlook.com>
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="X-Mailgun-Incoming"
+
+Yes
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="X-Originalarrivaltime"
+
+01 Oct 2014 10:20:27.0854 (UTC) FILETIME=[524036E0:01CFDD61]
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="X-Originating-Email"
+
+[esa-matti.suuronen@outlook.com]
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="X-Tmn"
+
+[fjMmqDDOW1RJDmb67PW/iYhimaEhj2Zt]
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="attachment-count"
+
+1
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="body-html"
+
+<html>
+<head>
+<style><!--
+.hmmessage P
+{
+margin:0px;
+padding:0px
+}
+body.hmmessage
+{
+font-size: 12pt;
+font-family:Calibri
+}
+--></style></head>
+<body class='hmmessage'><div dir='ltr'>This is from outlook.com. 		 	   		  </div></body>
+</html>
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="body-plain"
+
+This is from outlook.com. 		 	   		  
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="from"
+
+Esa-Matti Suuronen <esa-matti.suuronen@outlook.com>
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="message-headers"
+
+[["X-Envelope-From", "<esa-matti.suuronen@outlook.com>"], ["Received", "from COL004-OMC1S8.hotmail.com (col004-omc1s8.hotmail.com [65.55.34.18]) by mxa.mailgun.org with ESMTP id 542bd56c.7f1da1eefc30-in3; Wed, 01 Oct 2014 10:20:28 -0000 (UTC)"], ["Received", "from COL127-W5 ([65.55.34.8]) by COL004-OMC1S8.hotmail.com with Microsoft SMTPSVC(7.5.7601.22724);\t Wed, 1 Oct 2014 03:20:27 -0700"], ["X-Tmn", "[fjMmqDDOW1RJDmb67PW/iYhimaEhj2Zt]"], ["X-Originating-Email", "[esa-matti.suuronen@outlook.com]"], ["Message-Id", "<COL127-W57C6E8EB061E9E5CD8703C6B80@phx.gbl>"], ["Return-Path", "esa-matti.suuronen@outlook.com"], ["Content-Type", "multipart/mixed; boundary=\"_f92f26d6-b128-4df3-b849-e2e19891c209_\""], ["From", "Esa-Matti Suuronen <esa-matti.suuronen@outlook.com>"], ["To", "\"staging-tukipyynto@tuki.opinsys.fi\" <staging-tukipyynto@tuki.opinsys.fi>"], ["Subject", "Test issue with an attachment"], ["Date", "Wed, 1 Oct 2014 13:20:27 +0300"], ["Importance", "Normal"], ["Mime-Version", "1.0"], ["X-Originalarrivaltime", "01 Oct 2014 10:20:27.0854 (UTC) FILETIME=[524036E0:01CFDD61]"], ["X-Mailgun-Incoming", "Yes"]]
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="recipient"
+
+staging-tukipyynto@tuki.opinsys.fi
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="sender"
+
+esa-matti.suuronen@outlook.com
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="signature"
+
+b4ba75f1557641c33fd52b8eec56aace7c72a4447ca6da35151a6f157858b75d
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="stripped-html"
+
+<html>
+<head>
+<style><!--
+.hmmessage P
+{
+margin:0px;
+padding:0px
+}
+body.hmmessage
+{
+font-size: 12pt;
+font-family:Calibri
+}
+--></style></head>
+<body class='hmmessage'><div dir='ltr'>This is from outlook.com. 		 	   		  </div></body>
+</html>
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="stripped-signature"
+
+
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="stripped-text"
+
+This is from outlook.com.
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="subject"
+
+Test issue with an attachment
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="timestamp"
+
+1412158838
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="token"
+
+1569f8e5f2830481789beff5d645d24f8220ba340df06406e1
+--385945c4-8dad-45e8-9249-84a0424a83ed
+Content-Disposition: form-data; name="attachment-1"; filename="attachment.txt"
+Content-Type: text/plain
+Content-Length: 23
+
+This is an attachment.
+
+--385945c4-8dad-45e8-9249-84a0424a83ed--
