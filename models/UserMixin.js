@@ -118,7 +118,7 @@ var UserMixin = {
     getFullName: function(){
         var data = this.get("externalData");
         if (!data) return "";
-        return data.first_name + " " + data.last_name;
+        return (data.first_name + " " + data.last_name).trim();
     },
 
     /**
