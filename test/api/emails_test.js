@@ -17,6 +17,16 @@ function streamMailFixture(name) {
 function streamFixture2Req(name, req) {
 
     return new Promise(function(resolve, reject){
+
+        // Workaround supertest/superagent bug. Superagent assumes that
+        // req.end is called with a callback function. But when piping data to it
+        // the stream will call the end() without the function because that the
+        // way the node.js streams work. Superagent does not know how to handle
+        // this situation and is crashes.
+        //
+        // Workaround it by wrapping the end function and forcing a callback.
+        //
+        // XXX create bug to upstream
         var origEnd = req.end;
         req.end = function(last) {
             assert(!last, "missing chunk");
