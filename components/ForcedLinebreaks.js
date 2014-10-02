@@ -21,14 +21,15 @@ var ForcedLinebreaks = React.createClass({
             throw new Error("Only string children are supported");
         }
 
+        var vDom = string.trim().split("\n").reduce(function(current, line) {
+            current.push(line);
+            current.push(<br />);
+            return current;
+        }, []);
+
         return (
             <p className={"ForcedLinebreaks " + this.props.className} id={this.props.id} >
-                {string.trim().split("\n").map(function(line, i) {
-                    // Non Breaking Space. React does render &nbsp; literaly as
-                    // "&nbsp;" so use the actual character
-                    var nbsp = " ";
-                    return <span key={i}>{line.trim() || nbsp}</span>;
-                })}
+                {vDom}
             </p>
 
         );
