@@ -1,5 +1,4 @@
 export PATH := node_modules/.bin:$(PATH)
-export PATH := tools/bin:$(PATH)
 
 prefix ?= /usr/local
 
@@ -73,7 +72,7 @@ doc-watch:
 	watch make doc
 
 doc-publish:
-	tools/bin/publish-docs
+	extra/publish-docs.sh
 
 
 js_files=$(shell git ls-files "*.js" | grep -v test/vendor)

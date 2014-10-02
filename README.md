@@ -111,8 +111,8 @@ it. Ticket will get additional visibilities when:
   - [Mocha][] tests for the server-side models
 - `test/models/client/`
   - [Mocha][] tests for the client-side models
-- `tools/`
-  - Internal project tools. Such as git-hooks, inotify watcher helpers etc.
+- `extra/`
+  - Various helper script that are not scritly part of the application
 - `vendor-documentation/`
   - Just links to external libraries. Used by YUIDoc
 
