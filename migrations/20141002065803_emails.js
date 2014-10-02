@@ -6,7 +6,7 @@ exports.up = function(knex, Promise) {
     return Promise.join(
         // Secret for email reply checking
         knex.schema.table("tickets", function (table) {
-            table.string("emailSecret");
+            table.string("emailSecret").notNullable().defaultTo("changeme");
         })
         .then(function() {
             return Ticket.collection().fetch();
