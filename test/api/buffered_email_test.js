@@ -74,7 +74,7 @@ describe("buffered email sending", function() {
     });
 
     it("does not allow requests without emailJobSecret", function() {
-        return request(app).post("/api/send_emails").send({ secret: "bad" }).promise()
+        return request(app).post("/api/emails/send").send({ secret: "bad" }).promise()
         .then(function(res) {
             assert.equal(403, res.status, res.text);
          });
@@ -83,7 +83,7 @@ describe("buffered email sending", function() {
     it("does not send email if last comment is newer than 5min", function() {
         this.clock.tick(1000 * 60 * 2);
         var self = this;
-        return request(app).post("/api/send_emails").send({ secret: "secret" }).promise()
+        return request(app).post("/api/emails/send").send({ secret: "secret" }).promise()
         .then(function(res) {
             assert.equal(200, res.status, res.text);
             assert(!self.sendMailSpy.called);
@@ -94,7 +94,7 @@ describe("buffered email sending", function() {
         this.clock.tick(1000 * 60 * 6);
 
         var self = this;
-        return  request(app).post("/api/send_emails").send({ secret: "secret" }).promise()
+        return  request(app).post("/api/emails/send").send({ secret: "secret" }).promise()
         .then(function(res) {
             assert.equal(200, res.status, res.text);
             assert(
@@ -129,7 +129,7 @@ describe("buffered email sending", function() {
     it("does not send same comments twice", function() {
         this.clock.tick(1000 * 60 * 6);
         var self = this;
-        return request(app).post("/api/send_emails").send({ secret: "secret" }).promise()
+        return request(app).post("/api/emails/send").send({ secret: "secret" }).promise()
         .then(function(res) {
             assert.equal(200, res.status, res.text);
             assert(
@@ -148,7 +148,7 @@ describe("buffered email sending", function() {
             return self.ticket.markAsRead(self.teacher);
         })
         .then(function() {
-            return request(app).post("/api/send_emails").send({ secret: "secret" }).promise();
+            return request(app).post("/api/emails/send").send({ secret: "secret" }).promise();
         })
         .then(function(res) {
             assert.equal(200, res.status, res.text);
