@@ -184,7 +184,7 @@
         template: src=.ansible_files/_config.json.tmpl dest={{ code_dest }}/puavo-ticket/_config.json
           owner={{ dev_user }}
 
-      - name: Install nodejs moduiles, generate documentation and install git hooks
+      - name: Install nodejs modules, generate documentation and install git hooks
         command: make
           chdir={{ code_dest }}/puavo-ticket
         sudo_user: "{{ dev_user }}"
