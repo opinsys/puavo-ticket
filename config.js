@@ -37,6 +37,7 @@ if (process.env.NODE_ENV === "test") {
     config.managerOrganisationDomain = "managertesting.opinsys.net";
     config.sessionSecret = "secret";
     config.emailJobSecret = "secret";
+    config.emailReplyDomain = "opinsys.example";
 
 } else {
     var productionConfig = require("./_config");
@@ -57,6 +58,10 @@ if (!config.sessionSecret) {
 if (!config.emailJobSecret) {
     // Used for the buffered email sending api. See resources/emails.js
     throw new Error("config.emailJobSecret is not set");
+}
+
+if (!config.emailReplyDomain) {
+    throw new Error("config.emailReplyDomain is not set");
 }
 
 if (config.smtp) {

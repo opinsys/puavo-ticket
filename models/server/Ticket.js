@@ -659,6 +659,18 @@ var Ticket = Base.extend({
     },
 
     /**
+     * @method getReplyEmailAddress
+     * @return {String}
+     */
+    getReplyEmailAddress: function() {
+        return [
+            "tukipyynto", this.get("id"),
+            "+", this.get("emailSecret"),
+            "@", config.emailReplyDomain
+        ].join("");
+    },
+
+    /**
      * @method sendBufferedEmailNotifications
      * @param {models.server.User|Number} user User model or id of the user
      * @return {Bluebird.Promise}
@@ -699,8 +711,10 @@ var Ticket = Base.extend({
                 id, user.getDomainUsername(), user.getEmail()
             );
 
+            var from = "Opinsys tukipalvelu <"+ self.getReplyEmailAddress() +">";
             return self.sendMail({
-                from: "Opinsys tukipalvelu <noreply@opinsys.fi>",
+                from: from,
+                replyTo: from,
                 to: email,
                 subject: subject,
                 text: renderEmailBufferedTemplate({

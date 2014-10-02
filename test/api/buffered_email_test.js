@@ -92,9 +92,16 @@ describe("buffered email sending", function() {
 
     it("sends only the new comments after 5min", function() {
         this.clock.tick(1000 * 60 * 6);
-
         var self = this;
-        return  request(app).post("/api/emails/send").send({ secret: "secret" }).promise()
+        return Ticket.byId(1).fetch({ require: true })
+        .then(function(ticket) {
+            return ticket.set({ emailSecret: "emailsecret" }).save();
+        })
+        .then(function() {
+            return  request(app).post("/api/emails/send").send({
+                secret: "secret"
+            }).promise();
+        })
         .then(function(res) {
             assert.equal(200, res.status, res.text);
             assert(
@@ -107,6 +114,16 @@ describe("buffered email sending", function() {
             assert.equal(
                 "Tukipyyntö \"The Ticket\" (1) on päivittynyt",
                 mailOb.subject
+            );
+
+            assert.equal(
+                "Opinsys tukipalvelu <tukipyynto1+emailsecret@opinsys.example>",
+                mailOb.from
+            );
+
+            assert.equal(
+                "Opinsys tukipalvelu <tukipyynto1+emailsecret@opinsys.example>",
+                mailOb.replyTo
             );
 
             assert.equal(multiline.stripIndent(function(){/*
