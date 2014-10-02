@@ -1,0 +1,182 @@
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="Content-Type"
+
+multipart/mixed; boundary="----=_Part_126605_1327664800.1412253375958"
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="Date"
+
+Thu, 2 Oct 2014 12:36:15 +0000 (UTC)
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="From"
+
+Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="In-Reply-To"
+
+<1742888639.126599.1412253370620.JavaMail.zimbra@opinsys.fi>
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="Message-Id"
+
+<402737323.126607.1412253375960.JavaMail.zimbra@opinsys.fi>
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="Mime-Version"
+
+1.0
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="Received"
+
+from mail.opinsys.fi (api.opinsys.fi [217.112.254.4]) by mxa.mailgun.org with ESMTP id 542d4610.55b2a40-in3; Thu, 02 Oct 2014 12:33:20 -0000 (UTC)
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="Received"
+
+from localhost (localhost [127.0.0.1])	by mail.opinsys.fi (Postfix) with ESMTP id 1FD032E8540	for <staging-tukipyynto1+checksum@tuki.opinsys.fi>; Thu, 2 Oct 2014 12:36:21 +0000 (UTC)
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="Received"
+
+from mail.opinsys.fi ([127.0.0.1])	by localhost (mail.opinsys.fi [127.0.0.1]) (amavisd-new, port 10032)	with ESMTP id b75QtoJ_byo4	for <staging-tukipyynto1+checksum@tuki.opinsys.fi>;	Thu, 2 Oct 2014 12:36:16 +0000 (UTC)
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="Received"
+
+from localhost (localhost [127.0.0.1])	by mail.opinsys.fi (Postfix) with ESMTP id 185102E8541	for <staging-tukipyynto1+checksum@tuki.opinsys.fi>; Thu, 2 Oct 2014 12:36:16 +0000 (UTC)
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="Received"
+
+from mail.opinsys.fi ([127.0.0.1])	by localhost (mail.opinsys.fi [127.0.0.1]) (amavisd-new, port 10026)	with ESMTP id QV9PVyyC8cg2	for <staging-tukipyynto1+checksum@tuki.opinsys.fi>;	Thu, 2 Oct 2014 12:36:16 +0000 (UTC)
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="Received"
+
+from mail.opinsys.fi (mail.opinsys.fi [10.246.133.21])	by mail.opinsys.fi (Postfix) with ESMTP id F1F232E853F	for <staging-tukipyynto1+checksum@tuki.opinsys.fi>; Thu, 2 Oct 2014 12:36:15 +0000 (UTC)
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="Subject"
+
+Reply with an attachment
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="Thread-Index"
+
+lXt4KuIohZcDD7HRCb9o0T0YW0pMXw==
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="Thread-Topic"
+
+Reply with an attachment
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="To"
+
+staging-tukipyynto1+checksum@tuki.opinsys.fi
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="X-Envelope-From"
+
+<epeli@opinsys.fi>
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="X-Mailer"
+
+Zimbra 8.0.6_GA_5922 (ZimbraWebClient - GC36 (Linux)/8.0.6_GA_5922)
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="X-Mailgun-Incoming"
+
+Yes
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="X-Originating-Ip"
+
+[89.236.108.25]
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="X-Spam-Flag"
+
+NO
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="X-Spam-Level"
+
+
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="X-Spam-Score"
+
+-2.901
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="X-Spam-Status"
+
+No, score=-2.901 tagged_above=-10 required=6.6	tests=[ALL_TRUSTED=-1, BAYES_00=-1.9, RP_MATCHES_RCVD=-0.001]	autolearn=ham
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="X-Virus-Scanned"
+
+amavisd-new at opinsys.fi
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="attachment-count"
+
+1
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="body-plain"
+
+> Can you give me the picture
+
+Here's the picture as an attachment.
+
+--
+Esa-Matti Suuronen
+esa-matti.suuronen@opinsys.fi
+http://esa-matti.suuronen.org/
+
+
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="from"
+
+Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="message-headers"
+
+[["X-Envelope-From", "<epeli@opinsys.fi>"], ["Received", "from mail.opinsys.fi (api.opinsys.fi [217.112.254.4]) by mxa.mailgun.org with ESMTP id 542d4610.55b2a40-in3; Thu, 02 Oct 2014 12:33:20 -0000 (UTC)"], ["Received", "from localhost (localhost [127.0.0.1])\tby mail.opinsys.fi (Postfix) with ESMTP id 1FD032E8540\tfor <staging-tukipyynto1+checksum@tuki.opinsys.fi>; Thu, 2 Oct 2014 12:36:21 +0000 (UTC)"], ["X-Spam-Flag", "NO"], ["X-Spam-Score", "-2.901"], ["X-Spam-Level", ""], ["X-Spam-Status", "No, score=-2.901 tagged_above=-10 required=6.6\ttests=[ALL_TRUSTED=-1, BAYES_00=-1.9, RP_MATCHES_RCVD=-0.001]\tautolearn=ham"], ["Received", "from mail.opinsys.fi ([127.0.0.1])\tby localhost (mail.opinsys.fi [127.0.0.1]) (amavisd-new, port 10032)\twith ESMTP id b75QtoJ_byo4\tfor <staging-tukipyynto1+checksum@tuki.opinsys.fi>;\tThu, 2 Oct 2014 12:36:16 +0000 (UTC)"], ["Received", "from localhost (localhost [127.0.0.1])\tby mail.opinsys.fi (Postfix) with ESMTP id 185102E8541\tfor <staging-tukipyynto1+checksum@tuki.opinsys.fi>; Thu, 2 Oct 2014 12:36:16 +0000 (UTC)"], ["X-Virus-Scanned", "amavisd-new at opinsys.fi"], ["Received", "from mail.opinsys.fi ([127.0.0.1])\tby localhost (mail.opinsys.fi [127.0.0.1]) (amavisd-new, port 10026)\twith ESMTP id QV9PVyyC8cg2\tfor <staging-tukipyynto1+checksum@tuki.opinsys.fi>;\tThu, 2 Oct 2014 12:36:16 +0000 (UTC)"], ["Received", "from mail.opinsys.fi (mail.opinsys.fi [10.246.133.21])\tby mail.opinsys.fi (Postfix) with ESMTP id F1F232E853F\tfor <staging-tukipyynto1+checksum@tuki.opinsys.fi>; Thu, 2 Oct 2014 12:36:15 +0000 (UTC)"], ["Date", "Thu, 2 Oct 2014 12:36:15 +0000 (UTC)"], ["From", "Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>"], ["To", "staging-tukipyynto1+checksum@tuki.opinsys.fi"], ["Message-Id", "<402737323.126607.1412253375960.JavaMail.zimbra@opinsys.fi>"], ["In-Reply-To", "<1742888639.126599.1412253370620.JavaMail.zimbra@opinsys.fi>"], ["Subject", "Reply with an attachment"], ["Mime-Version", "1.0"], ["Content-Type", "multipart/mixed; boundary=\"----=_Part_126605_1327664800.1412253375958\""], ["X-Originating-Ip", "[89.236.108.25]"], ["X-Mailer", "Zimbra 8.0.6_GA_5922 (ZimbraWebClient - GC36 (Linux)/8.0.6_GA_5922)"], ["Thread-Topic", "Reply with an attachment"], ["Thread-Index", "lXt4KuIohZcDD7HRCb9o0T0YW0pMXw=="], ["X-Mailgun-Incoming", "Yes"]]
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="recipient"
+
+staging-tukipyynto1+checksum@tuki.opinsys.fi
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="sender"
+
+epeli@opinsys.fi
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="signature"
+
+5424f016f27a21f98761d547f97a2d2de986e41835bfb44cfc04068727d57bde
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="stripped-html"
+
+<p>&gt; Can you give me the picture
+
+Here's the picture as an attachment.</p>
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="stripped-signature"
+
+--
+Esa-Matti Suuronen
+esa-matti.suuronen@opinsys.fi
+http://esa-matti.suuronen.org/
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="stripped-text"
+
+> Can you give me the picture
+
+Here's the picture as an attachment.
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="subject"
+
+Reply with an attachment
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="timestamp"
+
+1412253222
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="token"
+
+cbca28d5eb8f9dbd7e72c6c43e76429233102e249a25f7444d
+--94229b8e-5746-4a02-9d4b-4cb30029a369
+Content-Disposition: form-data; name="attachment-1"; filename="small.png"
+Content-Type: image/png
+Content-Length: 159
+
+âPNG
+
+   IHDR   
+   
+   PXÍ   	pHYs     öú   tIMEﬁ
+
+è l   tEXtComment Created with GIMPWÅ   IDAT”c`†¯èóK√Yhe æ
+ ÊâF    IENDÆB`Ç
+--94229b8e-5746-4a02-9d4b-4cb30029a369--
