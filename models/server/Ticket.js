@@ -2,6 +2,7 @@
 var fs = require("fs");
 var _ = require("lodash");
 var Promise = require("bluebird");
+var crypto = require("crypto");
 
 var config = require("app/config");
 var Base = require("./Base");
@@ -63,7 +64,8 @@ var Ticket = Base.extend({
     defaults: function() {
         return {
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            emailSecret: Ticket.generateSecret()
         };
     },
 
@@ -737,6 +739,17 @@ var Ticket = Base.extend({
     }
 
 }, {
+
+    /**
+     * Generate secure random secret for email replies
+     *
+     * @method generateSecret
+     * @return {String}
+     */
+    generateSecret: function() {
+        return crypto.randomBytes(10).toString("hex");
+    },
+
 
     /**
      * Shortcut for creating ticket with a title and description.
