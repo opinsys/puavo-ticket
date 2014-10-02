@@ -168,6 +168,7 @@ exports.down = function(knex, Promise) {
     var tables = [
         "chunks",
         "titles",
+        "attachments",
         "comments",
         "visibilities",
         "followers",
