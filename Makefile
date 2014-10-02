@@ -150,7 +150,7 @@ install: install-dirs
 	ln -fs /etc/puavo-ticket/config.json $(DESTDIR)$(prefix)/lib/node_modules/puavo-ticket/_config.json
 
 install-git-hooks:
-	cp tools/pre-commit.hook .git/hooks/pre-commit
+	cp extra/pre-commit.hook .git/hooks/pre-commit
 	chmod +x .git/hooks/pre-commit
 	@echo
 	@echo Installed a git pre-commit hook to .git/hooks/pre-commit
