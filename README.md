@@ -212,9 +212,13 @@ or use the shortcut
 This will give you direct access and tab completion to `mocha`, `jsxhint` and
 other tools.
 
-## Bookshelf REPL
+## Database REPLs
 
-Start repl with `make repl`. All models should be in scope. The repl is based on [repl-promised](https://github.com/tlrobinson/node-repl-promised).
+Start node.js/Bookshelf repl with `make repl`. All models should be in scope. The repl is based on [repl-promised](https://github.com/tlrobinson/node-repl-promised).
+
+Start PostgreSQL psql repl use `make psql`.
+
+Both of these respect the the `NODE_ENV=test` environment variable.
 
 ## Running tests
 

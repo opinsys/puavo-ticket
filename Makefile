@@ -20,6 +20,9 @@ protip:
 repl:
 	@node extra/repl.js
 
+psql:
+	@node extra/psql.js
+
 npm:
 	npm install
 	rm -f node_modules/app && ln -sf .. node_modules/app
