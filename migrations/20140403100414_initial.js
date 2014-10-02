@@ -164,25 +164,28 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-    return knex.schema.dropTableIfExists("chunks")
-    .then(function() {
-        return knex.schema.dropTableIfExists("attachments");
-    })
-    .then(function() {
-        return Promise.join(
-            knex.schema.dropTableIfExists("titles"),
-            knex.schema.dropTableIfExists("comments"),
-            knex.schema.dropTableIfExists("visibilities"),
-            knex.schema.dropTableIfExists("followers"),
-            knex.schema.dropTableIfExists("tags"),
-            knex.schema.dropTableIfExists("handlers"),
-            knex.schema.dropTableIfExists("notifications")
-        );
-    })
-    .then(function() {
-        return knex.schema.dropTableIfExists("tickets");
-    })
-    .then(function() {
-        return knex.schema.dropTableIfExists("users");
-    });
+
+    var tables = [
+        "chunks",
+        "titles",
+        "comments",
+        "visibilities",
+        "followers",
+        "tags",
+        "handlers",
+        "notifications",
+        "tickets",
+        "users",
+    ];
+
+    function drop(tables) {
+        if (tables.length === 0) return Promise.resolve();
+        return knex.schema.dropTableIfExists(tables[0])
+        .then(function() {
+            return drop(tables.slice(1));
+        });
+    }
+
+    return drop(tables);
+
 };
