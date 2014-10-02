@@ -36,10 +36,10 @@ function streamFixture2Req(name, req) {
             });
         };
 
-        var s = streamMailFixture(name);
-        s.on("error", reject);
-        req.on("error", reject);
-        s.pipe(req);
+        streamMailFixture(name)
+        .on("error", reject)
+        .pipe(req)
+        .on("error", reject);
     });
 }
 
