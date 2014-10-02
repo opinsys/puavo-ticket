@@ -5,6 +5,7 @@ var assert = require("assert");
 var fs = require("fs");
 var request = require("supertest");
 var concat = require("concat-stream");
+var crypto = require("crypto");
 
 var helpers = require("app/test/helpers");
 var Ticket = require("app/models/server/Ticket");
@@ -215,6 +216,52 @@ describe("Email handler", function() {
             assert.equal("Esa-Matti Suuronen", commenter.getFullName());
             assert.equal("esa-matti.suuronen@opinsys.fi", commenter.getEmail());
         });
+    });
+
+    it("can reply with an attachment", function() {
+        var req = request(app).post("/api/emails/reply");
+        req.set("Content-Type", "multipart/form-data; boundary=94229b8e-5746-4a02-9d4b-4cb30029a369");
+        return streamFixture2Req("zimbra_reply_with_attachments", req)
+        .then(function(res) {
+            assert.equal(res.status, 200, res.text);
+            assert.equal(1, res.body.ticketId);
+            assert.equal(2, res.body.userId);
+            assert.equal(4, res.body.commentId);
+
+            return Ticket.byId(res.body.ticketId).fetch({
+                require: true,
+                withRelated: ["comments", "comments.createdBy", "comments.attachments"]
+            });
+        })
+        .then(function(ticket) {
+            var comment = ticket.relations.comments.last();
+            assert.equal(
+                "> Can you give me the picture\r\n\r\nHere's the picture as an attachment.",
+                comment.get("comment")
+            );
+
+            var commenter = comment.relations.createdBy;
+            assert.equal("Esa-Matti Suuronen", commenter.getFullName());
+            assert.equal("esa-matti.suuronen@opinsys.fi", commenter.getEmail());
+
+            assert.equal(1, comment.relations.attachments.length);
+            var attachment = comment.relations.attachments.first();
+
+            return new Promise(function(resolve, reject){
+                attachment.readStream()
+                .pipe(concat(resolve))
+                .on("error", reject);
+            });
+        })
+        .then(function(data) {
+            var shasum = crypto.createHash("sha1");
+            shasum.update(data);
+            assert.equal(
+                "23da0cc288de7cffd4ec111234159d60ff29ff74",
+                shasum.digest("hex")
+            );
+        });
+
     });
 
 });

@@ -141,6 +141,18 @@ app.post("/api/send_emails", function(req, res, next) {
 });
 app.post("/api/emails/send", sendEmails);
 
+function addAttachmentsToComment(files, comment, user) {
+    return Promise.map(files, function(file) {
+        return comment.addAttachment(
+            file.originalFilename,
+            file.headers["content-type"],
+            fs.createReadStream(file.path),
+            user
+        ).then(function() {
+            return fs.unlinkAsync(file.path);
+        });
+    });
+}
 
 app.post("/api/emails/new", function(req, res, next) {
     var response = {};
@@ -161,17 +173,7 @@ app.post("/api/emails/new", function(req, res, next) {
         .then(function(ticket) {
             var comment = ticket.relations.comments.first();
             response.commentId = comment.get("id");
-
-            return Promise.map(parsed.files, function(file) {
-                return comment.addAttachment(
-                    file.originalFilename,
-                    file.headers["content-type"],
-                    fs.createReadStream(file.path),
-                    user
-                ).then(function() {
-                    return fs.unlinkAsync(file.path);
-                });
-            });
+            return addAttachmentsToComment(parsed.files, comment, user);
         });
     })
     .then(function() {
@@ -209,6 +211,13 @@ app.post("/api/emails/reply", function(req, res, next) {
 
             response.ticketId = ticket.get("id");
             return ticket.addComment(parsed.fields["stripped-text"], parsed.user)
+            .then(function(comment) {
+                return addAttachmentsToComment(
+                    parsed.files,
+                    comment,
+                    parsed.user
+                ).return(comment);
+            })
             .then(function(comment) {
                 response.commentId = comment.get("id");
                 res.json(response);
