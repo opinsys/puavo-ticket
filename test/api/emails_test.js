@@ -18,11 +18,11 @@ function streamFixture2Req(name, req) {
 
     return new Promise(function(resolve, reject){
 
-        // Workaround supertest/superagent bug. Superagent assumes that
-        // req.end is called with a callback function. But when piping data to it
-        // the stream will call the end() without the function because that the
-        // way the node.js streams work. Superagent does not know how to handle
-        // this situation and is crashes.
+        // Workaround a supertest/superagent bug. Superagent assumes that
+        // req.end is called with a callback function. But when piping data to
+        // it the stream will call the end() without the function because
+        // that's the way the node.js streams work. Superagent does not know
+        // how to handle this situation and crashes.
         //
         // Workaround it by wrapping the end function and forcing a callback.
         //
