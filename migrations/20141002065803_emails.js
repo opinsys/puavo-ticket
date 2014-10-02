@@ -4,6 +4,12 @@ var Ticket = require("app/models/server/Ticket");
 
 exports.up = function(knex, Promise) {
     return Promise.join(
+        // We wont be using this field. We will use jsonb or separate emails
+        // table
+        knex.schema.table("users", function (table) {
+            table.dropColumn("email");
+        }),
+
         // Secret for email reply checking
         knex.schema.table("tickets", function (table) {
             table.string("emailSecret").notNullable().defaultTo("changeme");
@@ -33,6 +39,9 @@ exports.down = function(knex, Promise) {
     return Promise.join(
         knex.schema.table("tickets", function (table) {
             table.dropColumn("emailSecret");
+        }),
+        knex.schema.table("users", function (table) {
+            table.string("email").unique();
         }),
         knex.schema.dropTable("emailArchive")
     );

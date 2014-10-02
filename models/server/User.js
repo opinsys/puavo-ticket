@@ -78,10 +78,6 @@ var User = Base.extend({
                     externalData: token
                 });
 
-                if (token.email) {
-                    user.set({ email: token.email });
-                }
-
                 return user.save();
 
             });
