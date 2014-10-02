@@ -8,6 +8,7 @@ var concat = require("concat-stream");
 
 var helpers = require("app/test/helpers");
 var Ticket = require("app/models/server/Ticket");
+var User = require("app/models/server/User");
 var app = require("app/server");
 
 function streamMailFixture(name) {
@@ -47,7 +48,19 @@ function streamFixture2Req(name, req) {
 describe("Email handler", function() {
 
     before(function() {
-        return helpers.clearTestDatabase();
+        return helpers.clearTestDatabase()
+        .then(function() {
+            return User.ensureUserFromJWTToken({
+                id: 1234,
+                username: "esa",
+                first_name: "Esa-Matti",
+                last_name: "Suuronen",
+                organisation_name: "Testing",
+                organisation_domain: "testing.opinsys.fi",
+                email: "esa-matti.suuronen@outlook.com"
+                // XXX no schools here
+            });
+        });
     });
 
     it("can create new ticket from emails", function() {
@@ -59,6 +72,7 @@ describe("Email handler", function() {
         .then(function(res) {
             assert.equal(res.status, 200, res.text);
             assert.equal(1, res.body.userId);
+            assert.equal(1234, res.body.externalId);
             assert.equal(1, res.body.ticketId);
             assert.equal(1, res.body.commentId);
 
@@ -111,6 +125,7 @@ describe("Email handler", function() {
         .then(function(res) {
             assert.equal(res.status, 200, res.text);
             assert.equal(1, res.body.userId);
+            assert.equal(1234, res.body.externalId);
             assert.equal(2, res.body.ticketId);
             assert.equal(2, res.body.commentId);
 
@@ -169,6 +184,37 @@ describe("Email handler", function() {
             );
         });
 
+    });
+
+    it("can reply to tickets", function() {
+        return Ticket.byId(1).fetch({ require: true })
+        .then(function(ticket) {
+            return ticket.set({ emailSecret: "checksum" }).save();
+        })
+        .then(function(ticket) {
+            var req = request(app).post("/api/emails/reply");
+            req.set("Content-Type", "application/x-www-form-urlencoded");
+            return streamFixture2Req("reply_zimbra", req);
+        })
+        .then(function(res) {
+            assert.equal(res.status, 200, res.text);
+            assert.equal(1, res.body.ticketId);
+            assert.equal(2, res.body.userId);
+            assert.equal(3, res.body.commentId);
+
+            return Ticket.byId(res.body.ticketId).fetch({
+                require: true,
+                withRelated: ["comments", "comments.createdBy"]
+            });
+        })
+        .then(function(ticket) {
+            var comment = ticket.relations.comments.last();
+            assert.equal("Tämä on vastaus Zimbrasta.", comment.get("comment"));
+
+            var commenter = comment.relations.createdBy;
+            assert.equal("Esa-Matti Suuronen", commenter.getFullName());
+            assert.equal("esa-matti.suuronen@opinsys.fi", commenter.getEmail());
+        });
     });
 
 });

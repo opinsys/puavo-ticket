@@ -10,6 +10,7 @@ var fs = Promise.promisifyAll(require("fs"));
 var config = require("app/config");
 var Ticket = require("app/models/server/Ticket");
 var User = require("app/models/server/User");
+var parseReplyEmailAddress = require("app/utils/parseReplyEmailAddress");
 
 /**
  * @class emails
@@ -36,6 +37,22 @@ function isMultipartPost(req) {
 
 
 /**
+ * Ensure user for parsed email body
+ */
+function ensureUser(parsed) {
+    var userOb = parseOneAddress(parsed.fields.from);
+    var firstName = "";
+    var lastName = userOb.name;
+
+    return User.ensureUserByEmail(userOb.address, firstName, lastName)
+    .then(function(user) {
+        parsed.user = user;
+        return parsed;
+    });
+}
+
+
+/**
  * Parse multipart and url encoded Expressjs requests. Assumes body-parser
  * middleware.
  *
@@ -46,7 +63,6 @@ function isMultipartPost(req) {
  * @return {Bluebird.Promise}
  */
 function parseBody(req) {
-
     // If not multipart assume body-parser parsed
     // application/x-www-form-urlencoded or application/json
     if (!isMultipartPost(req)) {
@@ -77,7 +93,6 @@ function parseBody(req) {
             });
         });
     });
-
 }
 
 
@@ -129,36 +144,32 @@ app.post("/api/emails/send", sendEmails);
 
 app.post("/api/emails/new", function(req, res, next) {
     var response = {};
-    parseBody(req).then(function(parsed) {
-        var userOb = parseOneAddress(parsed.fields.from);
+    parseBody(req).then(ensureUser).then(function(parsed) {
 
-        var firstName = "";
-        var lastName = userOb.name;
+        var user = parsed.user;
         var title = parsed.fields.subject;
         var description = parsed.fields["stripped-text"];
 
-        return User.ensureUserByEmail(parsed.fields.sender, firstName, lastName)
-        .then(function(user) {
-            response.userId = user.get("id");
+        response.userId = user.get("id");
+        response.externalId = user.get("externalId");
 
-            return Ticket.create(title, description, user)
-            .then(function(ticket) {
-                response.ticketId = ticket.get("id");
-                return ticket.load("comments");
-            })
-            .then(function(ticket) {
-                var comment = ticket.relations.comments.first();
-                response.commentId = comment.get("id");
+        return Ticket.create(title, description, user)
+        .then(function(ticket) {
+            response.ticketId = ticket.get("id");
+            return ticket.load("comments");
+        })
+        .then(function(ticket) {
+            var comment = ticket.relations.comments.first();
+            response.commentId = comment.get("id");
 
-                return Promise.map(parsed.files, function(file) {
-                    return comment.addAttachment(
-                        file.originalFilename,
-                        file.headers["content-type"],
-                        fs.createReadStream(file.path),
-                        user
-                    ).then(function() {
-                        return fs.unlinkAsync(file.path);
-                    });
+            return Promise.map(parsed.files, function(file) {
+                return comment.addAttachment(
+                    file.originalFilename,
+                    file.headers["content-type"],
+                    fs.createReadStream(file.path),
+                    user
+                ).then(function() {
+                    return fs.unlinkAsync(file.path);
                 });
             });
         });
@@ -171,7 +182,40 @@ app.post("/api/emails/new", function(req, res, next) {
 
 
 app.post("/api/emails/reply", function(req, res, next) {
-    res.status(501).end("not implemented");
+    var response = {};
+    parseBody(req).then(ensureUser).then(function(parsed) {
+        response.userId = parsed.user.get("id");
+        response.externalId = parsed.user.get("externalId");
+
+        var mail = parseReplyEmailAddress(parsed.fields.recipient);
+        if (!mail) return res.status(400).json({
+            error: { message: "Invalid sender address" }
+        });
+
+        return Ticket.byId(mail.ticketId).fetch()
+        .then(function(ticket) {
+            if (!ticket) {
+                return res.status(404).json({
+                    error: { message: "ticket not found" }
+                });
+            }
+
+            var secret = ticket.get("emailSecret");
+            if (!secret || secret !== mail.emailSecret) {
+                return res.status(401).json({
+                    error: { message: "permission denied" }
+                });
+            }
+
+            response.ticketId = ticket.get("id");
+            return ticket.addComment(parsed.fields["stripped-text"], parsed.user)
+            .then(function(comment) {
+                response.commentId = comment.get("id");
+                res.json(response);
+            });
+        });
+    })
+    .catch(next);
 });
 
 module.exports = app;
