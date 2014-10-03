@@ -5,8 +5,10 @@ var prettyMs = require("pretty-ms");
 var parseOneAddress = require("email-addresses").parseOneAddress;
 var Promise = require("bluebird");
 var multiparty = require("multiparty");
-var fs = Promise.promisifyAll(require("fs"));
+var concat = require("concat-stream");
+var uuid = require("uuid");
 
+var db = require("app/db");
 var config = require("app/config");
 var Ticket = require("app/models/server/Ticket");
 var User = require("app/models/server/User");
@@ -37,22 +39,6 @@ function isMultipartPost(req) {
 
 
 /**
- * Ensure user for parsed email body
- */
-function ensureUser(parsed) {
-    var userOb = parseOneAddress(parsed.fields.from);
-    var firstName = "";
-    var lastName = userOb.name;
-
-    return User.ensureUserByEmail(userOb.address, firstName, lastName)
-    .then(function(user) {
-        parsed.user = user;
-        return parsed;
-    });
-}
-
-
-/**
  * Parse multipart and url encoded Expressjs requests. Assumes body-parser
  * middleware.
  *
@@ -68,6 +54,7 @@ function parseBody(req) {
     if (!isMultipartPost(req)) {
         return Promise.resolve({
             fields: req.body,
+            from: parseOneAddress(req.body.from),
             files: []
         });
     }
@@ -76,81 +63,63 @@ function parseBody(req) {
         var files = [];
         var fields = {};
         var form = new multiparty.Form();
-        form.parse(req);
         form.on("error", reject);
-        form.on("field", function(name, value) {
-            // XXX: Overrides fields that have the same name...
-            fields[name] = value;
-        });
-        form.on("file", function(name, file) {
-            files.push(file);
+
+        form.on("part", function(part) {
+            part.on("error", reject);
+            if (!part.filename) {
+                part.pipe(concat(function(data) {
+                    fields[part.name] = data.toString();
+                }));
+                return;
+            }
+
+            if (part.filename !== null) {
+                files.push(db.gridSQL.write(
+                    "email-attachment:" + uuid.v4(),
+                    part
+                ));
+            }
         });
 
         form.on("close", function() {
-            resolve({
-                fields: fields,
-                files: files
+            Promise.all(files).then(function(files) {
+                resolve({
+                    from: parseOneAddress(fields.from),
+                    fields: fields,
+                    files: files.map(function(file) {
+                        return {
+                            dataType: file.stream.headers["content-type"],
+                            fileId: file.fileId,
+                            filename: file.stream.filename,
+                            size: file.bytesWritten,
+                            chunkCount: file.chunkCount
+                        };
+                    })
+                });
             });
         });
+
+        form.parse(req);
     });
 }
 
 
-function sendEmails(req, res, next) {
-
-    if (req.body.secret !== config.emailJobSecret) {
-        return res.status(403).json({ error: "permission denied" });
-    }
-    var started = Date.now();
-
-    User.collection().fetch()
-    .then(function(coll) {
-        debug("Going to search for emails for %s users", coll.length);
-        return coll.models;
-    })
-    .map(function(user) {
-        if (!user.getEmail()) {
-             return;
-        }
-
-        return Ticket.withUnreadComments(user, { byEmail: true }).fetch({
-            withRelated: "titles"
-        }).then(function(coll) {
-            return coll.models;
-        })
-        .map(function(ticket) {
-            return ticket.sendBufferedEmailNotifications(user);
-        });
-    })
-    .then(function() {
-        var duration = Date.now() - started;
-
-        debug("emails processed in %s", prettyMs(duration));
-        res.json({
-            ok: true,
-            duration: duration,
-            durationPretty: prettyMs(duration),
-        });
-    })
-    .catch(next);
-}
-
-app.post("/api/send_emails", function(req, res, next) {
-    console.log("Call to deprecated /api/send_emails");
-    sendEmails(req, res, next);
-});
-app.post("/api/emails/send", sendEmails);
 
 function addAttachmentsToComment(files, comment, user) {
     return Promise.map(files, function(file) {
-        return comment.addAttachment(
-            file.originalFilename,
-            file.headers["content-type"],
-            fs.createReadStream(file.path),
-            user
-        ).then(function() {
-            return fs.unlinkAsync(file.path);
-        });
+        return comment.addExistingAttachment(file);
+    });
+}
+
+function ensureUser(parsed) {
+    return User.ensureUserByEmail(
+        parsed.from.address,
+        "", // first name
+        parsed.from.name
+    ).then(function(user) {
+        parsed.user = user;
+        return parsed;
     });
 }
 
@@ -226,5 +195,50 @@ app.post("/api/emails/reply", function(req, res, next) {
     })
     .catch(next);
 });
+
+function sendEmails(req, res, next) {
+
+    if (req.body.secret !== config.emailJobSecret) {
+        return res.status(403).json({ error: "permission denied" });
+    }
+    var started = Date.now();
+
+    User.collection().fetch()
+    .then(function(coll) {
+        debug("Going to search for emails for %s users", coll.length);
+        return coll.models;
+    })
+    .map(function(user) {
+        if (!user.getEmail()) {
+             return;
+        }
+
+        return Ticket.withUnreadComments(user, { byEmail: true }).fetch({
+            withRelated: "titles"
+        }).then(function(coll) {
+            return coll.models;
+        })
+        .map(function(ticket) {
+            return ticket.sendBufferedEmailNotifications(user);
+        });
+    })
+    .then(function() {
+        var duration = Date.now() - started;
+
+        debug("emails processed in %s", prettyMs(duration));
+        res.json({
+            ok: true,
+            duration: duration,
+            durationPretty: prettyMs(duration),
+        });
+    })
+    .catch(next);
+}
+
+app.post("/api/send_emails", function(req, res, next) {
+    console.log("Call to deprecated /api/send_emails");
+    sendEmails(req, res, next);
+});
+app.post("/api/emails/send", sendEmails);
 
 module.exports = app;

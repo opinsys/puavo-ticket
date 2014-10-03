@@ -130,6 +130,8 @@ GridSQL.prototype.write = function(fileId, readable, options) {
     })
     .then(function() {
         return {
+            fileId: fileId,
+            stream: readable,
             bytesWritten: bytesWritten,
             chunkCount: sequence
         };

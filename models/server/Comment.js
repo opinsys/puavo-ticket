@@ -3,6 +3,7 @@
 
 var filesize = require("filesize");
 var prettyMs = require("pretty-ms");
+var _ = require("lodash");
 var debugAttachment = require("debug")("app:attachments");
 
 var Attachment = require("./Attachment");
@@ -57,16 +58,6 @@ var Comment = Base.extend({
         return this.hasMany(Attachment, "commentId");
     },
 
-    addAttachmentMeta: function(filename, dataType, fileSize, createdBy) {
-        return Attachment.forge({
-            createdById: Base.toId(createdBy),
-            commentId: this.get("id"),
-            size: fileSize,
-            filename: filename,
-            dataType: dataType
-        }).save();
-    },
-
     /**
      * Render model to plain text for email or similar usage
      *
@@ -89,11 +80,18 @@ var Comment = Base.extend({
      * @param {String} filename
      * @param {String} dataType
      * @param {stream.Readable} stream Node.js readable stream
-     * @param {models.server.User} user
+     * @return {Bluebird.Promise}
      */
-    addAttachment: function(filename, dataType, stream, createdBy){
+    addAttachment: function(filename, dataType, stream){
         var start;
-        return this.addAttachmentMeta(filename, dataType, -1, createdBy)
+
+        return Attachment.forge({
+            commentId: this.get("id"),
+            createdById: Base.toId(this.get("createdById")),
+            size: -1,
+            filename: filename,
+            dataType: dataType
+        }).save()
         .then(function(attachment) {
             debugAttachment("Starting database write for %s", filename);
             start = Date.now();
@@ -112,7 +110,23 @@ var Comment = Base.extend({
             );
             return attachment;
         });
-    }
+    },
+
+    /**
+     * @method addExistingAttachment
+     * @param {String} filename
+     * @param {String} fileId
+     * @param {Number} size
+     * @param {String} dataType
+     * @param {models.server.User} user
+     * @return {Bluebird.Promise}
+     */
+    addExistingAttachment: function(data) {
+        return Attachment.forge(_.extend({}, data, {
+            commentId: this.get("id"),
+            createdById: Base.toId(this.get("createdById")),
+        })).save();
+    },
 
 });
 
