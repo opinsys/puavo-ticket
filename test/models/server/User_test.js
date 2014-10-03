@@ -52,6 +52,53 @@ describe("User model", function() {
             });
     });
 
+    describe("ensure that user from a Puavo JWT token Object exists when external id", function() {
+        var token = {
+            "id": "9335",
+            "username": "joe.bloggs",
+            "first_name": "Joe",
+            "last_name": "Bloggs"
+        };
+
+        it("not found", function() {
+
+            return User.ensureUserFromJWTToken(token)
+                .then(function(user) {
+                    return User.forge({ externalId: 9335}).fetch();
+                })
+                .then(function(user) {
+                    assert.equal("Joe", user.get("externalData").first_name);
+                    assert.equal("Bloggs", user.get("externalData").last_name);
+                });
+        });
+
+        it("not found but email address is alredy set with other external id", function() {
+            var self = this;
+            token.id = "998833";
+            token.email = "joe.bloggs@example.com";
+
+            return User.forge({ externalId: null,
+                                externalData: {
+                                    first_name: "foo",
+                                    last_name: "bar",
+                                    email: "joe.bloggs@example.com"
+                                }
+                              }).save()
+                .then(function(user) {
+                    self.existsUser = user;
+                    return User.ensureUserFromJWTToken(token);
+                })
+                .then(function(user) {
+                    return User.forge({ externalId: 998833}).fetch();
+                })
+                .then(function(user) {
+                    assert.equal(self.existsUser.id, user.id);
+                    assert.equal("Joe", user.get("externalData").first_name);
+                    assert.equal("Bloggs", user.get("externalData").last_name);
+                });
+        });
+
+    });
 });
 
 describe("UserMixin", function() {
