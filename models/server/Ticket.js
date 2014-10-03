@@ -784,6 +784,9 @@ var Ticket = Base.extend({
                     ticket.addTitle(title, createdBy),
                     ticket.addComment(description, createdBy)
                 ).return(ticket);
+            })
+            .then(function(ticket) {
+                return ticket.load(["comments", "comments.createdBy"]);
             });
     },
 

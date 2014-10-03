@@ -2,7 +2,6 @@
 var express = require("express");
 var debug = require("debug")("app:email");
 var prettyMs = require("pretty-ms");
-var parseOneAddress = require("email-addresses").parseOneAddress;
 var Promise = require("bluebird");
 var multiparty = require("multiparty");
 var concat = require("concat-stream");
@@ -12,12 +11,31 @@ var db = require("app/db");
 var config = require("app/config");
 var Ticket = require("app/models/server/Ticket");
 var User = require("app/models/server/User");
-var parseReplyEmailAddress = require("app/utils/parseReplyEmailAddress");
+var Email = require("app/models/server/Email");
 
 /**
+ * @namespace resources
  * @class emails
  */
 var app = express.Router();
+
+
+
+/**
+ * Archive given data as email
+ *
+ * @static
+ * @private
+ * @method createArchivedEmail
+ * @param {Object} data
+ * @return {Bluebird.Promise} models.server.Email
+ */
+function createArchivedEmail(data) {
+    return Email.forge({
+        email: data,
+        createdAt: new Date(),
+    }).save();
+}
 
 
 /**
@@ -39,22 +57,23 @@ function isMultipartPost(req) {
 
 
 /**
- * Parse multipart and url encoded Expressjs requests. Assumes body-parser
- * middleware.
+ *
+ * Receive POST from Mailgun webhook
+ *
+ * http://documentation.mailgun.com/user_manual.html#parsed-messages-parameters
  *
  * @static
  * @private
- * @method parseBody
+ * @method receiveMailGunPOST
  * @param {Object} req Expressjs request object
  * @return {Bluebird.Promise}
  */
-function parseBody(req) {
+function receiveMailGunPOST(req) {
     // If not multipart assume body-parser parsed
     // application/x-www-form-urlencoded or application/json
     if (!isMultipartPost(req)) {
-        return Promise.resolve({
+        return createArchivedEmail({
             fields: req.body,
-            from: parseOneAddress(req.body.from),
             files: []
         });
     }
@@ -85,7 +104,6 @@ function parseBody(req) {
         form.on("close", function() {
             Promise.all(files).then(function(files) {
                 resolve({
-                    from: parseOneAddress(fields.from),
                     fields: fields,
                     files: files.map(function(file) {
                         return {
@@ -101,95 +119,53 @@ function parseBody(req) {
         });
 
         form.parse(req);
-    });
+    }).then(createArchivedEmail);
 }
 
-
-
-function addAttachmentsToComment(files, comment, user) {
-    return Promise.map(files, function(file) {
-        return comment.addExistingAttachment(file);
-    });
-}
-
-function ensureUser(parsed) {
-    return User.ensureUserByEmail(
-        parsed.from.address,
-        "", // first name
-        parsed.from.name
-    ).then(function(user) {
-        parsed.user = user;
-        return parsed;
-    });
-}
 
 app.post("/api/emails/new", function(req, res, next) {
-    var response = {};
-    parseBody(req).then(ensureUser).then(function(parsed) {
-
-        var user = parsed.user;
-        var title = parsed.fields.subject;
-        var description = parsed.fields["stripped-text"];
-
-        response.userId = user.get("id");
-        response.externalId = user.get("externalId");
-
-        return Ticket.create(title, description, user)
-        .then(function(ticket) {
-            response.ticketId = ticket.get("id");
-            return ticket.load("comments");
-        })
-        .then(function(ticket) {
-            var comment = ticket.relations.comments.first();
-            response.commentId = comment.get("id");
-            return addAttachmentsToComment(parsed.files, comment, user);
-        });
+    receiveMailGunPOST(req).then(function(email) {
+        return email.submitAsNewTicket();
     })
-    .then(function() {
-        res.json(response);
+    .then(function(ticket) {
+        var comment = ticket.relations.comments.first();
+        var user = comment.relations.createdBy;
+        res.json({
+            externalId: user.getExternalId(),
+            userId: user.get("id"),
+            ticketId: ticket.get("id"),
+            commentId: comment.get("id")
+        });
     })
     .catch(next);
 });
 
 
 app.post("/api/emails/reply", function(req, res, next) {
-    var response = {};
-    parseBody(req).then(ensureUser).then(function(parsed) {
-        response.userId = parsed.user.get("id");
-        response.externalId = parsed.user.get("externalId");
-
-        var mail = parseReplyEmailAddress(parsed.fields.recipient);
-        if (!mail) return res.status(400).json({
-            error: { message: "Invalid sender address" }
-        });
-
-        return Ticket.byId(mail.ticketId).fetch()
+    receiveMailGunPOST(req).then(function(email) {
+        return Ticket.byId(email.getTicketId()).fetch()
         .then(function(ticket) {
             if (!ticket) {
                 return res.status(404).json({
                     error: { message: "ticket not found" }
                 });
             }
-
             var secret = ticket.get("emailSecret");
-            if (!secret || secret !== mail.emailSecret) {
+            if (!secret || secret !== email.getEmailSecret()) {
                 return res.status(401).json({
                     error: { message: "permission denied" }
                 });
             }
 
-            response.ticketId = ticket.get("id");
-            return ticket.addComment(parsed.fields["stripped-text"], parsed.user)
+            return email.submitAsReply(ticket)
             .then(function(comment) {
-                return addAttachmentsToComment(
-                    parsed.files,
-                    comment,
-                    parsed.user
-                ).return(comment);
-            })
-            .then(function(comment) {
-                response.commentId = comment.get("id");
-                res.json(response);
+                var user = email.user;
+                res.json({
+                    externalId: user.getExternalId(),
+                    userId: user.get("id"),
+                    ticketId: ticket.get("id"),
+                    commentId: comment.get("id")
+                });
             });
         });
     })

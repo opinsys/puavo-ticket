@@ -175,6 +175,7 @@ function clearTestDatabase() {
     .then(function() {
         return deleteAndReset([
             "attachments",
+            "emailArchive",
             "comments",
             "visibilities",
             "followers",
