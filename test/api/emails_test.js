@@ -246,6 +246,8 @@ describe("Email handler", function() {
 
             assert.equal(1, comment.relations.attachments.length);
             var attachment = comment.relations.attachments.first();
+            assert.equal(159, attachment.get("size"));
+            assert.equal(1, attachment.get("chunkCount"));
 
             return new Promise(function(resolve, reject){
                 attachment.readStream()
