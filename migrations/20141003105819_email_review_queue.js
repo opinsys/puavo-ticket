@@ -17,6 +17,7 @@ exports.up = function(knex, Promise) {
     return knex.raw('alter table "emailArchive" alter "commentId" drop not null')
     .then(function() {
         return knex.schema.table("emailArchive", function(table) {
+            table.increments("id");
             table.dateTime("createdAt").notNullable();
             table.integer("state").defaultTo(1).notNullable();
         });
@@ -29,6 +30,7 @@ exports.down = function(knex, Promise) {
         return knex.schema.table("emailArchive", function(table) {
             table.dropColumn("createdAt");
             table.dropColumn("state");
+            table.dropColumn("id");
         });
     });
 };
