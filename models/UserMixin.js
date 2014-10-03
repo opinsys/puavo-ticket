@@ -91,6 +91,7 @@ var UserMixin = {
      * @return {String}
      */
     getDomainUsername: function() {
+        if (this.isEmailOnly()) return null;
         return this.getUsername() + "@" + this.getOrganisationDomain();
     },
 
@@ -119,6 +120,16 @@ var UserMixin = {
         var data = this.get("externalData");
         if (!data) return "";
         return (data.first_name + " " + data.last_name).trim();
+    },
+
+    /**
+     * Get human readable organisation name
+     *
+     * @method getOrganisationName
+     */
+    getOrganisationName: function(){
+        if (this.isEmailOnly()) return "Email only";
+        return this.get("externalData").organisation_name;
     },
 
     /**

@@ -28,9 +28,12 @@ function byCreation(a, b) {
  * @class TicketView.opinsysRobot
  */
 var opinsysRobot = new User({
+    id: -1,
     externalData: {
+        email: "tuki@opinsys.fi",
         first_name: "Opinsys",
-        last_name: "Oy"
+        last_name: "Oy",
+        organisation_name: "Automaatti"
     }
 });
 

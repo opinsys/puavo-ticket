@@ -85,9 +85,14 @@ var ProfileBadge = React.createClass({
         var user = this.props.user;
         return (
             <span>
-                {user.getFullName()}
+                {user.getOrganisationName()}
                 <br />
-                {user.getDomainUsername()}
+                {user.getFullName()} ({user.get("id")})
+                <br />
+                {user.getEmail()}
+                {!user.isEmailOnly() && <div>
+                    <b>Puavo:</b> {user.getDomainUsername()} ({user.getExternalId()})
+                </div>}
             </span>
         );
     },
