@@ -190,7 +190,7 @@ var Email = Base.extend({
      * Submit this ticket as reply to given ticket
      *
      * @method submitAsReply
-     * @param {models.server.Ticket}
+     * @param {models.server.Ticket} ticket
      * @return {Bluebird.Promise} with models.server.Comment
      */
     submitAsReply: function(ticket){
