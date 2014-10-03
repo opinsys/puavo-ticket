@@ -13,8 +13,21 @@ io.on("connect", function(s) {
     console.log("Socket.IO connected");
 });
 
+io.on("jschangebegin", function() {
+    window.document.title = "!COMPILING!";
+    window.document.body.innerHTML = "<h1>Compiling Javascript...</h1>";
+});
+
 io.on("jschange", function() {
+    window.document.title = "!RELOADING!";
+    window.document.body.innerHTML += "<h1>Ok. Reloading...</h1>";
     window.location.reload();
+});
+
+io.on("jserror", function(err) {
+    window.document.title = "!FAILED!";
+    window.document.body.innerHTML += "<h1>Failed</h1>";
+    window.document.body.innerHTML += "<pre>" + err.stack + "</pre>";
 });
 
 io.on("csschange", function() {

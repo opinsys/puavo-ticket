@@ -259,14 +259,7 @@ if (require.main === module) {
     });
 
     if (!PRODUCTION) {
-        var devmode = require("./devmode");
-        // pipe js/css changes to the browser
-        ["assetchange", "jschange", "csschange"].forEach(function(eventName) {
-            devmode.on(eventName, function() {
-                sio.sockets.emit(eventName);
-            });
-        });
-
+        require("./devmode")(sio);
     }
 }
 
