@@ -69,6 +69,18 @@ var ProfileBadge = React.createClass({
         return this.props.user.getProfileImage();
     },
 
+    renderImage: function(width, height) {
+
+        var size = this.props.size;
+
+        if (this.props.user.isEmailOnly()) {
+            return <i className="fa fa-envelope"
+                style={{ fontSize: size/2 + "px" }}></i>;
+        }
+
+        return <img src={this.getImgURL()} width={width} height={height} />;
+    },
+
     renderTooltip: function() {
         var user = this.props.user;
         return (
@@ -107,7 +119,7 @@ var ProfileBadge = React.createClass({
                 <div className="ProfileBadge">
                     <div className="wrap" style={this.getSizeInCSS()}>
                         <div className="inner-wrap">
-                            <img src={this.getImgURL()} width={width} height={height} />
+                            {this.renderImage(width, height)}
                         </div>
                     </div>
                 </div>

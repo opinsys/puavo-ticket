@@ -139,6 +139,17 @@ var UserMixin = {
         }
     },
 
+    /**
+     * Return true for users that have not ever logged in puavo-ticket and have
+     * used it only via email
+     *
+     * @method isEmailOnly
+     * @return {Boolean}
+     */
+    isEmailOnly: function(){
+        return !this.getExternalId();
+    },
+
     toString: function() {
         return "<User " + this.getDomainUsername() + " (" + this.get("id") + ")>";
     }
