@@ -63,6 +63,16 @@ var Attachment = Base.extend({
      * @return {String}
      */
     getFileId: function(){
+        var id = this.get("fileId");
+        if (!id) throw new Error("File id null for " + this.get("id"));
+        return id;
+    },
+
+    /**
+     * @method getComputedFileId
+     * @return {String}
+     */
+    getComputedFileId: function(){
         return "attachmentfile:" + this.getUniqueId();
     },
 
@@ -76,9 +86,14 @@ var Attachment = Base.extend({
      */
     writeStream: function(stream) {
         var self = this;
-        return db.gridSQL.write(self.getFileId(), stream)
+        if (this.get("fileId")) {
+            throw new Error("Attachment " + this.get("id") + " already has a file written");
+        }
+        var fileId = this.getComputedFileId();
+        return db.gridSQL.write(fileId, stream)
         .then(function(info) {
             return self.set({
+                fileId: fileId,
                 size: info.bytesWritten,
                 chunkCount: info.chunkCount
             }).save();
