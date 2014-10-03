@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>components/TicketView/TicketView.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Backbone.Collection.html">Backbone.Collection</a></li>
+            
+                <li><a href="../classes/Backbone.Events.html">Backbone.Events</a></li>
+            
+                <li><a href="../classes/Backbone.Model.html">Backbone.Model</a></li>
+            
+                <li><a href="../classes/Bluebird.Promise.html">Bluebird.Promise</a></li>
+            
+                <li><a href="../classes/Bookshelf.Collection.html">Bookshelf.Collection</a></li>
+            
+                <li><a href="../classes/Bookshelf.Model.html">Bookshelf.Model</a></li>
+            
+                <li><a href="../classes/components.AttachmentsForm.html">components.AttachmentsForm</a></li>
+            
+                <li><a href="../classes/components.CommentForm.html">components.CommentForm</a></li>
+            
+                <li><a href="../classes/components.EditableText.html">components.EditableText</a></li>
+            
+                <li><a href="../classes/components.ElasticTextarea.html">components.ElasticTextarea</a></li>
+            
+                <li><a href="../classes/components.ErrorMessage.html">components.ErrorMessage</a></li>
+            
+                <li><a href="../classes/components.FileItem.html">components.FileItem</a></li>
+            
+                <li><a href="../classes/components.ForcedLinebreaks.html">components.ForcedLinebreaks</a></li>
+            
+                <li><a href="../classes/components.Loading.html">components.Loading</a></li>
+            
+                <li><a href="../classes/components.Loading.Spinner.html">components.Loading.Spinner</a></li>
+            
+                <li><a href="../classes/components.Main.html">components.Main</a></li>
+            
+                <li><a href="../classes/components.NotificationBox.html">components.NotificationBox</a></li>
+            
+                <li><a href="../classes/components.NotificationsHub.html">components.NotificationsHub</a></li>
+            
+                <li><a href="../classes/components.NotificationsHub.NotificationItem.html">components.NotificationsHub.NotificationItem</a></li>
+            
+                <li><a href="../classes/components.OnViewportMixin.html">components.OnViewportMixin</a></li>
+            
+                <li><a href="../classes/components.ProfileBadge.html">components.ProfileBadge</a></li>
+            
+                <li><a href="../classes/components.Redacted.html">components.Redacted</a></li>
+            
+                <li><a href="../classes/components.SelectUsers.html">components.SelectUsers</a></li>
+            
+                <li><a href="../classes/components.SelectUsers.UserItem.html">components.SelectUsers.UserItem</a></li>
+            
+                <li><a href="../classes/components.SideInfo.html">components.SideInfo</a></li>
+            
+                <li><a href="../classes/components.StringDiff.html">components.StringDiff</a></li>
+            
+                <li><a href="../classes/components.TicketForm.html">components.TicketForm</a></li>
+            
+                <li><a href="../classes/components.TicketList.html">components.TicketList</a></li>
+            
+                <li><a href="../classes/components.TicketList.TitleList.html">components.TicketList.TitleList</a></li>
+            
+                <li><a href="../classes/components.TicketView.html">components.TicketView</a></li>
+            
+                <li><a href="../classes/components.TicketView.CommentUpdate.html">components.TicketView.CommentUpdate</a></li>
+            
+                <li><a href="../classes/components.TicketView.HandlerUpdate.html">components.TicketView.HandlerUpdate</a></li>
+            
+                <li><a href="../classes/components.TicketView.TagUpdate.html">components.TicketView.TagUpdate</a></li>
+            
+                <li><a href="../classes/components.TicketView.TitleUpdate.html">components.TicketView.TitleUpdate</a></li>
+            
+                <li><a href="../classes/components.TicketView.ToggleFollowButton.html">components.TicketView.ToggleFollowButton</a></li>
+            
+                <li><a href="../classes/components.TicketView.ToggleStatusButton.html">components.TicketView.ToggleStatusButton</a></li>
+            
+                <li><a href="../classes/components.TicketView.UpdateMixin.html">components.TicketView.UpdateMixin</a></li>
+            
+                <li><a href="../classes/components.TimeAgo.html">components.TimeAgo</a></li>
+            
+                <li><a href="../classes/components.UploadProgress.html">components.UploadProgress</a></li>
+            
+                <li><a href="../classes/components.User.html">components.User</a></li>
+            
+                <li><a href="../classes/models.BaseMixin.html">models.BaseMixin</a></li>
+            
+                <li><a href="../classes/models.client.Base.html">models.client.Base</a></li>
+            
+                <li><a href="../classes/models.client.Base.Collection.html">models.client.Base.Collection</a></li>
+            
+                <li><a href="../classes/models.client.Base.NotFound.html">models.client.Base.NotFound</a></li>
+            
+                <li><a href="../classes/models.client.Comment.html">models.client.Comment</a></li>
+            
+                <li><a href="../classes/models.client.Device.html">models.client.Device</a></li>
+            
+                <li><a href="../classes/models.client.Handler.html">models.client.Handler</a></li>
+            
+                <li><a href="../classes/models.client.models.UserMixin.html">models.client.models.UserMixin</a></li>
+            
+                <li><a href="../classes/models.client.Notification.html">models.client.Notification</a></li>
+            
+                <li><a href="../classes/models.client.Tag.html">models.client.Tag</a></li>
+            
+                <li><a href="../classes/models.client.Ticket.html">models.client.Ticket</a></li>
+            
+                <li><a href="../classes/models.client.Ticket.Collection.html">models.client.Ticket.Collection</a></li>
+            
+                <li><a href="../classes/models.client.TicketView.opinsysRobot.html">models.client.TicketView.opinsysRobot</a></li>
+            
+                <li><a href="../classes/models.client.Title.html">models.client.Title</a></li>
+            
+                <li><a href="../classes/models.client.UpdatesCollection.html">models.client.UpdatesCollection</a></li>
+            
+                <li><a href="../classes/models.server.Attachment.html">models.server.Attachment</a></li>
+            
+                <li><a href="../classes/models.server.Base.html">models.server.Base</a></li>
+            
+                <li><a href="../classes/models.server.Chunk.html">models.server.Chunk</a></li>
+            
+                <li><a href="../classes/models.server.Comment.html">models.server.Comment</a></li>
+            
+                <li><a href="../classes/models.server.Device.html">models.server.Device</a></li>
+            
+                <li><a href="../classes/models.server.Email.html">models.server.Email</a></li>
+            
+                <li><a href="../classes/models.server.Follower.html">models.server.Follower</a></li>
+            
+                <li><a href="../classes/models.server.Handler.html">models.server.Handler</a></li>
+            
+                <li><a href="../classes/models.server.Notification.html">models.server.Notification</a></li>
+            
+                <li><a href="../classes/models.server.Tag.html">models.server.Tag</a></li>
+            
+                <li><a href="../classes/models.server.Ticket.html">models.server.Ticket</a></li>
+            
+                <li><a href="../classes/models.server.Ticket.queries.html">models.server.Ticket.queries</a></li>
+            
+                <li><a href="../classes/models.server.Title.html">models.server.Title</a></li>
+            
+                <li><a href="../classes/models.server.User.html">models.server.User</a></li>
+            
+                <li><a href="../classes/models.TagMixin.html">models.TagMixin</a></li>
+            
+                <li><a href="../classes/models.TicketMixin.html">models.TicketMixin</a></li>
+            
+                <li><a href="../classes/models.UserInformation.html">models.UserInformation</a></li>
+            
+                <li><a href="../classes/React.ReactComponent.html">React.ReactComponent</a></li>
+            
+                <li><a href="../classes/ReactComponent.html">ReactComponent</a></li>
+            
+                <li><a href="../classes/ReactCompositeComponent.html">ReactCompositeComponent</a></li>
+            
+                <li><a href="../classes/ReactMountReady.html">ReactMountReady</a></li>
+            
+                <li><a href="../classes/ReactMultiChild.html">ReactMultiChild</a></li>
+            
+                <li><a href="../classes/ReactOwner.html">ReactOwner</a></li>
+            
+                <li><a href="../classes/ReactPropTransferer.html">ReactPropTransferer</a></li>
+            
+                <li><a href="../classes/ReactReconcileTransaction.html">ReactReconcileTransaction</a></li>
+            
+                <li><a href="../classes/ReactServerRenderingTransaction.html">ReactServerRenderingTransaction</a></li>
+            
+                <li><a href="../classes/ReactTestUtils.html">ReactTestUtils</a></li>
+            
+                <li><a href="../classes/ReactTextComponent.html">ReactTextComponent</a></li>
+            
+                <li><a href="../classes/server.Request.html">server.Request</a></li>
+            
+                <li><a href="../classes/server.Response.html">server.Response</a></li>
+            
+                <li><a href="../classes/test.helpers.html">test.helpers</a></li>
+            
+                <li><a href="../classes/utils.BrowserTitle.html">utils.BrowserTitle</a></li>
+            
+                <li><a href="../classes/utils.GridSQL.html">utils.GridSQL</a></li>
+            
+                <li><a href="../classes/utils.middleware.createResponseLogger.html">utils.middleware.createResponseLogger</a></li>
+            
+                <li><a href="../classes/utils.middleware.createSlowInternet.html">utils.middleware.createSlowInternet</a></li>
+            
+                <li><a href="../classes/utils.Puavo.html">utils.Puavo</a></li>
+            
+                <li><a href="../classes/utils.Superagent.html">utils.Superagent</a></li>
+            
+                <li><a href="../classes/utils.Transaction.html">utils.Transaction</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/filesize.html">filesize</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected" checked>
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private" checked>
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated" checked>
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: components/TicketView/TicketView.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/** @jsx React.DOM */
+&quot;use strict&quot;;
+var React = require(&quot;react/addons&quot;);
+var Router = require(&quot;react-router&quot;);
+var classSet = React.addons.classSet;
+var _ = require(&quot;lodash&quot;);
+var Promise = require(&quot;bluebird&quot;);
+var debug = require(&quot;debug&quot;)(&quot;app:read&quot;);
+
+var Button = require(&quot;react-bootstrap/Button&quot;);
+var Badge = require(&quot;react-bootstrap/Badge&quot;);
+var Alert = require(&quot;react-bootstrap/Alert&quot;);
+
+var Loading = require(&quot;../Loading&quot;);
+var CommentForm = require(&quot;../CommentForm&quot;);
+var AttachmentsForm = require(&quot;../AttachmentsForm&quot;);
+var captureError = require(&quot;../../utils/captureError&quot;);
+var BackboneMixin = require(&quot;../../components/BackboneMixin&quot;);
+var Ticket = require(&quot;../../models/client/Ticket&quot;);
+var User = require(&quot;../../models/client/User&quot;);
+var Loading = require(&quot;../Loading&quot;);
+var SelectUsers = require(&quot;../SelectUsers&quot;);
+var SideInfo = require(&quot;../SideInfo&quot;);
+var Redacted = require(&quot;../Redacted&quot;);
+var EditableText = require(&quot;../EditableText&quot;);
+var BrowserTitle = require(&quot;app/utils/BrowserTitle&quot;);
+var UploadProgress = require(&quot;app/components/UploadProgress&quot;);
+
+var ToggleStatusButton = require(&quot;./ToggleStatusButton&quot;);
+var ToggleFollowButton = require(&quot;./ToggleFollowButton&quot;);
+var CommentUpdate = require(&quot;./CommentUpdate&quot;);
+
+
+// Individual components for each ticket update type
+var UPDATE_COMPONENTS = {
+    comments: CommentUpdate,
+    tags: require(&quot;./TagUpdate&quot;),
+    handlers: require(&quot;./HandlerUpdate&quot;),
+    titles: require(&quot;./TitleUpdate&quot;)
+};
+
+
+
+/**
+ * TicketView
+ *
+ * @namespace components
+ * @class TicketView
+ * @constructor
+ * @param {Object} props
+ * @param {models.client.User} props.user
+ * @param {Socket.IO} props.io Socket.IO socket
+ * @param {Function} props.renderInModal
+ * @param {BrowserTitle} props.title BrowserTitle instance
+ */
+var TicketView = React.createClass({
+
+    mixins: [BackboneMixin],
+
+    propTypes: {
+        title: React.PropTypes.instanceOf(BrowserTitle).isRequired,
+        user: React.PropTypes.instanceOf(User).isRequired,
+        renderInModal: React.PropTypes.func.isRequired,
+        io: React.PropTypes.shape({
+            on: React.PropTypes.func.isRequired,
+            off: React.PropTypes.func.isRequired
+        }).isRequired
+    },
+
+    createInitialState: function(props) {
+        return {
+            ticket: new Ticket({ id: props.params.id }),
+            changeTitle: false,
+            fetching: true,
+            saving: false,
+            showTags: true,
+            scrolled: false,
+            uploadProgress: null
+        };
+    },
+
+    getInitialState: function() {
+        return this.createInitialState(this.props);
+    },
+
+    componentWillReceiveProps: function(nextProps) {
+        if (this.props.params.id === nextProps.params.id) return;
+        this.setBackbone(this.createInitialState(nextProps), this.fetchTicket);
+    },
+
+    /**
+     * Called when a new live comment message is received from socket.io
+     *
+     * @private
+     * @method _handleWatcherUpdate
+     */
+    _handleWatcherUpdate: function(comment) {
+        if (comment.ticketId === this.state.ticket.get(&quot;id&quot;)) {
+            this.fetchTicket();
+        }
+    },
+
+    /**
+     * Subscribe to the ticket updates
+     *
+     * @method startWatching
+     */
+    startWatching: function() {
+        this.props.io.emit(&quot;startWatching&quot;, {
+            ticketId: this.state.ticket.get(&quot;id&quot;)
+        });
+    },
+
+    /**
+     * Called when socket reconnects while the user is still watching it
+     *
+     * Restarts watching and refreshes the ticket
+     *
+     * @private
+     * @method _handleSocketConnect
+     */
+    _handleSocketConnect: function() {
+        this.startWatching();
+        this.fetchTicket();
+    },
+
+    componentDidMount: function() {
+        window.scrollTo(0, 0);
+        this.fetchTicket();
+        window.addEventListener(&quot;focus&quot;, this.handleOnFocus);
+        this.props.io.on(&quot;watcherUpdate&quot;, this._handleWatcherUpdate);
+        this.startWatching();
+
+        this.props.io.on(&quot;connect&quot;, this._handleSocketConnect);
+
+        /**
+         * Lazy version of the &#x60;markAsRead()&#x60; method. It will mark the ticket
+         * as read at max once in 10 seconds
+         *
+         * @method lazyMarkAsRead
+         */
+        this.lazyMarkAsRead = _.throttle(this.markAsRead, 5*1000);
+    },
+
+    componentWillUnmount: function() {
+        window.removeEventListener(&quot;focus&quot;, this.handleOnFocus);
+        this.props.io.emit(&quot;stopWatching&quot;, {
+            ticketId: this.state.ticket.get(&quot;id&quot;)
+        });
+        this.props.io.off(&quot;watcherUpdate&quot;, this._handleWatcherUpdate);
+        this.props.io.off(&quot;connect&quot;, this._handleSocketConnect);
+        this.props.title.setTitle(&quot;&quot;);
+        this.props.title.activateOnNextTick();
+    },
+
+    componentDidUpdate: function() {
+        this.scrollToAnchoredElement();
+    },
+
+
+    /**
+     * Anchor links (eg. #foobar) does not work on dynamically loaded elements
+     * because they are not present at load time. This method manually scrolls
+     * to the linked element when they appear.
+     *
+     * @method scrollToAnchoredElement
+     */
+    scrollToAnchoredElement: function() {
+        var unread = this.state.ticket.firstUnreadUpdateFor(this.props.user);
+
+        // Remove ?scrollTo=firstUnread query string and set
+        // window.location.hash
+        if (unread &amp;&amp; this.props.query.scrollTo === &quot;firstUnread&quot;) {
+            Router.replaceWith(this.props.name, this.props.params);
+            window.location.hash = unread.getUniqueId();
+        }
+
+        // Nothing selected
+        if (!window.location.hash) return;
+
+        // No need to scroll multiple times
+        if (this.state.scrolled) return;
+
+        var el = document.getElementById(window.location.hash.slice(1));
+        // Element not rendered yet - or it just does not exists
+        if (!el) return;
+
+        el.scrollIntoView();
+        this.setState({ scrolled: true });
+    },
+
+    /**
+     * Save comment handler. Reports any unhandled errors to the global error
+     * handler
+     *
+     * @method saveComment
+     */
+    saveComment: function(e) {
+        var self = this;
+        e.clear();
+        self.setState({ saving: true });
+
+        self.state.ticket.addComment(e.comment)
+        .then(function(comment) {
+            var files = self.refs.attachments.getFiles();
+            if (files.length &gt; 0) {
+                self.refs.attachments.clear();
+                return comment.addAttachments(files, { onProgress: function(e) {
+                    self.setState({ uploadProgress: e });
+                }});
+            }
+        })
+        .then(function() {
+            self.setState({ uploadProgress: null });
+            return self.fetchTicket();
+        })
+        .then(function() {
+            if (!self.isMounted()) return;
+            self.setState({ saving: false });
+            process.nextTick(e.scrollToCommentButton);
+        })
+        .catch(captureError(&quot;Kommentin tallennus epäonnistui&quot;));
+
+    },
+
+
+    handleClose: function() {
+        this.state.ticket.close();
+    },
+
+
+    toggleTags: function() {
+        this.setState({
+            showTags: !this.state.showTags
+        });
+    },
+
+    handleAddHandler: function() {
+        var self = this;
+        self.props.renderInModal(&quot;Lisää käsittelijöitä&quot;, function(close){
+            return (
+                &lt;SelectUsers
+                    user={self.props.user}
+                    ticket={self.state.ticket}
+                    currentHandlers={_.invoke(self.state.ticket.handlers(), &quot;getUser&quot;)}
+                    onCancel={close}
+                    onSelect={function(users) {
+                        close();
+                        if (self.isMounted()) self.setState({ fetching: true });
+
+                        Promise.map(users, function(user) {
+                            return self.state.ticket.addHandler(user);
+                        })
+                        .then(function() {
+                            return self.fetchTicket();
+                        })
+                        .catch(captureError(&quot;Käsittelijöiden lisääminen epäonnistui&quot;));
+                }}/&gt;
+            );
+        });
+    },
+
+    handleOnFocus: function() {
+        this.fetchTicket();
+    },
+
+    /**
+     * Mark the ticket as read by the current user and refetch the ticket data
+     *
+     * @method markAsRead
+     * @return {Bluebird.Promise}
+     */
+    markAsRead: function() {
+        if (!this.isMounted()) return;
+
+        this.setState({ fetching: true });
+        debug(&quot;Actually marking as read&quot;);
+        return this.state.ticket.markAsRead()
+            .bind(this)
+            .then(function() {
+                return this.fetchTicket();
+            })
+            .catch(captureError(&quot;Tukipyynnön merkkaaminen luetuksi epäonnistui&quot;));
+    },
+
+
+    /**
+     * Fetch the ticket data
+     *
+     * @method fetchTicket
+     * @return {Bluebird.Promise}
+     */
+    fetchTicket: function() {
+        if (!this.isMounted()) return;
+
+        this.setState({ fetching: true });
+        return this.state.ticket.fetch()
+            .bind(this)
+            .then(function() {
+                if (this.isMounted()) this.setState({ fetching: false });
+            })
+            .catch(Ticket.NotFound, function(err) {
+                this.setState({
+                    notFound: err
+                });
+            })
+            .catch(captureError(&quot;Tukipyynnön tilan päivitys epäonnistui&quot;));
+    },
+
+
+
+    renderBadge: function() {
+
+        var id = &quot;#&quot; + this.state.ticket.get(&quot;id&quot;);
+
+        var status = this.state.ticket.getCurrentStatus();
+        switch (status) {
+            case &quot;open&quot;:
+                return &lt;Badge className=&quot;ticket-status ticket-open&quot;&gt;Avoin {id}&lt;/Badge&gt;;
+            case &quot;closed&quot;:
+                return &lt;Badge className=&quot;ticket-status ticket-closed&quot;&gt;Ratkaistu {id}&lt;/Badge&gt;;
+            default:
+                return &lt;Badge className=&quot;ticket-status&quot;&gt; &lt;Redacted&gt;Unknown&lt;/Redacted&gt;&lt;/Badge&gt;;
+        }
+    },
+
+    renderDate: function() {
+        var datestring = this.state.ticket.get(&quot;createdAt&quot;),
+        options={weekday: &quot;long&quot;, year: &quot;numeric&quot;, month: &quot;numeric&quot;, day: &quot;numeric&quot;, hour: &quot;numeric&quot;, minute:&quot;numeric&quot;};
+        return(
+            &lt;span className=&quot;badge-text&quot;&gt;
+                &lt;time dateTime={&#x27;&quot;&#x27; + datestring + &#x27;&quot;&#x27;} /&gt;{&quot; &quot; + new Date(Date.parse(datestring)).toLocaleString(&#x27;fi&#x27;, options)}
+            &lt;/span&gt;
+        );
+    },
+
+    changeTitle: function(e) {
+        this.setState({ changingTitle: true });
+        this.state.ticket.addTitle(e.value)
+        .delay(2000)
+        .bind(this)
+        .then(function() {
+            if (!this.isMounted()) return;
+            return this.fetchTicket();
+        })
+        .then(function() {
+            if (!this.isMounted()) return;
+            this.setState({ changingTitle: false });
+        })
+        .catch(captureError(&quot;Otsikon päivitys epäonnistui&quot;));
+    },
+
+
+    /**
+     * Get array of updates with comments merged that are created by the same
+     * user within small amount of time
+     *
+     * @method getUpdatesWithMergedComments
+     * @return {Array} of models.client.Base
+     */
+    getUpdatesWithMergedComments: function(){
+        return this.state.ticket.updates().reduce(function(a, next) {
+            var prev = a.pop();
+            if (!prev) {
+                a.push(next);
+                return a;
+            }
+
+            var bothComments = (
+                prev.get(&quot;type&quot;) === &quot;comments&quot; &amp;&amp;
+                next.get(&quot;type&quot;) === &quot;comments&quot;
+            );
+
+            if (bothComments &amp;&amp; prev.wasCreatedInVicinityOf(next)) {
+                a.push(prev.merge(next));
+                return a;
+            }
+
+            a.push(prev);
+            a.push(next);
+            return a;
+
+        }, []);
+    },
+
+    render: function() {
+        if (this.state.notFound) {
+            return &lt;Alert bsStyle=&quot;danger&quot;&gt;
+                Hakemaasi tukipyyntöä ei ole olemassa.
+            &lt;/Alert&gt;;
+        }
+
+
+        var self = this;
+        var ticket = this.state.ticket;
+        var fetching = this.state.fetching;
+        var user = this.props.user;
+        var updates = this.getUpdatesWithMergedComments();
+        var title = ticket.getCurrentTitle();
+
+        this.props.title.setTitle(title);
+        this.props.title.activateOnNextTick();
+
+        return (
+            &lt;div className=&quot;row TicketView&quot;&gt;
+
+                &lt;div className=&quot;ticket-view col-md-8&quot;&gt;
+
+                    &lt;Loading visible={fetching} /&gt;
+
+                    &lt;div className=&quot;row ticket-actions-row&quot;&gt;
+                        &lt;div className=&quot;col-md-12&quot;&gt;
+                            {user.isManager() &amp;&amp;
+                                &lt;Button bsStyle=&quot;primary&quot; onClick={this.handleAddHandler} &gt;
+                                    &lt;i className=&quot;fa fa-user&quot;&gt;&lt;/i&gt;Lisää käsittelijä
+                                &lt;/Button&gt; }
+
+                            {ticket.isHandler(user) &amp;&amp;
+                                &lt;ToggleStatusButton ticket={ticket} user={user} /&gt;}
+
+
+                            {ticket.createdBy().get(&quot;id&quot;) !== user.get(&quot;id&quot;) &amp;&amp;
+                                &lt;ToggleFollowButton ticket={ticket} user={user} /&gt;}
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;div className=&quot;row title-row&quot;&gt;
+                        &lt;div className=&quot;col-md-12&quot;&gt;
+                            &lt;EditableText onSubmit={this.changeTitle} text={title} disabled={!ticket.isHandler(user)}&gt;
+                                &lt;h3&gt;
+                                    {this.renderBadge()}
+
+                                    &lt;span className=&quot;ticket-title&quot;&gt;
+                                        {title || &lt;Redacted&gt;Ladataan otsikkoa&lt;/Redacted&gt;}
+                                    &lt;/span&gt;
+                                    {this.state.changingTitle &amp;&amp; &lt;Loading.Spinner /&gt;}
+                                &lt;/h3&gt;
+                            &lt;/EditableText&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;div className=&quot;updates&quot;&gt;
+                        {updates.map(function(update) {
+                            var UpdateComponent = UPDATE_COMPONENTS[update.get(&quot;type&quot;)];
+
+                            if (!UpdateComponent) {
+                                console.error(&quot;Unknown update type: &quot; + update.get(&quot;type&quot;));
+                                return;
+                            }
+
+                            var className = classSet({
+                                unread: update.isUnreadBy(self.props.user)
+                            });
+
+
+                            return (
+                                &lt;div key={update.getUniqueId()} className={className}&gt;
+                                    &lt;UpdateComponent update={update} onViewport={function(props) {
+                                        if (_.last(updates) !== props.update) return;
+                                        // Mark the ticket as read 5 seconds
+                                        // after the last update has been shown
+                                        // to the user
+                                        debug(&quot;Last comment is visible. Going to mark it read soon!&quot;);
+                                        setTimeout(function() {
+                                            self.lazyMarkAsRead();
+                                        }, 5*1000);
+                                    }} /&gt;
+                                &lt;/div&gt;
+                            );
+                        })}
+                    &lt;/div&gt;
+
+                    &lt;CommentForm onSubmit={this.saveComment} &gt;
+                        Lähetä {this.state.saving &amp;&amp; &lt;Loading.Spinner /&gt;}
+                    &lt;/CommentForm&gt;
+                    &lt;UploadProgress progress={this.state.uploadProgress} /&gt;
+                    &lt;AttachmentsForm ref=&quot;attachments&quot; /&gt;
+                &lt;/div&gt;
+
+                &lt;div className=&quot;col-md-4&quot;&gt;
+                    &lt;SideInfo /&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        );
+    },
+
+});
+
+module.exports = TicketView;
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

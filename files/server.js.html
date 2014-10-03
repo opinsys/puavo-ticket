@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>server.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Backbone.Collection.html">Backbone.Collection</a></li>
+            
+                <li><a href="../classes/Backbone.Events.html">Backbone.Events</a></li>
+            
+                <li><a href="../classes/Backbone.Model.html">Backbone.Model</a></li>
+            
+                <li><a href="../classes/Bluebird.Promise.html">Bluebird.Promise</a></li>
+            
+                <li><a href="../classes/Bookshelf.Collection.html">Bookshelf.Collection</a></li>
+            
+                <li><a href="../classes/Bookshelf.Model.html">Bookshelf.Model</a></li>
+            
+                <li><a href="../classes/components.AttachmentsForm.html">components.AttachmentsForm</a></li>
+            
+                <li><a href="../classes/components.CommentForm.html">components.CommentForm</a></li>
+            
+                <li><a href="../classes/components.EditableText.html">components.EditableText</a></li>
+            
+                <li><a href="../classes/components.ElasticTextarea.html">components.ElasticTextarea</a></li>
+            
+                <li><a href="../classes/components.ErrorMessage.html">components.ErrorMessage</a></li>
+            
+                <li><a href="../classes/components.FileItem.html">components.FileItem</a></li>
+            
+                <li><a href="../classes/components.ForcedLinebreaks.html">components.ForcedLinebreaks</a></li>
+            
+                <li><a href="../classes/components.Loading.html">components.Loading</a></li>
+            
+                <li><a href="../classes/components.Loading.Spinner.html">components.Loading.Spinner</a></li>
+            
+                <li><a href="../classes/components.Main.html">components.Main</a></li>
+            
+                <li><a href="../classes/components.NotificationBox.html">components.NotificationBox</a></li>
+            
+                <li><a href="../classes/components.NotificationsHub.html">components.NotificationsHub</a></li>
+            
+                <li><a href="../classes/components.NotificationsHub.NotificationItem.html">components.NotificationsHub.NotificationItem</a></li>
+            
+                <li><a href="../classes/components.OnViewportMixin.html">components.OnViewportMixin</a></li>
+            
+                <li><a href="../classes/components.ProfileBadge.html">components.ProfileBadge</a></li>
+            
+                <li><a href="../classes/components.Redacted.html">components.Redacted</a></li>
+            
+                <li><a href="../classes/components.SelectUsers.html">components.SelectUsers</a></li>
+            
+                <li><a href="../classes/components.SelectUsers.UserItem.html">components.SelectUsers.UserItem</a></li>
+            
+                <li><a href="../classes/components.SideInfo.html">components.SideInfo</a></li>
+            
+                <li><a href="../classes/components.StringDiff.html">components.StringDiff</a></li>
+            
+                <li><a href="../classes/components.TicketForm.html">components.TicketForm</a></li>
+            
+                <li><a href="../classes/components.TicketList.html">components.TicketList</a></li>
+            
+                <li><a href="../classes/components.TicketList.TitleList.html">components.TicketList.TitleList</a></li>
+            
+                <li><a href="../classes/components.TicketView.html">components.TicketView</a></li>
+            
+                <li><a href="../classes/components.TicketView.CommentUpdate.html">components.TicketView.CommentUpdate</a></li>
+            
+                <li><a href="../classes/components.TicketView.HandlerUpdate.html">components.TicketView.HandlerUpdate</a></li>
+            
+                <li><a href="../classes/components.TicketView.TagUpdate.html">components.TicketView.TagUpdate</a></li>
+            
+                <li><a href="../classes/components.TicketView.TitleUpdate.html">components.TicketView.TitleUpdate</a></li>
+            
+                <li><a href="../classes/components.TicketView.ToggleFollowButton.html">components.TicketView.ToggleFollowButton</a></li>
+            
+                <li><a href="../classes/components.TicketView.ToggleStatusButton.html">components.TicketView.ToggleStatusButton</a></li>
+            
+                <li><a href="../classes/components.TicketView.UpdateMixin.html">components.TicketView.UpdateMixin</a></li>
+            
+                <li><a href="../classes/components.TimeAgo.html">components.TimeAgo</a></li>
+            
+                <li><a href="../classes/components.UploadProgress.html">components.UploadProgress</a></li>
+            
+                <li><a href="../classes/components.User.html">components.User</a></li>
+            
+                <li><a href="../classes/models.BaseMixin.html">models.BaseMixin</a></li>
+            
+                <li><a href="../classes/models.client.Base.html">models.client.Base</a></li>
+            
+                <li><a href="../classes/models.client.Base.Collection.html">models.client.Base.Collection</a></li>
+            
+                <li><a href="../classes/models.client.Base.NotFound.html">models.client.Base.NotFound</a></li>
+            
+                <li><a href="../classes/models.client.Comment.html">models.client.Comment</a></li>
+            
+                <li><a href="../classes/models.client.Device.html">models.client.Device</a></li>
+            
+                <li><a href="../classes/models.client.Handler.html">models.client.Handler</a></li>
+            
+                <li><a href="../classes/models.client.models.UserMixin.html">models.client.models.UserMixin</a></li>
+            
+                <li><a href="../classes/models.client.Notification.html">models.client.Notification</a></li>
+            
+                <li><a href="../classes/models.client.Tag.html">models.client.Tag</a></li>
+            
+                <li><a href="../classes/models.client.Ticket.html">models.client.Ticket</a></li>
+            
+                <li><a href="../classes/models.client.Ticket.Collection.html">models.client.Ticket.Collection</a></li>
+            
+                <li><a href="../classes/models.client.TicketView.opinsysRobot.html">models.client.TicketView.opinsysRobot</a></li>
+            
+                <li><a href="../classes/models.client.Title.html">models.client.Title</a></li>
+            
+                <li><a href="../classes/models.client.UpdatesCollection.html">models.client.UpdatesCollection</a></li>
+            
+                <li><a href="../classes/models.server.Attachment.html">models.server.Attachment</a></li>
+            
+                <li><a href="../classes/models.server.Base.html">models.server.Base</a></li>
+            
+                <li><a href="../classes/models.server.Chunk.html">models.server.Chunk</a></li>
+            
+                <li><a href="../classes/models.server.Comment.html">models.server.Comment</a></li>
+            
+                <li><a href="../classes/models.server.Device.html">models.server.Device</a></li>
+            
+                <li><a href="../classes/models.server.Email.html">models.server.Email</a></li>
+            
+                <li><a href="../classes/models.server.Follower.html">models.server.Follower</a></li>
+            
+                <li><a href="../classes/models.server.Handler.html">models.server.Handler</a></li>
+            
+                <li><a href="../classes/models.server.Notification.html">models.server.Notification</a></li>
+            
+                <li><a href="../classes/models.server.Tag.html">models.server.Tag</a></li>
+            
+                <li><a href="../classes/models.server.Ticket.html">models.server.Ticket</a></li>
+            
+                <li><a href="../classes/models.server.Ticket.queries.html">models.server.Ticket.queries</a></li>
+            
+                <li><a href="../classes/models.server.Title.html">models.server.Title</a></li>
+            
+                <li><a href="../classes/models.server.User.html">models.server.User</a></li>
+            
+                <li><a href="../classes/models.TagMixin.html">models.TagMixin</a></li>
+            
+                <li><a href="../classes/models.TicketMixin.html">models.TicketMixin</a></li>
+            
+                <li><a href="../classes/models.UserInformation.html">models.UserInformation</a></li>
+            
+                <li><a href="../classes/React.ReactComponent.html">React.ReactComponent</a></li>
+            
+                <li><a href="../classes/ReactComponent.html">ReactComponent</a></li>
+            
+                <li><a href="../classes/ReactCompositeComponent.html">ReactCompositeComponent</a></li>
+            
+                <li><a href="../classes/ReactMountReady.html">ReactMountReady</a></li>
+            
+                <li><a href="../classes/ReactMultiChild.html">ReactMultiChild</a></li>
+            
+                <li><a href="../classes/ReactOwner.html">ReactOwner</a></li>
+            
+                <li><a href="../classes/ReactPropTransferer.html">ReactPropTransferer</a></li>
+            
+                <li><a href="../classes/ReactReconcileTransaction.html">ReactReconcileTransaction</a></li>
+            
+                <li><a href="../classes/ReactServerRenderingTransaction.html">ReactServerRenderingTransaction</a></li>
+            
+                <li><a href="../classes/ReactTestUtils.html">ReactTestUtils</a></li>
+            
+                <li><a href="../classes/ReactTextComponent.html">ReactTextComponent</a></li>
+            
+                <li><a href="../classes/server.Request.html">server.Request</a></li>
+            
+                <li><a href="../classes/server.Response.html">server.Response</a></li>
+            
+                <li><a href="../classes/test.helpers.html">test.helpers</a></li>
+            
+                <li><a href="../classes/utils.BrowserTitle.html">utils.BrowserTitle</a></li>
+            
+                <li><a href="../classes/utils.GridSQL.html">utils.GridSQL</a></li>
+            
+                <li><a href="../classes/utils.middleware.createResponseLogger.html">utils.middleware.createResponseLogger</a></li>
+            
+                <li><a href="../classes/utils.middleware.createSlowInternet.html">utils.middleware.createSlowInternet</a></li>
+            
+                <li><a href="../classes/utils.Puavo.html">utils.Puavo</a></li>
+            
+                <li><a href="../classes/utils.Superagent.html">utils.Superagent</a></li>
+            
+                <li><a href="../classes/utils.Transaction.html">utils.Transaction</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/filesize.html">filesize</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected" checked>
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private" checked>
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated" checked>
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: server.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&quot;use strict&quot;;
+var PRODUCTION = process.env.NODE_ENV === &quot;production&quot;;
+var CACHE_KEY = Date.now();
+var STARTED = Date.now();
+var VERSION = &quot;loading&quot;;
+var HOSTNAME = require(&quot;os&quot;).hostname();
+
+if (!PRODUCTION) {
+    // Use environment variable to set the Bluebird long stack traces in order
+    // to enable it from libraries too
+    process.env.BLUEBIRD_DEBUG = &quot;true&quot;;
+}
+
+require(&quot;./db&quot;);
+var Promise = require(&quot;bluebird&quot;);
+var express = require(&quot;express&quot;);
+var Server = require(&quot;http&quot;).Server;
+var prettyMs = require(&quot;pretty-ms&quot;);
+var exec = require(&quot;child_process&quot;).exec;
+var crypto = require(&quot;crypto&quot;);
+
+var debug = require(&quot;debug&quot;)(&quot;app:live&quot;);
+var debugMem = require(&quot;debug&quot;)(&quot;app:memory&quot;);
+var serveStatic = require(&quot;serve-static&quot;);
+var bodyParser = require(&quot;body-parser&quot;);
+var jwtsso = require(&quot;jwtsso&quot;);
+var cookieParser = require(&quot;cookie-parser&quot;);
+var session = require(&quot;express-session&quot;);
+var RedisStore = require(&quot;connect-redis&quot;)(session);
+
+var User = require(&quot;./models/server/User&quot;);
+var Ticket = require(&quot;./models/server/Ticket&quot;);
+
+var config = require(&quot;./config&quot;);
+/**
+ * http://expressjs.com/4x/api.html#req.params
+ *
+ * @namespace server
+ * @class Request
+ */
+
+/**
+ * http://expressjs.com/4x/api.html#res.status
+ *
+ * @namespace server
+ * @class Response
+ */
+var app = express();
+var server = Server(app);
+var sio = require(&quot;socket.io&quot;)(server);
+app.sio = sio;
+
+var sessionMiddleware = session({
+    name: &quot;puavo-ticket-sid&quot;,
+    resave: true,
+    saveUninitialized: true,
+    store: new RedisStore(config.redis),
+    secret: config.sessionSecret
+});
+
+sio.use(function(socket, next) {
+    sessionMiddleware(socket.request, socket.request.res, next);
+});
+
+sio.use(function(socket, next) {
+    var req = socket.request;
+    Promise.resolve().then(function() {
+        return User.byExternalId(req.session.jwt.id).fetch({ require: true });
+    })
+    .then(function(user) {
+        socket.user = user;
+        debug(&quot;%s authenticated with socket.io&quot;, user);
+    })
+    .then(next.bind(this, null))
+    .catch(function(err) {
+        console.error(&quot;Socket.IO socket init failed&quot;, err);
+        next(err);
+    });
+});
+
+sio.sockets.on(&quot;connection&quot;, function(socket) {
+    socket.join(socket.user.getSocketIORoom());
+
+    socket.on(&quot;startWatching&quot;, function(ob) {
+        Ticket.fetchByIdConstrained(socket.user, ob.ticketId)
+        .then(function(ticket) {
+            socket.join(ticket.getSocketIORoom());
+
+            debug(
+                &quot;%s started watching ticket %s&quot;,
+                socket.user, ticket.get(&quot;id&quot;)
+            );
+        })
+        .catch(console.error);
+    });
+
+    socket.on(&quot;stopWatching&quot;, function(ob) {
+        socket.leave(&quot;ticket:&quot; + ob.ticketId);
+        debug(
+            &quot;%s stopped watching ticket %s&quot;,
+            socket.user, ob.ticketId
+        );
+    });
+
+    socket.on(&quot;disconnect&quot;, function() {
+        debug(
+            &quot;%s disconnected from socket.io&quot;,
+            socket.user
+        );
+    });
+
+});
+
+app.use(require(&quot;./utils/middleware/createSlowInternet&quot;)());
+app.use(require(&quot;./utils/middleware/createResponseLogger&quot;)());
+app.use(bodyParser());
+app.use(cookieParser());
+
+app.use(sessionMiddleware);
+
+app.use(jwtsso({
+
+    // Service endpoint that issues the jwt tokens
+    authEndpoint: config.puavo.restServerAddress + &quot;/v3/sso&quot;,
+
+    // Shared secret string with the above service
+    sharedSecret: config.puavo.sharedSecret,
+
+    // Set max age in seconds for the tokens
+    // Defaults to 60 seconds
+    maxAge: 120,
+
+    hook: function(token, done) {
+        User.ensureUserFromJWTToken(token)
+        .then(done.bind(this, null))
+        .catch(done);
+    }
+
+}));
+
+
+
+app.use(&quot;/styles&quot;, serveStatic(__dirname + &quot;/styles&quot;));
+app.use(&quot;/components&quot;, serveStatic(__dirname + &quot;/components&quot;));
+app.use(&quot;/bootstrap&quot;, serveStatic(__dirname + &quot;/node_modules/bootstrap&quot;));
+app.use(&quot;/font-awesome&quot;, serveStatic(__dirname + &quot;/node_modules/font-awesome&quot;));
+app.use(serveStatic(__dirname + &quot;/public&quot;));
+app.use(&quot;/doc&quot;, serveStatic(__dirname + &quot;/doc&quot;));
+
+// Must be set here before the &#x60;ensureAuthentication&#x60; middleware because it
+// must be accessed without Puavo credentials
+app.use(require(&quot;./resources/emails&quot;));
+
+
+/**
+ * Set an instance of models.User to the request object when user has been
+ * authenticated
+ *
+ * @for server.Request
+ * @property {models.User} user
+ */
+app.use(function ensureAuthentication(req, res, next) {
+    if (!req.session.jwt) {
+        console.log(&quot;Not auth!&quot;);
+        return res.requestJwt();
+    }
+
+    User.byExternalId(req.session.jwt.id).fetch()
+    .then(function(user) {
+        if (!user) {
+            // The database was probably destroyed during development and the
+            // user in the session has disappeared. Just destroy the session
+            // and redirect to front page.
+            req.session.destroy();
+            return res.redirect(&quot;/&quot;);
+        }
+        req.sio = sio;
+        req.user = user;
+        next();
+    })
+    .catch(next);
+});
+
+app.use(function setDebugMode(req, res, next) {
+    req.debugMode = !PRODUCTION;
+    if (req.session.forceDebugMode) {
+        req.debugMode = true;
+    }
+    next();
+});
+
+app.get(&quot;/logout&quot;, function(req, res) {
+    req.session.destroy();
+    res.redirect(&quot;/&quot;);
+});
+
+app.get(&quot;/debugmode&quot;, function(req, res, next) {
+
+    req.session.forceDebugMode = !req.session.forceDebugMode;
+    console.log(&quot;forceDebugMode is now&quot;, req.session.forceDebugMode);
+    // req.session.save(function(err) {
+    //     if (err) return next(err);
+        res.render(&quot;debugmode.ejs&quot;, { debugmode: req.session.forceDebugMode });
+    // });
+});
+
+app.use(require(&quot;./resources/tickets&quot;));
+app.use(require(&quot;./resources/comments&quot;));
+app.use(require(&quot;./resources/attachments&quot;));
+app.use(require(&quot;./resources/followers&quot;));
+app.use(require(&quot;./resources/visibilities&quot;));
+app.use(require(&quot;./resources/handlers&quot;));
+app.use(require(&quot;./resources/tags&quot;));
+app.use(require(&quot;./resources/notifications&quot;));
+app.use(require(&quot;./resources/titles&quot;));
+
+app.use(&quot;/api/puavo&quot;, require(&quot;./resources/puavo_api_proxy&quot;)(config));
+
+
+app.get(&quot;/*&quot;, function(req, res) {
+
+    var jsBundle = &quot;/build/bundle.min.js&quot;;
+    var cssBundle = &quot;/build/styles.min.css&quot;;
+    var cacheKey = CACHE_KEY;
+
+    if (req.debugMode) {
+        console.log(&quot;Using debugmode for&quot;, req.user.getDomainUsername());
+        jsBundle = &quot;/build/bundle.js&quot;;
+        cssBundle = &quot;/build/styles.css&quot;;
+        cacheKey = Date.now();
+    }
+
+    res.render(&quot;index.ejs&quot;, {
+        jsBundle: jsBundle,
+        cssBundle: cssBundle,
+        cacheKey: cacheKey,
+        user: req.user.toJSON(),
+        serverHostname: HOSTNAME,
+        uptime: prettyMs(Date.now() - STARTED),
+        ptVersion: VERSION,
+        debugMode: req.debugMode,
+    });
+});
+
+app.use(function(err, req, res, next) {
+    if (process.env.NODE_ENV !== &quot;test&quot;) next(err);
+    res.status(500).send(err.stack);
+});
+
+module.exports = app;
+
+if (require.main === module) {
+    server.listen(config.port, function() {
+        console.log(&quot;Javascript API docs http://opinsys.github.io/puavo-ticket/&quot;);
+        console.log(&quot;REST API docs http://opinsys.github.io/puavo-ticket/rest&quot;);
+
+        var addr = server.address();
+        console.log(&#x27;Listening on  http://%s:%d&#x27;, addr.address, addr.port);
+    });
+
+    if (!PRODUCTION) {
+        require(&quot;./devmode&quot;)(sio);
+    }
+}
+
+
+if (debugMem.name === &quot;enabled&quot;) {
+    var filesize = require(&quot;filesize&quot;);
+    var last = process.memoryUsage().rss;
+    setInterval(function() {
+        var current = process.memoryUsage().rss;
+        var change = current - last;
+        last = current;
+
+        if (Math.abs(change) &lt; 1024) return;
+        debugMem(
+            &quot;Memory usage %s change from last %s&quot;,
+            filesize(current), filesize(change)
+        );
+    }, 500);
+}
+
+exec(&quot;dpkg -s puavo-ticket&quot;, function(err, stdout) {
+    if (err) {
+        return console.error(&quot;Failed to read puavo-ticket deb package version&quot;);
+    }
+    var re = /^Version: *(.+)/;
+
+    VERSION = stdout.split(&quot;\n&quot;).filter(function(line) {
+        return re.test(line);
+    }).map(function(line) {
+        return re.exec(line)[1];
+    })[0];
+
+    if (!PRODUCTION) return;
+
+    var shasum = crypto.createHash(&quot;sha1&quot;);
+    CACHE_KEY = shasum.update(VERSION).digest(&quot;hex&quot;);
+});
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

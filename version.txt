@@ -1,0 +1,5 @@
+commit 50a10a0d2892af1fbf5c145740a38301d1181029
+Author: Esa-Matti Suuronen <esa-matti@suuronen.org>
+Date:   Fri Oct 3 17:11:53 2014 +0300
+
+    doc fixup

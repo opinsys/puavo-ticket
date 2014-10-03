@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>components/SelectUsers.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Backbone.Collection.html">Backbone.Collection</a></li>
+            
+                <li><a href="../classes/Backbone.Events.html">Backbone.Events</a></li>
+            
+                <li><a href="../classes/Backbone.Model.html">Backbone.Model</a></li>
+            
+                <li><a href="../classes/Bluebird.Promise.html">Bluebird.Promise</a></li>
+            
+                <li><a href="../classes/Bookshelf.Collection.html">Bookshelf.Collection</a></li>
+            
+                <li><a href="../classes/Bookshelf.Model.html">Bookshelf.Model</a></li>
+            
+                <li><a href="../classes/components.AttachmentsForm.html">components.AttachmentsForm</a></li>
+            
+                <li><a href="../classes/components.CommentForm.html">components.CommentForm</a></li>
+            
+                <li><a href="../classes/components.EditableText.html">components.EditableText</a></li>
+            
+                <li><a href="../classes/components.ElasticTextarea.html">components.ElasticTextarea</a></li>
+            
+                <li><a href="../classes/components.ErrorMessage.html">components.ErrorMessage</a></li>
+            
+                <li><a href="../classes/components.FileItem.html">components.FileItem</a></li>
+            
+                <li><a href="../classes/components.ForcedLinebreaks.html">components.ForcedLinebreaks</a></li>
+            
+                <li><a href="../classes/components.Loading.html">components.Loading</a></li>
+            
+                <li><a href="../classes/components.Loading.Spinner.html">components.Loading.Spinner</a></li>
+            
+                <li><a href="../classes/components.Main.html">components.Main</a></li>
+            
+                <li><a href="../classes/components.NotificationBox.html">components.NotificationBox</a></li>
+            
+                <li><a href="../classes/components.NotificationsHub.html">components.NotificationsHub</a></li>
+            
+                <li><a href="../classes/components.NotificationsHub.NotificationItem.html">components.NotificationsHub.NotificationItem</a></li>
+            
+                <li><a href="../classes/components.OnViewportMixin.html">components.OnViewportMixin</a></li>
+            
+                <li><a href="../classes/components.ProfileBadge.html">components.ProfileBadge</a></li>
+            
+                <li><a href="../classes/components.Redacted.html">components.Redacted</a></li>
+            
+                <li><a href="../classes/components.SelectUsers.html">components.SelectUsers</a></li>
+            
+                <li><a href="../classes/components.SelectUsers.UserItem.html">components.SelectUsers.UserItem</a></li>
+            
+                <li><a href="../classes/components.SideInfo.html">components.SideInfo</a></li>
+            
+                <li><a href="../classes/components.StringDiff.html">components.StringDiff</a></li>
+            
+                <li><a href="../classes/components.TicketForm.html">components.TicketForm</a></li>
+            
+                <li><a href="../classes/components.TicketList.html">components.TicketList</a></li>
+            
+                <li><a href="../classes/components.TicketList.TitleList.html">components.TicketList.TitleList</a></li>
+            
+                <li><a href="../classes/components.TicketView.html">components.TicketView</a></li>
+            
+                <li><a href="../classes/components.TicketView.CommentUpdate.html">components.TicketView.CommentUpdate</a></li>
+            
+                <li><a href="../classes/components.TicketView.HandlerUpdate.html">components.TicketView.HandlerUpdate</a></li>
+            
+                <li><a href="../classes/components.TicketView.TagUpdate.html">components.TicketView.TagUpdate</a></li>
+            
+                <li><a href="../classes/components.TicketView.TitleUpdate.html">components.TicketView.TitleUpdate</a></li>
+            
+                <li><a href="../classes/components.TicketView.ToggleFollowButton.html">components.TicketView.ToggleFollowButton</a></li>
+            
+                <li><a href="../classes/components.TicketView.ToggleStatusButton.html">components.TicketView.ToggleStatusButton</a></li>
+            
+                <li><a href="../classes/components.TicketView.UpdateMixin.html">components.TicketView.UpdateMixin</a></li>
+            
+                <li><a href="../classes/components.TimeAgo.html">components.TimeAgo</a></li>
+            
+                <li><a href="../classes/components.UploadProgress.html">components.UploadProgress</a></li>
+            
+                <li><a href="../classes/components.User.html">components.User</a></li>
+            
+                <li><a href="../classes/models.BaseMixin.html">models.BaseMixin</a></li>
+            
+                <li><a href="../classes/models.client.Base.html">models.client.Base</a></li>
+            
+                <li><a href="../classes/models.client.Base.Collection.html">models.client.Base.Collection</a></li>
+            
+                <li><a href="../classes/models.client.Base.NotFound.html">models.client.Base.NotFound</a></li>
+            
+                <li><a href="../classes/models.client.Comment.html">models.client.Comment</a></li>
+            
+                <li><a href="../classes/models.client.Device.html">models.client.Device</a></li>
+            
+                <li><a href="../classes/models.client.Handler.html">models.client.Handler</a></li>
+            
+                <li><a href="../classes/models.client.models.UserMixin.html">models.client.models.UserMixin</a></li>
+            
+                <li><a href="../classes/models.client.Notification.html">models.client.Notification</a></li>
+            
+                <li><a href="../classes/models.client.Tag.html">models.client.Tag</a></li>
+            
+                <li><a href="../classes/models.client.Ticket.html">models.client.Ticket</a></li>
+            
+                <li><a href="../classes/models.client.Ticket.Collection.html">models.client.Ticket.Collection</a></li>
+            
+                <li><a href="../classes/models.client.TicketView.opinsysRobot.html">models.client.TicketView.opinsysRobot</a></li>
+            
+                <li><a href="../classes/models.client.Title.html">models.client.Title</a></li>
+            
+                <li><a href="../classes/models.client.UpdatesCollection.html">models.client.UpdatesCollection</a></li>
+            
+                <li><a href="../classes/models.server.Attachment.html">models.server.Attachment</a></li>
+            
+                <li><a href="../classes/models.server.Base.html">models.server.Base</a></li>
+            
+                <li><a href="../classes/models.server.Chunk.html">models.server.Chunk</a></li>
+            
+                <li><a href="../classes/models.server.Comment.html">models.server.Comment</a></li>
+            
+                <li><a href="../classes/models.server.Device.html">models.server.Device</a></li>
+            
+                <li><a href="../classes/models.server.Email.html">models.server.Email</a></li>
+            
+                <li><a href="../classes/models.server.Follower.html">models.server.Follower</a></li>
+            
+                <li><a href="../classes/models.server.Handler.html">models.server.Handler</a></li>
+            
+                <li><a href="../classes/models.server.Notification.html">models.server.Notification</a></li>
+            
+                <li><a href="../classes/models.server.Tag.html">models.server.Tag</a></li>
+            
+                <li><a href="../classes/models.server.Ticket.html">models.server.Ticket</a></li>
+            
+                <li><a href="../classes/models.server.Ticket.queries.html">models.server.Ticket.queries</a></li>
+            
+                <li><a href="../classes/models.server.Title.html">models.server.Title</a></li>
+            
+                <li><a href="../classes/models.server.User.html">models.server.User</a></li>
+            
+                <li><a href="../classes/models.TagMixin.html">models.TagMixin</a></li>
+            
+                <li><a href="../classes/models.TicketMixin.html">models.TicketMixin</a></li>
+            
+                <li><a href="../classes/models.UserInformation.html">models.UserInformation</a></li>
+            
+                <li><a href="../classes/React.ReactComponent.html">React.ReactComponent</a></li>
+            
+                <li><a href="../classes/ReactComponent.html">ReactComponent</a></li>
+            
+                <li><a href="../classes/ReactCompositeComponent.html">ReactCompositeComponent</a></li>
+            
+                <li><a href="../classes/ReactMountReady.html">ReactMountReady</a></li>
+            
+                <li><a href="../classes/ReactMultiChild.html">ReactMultiChild</a></li>
+            
+                <li><a href="../classes/ReactOwner.html">ReactOwner</a></li>
+            
+                <li><a href="../classes/ReactPropTransferer.html">ReactPropTransferer</a></li>
+            
+                <li><a href="../classes/ReactReconcileTransaction.html">ReactReconcileTransaction</a></li>
+            
+                <li><a href="../classes/ReactServerRenderingTransaction.html">ReactServerRenderingTransaction</a></li>
+            
+                <li><a href="../classes/ReactTestUtils.html">ReactTestUtils</a></li>
+            
+                <li><a href="../classes/ReactTextComponent.html">ReactTextComponent</a></li>
+            
+                <li><a href="../classes/server.Request.html">server.Request</a></li>
+            
+                <li><a href="../classes/server.Response.html">server.Response</a></li>
+            
+                <li><a href="../classes/test.helpers.html">test.helpers</a></li>
+            
+                <li><a href="../classes/utils.BrowserTitle.html">utils.BrowserTitle</a></li>
+            
+                <li><a href="../classes/utils.GridSQL.html">utils.GridSQL</a></li>
+            
+                <li><a href="../classes/utils.middleware.createResponseLogger.html">utils.middleware.createResponseLogger</a></li>
+            
+                <li><a href="../classes/utils.middleware.createSlowInternet.html">utils.middleware.createSlowInternet</a></li>
+            
+                <li><a href="../classes/utils.Puavo.html">utils.Puavo</a></li>
+            
+                <li><a href="../classes/utils.Superagent.html">utils.Superagent</a></li>
+            
+                <li><a href="../classes/utils.Transaction.html">utils.Transaction</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/filesize.html">filesize</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected" checked>
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private" checked>
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated" checked>
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: components/SelectUsers.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/** @jsx React.DOM */
+&quot;use strict&quot;;
+
+var _ = require(&quot;lodash&quot;);
+var React = require(&quot;react/addons&quot;);
+var Promise = require(&quot;bluebird&quot;);
+
+var Button = require(&quot;react-bootstrap/Button&quot;);
+
+var User = require(&quot;../models/client/User&quot;);
+var Ticket = require(&quot;../models/client/Ticket&quot;);
+var captureError = require(&quot;../utils/captureError&quot;);
+
+
+/**
+ * UserItem
+ *
+ * @namespace components
+ * @class SelectUsers.UserItem
+ * @constructor
+ * @param {Object} props
+ * @param {models.client.User} props.user
+ */
+var UserItem = React.createClass({
+
+    propTypes: {
+        user: React.PropTypes.instanceOf(User).isRequired
+    },
+
+    getDefaultProps: function() {
+        return {
+            checked: false,
+            disabled: false
+        };
+    },
+
+    handleOnChange: function(e) {
+        if (e.target.checked) this.props.onSelectUser(this.props.user);
+        else this.props.onRemoveUser(this.props.user);
+    },
+
+    render: function() {
+        var id = _.uniqueId(&quot;checkbox&quot;);
+        var user = this.props.user;
+        return (
+            &lt;label className=&quot;UserItem&quot; for={id}&gt;
+                &lt;input
+                    id={id}
+                    type=&quot;checkbox&quot;
+                    checked={this.props.checked}
+                    disabled={this.props.disabled}
+                    onChange={this.handleOnChange}
+                    ref=&quot;checkbox&quot; /&gt;
+                &lt;span className=&quot;first-name&quot; &gt;{user.get(&quot;externalData&quot;).first_name + &quot; &quot;}&lt;/span&gt;
+                &lt;span className=&quot;last-name&quot; &gt;{user.get(&quot;externalData&quot;).last_name + &quot; &quot;}&lt;/span&gt;
+                &lt;span className=&quot;badge&quot; &gt;{user.getDomainUsername()}&lt;/span&gt;
+            &lt;/label&gt;
+        );
+    }
+});
+
+
+
+/**
+ * SelectUsers
+ *
+ * @namespace components
+ * @class SelectUsers
+ * @constructor
+ * @param {Object} props
+ * @param {models.client.User} props.user
+ * @param {models.client.Ticket} props.Ticket
+ */
+var SelectUsers = React.createClass({
+
+    propTypes: {
+        user: React.PropTypes.instanceOf(User).isRequired,
+        ticket: React.PropTypes.instanceOf(Ticket).isRequired
+    },
+
+    /**
+     * Search users with the given search string. The results will be saved to
+     * the component state in &#x60;searchedUsers&#x60; key
+     *
+     * @method doSearch
+     * @param {String} searchString
+     */
+    doSearch: function(searchString) {
+        this.cancelCurrentSearch();
+
+        var self = this;
+        var user = this.props.user;
+        var ticket = this.props.ticket;
+
+        var creatorDomain = ticket.createdBy().getOrganisationDomain();
+        var currentDomain = user.getOrganisationDomain();
+        var orgs = [currentDomain];
+
+        // If the user is manager and the ticket creator is from a another
+        // organisation search users from that organisation too.
+        if (creatorDomain !== currentDomain &amp;&amp; user.isManager()) {
+            orgs.push(creatorDomain);
+        }
+
+        var searchOp = Promise.map(orgs, function(domain) {
+            return User.search(domain, searchString);
+        })
+        .then(function(users) {
+            self.setState({ searchedUsers: _.flatten(users) });
+        })
+        .catch(Promise.CancellationError, function() {
+            // cancel is ok
+        })
+        .catch(captureError(&quot;Käyttäjien haku epäonnistui&quot;));
+
+        self.setState({ searchOp: searchOp });
+    },
+
+    componentWillMount: function() {
+        // search after 500ms of silence for each mounted component
+        this.bouncedSearch = _.debounce(this.doSearch, 500);
+    },
+
+    componentDidMount: function() {
+        this.refs.search.getDOMNode().focus();
+    },
+
+    cancelCurrentSearch: function() {
+        if (!this.state.searchOp) return;
+        if (!this.state.searchOp.isPending()) return;
+        this.state.searchOp.cancel();
+    },
+
+
+    getInitialState: function() {
+        return {
+            searchString: &quot;&quot;,
+            searchOp: null,
+            searchedUsers: [],
+            selectedUsers: this.props.currentHandlers
+        };
+    },
+
+    handleSearchStringChange: function(e) {
+        this.setState({ searchString: e.target.value });
+        this.bouncedSearch(e.target.value);
+    },
+
+    handleSelectUser: function(user) {
+        this.refs.search.getDOMNode().focus();
+        if (this.isSelected(user)) return;
+
+        this.setState({
+            selectedUsers: this.state.selectedUsers.concat(user)
+        });
+
+    },
+
+    handleRemoveUser: function(user) {
+        this.refs.search.getDOMNode().focus();
+        this.setState({
+            selectedUsers: this.state.selectedUsers.filter(function(selectedUser) {
+                return selectedUser.getExternalId() !== user.getExternalId();
+            })
+        });
+    },
+
+    /**
+     * saved handlers cannot be removed yet...
+     */
+    isSaved: function(user) {
+        return this.props.currentHandlers.some(function(selectedUser) {
+            return selectedUser.getExternalId() === user.getExternalId();
+        });
+    },
+
+    isSelected: function(user) {
+        return this.state.selectedUsers.some(function(selectedUser) {
+            return selectedUser.getExternalId() === user.getExternalId();
+        });
+    },
+
+    handleOk: function(e) {
+        e.preventDefault();
+        var self = this;
+        this.props.onSelect(this.state.selectedUsers.filter(function(user) {
+            return !self.isSaved(user);
+        }));
+    },
+
+    render: function() {
+        var self = this;
+        return (
+            &lt;div className=&quot;SelectUsers&quot;&gt;
+                &lt;div className=&quot;search-input-wrap&quot;&gt;
+                    &lt;input
+                        className=&quot;form-control search-input&quot;
+                        ref=&quot;search&quot;
+                        placeholder=&quot;Aloita kirjoittamaan käsittelijän nimeä&quot;
+                        value={self.state.searchString}
+                        onChange={self.handleSearchStringChange} /&gt;
+                &lt;/div&gt;
+
+                &lt;div className=&quot;selectuser&quot;&gt;
+                    &lt;ul className=&quot;list-group&quot; &gt;
+                        {self.state.searchedUsers.map(function(user) {
+                            return (
+                                &lt;li key={user.get(&quot;externalId&quot;)} className=&quot;list-group-item&quot; &gt;
+                                    &lt;UserItem
+                                        user={user}
+                                        disabled={self.isSaved(user)}
+                                        checked={self.isSelected(user)}
+                                        onRemoveUser={self.handleRemoveUser}
+                                        onSelectUser={self.handleSelectUser} /&gt;
+                                &lt;/li&gt;
+                            );
+                        })}
+                    &lt;/ul&gt;
+
+                    {self.state.selectedUsers.length &gt; 0 &amp;&amp;
+                        &lt;h2&gt;
+                            Valitut
+                        &lt;/h2&gt;
+                    }
+
+                    &lt;ul className=&quot;list-group&quot; &gt;
+                        {self.state.selectedUsers.map(function(user) {
+                            return (
+                                &lt;li key={user.get(&quot;externalId&quot;)} className=&quot;list-group-item selected&quot; &gt;
+                                    &lt;UserItem
+                                        user={user}
+                                        checked={self.isSelected(user)}
+                                        disabled={self.isSaved(user)}
+                                        onRemoveUser={self.handleRemoveUser}
+                                        onSelectUser={self.handleSelectUser} /&gt;
+                                &lt;/li&gt;
+                            );
+                        })}
+                    &lt;/ul&gt;
+
+                &lt;/div&gt;
+
+                &lt;div className=&quot;modal-footer&quot;&gt;
+                    &lt;Button onClick={self.handleOk}&gt;
+                        Lisää käsittelijät
+                    &lt;/Button&gt;
+
+                    &lt;Button bsStyle=&quot;danger&quot; onClick={self.handleOk}&gt;
+                        Peruuta
+                    &lt;/Button&gt;
+                &lt;/div&gt;
+
+            &lt;/div&gt;
+        );
+    },
+
+});
+
+module.exports = SelectUsers;
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
