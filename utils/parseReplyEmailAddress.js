@@ -1,6 +1,6 @@
 "use strict";
 
-var re = /^.+([0-9]+)\+(.+)@(.+)$/;
+var re = /^.+?([0-9]+)\+(.+)@(.+)$/;
 
 /**
  * Parse ticket id and email secret from a reply email address

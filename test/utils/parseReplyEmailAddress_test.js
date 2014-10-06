@@ -25,4 +25,10 @@ describe("utils/parseReplyEmailAddress", function() {
         assert(!parseReplyEmailAddress("staging-tukipyynto@tuki.opinsys.fi"));
     });
 
+    it("can parse multi digit id", function() {
+        var ob = parseReplyEmailAddress("staging-reply-to-10+secret@tuki.opinsys.net");
+        assert(ob);
+        assert.equal(10, ob.ticketId);
+    });
+
 });
