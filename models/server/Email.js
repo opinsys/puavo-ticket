@@ -9,9 +9,9 @@ var User = require("app/models/server/User");
 var parseReplyEmailAddress = require("app/utils/parseReplyEmailAddress");
 
 var STATES = {
-    1: "pending",
-    2: "accepted",
-    3: "rejected"
+    pending: 1,
+    accepted: 2,
+    rejecte: 3
 };
 
 var STATESr = {};
@@ -50,7 +50,7 @@ var Email = Base.extend({
      * @return {String}
      */
     getState: function() {
-        return STATES[this.get("state")];
+        return STATESr[this.get("state")];
     },
 
 
@@ -61,7 +61,7 @@ var Email = Base.extend({
      * @return {models.server.Email}
      */
     reject: function() {
-        return this.set({ state: STATESr.rejected });
+        return this.set({ state: STATES.rejected });
     },
 
 
@@ -179,7 +179,7 @@ var Email = Base.extend({
             })).return(comment)
             .then(function(comment) {
                 return self.set({
-                    state: STATESr.accepted,
+                    state: STATES.accepted,
                     commentId: comment.get("id")
                 }).save();
             }).return(ticket);
@@ -205,12 +205,21 @@ var Email = Base.extend({
         })
         .then(function(comment) {
             return self.set({
-                state: STATESr.accepted,
+                state: STATES.accepted,
                 commentId: comment.get("id")
             }).save();
         });
     },
 
 });
+
+/**
+ * Email state id mapping. Useful for query building.
+ *
+ * @static
+ * @property STATES
+ * @type Object
+ */
+Email.STATES = STATES;
 
 module.exports = Email;
