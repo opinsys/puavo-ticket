@@ -732,6 +732,46 @@ var Ticket = Base.extend({
     },
 
     /**
+     * Send live updates to active users about the given comment
+     *
+     * @method sendLiveNotifications
+     * @param {models.server.Comment} comment
+     * @param {Object} sio Socket.IO object
+     * @return {Bluebird.Promise}
+     */
+    sendLiveNotifications: function(comment, sio){
+        var self = this;
+        var userId = comment.get("createdById");
+
+        sio.sockets.to(
+            self.getSocketIORoom()
+        ).emit("watcherUpdate", {
+            ticketId: self.get("id"),
+            commentId: comment.get("id")
+        });
+
+        return self.followers().query(function(q) {
+            q.where("followedById", "!=", userId);
+        })
+        .fetch()
+        .then(function(followers) {
+            return comment.load([
+                "createdBy",
+                "ticket",
+                "ticket.titles",
+            ]).return(followers);
+        })
+        .then(function(followers) {
+            return followers.models;
+        })
+        .each(function(follower) {
+            sio.sockets.to(
+                follower.getSocketIORoom()
+            ).emit("followerUpdate", comment.toJSON());
+        });
+    },
+
+    /**
      * Update `updatedAt` column to current time. Should be called when ever a
      * update relation is added to the ticket
      *
@@ -795,6 +835,7 @@ var Ticket = Base.extend({
                 return ticket.load(["comments", "comments.createdBy"]);
             });
     },
+
 
     /**
      * Fetch tickets by given visibilities.
