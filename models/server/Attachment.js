@@ -63,9 +63,7 @@ var Attachment = Base.extend({
      * @return {String}
      */
     getFileId: function(){
-        var id = this.get("fileId");
-        if (!id) throw new Error("File id null for " + this.get("id"));
-        return id;
+        return this.get("fileId") || this.getComputedFileId();
     },
 
     /**
