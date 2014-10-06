@@ -20,6 +20,8 @@ Object.keys(STATES).forEach(function(key) {
 });
 
 /**
+ * Email archive and review queue
+ *
  * @namespace models.server
  * @extends models.server.Base
  * @class Email
@@ -135,7 +137,7 @@ var Email = Base.extend({
      * @method isReply
      */
     isReply: function(){
-        return !this._parseRecipient();
+        return !!this._parseRecipient();
     },
 
     /**
@@ -145,7 +147,11 @@ var Email = Base.extend({
      * @return {Number}
      */
     getTicketId: function() {
-        return this._parseRecipient().ticketId;
+        var ob = this._parseRecipient();
+        if (!ob) {
+            throw new Error("Cannot get ticket id for non reply recipient adress");
+        }
+        return ob.ticketId;
     },
 
     /**

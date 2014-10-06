@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === "test") {
     config.sessionSecret = "secret";
     config.emailJobSecret = "secret";
     config.emailReplyDomain = "opinsys.example";
-
+    config.mailGunSecret = "secret";
 } else {
     var productionConfig = require("./_config");
     config = _.extend(config, productionConfig);
@@ -62,6 +62,10 @@ if (!config.emailJobSecret) {
 
 if (!config.emailReplyDomain) {
     throw new Error("config.emailReplyDomain is not set");
+}
+
+if (!config.mailGunSecret) {
+    throw new Error("config.mailGunSecret is not set");
 }
 
 if (config.smtp) {

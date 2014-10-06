@@ -21,4 +21,8 @@ describe("utils/parseReplyEmailAddress", function() {
         assert.equal("tuki.opinsys.net", ob.domain);
     });
 
+    it("staging-tukipyynto@tuki.opinsys.fi is not a reply adress", function() {
+        assert(!parseReplyEmailAddress("staging-tukipyynto@tuki.opinsys.fi"));
+    });
+
 });

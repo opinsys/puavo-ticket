@@ -67,7 +67,7 @@ describe("Email handler", function() {
 
     it("can create new ticket from emails", function() {
 
-        var req = request(app).post("/api/emails/new");
+        var req = request(app).post("/api/emails/mailgun/secret");
         req.set("Content-Type", "application/x-www-form-urlencoded");
 
         return streamFixture2Req("new_outlook", req)
@@ -143,7 +143,7 @@ describe("Email handler", function() {
     });
 
     it("can create new tickets with attachments", function() {
-        var req = request(app).post("/api/emails/new");
+        var req = request(app).post("/api/emails/mailgun/secret");
         req.set("Content-Type", "multipart/form-data; boundary=385945c4-8dad-45e8-9249-84a0424a83ed");
 
         return streamFixture2Req("new_outlook_with_attachment", req)
@@ -217,7 +217,7 @@ describe("Email handler", function() {
             return ticket.set({ emailSecret: "checksum" }).save();
         })
         .then(function(ticket) {
-            var req = request(app).post("/api/emails/reply");
+            var req = request(app).post("/api/emails/mailgun/secret");
             req.set("Content-Type", "application/x-www-form-urlencoded");
             return streamFixture2Req("reply_zimbra", req);
         })
@@ -247,7 +247,7 @@ describe("Email handler", function() {
     });
 
     it("can reply with an attachment", function() {
-        var req = request(app).post("/api/emails/reply");
+        var req = request(app).post("/api/emails/mailgun/secret");
         req.set("Content-Type", "multipart/form-data; boundary=94229b8e-5746-4a02-9d4b-4cb30029a369");
         return streamFixture2Req("zimbra_reply_with_attachments", req)
         .then(function(res) {

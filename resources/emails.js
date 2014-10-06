@@ -57,18 +57,19 @@ function isMultipartPost(req) {
 
 
 /**
- *
- * Receive POST from Mailgun webhook
+ * Receive POST from Mailgun webhook. Mailgun sends a parsed email as an
+ * application/x-www-form-urlencoded or as a multipart form if the email
+ * contains attachments.
  *
  * http://documentation.mailgun.com/user_manual.html#parsed-messages-parameters
  *
  * @static
  * @private
- * @method receiveMailGunPOST
+ * @method parseMailgunPost
  * @param {Object} req Expressjs request object
  * @return {Bluebird.Promise}
  */
-function receiveMailGunPOST(req) {
+function parseMailgunPost(req) {
     // If not multipart assume body-parser parsed
     // application/x-www-form-urlencoded or application/json
     if (!isMultipartPost(req)) {
@@ -88,11 +89,14 @@ function receiveMailGunPOST(req) {
             part.on("error", reject);
             if (!part.filename) {
                 part.pipe(concat(function(data) {
+                    // XXX Can clash with duplicate keys
                     fields[part.name] = data.toString();
                 }));
                 return;
             }
 
+            // Stream file attachments directly to GridSQL without hitting
+            // local disk
             if (part.filename !== null) {
                 files.push(db.gridSQL.write(
                     "email-attachment:" + uuid.v4(),
@@ -122,64 +126,75 @@ function receiveMailGunPOST(req) {
     }).then(createArchivedEmail);
 }
 
-
-app.post("/api/emails/new", function(req, res, next) {
-    receiveMailGunPOST(req).then(function(email) {
-        return email.submitAsNewTicket();
-    })
-    .then(function(ticket) {
-        var comment = ticket.relations.comments.first();
-        var user = comment.relations.createdBy;
-        res.json({
-            externalId: user.getExternalId(),
-            userId: user.get("id"),
-            ticketId: ticket.get("id"),
-            commentId: comment.get("id")
-        });
-    })
-    .catch(next);
-});
-
-
-app.post("/api/emails/reply", function(req, res, next) {
-    receiveMailGunPOST(req).then(function(email) {
-        return Ticket.byId(email.getTicketId()).fetch()
+/**
+ * Create new ticket from the email or use it as reply to an existing ticket
+ *
+ * @static
+ * @private
+ * @method receiveEmail
+ * @param {models.server.Email} email
+ * @param {Object} req Express request object
+ * @param {Object} res Express response object
+ * @return Bluebird.Promise
+ */
+function receiveEmail(email, req, res) {
+    if (!email.isReply()) {
+        return email.submitAsNewTicket()
         .then(function(ticket) {
-            if (!ticket) {
-                return res.status(404).json({
-                    error: { message: "ticket not found" }
-                });
-            }
-            var secret = ticket.get("emailSecret");
-            if (!secret || secret !== email.getEmailSecret()) {
-                return res.status(401).json({
-                    error: { message: "permission denied" }
-                });
-            }
-
-            return email.submitAsReply(ticket)
-            .then(function(comment) {
-                var user = email.user;
-                res.json({
-                    externalId: user.getExternalId(),
-                    userId: user.get("id"),
-                    ticketId: ticket.get("id"),
-                    commentId: comment.get("id")
-                });
+            var comment = ticket.relations.comments.first();
+            var user = comment.relations.createdBy;
+            res.json({
+                externalId: user.getExternalId(),
+                userId: user.get("id"),
+                ticketId: ticket.get("id"),
+                commentId: comment.get("id")
             });
         });
-    })
-    .catch(next);
-});
-
-function sendEmails(req, res, next) {
-
-    if (req.body.secret !== config.emailJobSecret) {
-        return res.status(403).json({ error: "permission denied" });
     }
+
+    return Ticket.byId(email.getTicketId()).fetch()
+    .then(function(ticket) {
+        if (!ticket) {
+            return res.status(404).json({
+                error: { message: "ticket not found" }
+            });
+        }
+
+        var secret = ticket.get("emailSecret");
+        if (!secret || secret !== email.getEmailSecret()) {
+            return res.status(401).json({
+                error: { message: "permission denied - invalid reply to address" }
+            });
+        }
+
+        return email.submitAsReply(ticket)
+        .then(function(comment) {
+            var user = email.user;
+            res.json({
+                externalId: user.getExternalId(),
+                userId: user.get("id"),
+                ticketId: ticket.get("id"),
+                commentId: comment.get("id")
+            });
+        });
+    });
+}
+
+
+
+/**
+ * Send emails notifications to every user with unread ticket comments
+ *
+ * @static
+ * @private
+ * @method sendEmails
+ * @return {Bluebird.Promise} with some sending meta data
+ */
+function sendEmails() {
+
     var started = Date.now();
 
-    User.collection().fetch()
+    return User.collection().fetch()
     .then(function(coll) {
         debug("Going to search for emails for %s users", coll.length);
         return coll.models;
@@ -202,19 +217,40 @@ function sendEmails(req, res, next) {
         var duration = Date.now() - started;
 
         debug("emails processed in %s", prettyMs(duration));
-        res.json({
+        return {
             ok: true,
             duration: duration,
             durationPretty: prettyMs(duration),
-        });
-    })
-    .catch(next);
+        };
+    });
 }
 
-app.post("/api/send_emails", function(req, res, next) {
-    console.log("Call to deprecated /api/send_emails");
-    sendEmails(req, res, next);
+/**
+ * Mailgun webhook endpoint
+ */
+app.post("/api/emails/mailgun/:secret", function(req, res, next) {
+    if (config.mailGunSecret !== req.params.secret) {
+        return res.status(401).json({ error: "permission denied" });
+    }
+
+    parseMailgunPost(req).then(function(email) {
+        return receiveEmail(email, req, res);
+    })
+    .catch(next);
 });
-app.post("/api/emails/send", sendEmails);
+
+/**
+ * Email cronjob enpoint
+ */
+app.post("/api/emails/send/:secret", function(req, res, next) {
+    if (req.params.secret !== config.emailJobSecret) {
+        return res.status(403).json({ error: "permission denied" });
+    }
+
+    sendEmails().then(function(info) {
+        res.json(info);
+    })
+    .catch(next);
+});
 
 module.exports = app;
