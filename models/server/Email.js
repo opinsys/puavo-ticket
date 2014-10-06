@@ -169,7 +169,8 @@ var Email = Base.extend({
             return Ticket.create(
                 self.getSubject(),
                 self.getBody(),
-                user
+                user,
+                { textType: "email" }
             );
         })
         .then(function(ticket) {
@@ -196,7 +197,9 @@ var Email = Base.extend({
     submitAsReply: function(ticket){
         var self = this;
         return this.fetchUser().then(function(user) {
-            return ticket.addComment(self.getBody(), user);
+            return ticket.addComment(self.getBody(), user, {
+                textType: "email"
+            });
         })
         .then(function(comment) {
             return Promise.all(self.getFiles().map(function(file) {

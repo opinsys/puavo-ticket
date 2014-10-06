@@ -39,9 +39,11 @@ describe("Comment model", function() {
                     });
             })
             .then(function(comments) {
-                assert(comments.find(function(m) {
+                var comment = comments.find(function(m) {
                     return m.get("comment") === "foo";
-                }));
+                });
+                assert(comment);
+                assert.equal("plain", comment.get("textType"));
             });
     });
 

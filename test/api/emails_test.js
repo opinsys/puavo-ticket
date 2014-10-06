@@ -108,6 +108,11 @@ describe("Email handler", function() {
             );
 
             assert.equal(
+                "email",
+                firstComment.get("textType")
+            );
+
+            assert.equal(
                 "Esa-Matti Suuronen",
                 firstComment.relations.createdBy.getFullName()
             );
@@ -230,6 +235,10 @@ describe("Email handler", function() {
         .then(function(ticket) {
             var comment = ticket.relations.comments.last();
             assert.equal("Tämä on vastaus Zimbrasta.", comment.get("comment"));
+            assert.equal(
+                "email",
+                comment.get("textType")
+            );
 
             var commenter = comment.relations.createdBy;
             assert.equal("Esa-Matti Suuronen", commenter.getFullName());

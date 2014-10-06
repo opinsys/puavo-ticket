@@ -233,6 +233,7 @@ var Ticket = Base.extend({
      * @param {models.server.User|Number} user Creator of the tag
      * @param {Boolean} [opts]
      * @param {Boolean} [opts.silent=false] Set to true to disable update notifications
+     * @param {Boolean} [opts.textType=plain] Set custom textType
      * @return {Bluebird.Promise} with models.server.Comment
      */
     addComment: function(comment, user, opts) {
@@ -241,7 +242,8 @@ var Ticket = Base.extend({
             Comment.forge({
                 ticketId: self.get("id"),
                 comment: comment,
-                createdById: Base.toId(user)
+                createdById: Base.toId(user),
+                textType: (opts && opts.textType) || "plain"
             }).save(),
             self.addFollower(user, user)
         ).then(function(comment) {
@@ -774,6 +776,8 @@ var Ticket = Base.extend({
      * @param {models.server.User|Number} createdBy
      * @param {Object} [options]
      * @param [options.mailTransport] custom mail transport
+     * @param {Boolean} [opts.textType=plain] Set custom textType for the
+     * initial comment
      * @return {Bluebird.Promise} with models.server.Ticket
      */
     create: function(title, description, createdBy, opts) {
@@ -782,7 +786,9 @@ var Ticket = Base.extend({
             .then(function(ticket) {
                 return Promise.join(
                     ticket.addTitle(title, createdBy),
-                    ticket.addComment(description, createdBy)
+                    ticket.addComment(description, createdBy, {
+                        textType: opts && opts.textType
+                    })
                 ).return(ticket);
             })
             .then(function(ticket) {
