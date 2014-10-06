@@ -70,6 +70,8 @@ function isMultipartPost(req) {
  * @return {Bluebird.Promise}
  */
 function parseMailgunPost(req) {
+    debug("Receiving %s POST from Mailgun", req.get("content-type"));
+
     // If not multipart assume body-parser parsed
     // application/x-www-form-urlencoded or application/json
     if (!isMultipartPost(req)) {
@@ -143,6 +145,8 @@ function receiveEmail(email, req, res) {
         .then(function(ticket) {
             var comment = ticket.relations.comments.first();
             var user = comment.relations.createdBy;
+            debug("User %s created new ticket %s from email",
+                  user.get("id"), ticket.get("id"));
             res.json({
                 externalId: user.getExternalId(),
                 userId: user.get("id"),
@@ -170,6 +174,8 @@ function receiveEmail(email, req, res) {
         return email.submitAsReply(ticket)
         .then(function(comment) {
             var user = email.user;
+            debug("User %s created new reply %s for ticket %s from email",
+                  user.get("id"), comment.get("id"), ticket.get("id"));
             res.json({
                 externalId: user.getExternalId(),
                 userId: user.get("id"),
