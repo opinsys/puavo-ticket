@@ -664,7 +664,7 @@ var Ticket = Base.extend({
      */
     getReplyEmailAddress: function() {
         return [
-            "tukipyynto", this.get("id"),
+            "reply-to-", this.get("id"),
             "+", this.get("emailSecret"),
             "@", config.emailReplyDomain
         ].join("");

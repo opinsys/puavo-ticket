@@ -117,12 +117,12 @@ describe("buffered email sending", function() {
             );
 
             assert.equal(
-                "Opinsys tukipalvelu <tukipyynto1+emailsecret@opinsys.example>",
+                "Opinsys tukipalvelu <reply-to-1+emailsecret@opinsys.example>",
                 mailOb.from
             );
 
             assert.equal(
-                "Opinsys tukipalvelu <tukipyynto1+emailsecret@opinsys.example>",
+                "Opinsys tukipalvelu <reply-to-1+emailsecret@opinsys.example>",
                 mailOb.replyTo
             );
 
