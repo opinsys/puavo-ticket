@@ -140,7 +140,12 @@ function parseMailgunPost(req) {
  * @return Bluebird.Promise
  */
 function receiveEmail(email, req, res) {
+
     if (!email.isReply()) {
+        debug(
+            "Creating new ticket from '%s' -> '%s'",
+            email.getFrom(), email.getRecipient()
+        );
         return email.submitAsNewTicket()
         .then(function(ticket) {
             var comment = ticket.relations.comments.first();
@@ -156,6 +161,10 @@ function receiveEmail(email, req, res) {
         });
     }
 
+    debug(
+        "Adding comment from '%s' -> '%s'",
+        email.getFrom(), email.getRecipient()
+    );
     return Ticket.byId(email.getTicketId()).fetch()
     .then(function(ticket) {
         if (!ticket) {

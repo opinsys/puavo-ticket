@@ -84,6 +84,16 @@ var Email = Base.extend({
     },
 
     /**
+     * Get raw from field value
+     *
+     * @method getFrom
+     * @method getSenderName
+     */
+    getFrom: function(){
+        return this.get("email").fields.from;
+    },
+
+    /**
      * @method getSubject
      * @return {String}
      */
@@ -132,9 +142,20 @@ var Email = Base.extend({
     },
 
     /**
+     * Get raw sender email
+     *
+     * @method getRecipient
+     * @return {String}
+     */
+    getRecipient: function(){
+        return this.get("email").fields.recipient;
+    },
+
+    /**
      * Return true if this email is a reply to existing ticket
      *
      * @method isReply
+     * @return {Boolen}
      */
     isReply: function(){
         return !!this._parseRecipient();
