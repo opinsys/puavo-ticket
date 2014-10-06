@@ -50,8 +50,8 @@ function createArchivedEmail(data) {
 function isMultipartPost(req) {
     return (
         req.method === "POST" &&
-        req.headers["content-type"] &&
-        req.headers["content-type"].indexOf("multipart/form-data") !== -1
+        req.get("content-type") &&
+        req.get("content-type").indexOf("multipart/form-data") !== -1
     );
 }
 
