@@ -8,9 +8,10 @@ var concat = require("concat-stream");
 var crypto = require("crypto");
 
 var helpers = require("app/test/helpers");
+var app = require("app/server");
 var Ticket = require("app/models/server/Ticket");
 var User = require("app/models/server/User");
-var app = require("app/server");
+var Email = require("app/models/server/Email");
 
 function streamMailFixture(name) {
     return fs.createReadStream(__dirname + "/email_fixtures/" + name + ".txt");
@@ -114,6 +115,24 @@ describe("Email handler", function() {
                 "esa-matti.suuronen@outlook.com",
                 firstComment.relations.createdBy.getEmail()
             );
+
+            return Email.collection().fetch();
+        })
+        .then(function assertArchive(emails) {
+
+            assert.equal(1, emails.length);
+            var email = emails.first();
+
+            assert.equal(
+                "Hello.\r\nThis is in bold.",
+                email.getBody()
+            );
+
+            assert.equal(
+                Email.STATES.accepted,
+                email.get("state")
+            );
+
 
         });
     });
