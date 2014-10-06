@@ -174,13 +174,18 @@ function receiveEmail(email, req, res) {
         return email.submitAsReply(ticket)
         .then(function(comment) {
             var user = email.user;
+
             debug("User %s created new reply %s for ticket %s from email",
                   user.get("id"), comment.get("id"), ticket.get("id"));
-            res.json({
-                externalId: user.getExternalId(),
-                userId: user.get("id"),
-                ticketId: ticket.get("id"),
-                commentId: comment.get("id")
+
+            return ticket.sendLiveNotifications(comment, req.sio)
+            .then(function() {
+                res.json({
+                    externalId: user.getExternalId(),
+                    userId: user.get("id"),
+                    ticketId: ticket.get("id"),
+                    commentId: comment.get("id")
+                });
             });
         });
     });

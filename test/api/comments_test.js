@@ -16,7 +16,6 @@ describe("/api/tickets/:id/comments", function() {
         var self = this;
 
         self.emitSpy = sinon.spy();
-
         self.toStub = sinon.stub(server.sio.sockets, "to", function() {
             return { emit: self.emitSpy };
         });

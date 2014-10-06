@@ -147,6 +147,12 @@ app.use("/font-awesome", serveStatic(__dirname + "/node_modules/font-awesome"));
 app.use(serveStatic(__dirname + "/public"));
 app.use("/doc", serveStatic(__dirname + "/doc"));
 
+// Make socket.io object available from the request object
+app.use(function setSiotoReq(req, res, next) {
+    req.sio = sio;
+    next();
+});
+
 // Must be set here before the `ensureAuthentication` middleware because it
 // must be accessed without Puavo credentials
 app.use(require("./resources/emails"));
@@ -174,7 +180,6 @@ app.use(function ensureAuthentication(req, res, next) {
             req.session.destroy();
             return res.redirect("/");
         }
-        req.sio = sio;
         req.user = user;
         next();
     })

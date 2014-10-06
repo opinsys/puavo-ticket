@@ -6,12 +6,14 @@ var fs = require("fs");
 var request = require("supertest");
 var concat = require("concat-stream");
 var crypto = require("crypto");
+var sinon = require("sinon");
 
 var helpers = require("app/test/helpers");
 var app = require("app/server");
 var Ticket = require("app/models/server/Ticket");
 var User = require("app/models/server/User");
 var Email = require("app/models/server/Email");
+var server = require("app/server");
 
 function streamMailFixture(name) {
     return fs.createReadStream(__dirname + "/email_fixtures/" + name + ".txt");
@@ -50,6 +52,13 @@ function streamFixture2Req(name, req) {
 describe("Email handler", function() {
 
     before(function() {
+        var self = this;
+
+        self.emitSpy = sinon.spy();
+        self.toStub = sinon.stub(server.sio.sockets, "to", function() {
+            return { emit: self.emitSpy };
+        });
+
         return helpers.clearTestDatabase()
         .then(function() {
             return User.ensureUserFromJWTToken({
@@ -63,6 +72,11 @@ describe("Email handler", function() {
                 // XXX no schools here
             });
         });
+    });
+
+    beforeEach(function() {
+        this.toStub.reset();
+        this.emitSpy.reset();
     });
 
     it("can create new ticket from emails", function() {
@@ -212,6 +226,8 @@ describe("Email handler", function() {
     });
 
     it("can reply to tickets", function() {
+        var self = this;
+
         return Ticket.byId(1).fetch({ require: true })
         .then(function(ticket) {
             return ticket.set({ emailSecret: "checksum" }).save();
@@ -243,6 +259,29 @@ describe("Email handler", function() {
             var commenter = comment.relations.createdBy;
             assert.equal("Esa-Matti Suuronen", commenter.getFullName());
             assert.equal("esa-matti.suuronen@opinsys.fi", commenter.getEmail());
+
+
+            // Assert live updates
+            assert(self.toStub.called);
+            assert.deepEqual(
+                [ [ "ticket:1" ], [ "user:1" ] ],
+                self.toStub.args
+            );
+
+            assert(self.emitSpy.called);
+
+            // Notification is sent to ticket watchers
+            var firstCall = self.emitSpy.args[0];
+            assert.equal("watcherUpdate", firstCall[0]);
+            assert.deepEqual(
+                { ticketId: 1, commentId: 3 },
+                firstCall[1]
+            );
+
+            var secondCall = self.emitSpy.args[1];
+            assert.equal("followerUpdate", secondCall[0]);
+
+
         });
     });
 

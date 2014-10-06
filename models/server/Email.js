@@ -216,7 +216,7 @@ var Email = Base.extend({
             return self.set({
                 state: STATES.accepted,
                 commentId: comment.get("id")
-            }).save();
+            }).save().return(comment);
         });
     },
 
