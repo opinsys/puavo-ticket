@@ -78,6 +78,33 @@ var SelectUsers = React.createClass({
         ticket: React.PropTypes.instanceOf(Ticket).isRequired
     },
 
+
+    getInitialState: function() {
+        var user = this.props.user;
+        var ticket = this.props.ticket;
+        var creatorDomain = ticket.createdBy().getOrganisationDomain();
+        var currentDomain = user.getOrganisationDomain();
+        var orgs = [user.getOrganisationDomain()];
+
+        // If the user is manager and the ticket creator is from a another
+        // organisation search users from that organisation too.
+        if (creatorDomain !== currentDomain && user.isManager()) {
+            orgs.push(creatorDomain);
+        }
+
+        return {
+            organisations: orgs.join(","),
+            searchString: "",
+            searchOp: null,
+            searchedUsers: [],
+            selectedUsers: this.props.currentHandlers
+        };
+    },
+
+    getSelectedOrganisations: function() {
+        return this.state.organisations.split(",");
+    },
+
     /**
      * Search users with the given search string. The results will be saved to
      * the component state in `searchedUsers` key
@@ -89,21 +116,16 @@ var SelectUsers = React.createClass({
         this.cancelCurrentSearch();
 
         var self = this;
-        var user = this.props.user;
-        var ticket = this.props.ticket;
-
-        var creatorDomain = ticket.createdBy().getOrganisationDomain();
-        var currentDomain = user.getOrganisationDomain();
-        var orgs = [currentDomain];
-
-        // If the user is manager and the ticket creator is from a another
-        // organisation search users from that organisation too.
-        if (creatorDomain !== currentDomain && user.isManager()) {
-            orgs.push(creatorDomain);
-        }
-
-        var searchOp = Promise.map(orgs, function(domain) {
-            return User.search(domain, searchString);
+        var searchOp = Promise.map(this.getSelectedOrganisations(), function(domain) {
+            return User.search(domain, searchString)
+            .catch(function(err) {
+                if (err.responseJSON && err.responseJSON.error.message === "Cannot configure organisation for this request") {
+                    // User just typed an invalid organisation domain
+                    console.error("Bad organisation domain", err.responseJSON);
+                    return [];
+                }
+                throw err;
+            });
         })
         .then(function(users) {
             self.setState({ searchedUsers: _.flatten(users) });
@@ -132,14 +154,6 @@ var SelectUsers = React.createClass({
     },
 
 
-    getInitialState: function() {
-        return {
-            searchString: "",
-            searchOp: null,
-            searchedUsers: [],
-            selectedUsers: this.props.currentHandlers
-        };
-    },
 
     handleSearchStringChange: function(e) {
         this.setState({ searchString: e.target.value });
@@ -186,6 +200,11 @@ var SelectUsers = React.createClass({
         this.props.onSelect(this.state.selectedUsers.filter(function(user) {
             return !self.isSaved(user);
         }));
+    },
+
+    handleOrganisationChange: function(e) {
+        this.setState({ organisations: e.target.value });
+        this.bouncedSearch(this.state.searchString);
     },
 
     render: function() {
@@ -238,6 +257,15 @@ var SelectUsers = React.createClass({
                         })}
                     </ul>
 
+                </div>
+
+                <div className="search-input-wrap">
+                    <h4>Organisaatiot joista käyttäjiä haetaan</h4>
+                    <input
+                        className="form-control"
+                        onChange={self.handleOrganisationChange}
+                        value={self.state.organisations}
+                    />
                 </div>
 
                 <div className="modal-footer">
