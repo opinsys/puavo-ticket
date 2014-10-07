@@ -171,7 +171,47 @@ describe("buffered email sending", function() {
             assert.equal(200, res.status, res.text);
             assert(!self.sendMailSpy.called, "must not send emails");
         });
+    });
 
+    it("sends the initial comment for handlers that are added later", function() {
+        var self = this;
+        return Ticket.create(
+            "Ticket created for a teacher",
+            "by manager",
+            self.manager
+        ).then(function(ticket) {
+            return ticket.addHandler(self.teacher, self.manager);
+        })
+        .then(function() {
+            self.clock.tick(1000 * 60 * 6);
+            return request(app).post("/api/emails/send/secret").send({ dummy: 1 }).promise();
+        })
+        .then(function(res) {
+            assert.equal(200, res.status, res.text);
+
+            assert(
+                self.sendMailSpy.called,
+                "no email was sent"
+            );
+
+            var mailOb = self.sendMailSpy.args[0][0];
+
+            assert.equal(
+                "Tukipyyntö \"Ticket created for a teacher\" (4) on päivittynyt",
+                mailOb.subject
+            );
+            assert.equal(multiline.stripIndent(function(){/*
+                Tukipyyntösi on päivittynyt seuraavin kommentein
+
+                Pointy-haired Boss
+                by manager
+
+                ----------------------------------------------
+                Pääset tarkastelemaan tukipyyntöä kokonaisuudessaan osoitteessa https://support.opinsys.fi/tickets/4
+                Tämä viesti on lähetetty Opinsysin tukipalvelusta
+            */}), mailOb.text.trim());
+
+        });
     });
 
 });
