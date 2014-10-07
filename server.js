@@ -4,6 +4,7 @@ var CACHE_KEY = Date.now();
 var STARTED = Date.now();
 var VERSION = "loading";
 var HOSTNAME = require("os").hostname();
+require("moment/locale/fi");
 
 if (!PRODUCTION) {
     // Use environment variable to set the Bluebird long stack traces in order

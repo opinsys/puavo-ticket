@@ -3,6 +3,7 @@
 
 var filesize = require("filesize");
 var prettyMs = require("pretty-ms");
+var moment = require("moment");
 var _ = require("lodash");
 var debugAttachment = require("debug")("app:attachments");
 
@@ -69,7 +70,8 @@ var Comment = Base.extend({
             throw new Error("'createdBy' relation not loaded");
         }
 
-        return this.relations.createdBy.getFullName() + "\n" + this.get("comment");
+        var time = moment().format("MMM Do H:mm");
+        return this.relations.createdBy.getFullName() + ", " + time + "\n" + this.get("comment");
     },
 
     /**

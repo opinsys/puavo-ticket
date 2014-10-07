@@ -17,6 +17,8 @@ describe("buffered email sending", function() {
 
     before(function() {
         var self = this;
+        this.clock = sinon.useFakeTimers(new Date(2014,9,1,12).getTime(), "Date");
+
         return helpers.clearTestDatabase()
         .then(function() {
             return Promise.join(
@@ -56,20 +58,24 @@ describe("buffered email sending", function() {
             return self.ticket.markAsRead(self.teacher);
         })
         .then(function() {
+            self.clock.tick(1000*60);
             return self.ticket.addComment("A comment by another teacher", self.otherTeacher);
         })
         .then(function() {
+            self.clock.tick(1000*60*2);
             return self.ticket.addComment("A second comment by another teacher", self.otherTeacher);
         });
     });
 
     beforeEach(function() {
         this.sendMailSpy = sinon.spy(config.mailTransport, "sendMail");
-        this.clock = sinon.useFakeTimers(Date.now(), "Date");
     });
 
     afterEach(function() {
         this.sendMailSpy.restore();
+    });
+
+    after(function() {
         this.clock.restore();
     });
 
@@ -129,10 +135,10 @@ describe("buffered email sending", function() {
             assert.equal(multiline.stripIndent(function(){/*
                 Tukipyyntösi on päivittynyt seuraavin kommentein
 
-                Matti Meikäläinen
+                Matti Meikäläinen, loka 1. 12:11
                 A comment by another teacher
                 ----------------------------------------------
-                Matti Meikäläinen
+                Matti Meikäläinen, loka 1. 12:11
                 A second comment by another teacher
 
                 ----------------------------------------------
@@ -180,6 +186,7 @@ describe("buffered email sending", function() {
             "by manager",
             self.manager
         ).then(function(ticket) {
+            self.clock.tick(1000 * 60);
             return ticket.addHandler(self.teacher, self.manager);
         })
         .then(function() {
@@ -203,7 +210,7 @@ describe("buffered email sending", function() {
             assert.equal(multiline.stripIndent(function(){/*
                 Tukipyyntösi on päivittynyt seuraavin kommentein
 
-                Pointy-haired Boss
+                Pointy-haired Boss, loka 1. 12:36
                 by manager
 
                 ----------------------------------------------
