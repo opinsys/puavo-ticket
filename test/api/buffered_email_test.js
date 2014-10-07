@@ -135,10 +135,10 @@ describe("buffered email sending", function() {
             assert.equal(multiline.stripIndent(function(){/*
                 Tukipyyntösi on päivittynyt seuraavin kommentein
 
-                Matti Meikäläinen, loka 1. 12:11
+                Matti Meikäläinen, 1. loka 12:11
                 A comment by another teacher
                 ----------------------------------------------
-                Matti Meikäläinen, loka 1. 12:11
+                Matti Meikäläinen, 1. loka 12:11
                 A second comment by another teacher
 
                 ----------------------------------------------
@@ -210,7 +210,7 @@ describe("buffered email sending", function() {
             assert.equal(multiline.stripIndent(function(){/*
                 Tukipyyntösi on päivittynyt seuraavin kommentein
 
-                Pointy-haired Boss, loka 1. 12:36
+                Pointy-haired Boss, 1. loka 12:36
                 by manager
 
                 ----------------------------------------------

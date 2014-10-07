@@ -70,7 +70,7 @@ var Comment = Base.extend({
             throw new Error("'createdBy' relation not loaded");
         }
 
-        var time = moment().format("MMM Do H:mm");
+        var time = moment().format("Do MMM H:mm");
         return this.relations.createdBy.getFullName() + ", " + time + "\n" + this.get("comment");
     },
 
