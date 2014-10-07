@@ -11,6 +11,7 @@ var Loading = require("./Loading");
 var ElasticTextarea = require("./ElasticTextarea");
 var AttachmentsForm = require("./AttachmentsForm");
 var UploadProgress = require("app/components/UploadProgress");
+var BackupInput = require("app/components/BackupInput");
 
 var BackboneMixin = require("../components/BackboneMixin");
 var Ticket = require("../models/client/Ticket");
@@ -69,6 +70,8 @@ var TicketForm = React.createClass({
             });
         })
         .then(function(savedTicket) {
+            self.refs.title.clearBackup();
+            self.refs.description.clearBackup();
             self.setState({ uploadProgress: null });
             Router.transitionTo("ticket", { id: savedTicket.get("id") });
         })
@@ -86,16 +89,22 @@ var TicketForm = React.createClass({
                     <div className="header">
                         <h3>Uusi tukipyyntö</h3>
                     </div>
-                    <input
+                    <BackupInput
+                        input={React.DOM.input}
+                        backupKey="newtickettitle"
+                        ref="title"
+
                         className="form-control"
                         disabled={this.state.saving}
                         autoFocus
-                        ref="title"
                         type="text"
                         onChange={this.handleChange}
                         value={this.state.title}
                         placeholder="Tukipyyntöä kuvaava otsikko" />
-                    <ElasticTextarea
+                    <BackupInput
+                        input={ElasticTextarea}
+                        backupKey="newticketdescription"
+
                         minRows={10}
                         className="form-control"
                         disabled={this.state.saving}

@@ -6,6 +6,7 @@ var $ = require("jquery");
 var _ = require("lodash");
 
 var ElasticTextarea = require("./ElasticTextarea");
+var BackupInput = require("app/components/BackupInput");
 
 var Button = require("react-bootstrap/Button");
 var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
@@ -112,6 +113,7 @@ var CommentForm = React.createClass({
      * @method clear
      */
     clear: function() {
+        this.refs.textarea.clearBackup();
         this.setState({ comment: "" });
     },
 
@@ -186,9 +188,12 @@ var CommentForm = React.createClass({
                     <Label bsStyle={tip.bsStyle} className="linemode-tooltip">{tip.title}</Label>
                 </OverlayTrigger>
 
-                <ElasticTextarea
-                    placeholder="Kommentti..."
+                <BackupInput
+                    input={ElasticTextarea}
+                    backupKey="ticketcomment"
                     ref="textarea"
+
+                    placeholder="Kommentti..."
                     className="form-control"
                     value={this.state.comment}
                     onChange={this._handleCommentChange}
