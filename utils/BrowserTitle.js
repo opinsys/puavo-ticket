@@ -103,12 +103,22 @@ BrowserTitle.prototype = {
     },
 
     /**
+     * @method showInFavicon
+     * @param {String} s
+     */
+    showInFavicon: function(s) {
+        var Tinycon = require("app/vendor/tinycon.shim");
+        Tinycon.setBubble(s);
+    },
+
+    /**
      * Apply title changes immediately
      *
      * @method activateNow
      */
     activateNow: function() {
         this.document.title = this.getNotificationCount() + this.getTitle() + this.getTrailingTitle();
+        this.showInFavicon(this.noticationCount);
     },
 
 };
