@@ -44,7 +44,7 @@ var BackboneMixin = {
         self.setState(attrs, cb);
     },
 
-    componentDidMount: function() {
+    componentWillMount: function() {
         if (this.state) this.setBackbone(this.state);
     },
 
