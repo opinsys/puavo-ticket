@@ -78,7 +78,7 @@ doc-publish:
 	extra/publish-docs.sh
 
 
-js_files=$(shell git ls-files "*.js" | grep -v test/vendor)
+js_files=$(shell git ls-files "*.js" | grep -v test/vendor | grep -v vendor)
 jshint: $(js_files)
 	$(JSHINT) $?
 
