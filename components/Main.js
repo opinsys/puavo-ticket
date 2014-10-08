@@ -47,6 +47,7 @@ var Main = React.createClass({
         return {
             user: new User(window.USER),
             unreadTickets: Ticket.collection(),
+            ticketCollection: Ticket.collection(),
             lastUpdate: null
         };
     },
@@ -179,6 +180,7 @@ var Main = React.createClass({
 
                             <this.props.activeRouteHandler
                                 renderInModal={this.renderInModal}
+                                ticketCollection={this.state.ticketCollection}
                                 unreadTickets={unreadTickets}
                                 user={this.state.user} />
 

@@ -11,7 +11,6 @@ var User = require("../models/client/User");
 var Loading = require("./Loading");
 var ProfileBadge = require("./ProfileBadge");
 var captureError = require("../utils/captureError");
-var BackboneMixin = require("./BackboneMixin");
 var TimeAgo = require("./TimeAgo");
 
 
@@ -127,30 +126,28 @@ var TicketList = React.createClass({
 
     propTypes: {
         user: React.PropTypes.instanceOf(User).isRequired,
-        unreadTickets: React.PropTypes.instanceOf(Ticket.Collection).isRequired
+        unreadTickets: React.PropTypes.instanceOf(Ticket.Collection).isRequired,
+        ticketCollection: React.PropTypes.instanceOf(Ticket.Collection).isRequired
     },
-
-    mixins: [BackboneMixin],
 
     getInitialState: function() {
         return {
-            ticketCollection: Ticket.collection(),
             fetching: true
         };
     },
 
     componentDidMount: function() {
-        this.state.ticketCollection.fetch()
-        .bind(this)
-        .then(function() {
-            if (this.isMounted()) this.setState({ fetching: false });
+        var self = this;
+        self.props.ticketCollection.fetch()
+        .then(function(coll) {
+            if (self.isMounted()) self.setState({ fetching: false });
         })
         .catch(captureError("Tukipyyntö listauksen haku epäonnistui"));
     },
 
     render: function() {
         var unreadTickets = this.props.unreadTickets;
-        var coll = this.state.ticketCollection;
+        var coll = this.props.ticketCollection;
         var pending = coll.selectPending();
         var myTickets = coll.selectHandledBy(this.props.user);
         var others = coll.selectHandledByOtherManagers(this.props.user);
