@@ -3,6 +3,7 @@ var debug = require("debug")("puavo-ticket:models/client/Ticket");
 var Promise = require("bluebird");
 var _ = require("lodash");
 var $ = require("jquery");
+var url = require("url");
 
 var Base = require("./Base");
 var Tag = require("./Tag");
