@@ -450,7 +450,11 @@ var Ticket = Base.extend({
 var Collection = Base.Collection.extend({
 
     url: function() {
-        return "/api/tickets";
+        var u = url.parse(window.location.toString(), true);
+        return url.format({
+            pathname: "/api/tickets",
+            query: u.query
+        });
     },
 
     /**
