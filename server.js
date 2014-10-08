@@ -10,7 +10,13 @@ if (!PRODUCTION) {
     // Use environment variable to set the Bluebird long stack traces in order
     // to enable it from libraries too
     process.env.BLUEBIRD_DEBUG = "true";
+
+    if (process.env.NODE_ENV !== "test" && !process.env.DEBUG) {
+        // Enable all debug logs in development mode if nothing is enabled
+        process.env.DEBUG = "app:*";
+    }
 }
+
 
 require("./db");
 var Promise = require("bluebird");
