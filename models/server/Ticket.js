@@ -443,7 +443,7 @@ var Ticket = Base.extend({
     addHandler: function(handler, addedBy) {
         var self = this;
 
-        if (Base.isModel(handler)) handler = Promise.cast(handler);
+        if (Base.isModel(handler)) handler = Promise.resolve(handler);
         else handler = User.byId(handler).fetch({ require: true });
 
         return handler.then(function(handler) {

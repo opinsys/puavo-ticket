@@ -30,7 +30,7 @@ var BackboneMixin = {
             if (currentModel) currentModel.off();
 
             newModel.once("replace", function(op) {
-                Promise.cast(op).then(function(replaceModel) {
+                Promise.resolve(op).then(function(replaceModel) {
                     if (!self.isMounted()) return;
                     var o = {};
                     o[stateKey] = replaceModel;

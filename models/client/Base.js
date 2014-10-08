@@ -31,7 +31,7 @@ function createReplaceMixin(parentPrototype) {
             }
 
             var url = _.result(this, "url");
-            var op = Promise.cast($.get(url))
+            var op = Promise.resolve($.get(url))
             .bind(this)
             .catch(function(err) {
                 if (err && err.status === 404) {
@@ -170,7 +170,7 @@ var Base = Backbone.Model.extend({
     save: function() {
         if (!this.isNew()) throw new Error("Only new models can be saved!");
 
-        return Promise.cast($.post(_.result(this, "url"), this.toJSON()))
+        return Promise.resolve($.post(_.result(this, "url"), this.toJSON()))
             .bind(this)
             .then(function(res) {
                 return new this.constructor(res, { parent: this.parent });
