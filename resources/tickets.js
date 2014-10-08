@@ -21,6 +21,12 @@ app.get("/api/tickets", function(req, res, next) {
     Ticket.byUserVisibilities(req.user)
     .query(function(q) {
         q.orderBy("updatedAt", "desc");
+        if (req.query.tags) {
+            var tags = req.query.tags.split(",");
+            q.join("tags", "tickets.id", "=", "tags.ticketId")
+            .whereIn("tags.tag", tags)
+            .whereNull("tags.deletedAt");
+        }
     })
     .fetch({
         withRelated: [

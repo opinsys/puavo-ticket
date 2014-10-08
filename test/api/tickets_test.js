@@ -5,6 +5,8 @@ var _ = require("lodash");
 var assert = require("assert");
 
 var helpers = require("app/test/helpers");
+var Ticket = require("app/models/server/Ticket");
+var User = require("app/models/server/User");
 
 describe("/api/tickets", function() {
 
@@ -165,6 +167,50 @@ describe("/api/tickets", function() {
                     "has comments"
                 );
             });
+    });
+
+    it("can filter by tags", function() {
+        return User.ensureUserFromJWTToken(helpers.user.manager)
+        .then(function(manager) {
+            return Ticket.create("Ticket with foo tag", "plaa", manager)
+            .then(function(ticket) {
+                return ticket.addTag("foo", manager);
+            });
+        })
+        .then(function() {
+            return helpers.loginAsUser(helpers.user.manager);
+        })
+        .then(function(agent) {
+            return agent.get("/api/tickets?tags=foo").promise();
+        })
+        .then(function(res) {
+            assert.equal(res.status, 200);
+            assert.equal(1, res.body.length);
+            assert.equal(
+                "Ticket with foo tag",
+                res.body[0].titles[0].title
+            );
+        });
+    });
+
+    it("can filter by multiple tags", function() {
+        return User.ensureUserFromJWTToken(helpers.user.manager)
+        .then(function(manager) {
+            return Ticket.create("Ticket with bar tag", "plaa", manager)
+            .then(function(ticket) {
+                return ticket.addTag("bar", manager);
+            });
+        })
+        .then(function() {
+            return helpers.loginAsUser(helpers.user.manager);
+        })
+        .then(function(agent) {
+            return agent.get("/api/tickets?tags=foo,bar").promise();
+        })
+        .then(function(res) {
+            assert.equal(res.status, 200);
+            assert.equal(2, res.body.length);
+        });
     });
 
 
