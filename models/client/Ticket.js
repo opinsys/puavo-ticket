@@ -2,8 +2,6 @@
 var debug = require("debug")("puavo-ticket:models/client/Ticket");
 var Promise = require("bluebird");
 var _ = require("lodash");
-var $ = require("jquery");
-var url = require("url");
 
 var Base = require("./Base");
 var Tag = require("./Tag");
@@ -431,11 +429,11 @@ var Ticket = Base.extend({
      *
      * @static
      * @method collection
-     * @param {Array} models of models.client.Ticket
+     * @param {Object} [options]
      * @return {models.client.Ticket.Collection}
      */
-    collection: function() {
-        return new Collection();
+    collection: function(options) {
+        return new Collection(options.models, options);
     }
 
 });
@@ -451,11 +449,7 @@ var Ticket = Base.extend({
 var Collection = Base.Collection.extend({
 
     url: function() {
-        var u = url.parse(window.location.toString(), true);
-        return url.format({
-            pathname: "/api/tickets",
-            query: u.query
-        });
+        return "/api/tickets";
     },
 
     /**
@@ -465,27 +459,6 @@ var Collection = Base.Collection.extend({
      * @type {models.client.Ticket}
      */
     model: Ticket,
-
-    /**
-     * Return list of ticketi in a promise that have unread comments by the
-     * current user
-     *
-     * @method fetchWithUnreadComments
-     * @return {Bluebird.Promise} with array models.client.Ticket instances
-     */
-    fetchWithUnreadComments: function() {
-        var op = Promise.cast($.get("/api/notifications"))
-        .bind(this)
-        .map(function(data) {
-            return new Ticket(data);
-        })
-        .then(function(tickets) {
-            return new this.constructor(tickets);
-        });
-
-        this.trigger("replace", op);
-        return op;
-    },
 
     /**
      * Select tickets that are closed

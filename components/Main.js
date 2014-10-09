@@ -44,17 +44,25 @@ var Main = React.createClass({
     },
 
     getInitialState: function() {
+        var user = new User(window.USER);
         return {
-            user: new User(window.USER),
-            unreadTickets: Ticket.collection(),
-            ticketCollection: Ticket.collection(),
+            user: user,
+            unreadTickets: Ticket.collection({ url: "/api/notifications" }),
+            userTickets: Ticket.collection({
+                query: {
+                    tags: [
+                        "handler:" + user.get("id"),
+                        "status:pending|status:open",
+                    ]
+                }
+            }),
             lastUpdate: null
         };
     },
 
     fetchUnreadTickets: function() {
-        return this.state.unreadTickets.fetchWithUnreadComments()
-            .catch(captureError("Ilmoitusten lataaminen epäonnistui"));
+        return this.state.unreadTickets.fetch()
+        .catch(captureError("Ilmoitusten lataaminen epäonnistui"));
     },
 
     handleFollowerUpdate: function(update) {
@@ -180,10 +188,8 @@ var Main = React.createClass({
 
                             <this.props.activeRouteHandler
                                 renderInModal={this.renderInModal}
-                                ticketCollection={this.state.ticketCollection}
-                                unreadTickets={unreadTickets}
+                                userTickets={this.state.userTickets}
                                 user={this.state.user} />
-
                         </div>
 
                     </div>

@@ -1,11 +1,9 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
-var classSet = React.addons.classSet;
 var Link = require("react-router").Link;
 var Badge = require("react-bootstrap/Badge");
 
-var Ticket = require("../models/client/Ticket");
 var User = require("../models/client/User");
 
 var ProfileBadge = require("./ProfileBadge");
@@ -23,7 +21,6 @@ var TimeAgo = require("./TimeAgo");
  * @param {models.client.User} props.user The current user. Used to render
  * unread highlights
  * @param {Array} props.tickets Array of models.client.Ticket
- * @param {models.client.Ticket.Collection} props.unreadTickets
  */
 var TicketList = React.createClass({
 
@@ -31,21 +28,14 @@ var TicketList = React.createClass({
         title: React.PropTypes.string.isRequired,
         user: React.PropTypes.instanceOf(User).isRequired,
         tickets: React.PropTypes.array.isRequired,
-        unreadTickets: React.PropTypes.instanceOf(Ticket.Collection).isRequired
     },
 
-    renderTicketMetaInfo: function(ticket, read) {
-
-        var className = classSet({
-            unread: !read,
-            read: read
-        });
-
+    renderTicketMetaInfo: function(ticket) {
         var creator = ticket.createdBy();
         var handlers = ticket.handlers();
 
         return (
-            <tr key={ticket.get("id")} className={className}>
+            <tr key={ticket.get("id")} >
                 <td>#{ticket.get("id")}</td>
                 <td>
                     <Link to="ticket" params={{ id: ticket.get("id")}}>
@@ -76,7 +66,6 @@ var TicketList = React.createClass({
     render: function() {
         var self = this;
         var tickets = this.props.tickets;
-        var unreadTickets = this.props.unreadTickets;
 
         return (
             <div className="TicketList ticket-division col-md-12">
@@ -88,7 +77,7 @@ var TicketList = React.createClass({
                 <div className="ticketlist">
                     <table ref="list" className="table table-striped table-responsive">
                         <tbody>
-                            <tr>
+                            <tr key="title">
                                 <th data-column-id="id">ID</th>
                                 <th data-column-id="subject">Aihe</th>
                                 <th data-column-id="creator">Lähettäjä</th>
@@ -97,8 +86,7 @@ var TicketList = React.createClass({
                             </tr>
 
                             {this.props.tickets.map(function(ticket) {
-                                var read = !unreadTickets.get(ticket);
-                                return self.renderTicketMetaInfo(ticket, read);
+                                return self.renderTicketMetaInfo(ticket);
                             })}
                         </tbody>
                     </table>

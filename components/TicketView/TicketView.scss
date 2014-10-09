@@ -67,6 +67,10 @@
         background-color: $open-ticket-color;
     }
 
+    .ticket-pending {
+        background-color: $pending-ticket-color;
+    }
+
     .ticket-header {
         float: left;
     }

@@ -151,6 +151,14 @@ var UserMixin = {
     },
 
     /**
+     * @method getSchools
+     * @return {Array} of school objects
+     */
+    getSchools: function(){
+        return this.get("externalData").schools;
+    },
+
+    /**
      * Return true for users that have not ever logged in puavo-ticket and have
      * used it only via email
      *
