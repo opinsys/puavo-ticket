@@ -8,9 +8,7 @@ var Badge = require("react-bootstrap/Badge");
 var Ticket = require("../models/client/Ticket");
 var User = require("../models/client/User");
 
-var Loading = require("./Loading");
 var ProfileBadge = require("./ProfileBadge");
-var captureError = require("../utils/captureError");
 var TimeAgo = require("./TimeAgo");
 
 
@@ -18,7 +16,7 @@ var TimeAgo = require("./TimeAgo");
  * List of tickets under a title
  *
  * @namespace components
- * @class TicketList.TitleList
+ * @class TicketList
  * @constructor
  * @param {Object} props
  * @param {String} props.title Title for the list
@@ -27,7 +25,7 @@ var TimeAgo = require("./TimeAgo");
  * @param {Array} props.tickets Array of models.client.Ticket
  * @param {models.client.Ticket.Collection} props.unreadTickets
  */
-var TitleList = React.createClass({
+var TicketList = React.createClass({
 
     propTypes: {
         title: React.PropTypes.string.isRequired,
@@ -81,7 +79,7 @@ var TitleList = React.createClass({
         var unreadTickets = this.props.unreadTickets;
 
         return (
-            <div className="ticket-division col-md-12">
+            <div className="TicketList ticket-division col-md-12">
                 <div className="header">
                     <h3>{this.props.title}</h3>
                     <span className="numberOfTickets">({tickets.length})</span>
@@ -111,59 +109,5 @@ var TitleList = React.createClass({
     }
 });
 
-/**
- * List existing tickets under multiple categories
- *
- * @namespace components
- * @class TicketList
- * @extends React.ReactComponent
- * @constructor
- * @param {Object} props
- * @param {models.client.User} props.user
- * @param {models.client.Ticket.Collection} props.unreadTickets
- */
-var TicketList = React.createClass({
-
-    propTypes: {
-        user: React.PropTypes.instanceOf(User).isRequired,
-        unreadTickets: React.PropTypes.instanceOf(Ticket.Collection).isRequired,
-        ticketCollection: React.PropTypes.instanceOf(Ticket.Collection).isRequired
-    },
-
-    getInitialState: function() {
-        return {
-            fetching: true
-        };
-    },
-
-    componentDidMount: function() {
-        var self = this;
-        self.props.ticketCollection.fetch()
-        .then(function(coll) {
-            if (self.isMounted()) self.setState({ fetching: false });
-        })
-        .catch(captureError("Tukipyyntö listauksen haku epäonnistui"));
-    },
-
-    render: function() {
-        var unreadTickets = this.props.unreadTickets;
-        var coll = this.props.ticketCollection;
-        var pending = coll.selectPending();
-        var myTickets = coll.selectHandledBy(this.props.user);
-        var others = coll.selectHandledByOtherManagers(this.props.user);
-        var closed = coll.selectClosed();
-
-        return (
-            <div className="TicketList ticket-wrap row">
-                <Loading visible={this.state.fetching} />
-                <TitleList title="Odottavat tukipyynnöt" tickets={pending} unreadTickets={unreadTickets} user={this.props.user} />
-                <TitleList title="Minun tukipyyntöni" tickets={myTickets} unreadTickets={unreadTickets} user={this.props.user} />
-                {others.length > 0 &&
-                    <TitleList title="Muiden tukipyynnöt" tickets={others} unreadTickets={unreadTickets} user={this.props.user} />}
-                <TitleList title="Käsitellyt tukipyynnöt" tickets={closed} unreadTickets={unreadTickets} user={this.props.user} />
-            </div>
-        );
-    }
-});
 
 module.exports = TicketList;

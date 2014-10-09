@@ -58,7 +58,7 @@ var Routes = require("react-router").Routes;
 var Main = require("./components/Main");
 var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
-var TicketList = require("./components/TicketList");
+var FrontPage = require("./components/FrontPage");
 var BrowserTitle = require("./utils/BrowserTitle");
 
 var title = new BrowserTitle({ trailingTitle: window.document.title });
@@ -68,7 +68,8 @@ React.renderComponent(
     <Routes location="history">
         <Route handler={Main} io={io} title={title}>
             <Route name="new" handler={TicketForm} />
-            <Route name="tickets" path="/" handler={TicketList} />
+            <Route name="tickets" path="/" handler={FrontPage} />
+            {/*<Route name="tickets" path="/closed" handler={Closed} /> */}
             <Route name="ticket" path="/tickets/:id" handler={TicketView} io={io} title={title} preserveScrollPosition />
         </Route>
     </Routes>, document.getElementById("app"));
