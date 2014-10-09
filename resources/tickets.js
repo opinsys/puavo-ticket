@@ -22,18 +22,12 @@ app.get("/api/tickets", function(req, res, next) {
     .query(function(q) {
         q.orderBy("updatedAt", "desc");
 
-        if (req.query.someTag) {
-            q.join("tags", "tickets.id", "=", "tags.ticketId");
-            q.whereIn("tags.tag", req.query.someTag.split(","));
-            q.whereNull("tags.deletedAt");
-        }
-
-        if (req.query.everyTag) {
-            req.query.everyTag.split(",").forEach(function(tag, i) {
-                // Each required tag needs it's own join...
+        if (req.query.tags) {
+            [].concat(req.query.tags).forEach(function(tags, i) {
+                tags = tags.split("|");
                 var ref = "t" + i;
                 q.join("tags as " + ref, "tickets.id", "=", ref + ".ticketId");
-                q.where(ref + ".tag", "=", tag );
+                q.whereIn(ref + ".tag", tags);
                 q.whereNull(ref + ".deletedAt");
             });
         }

@@ -181,7 +181,7 @@ describe("/api/tickets", function() {
             return helpers.loginAsUser(helpers.user.manager);
         })
         .then(function(agent) {
-            return agent.get("/api/tickets?someTag=foo").promise();
+            return agent.get("/api/tickets?tags=foo").promise();
         })
         .then(function(res) {
             assert.equal(res.status, 200);
@@ -205,7 +205,7 @@ describe("/api/tickets", function() {
             return helpers.loginAsUser(helpers.user.manager);
         })
         .then(function(agent) {
-            return agent.get("/api/tickets?someTag=foo,bar").promise();
+            return agent.get("/api/tickets?tags=foo|bar").promise();
         })
         .then(function(res) {
             assert.equal(res.status, 200);
@@ -228,7 +228,7 @@ describe("/api/tickets", function() {
             return helpers.loginAsUser(helpers.user.manager);
         })
         .then(function(agent) {
-            return agent.get("/api/tickets?everyTag=foo,bar").promise();
+            return agent.get("/api/tickets?tags=foo&tags=bar").promise();
         })
         .then(function(res) {
             assert.equal(res.status, 200);
