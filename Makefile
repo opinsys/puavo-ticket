@@ -84,7 +84,7 @@ jshint: $(js_files)
 
 js:
 	browserify --debug client.js > public/build/bundle.js
-	NODE_ENV=production browserify client.js > public/build/bundle.premin.js
+	NODE_ENV=production browserify -t envify client.js > public/build/bundle.premin.js
 	uglifyjs public/build/bundle.premin.js --mangle > public/build/bundle.min.js
 
 

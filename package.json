@@ -6,8 +6,7 @@
   "license": "GPLv2",
   "browserify": {
     "transform": [
-      "reactify",
-      "envify"
+      "reactify"
     ]
   },
   "dependencies": {
