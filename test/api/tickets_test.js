@@ -181,7 +181,7 @@ describe("/api/tickets", function() {
             return helpers.loginAsUser(helpers.user.manager);
         })
         .then(function(agent) {
-            return agent.get("/api/tickets?tags=foo").promise();
+            return agent.get("/api/tickets?someTag=foo").promise();
         })
         .then(function(res) {
             assert.equal(res.status, 200);
@@ -205,7 +205,7 @@ describe("/api/tickets", function() {
             return helpers.loginAsUser(helpers.user.manager);
         })
         .then(function(agent) {
-            return agent.get("/api/tickets?tags=foo,bar").promise();
+            return agent.get("/api/tickets?someTag=foo,bar").promise();
         })
         .then(function(res) {
             assert.equal(res.status, 200);
@@ -213,5 +213,31 @@ describe("/api/tickets", function() {
         });
     });
 
+    it("can require multiple tags", function() {
+        return User.ensureUserFromJWTToken(helpers.user.manager)
+        .then(function(manager) {
+            return Ticket.create("Ticket with foo and bar", "plaa", manager)
+            .then(function(ticket) {
+                return Promise.join(
+                    ticket.addTag("foo", manager),
+                    ticket.addTag("bar", manager)
+                );
+            });
+        })
+        .then(function() {
+            return helpers.loginAsUser(helpers.user.manager);
+        })
+        .then(function(agent) {
+            return agent.get("/api/tickets?everyTag=foo,bar").promise();
+        })
+        .then(function(res) {
+            assert.equal(res.status, 200);
+            assert.equal(1, res.body.length);
+            assert.equal(
+                "Ticket with foo and bar",
+                res.body[0].titles[0].title
+            );
+        });
+    });
 
 });

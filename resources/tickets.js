@@ -21,11 +21,21 @@ app.get("/api/tickets", function(req, res, next) {
     Ticket.byUserVisibilities(req.user)
     .query(function(q) {
         q.orderBy("updatedAt", "desc");
-        if (req.query.tags) {
-            var tags = req.query.tags.split(",");
-            q.join("tags", "tickets.id", "=", "tags.ticketId")
-            .whereIn("tags.tag", tags)
-            .whereNull("tags.deletedAt");
+
+        if (req.query.someTag) {
+            q.join("tags", "tickets.id", "=", "tags.ticketId");
+            q.whereIn("tags.tag", req.query.someTag.split(","));
+            q.whereNull("tags.deletedAt");
+        }
+
+        if (req.query.everyTag) {
+            req.query.everyTag.split(",").forEach(function(tag, i) {
+                // Each required tag needs it's own join...
+                var ref = "t" + i;
+                q.join("tags as " + ref, "tickets.id", "=", ref + ".ticketId");
+                q.where(ref + ".tag", "=", tag );
+                q.whereNull(ref + ".deletedAt");
+            });
         }
     })
     .fetch({
