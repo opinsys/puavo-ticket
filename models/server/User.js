@@ -7,6 +7,7 @@ var Bookshelf = require("bookshelf");
 var UserMixin = require("../UserMixin");
 var Puavo = require("../../utils/Puavo");
 var config = require("../../config");
+var debug = require("debug")("app:server/models/User");
 
 /**
  * Server User model
@@ -71,6 +72,51 @@ var User = Base.extend({
     ensureUserFromJWTToken: function(token) {
         return User.byExternalId(token.id).fetch()
             .then(function(user) {
+                if (user) return user;
+
+                if (!token.email) return user;
+
+                var emailUser;
+                return User.byEmailAddress(token.email).fetch()
+                    .then(function(user) {
+                        if (!user) return false;
+
+                        emailUser = user;
+
+                        if (!user.get("externalData").id) return false;
+
+                        if (!user.get("externalData").username) return false;
+
+                        var puavo = new Puavo({ domain: user.get("externalData").organisation_domain });
+
+                        return puavo.fetchUserByUsername(user.get("externalData").username);
+                    })
+                    .then(function(puavoUser) {
+                        if (puavoUser !== false && puavoUser !== null) {
+                            debug("Error: email address collision!");
+                            debug( "JWT token, id: " +
+                                   token.id +
+                                   ", email: " +
+                                   token.email +
+                                   ", domain: " +
+                                   token.organisation_domain +
+                                   ", username: "+
+                                   token.username );
+                            debug( "puavo-ticket user, externalId: " +
+                                   emailUser.get("externalData").id +
+                                   ", email: " +
+                                   emailUser.get("externalData").email +
+                                   ", domain: " +
+                                   emailUser.get("externalData").organisation_domain +
+                                   ", username: " +
+                                   emailUser.get("externalData").organisation_domain );
+                            throw new User.EmailCollisionError("Email address collision!");
+                        }
+
+                        return emailUser;
+                    });
+            })
+            .then(function(user) {
                 if (!user) user = User.forge({});
 
                 user.set({
@@ -79,7 +125,6 @@ var User = Base.extend({
                 });
 
                 return user.save();
-
             });
     },
 
@@ -164,9 +209,17 @@ var User = Base.extend({
             .query(function(qb) {
                 qb.where( Bookshelf.DB.knex.raw( "externalData->>'username' = ?",  [username] ) );
             });
-    }
+    },
+
+    EmailCollisionError: EmailCollisionError
 
 });
+
+function EmailCollisionError(message) {
+    Error.prototype.constructor.call(this, message);
+}
+
+EmailCollisionError.prototype = new Error();
 
 Cocktail.mixin(User, UserMixin);
 module.exports = User;
