@@ -22,7 +22,7 @@ require("../utils/superagentPromise");
 var request = require("supertest");
 var jwt = require("jwt-simple");
 
-var DB = require("../db");
+var db = require("app/db");
 var app = require("../server");
 
 var Ticket = require("../models/server/Ticket");
@@ -138,56 +138,7 @@ function insertTestTickets(user) {
         });
 }
 
-/**
- * Delete all rows from given tables in series.
- *
- * The rows must have an id sequence which will be restarted
- *
- * @static
- * @private
- * @method deleteAndReset
- * @param {Array} tables Tables names
- */
-function deleteAndReset(tables) {
-    if (tables.length === 0) return;
 
-    var tableName = tables[0];
-
-    return DB.knex(tableName).del()
-    .then(function() {
-        return DB.knex.raw("ALTER SEQUENCE \"" + tableName + "_id_seq\" RESTART");
-    })
-    .then(function() {
-        return deleteAndReset(tables.slice(1));
-    });
-}
-
-/**
- * Ensure empty database for testing
- *
- * @static
- * @method clearTestDatabase
- * @return {Bluebird.Promise}
- */
-function clearTestDatabase() {
-    // the chunks table has no incrementing id column
-    return DB.knex("chunks").del()
-    .then(function() {
-        return deleteAndReset([
-            "attachments",
-            "emailArchive",
-            "comments",
-            "visibilities",
-            "followers",
-            "tags",
-            "handlers",
-            "notifications",
-            "titles",
-            "tickets",
-            "users"
-        ]);
-    });
-}
 
 /**
  * Fetch test user
@@ -358,7 +309,7 @@ var testUser = {
 
 module.exports = {
     loginAsUser: loginAsUser,
-    clearTestDatabase: clearTestDatabase,
+    clearTestDatabase: db.emptyAllRows,
     insertTestTickets: insertTestTickets,
     fetchTestUser: fetchTestUser,
     user: testUser

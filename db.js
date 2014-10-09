@@ -5,7 +5,8 @@ var config = require("./config");
 var knex = require("knex");
 
 var knex = knex(config.database);
-Bookshelf.DB = Bookshelf.initialize(knex);
+var db = Bookshelf.initialize(knex);
+Bookshelf.DB = db;
 Bookshelf.DB.plugin("virtuals");
 Bookshelf.DB.gridSQL = new GridSQL({
     knex: knex,
@@ -15,5 +16,57 @@ Bookshelf.DB.gridSQL = new GridSQL({
     // chunkSize: 1025 * 1024 * 10
     chunkSize: 1024 * 255
 });
+
+/**
+ * Delete all rows from given tables in series.
+ *
+ * The rows must have an id sequence which will be restarted
+ *
+ * @static
+ * @private
+ * @method deleteAndReset
+ * @param {Array} tables Tables names
+ */
+function deleteAndReset(tables) {
+    if (tables.length === 0) return;
+
+    var tableName = tables[0];
+
+    return db.knex(tableName).del()
+    .then(function() {
+        return db.knex.raw("ALTER SEQUENCE \"" + tableName + "_id_seq\" RESTART");
+    })
+    .then(function() {
+        return deleteAndReset(tables.slice(1));
+    });
+}
+
+/**
+ * Ensure empty database
+ *
+ * @static
+ * @method emptyAllRows
+ * @return {Bluebird.Promise}
+ */
+db.emptyAllRows = function() {
+    // the chunks table has no incrementing id column
+    return Bookshelf.DB.knex("chunks").del()
+    .then(function() {
+        return deleteAndReset([
+            "attachments",
+            "emailArchive",
+            "comments",
+            "visibilities",
+            "followers",
+            "tags",
+            "handlers",
+            "notifications",
+            "titles",
+            "tickets",
+            "users"
+        ]);
+    });
+};
+
 module.exports = Bookshelf.DB;
 
