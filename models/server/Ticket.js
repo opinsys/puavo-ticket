@@ -118,9 +118,10 @@ var Ticket = Base.extend({
     _setInitialTicketState: function (ticket) {
         return ticket.createdBy().fetch().then(function(user) {
             return Promise.join(
-                ticket.setStatus("open", user, { force: true }),
+                ticket.setStatus("pending", user, { force: true }),
                 ticket.addHandler(user, user),
-                ticket.addVisibility(user.getOrganisationAdminVisibility(), user)
+                ticket.addVisibility(user.getOrganisationAdminVisibility(), user),
+                ticket.addTag("organisation:" + user.getOrganisationDomain(), user)
             );
         });
     },
@@ -462,6 +463,12 @@ var Ticket = Base.extend({
                     }
                 }),
 
+                self.addTag("handler:" + Base.toId(handler), addedBy),
+                Promise.try(function(){
+                    if (handler.isManager()) {
+                        return self.setStatus("open", handler);
+                    }
+                }),
                 self.addFollower(handler, addedBy)
             );
         })

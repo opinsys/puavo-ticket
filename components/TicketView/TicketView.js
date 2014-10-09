@@ -315,6 +315,8 @@ var TicketView = React.createClass({
 
         var status = this.state.ticket.getCurrentStatus();
         switch (status) {
+            case "pending":
+                return <Badge className="ticket-status ticket-pending">Odottava {id}</Badge>;
             case "open":
                 return <Badge className="ticket-status ticket-open">Avoin {id}</Badge>;
             case "closed":

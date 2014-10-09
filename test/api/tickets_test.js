@@ -67,8 +67,8 @@ describe("/api/tickets", function() {
 
                 assert.equal(self.ticket.id, res.body[0].id);
                 assert(
-                    _.find(res.body[0].tags, { tag: "status:open" }),
-                    "has status:open tag"
+                    _.find(res.body[0].tags, { tag: "status:pending" }),
+                    "has status:pending tag"
                 );
 
                 assert(
@@ -158,8 +158,8 @@ describe("/api/tickets", function() {
                 );
 
                 assert(
-                    _.findWhere(res.body.tags, { tag: "status:open" }),
-                    "has status:open tag"
+                    _.findWhere(res.body.tags, { tag: "status:pending" }),
+                    "has status:pending tag"
                 );
 
                 assert(

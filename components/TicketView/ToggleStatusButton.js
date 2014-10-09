@@ -27,7 +27,7 @@ var ToggleStatusButton = React.createClass({
     handleChangeState: function() {
         this.setState({ saving: true });
         var op;
-        if (this.getTicketStatus() === "open") {
+        if (this.getTicketStatus() === "open" || this.getTicketStatus() === "pending") {
             op = this.props.ticket.setClosed(this.props.user);
         } else {
             op = this.props.ticket.setOpen(this.props.user);

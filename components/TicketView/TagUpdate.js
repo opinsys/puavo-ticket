@@ -20,8 +20,11 @@ var TagUpdate = React.createClass({
         var msg = "";
 
         switch (tag) {
+            case "status:pending":
+                msg = <i>Tukipyyntö odottaa käsittelijää</i>;
+                break;
             case "status:open":
-                msg = <i>{this.getCreatorName()} avasi tukipyynnön</i>;
+                msg = <i>{this.getCreatorName()} asetti tukipyynnön käsittelyyn</i>;
                 break;
             case "status:closed":
                 msg = <i>{this.getCreatorName()} asetti tukipyynnön ratkaistuksi</i>;
