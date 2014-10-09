@@ -255,6 +255,8 @@ app.get("/*", function(req, res) {
 });
 
 app.use(function(err, req, res, next) {
+    if (err instanceof User.EmailCollisionError) return res.status("406").render("emailCollisionError.ejs");
+
     if (process.env.NODE_ENV !== "test") next(err);
     res.status(500).send(err.stack);
 });
