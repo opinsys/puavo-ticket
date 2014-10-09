@@ -7,6 +7,7 @@ var _ = require("lodash");
 var $ = require("jquery");
 var Promise = require("bluebird");
 var Cocktail = require("backbone.cocktail");
+var url = require("url");
 
 var BaseMixin = require("../BaseMixin");
 
@@ -14,14 +15,37 @@ var BaseMixin = require("../BaseMixin");
 function createReplaceMixin(parentPrototype) {
     return {
 
+        initialize: function(data, options) {
+            this.options = options || {};
+            this.query = this.options.query;
+            if (this.options.url) {
+                this.url = options.url;
+            }
+        },
+
+        /**
+         * Return empty clone of this model instance with same options
+         *
+         * @method optionsClone
+         * @return {models.server.Base}
+         */
+        optionsClone: function(data) {
+            return new this.constructor(data, _.extend(
+                {}, this.options, { parent: this.parent }
+            ));
+        },
+
+
         /**
          * Fetch model state from the server
          * http://backbonejs.org/#Model-fetch
          *
          * @method fetch
+         * @param {Object} [options]
+         * @param {Object} [options.query]
          * @return {Bluebird.Promise}
          */
-        fetch: function() {
+        fetch: function(options) {
             if (this.parent) {
                 throw new Error("This is a child model. Use fetchParent() to get a new parent");
             }
@@ -30,8 +54,14 @@ function createReplaceMixin(parentPrototype) {
                 throw new Error("fetch() without id makes no sense on a model");
             }
 
-            var url = _.result(this, "url");
-            var op = Promise.resolve($.get(url))
+
+            var resourceURL = url.parse(_.result(this, "url"));
+            resourceURL = url.format({
+                pathname: resourceURL.pathname,
+                query: _.extend({}, resourceURL.query, this.query, options && options.query)
+            });
+
+            var op = Promise.resolve($.get(resourceURL))
             .bind(this)
             .catch(function(err) {
                 if (err && err.status === 404) {
@@ -40,7 +70,7 @@ function createReplaceMixin(parentPrototype) {
                 throw err;
             })
             .then(function(res) {
-                return new this.constructor(res, { parent: this.parent });
+                return this.optionsClone(res);
             });
 
             this.trigger("replace", op);
@@ -173,7 +203,7 @@ var Base = Backbone.Model.extend({
         return Promise.resolve($.post(_.result(this, "url"), this.toJSON()))
             .bind(this)
             .then(function(res) {
-                return new this.constructor(res, { parent: this.parent });
+                return this.optionsClone(res);
             });
 
     },
