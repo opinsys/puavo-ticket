@@ -83,8 +83,9 @@ jshint: $(js_files)
 	$(JSHINT) $?
 
 js:
-	browserify --debug client.js | exorcist public/build/bundle.map.json > public/build/bundle.js
-	uglifyjs public/build/bundle.js --in-source-map public/build/bundle.map.json --source-map public/build/bundle.min.map.json --prefix 2 --mangle --source-map-url bundle.min.map.json > public/build/bundle.min.js
+	browserify --debug client.js > public/build/bundle.js
+	NODE_ENV=production browserify client.js > public/build/bundle.premin.js
+	uglifyjs public/build/bundle.premin.js --mangle > public/build/bundle.min.js
 
 
 css:
