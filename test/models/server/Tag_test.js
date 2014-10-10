@@ -184,6 +184,22 @@ describe("Tag model", function() {
             });
     });
 
+    it("reset previous status tag", function() {
+        var self = this;
+        return Ticket.byId(this.ticketId).fetch()
+            .then(function(ticket) {
+                return ticket.setStatus("inprogress", self.user).return(ticket);
+            })
+            .then(function(ticket) {
+                return ticket.tags().fetch();
+            })
+            .then(function(tags) {
+                assert(
+                    tags.findWhere({ tag: "status:inprogress", deleted: 0 }),
+                    "has new status:inprogress tag"
+                );
+            });
+    });
 
 
 });

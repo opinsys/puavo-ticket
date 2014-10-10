@@ -291,7 +291,8 @@ var Ticket = Base.extend({
     addTag: function(tagName, user, options) {
         return Tag.fetchOrCreate({
             tag: tagName,
-            ticketId: this.get("id")
+            ticketId: this.get("id"),
+            deleted: 0
         })
         .then(function(tag) {
             if (tag.isNew()) {
