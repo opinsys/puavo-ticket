@@ -6,14 +6,12 @@ var React = require("react/addons");
 var Ticket = require("../../models/client/Ticket");
 
 /**
- * TagsEditor
- *
  * @namespace components
- * @class TagsEditor
+ * @class TagEditor
  * @constructor
  * @param {Object} props
  */
-var TagsEditor = React.createClass({
+var TagEditor = React.createClass({
 
     propTypes: {
         ticket: React.PropTypes.instanceOf(Ticket).isRequired,
@@ -26,4 +24,4 @@ var TagsEditor = React.createClass({
 });
 
 
-module.exports = TagsEditor;
+module.exports = TagEditor;

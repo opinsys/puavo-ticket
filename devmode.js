@@ -23,7 +23,16 @@ var b = browserify({
     fullPaths: true
 });
 
+var compilingJS = false;
+var requestRecompileJS = false;
 function writeJS() {
+    if (compilingJS) {
+        requestRecompileJS = true;
+        debug("JS compiling in progress. Queueing compile");
+        return;
+    }
+    compilingJS = true;
+
     debug("Starting js write");
     sio.sockets.emit("jschangebegin");
 
@@ -38,8 +47,17 @@ function writeJS() {
     });
     wb.pipe(fs.createWriteStream(dotfile));
     wb.on("end", function() {
+
         fs.rename(dotfile, outfile, function (err) {
-            if (err) return console.error(err);
+            compilingJS = false;
+            if (err) console.error(err);
+            if (requestRecompileJS) {
+                requestRecompileJS = false;
+                return writeJS();
+            }
+
+            if (err) return;
+
             debug("js ok");
             sio.sockets.emit("jschange");
             sio.sockets.emit("assetchange");
