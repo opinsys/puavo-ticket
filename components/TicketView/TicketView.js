@@ -17,7 +17,6 @@ var captureError = require("../../utils/captureError");
  * @param {Object} props
  * @param {models.client.User} props.user
  * @param {Socket.IO} props.io Socket.IO socket
- * @param {Function} props.renderInModal
  * @param {BrowserTitle} props.title BrowserTitle instance
  */
 var TicketView = React.createClass({
@@ -48,6 +47,7 @@ var TicketView = React.createClass({
 
     componentDidMount: function() {
         window.addEventListener("focus", this.fetchTicket);
+        this.fetchTicket();
     },
 
     componentWillUnmount: function() {
@@ -63,23 +63,35 @@ var TicketView = React.createClass({
     render: function() {
         var ticketId = this.props.params.id;
         var user = this.props.user;
+        var ticket = this.state.ticket;
 
         return (
             <div className="TicketView">
 
-                {user.isManager() && false && <ul className="nav nav-tabs" role="tablist">
+                {user.isManager() && <ul className="nav nav-tabs" role="tablist">
                     <li>
-                        <Link to="ticket" params={{ id: ticketId }}>discuss</Link>
+                        <Link to="discuss" params={{ id: ticketId }}>
+                            Keskustelu
+                        </Link>
                     </li>
                     <li>
-                        <Link to="tags" params={{ id: ticketId }}>tags</Link>
+                        <Link to="handlers" params={{ id: ticketId }}>
+                            Käsittelijät
+                        </Link>
                     </li>
+
+                    {/*
+                    <li>
+                        <Link to="tags" params={{ id: ticketId }}>
+                            Tagit
+                        </Link>
+                    </li>
+                    */}
+
                 </ul>}
 
-                <this.props.activeRouteHandler
-                    renderInModal={this.props.renderInModal}
-                    user={this.props.user}
-                    ticket={this.state.ticket} />
+                {ticket.hasData() &&
+                    <this.props.activeRouteHandler ticket={ticket} />}
             </div>
         );
     },

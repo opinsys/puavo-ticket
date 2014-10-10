@@ -10,7 +10,7 @@ var io = require("socket.io-client")();
 window.io = io;
 var Route = require("react-router").Route;
 var Routes = require("react-router").Routes;
-var DefaultRoute = require("react-router").DefaultRoute;
+var Redirect = require("react-router").Redirect;
 
 io.on("connect", function(s) {
     console.log("Socket.IO connected");
@@ -66,6 +66,7 @@ var FrontPage = require("./components/FrontPage");
 var Solved = require("./components/Solved");
 var CustomList = require("./components/CustomList");
 var TagEditor = require("./components/TicketView/TagEditor");
+var HandlerEditor = require("./components/TicketView/HandlerEditor");
 var Discuss = require("./components/TicketView/Discuss");
 var BrowserTitle = require("./utils/BrowserTitle");
 
@@ -79,9 +80,11 @@ React.renderComponent(
             <Route name="tickets" path="/" handler={FrontPage} />
             <Route name="solved-tickets" path="/solved" handler={Solved} />
             <Route name="custom-list" path="/custom" handler={CustomList} />
+            <Redirect from="/tickets/:id" to="discuss" />
             <Route name="ticket" path="/tickets/:id" handler={TicketView} user={loggedInUser} >
                 <Route name="tags" path="tags" handler={TagEditor} user={loggedInUser} />
-                <DefaultRoute handler={Discuss} io={io} title={title} user={loggedInUser} />
+                <Route name="handlers" path="handlers" handler={HandlerEditor} user={loggedInUser} />
+                <Route name="discuss" handler={Discuss} io={io} title={title} user={loggedInUser} />
             </Route>
         </Route>
     </Routes>, document.getElementById("app"));

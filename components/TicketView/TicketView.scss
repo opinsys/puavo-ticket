@@ -1,2 +1,13 @@
 .TicketView {
+    .nav {
+        margin-bottom: 1em;
+        li a {
+            color: white;
+            background-color: $ticket-tab-color;
+            &.active {
+                background-color: $ticket-active-tab-color;
+            }
+        }
+    }
+
 }

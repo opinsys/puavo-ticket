@@ -24,7 +24,7 @@ var captureError = require("../utils/captureError");
 var UserItem = React.createClass({
 
     propTypes: {
-        user: React.PropTypes.instanceOf(User).isRequired
+        user: React.PropTypes.instanceOf(User).isRequired,
     },
 
     getDefaultProps: function() {
@@ -75,7 +75,8 @@ var SelectUsers = React.createClass({
 
     propTypes: {
         user: React.PropTypes.instanceOf(User).isRequired,
-        ticket: React.PropTypes.instanceOf(Ticket).isRequired
+        ticket: React.PropTypes.instanceOf(Ticket).isRequired,
+        buttonLabel: React.PropTypes.string.isRequired
     },
 
 
@@ -238,9 +239,9 @@ var SelectUsers = React.createClass({
                     </ul>
 
                     {self.state.selectedUsers.length > 0 &&
-                        <h2>
+                        <h3>
                             Valitut
-                        </h2>
+                        </h3>
                     }
 
                     <ul className="list-group" >
@@ -271,11 +272,7 @@ var SelectUsers = React.createClass({
 
                 <div className="modal-footer">
                     <Button onClick={self.handleOk}>
-                        Lisää käsittelijät
-                    </Button>
-
-                    <Button bsStyle="danger" onClick={self.handleOk}>
-                        Peruuta
+                        {self.props.buttonLabel}
                     </Button>
                 </div>
 

@@ -166,7 +166,7 @@ var Ticket = Base.extend({
      * @return {Boolean}
      */
     hasData: function() {
-        return !!this.get("title");
+        return !!this.get("createdById");
     },
 
     comments: function() {

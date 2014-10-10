@@ -5,10 +5,8 @@ var React = require("react/addons");
 var Router = require("react-router");
 var classSet = React.addons.classSet;
 var _ = require("lodash");
-var Promise = require("bluebird");
 var debug = require("debug")("app:read");
 
-var Button = require("react-bootstrap/Button");
 var Badge = require("react-bootstrap/Badge");
 var Alert = require("react-bootstrap/Alert");
 
@@ -18,8 +16,6 @@ var AttachmentsForm = require("../AttachmentsForm");
 var captureError = require("../../utils/captureError");
 var Ticket = require("../../models/client/Ticket");
 var User = require("../../models/client/User");
-var Loading = require("../Loading");
-var SelectUsers = require("../SelectUsers");
 var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
 var EditableText = require("../EditableText");
@@ -48,7 +44,6 @@ var UPDATE_COMPONENTS = {
  * @param {Object} props
  * @param {models.client.User} props.user
  * @param {Socket.IO} props.io Socket.IO socket
- * @param {Function} props.renderInModal
  * @param {BrowserTitle} props.title BrowserTitle instance
  */
 var Discuss = React.createClass({
@@ -57,7 +52,6 @@ var Discuss = React.createClass({
         title: React.PropTypes.instanceOf(BrowserTitle).isRequired,
         user: React.PropTypes.instanceOf(User).isRequired,
         ticket: React.PropTypes.instanceOf(Ticket).isRequired,
-        renderInModal: React.PropTypes.func.isRequired,
         io: React.PropTypes.shape({
             on: React.PropTypes.func.isRequired,
             off: React.PropTypes.func.isRequired
@@ -219,32 +213,6 @@ var Discuss = React.createClass({
         });
     },
 
-    handleAddHandler: function() {
-        var self = this;
-        self.props.renderInModal("Lisää käsittelijöitä", function(close){
-            return (
-                <SelectUsers
-                    user={self.props.user}
-                    ticket={self.props.ticket}
-                    currentHandlers={_.invoke(self.props.ticket.handlers(), "getUser")}
-                    onCancel={close}
-                    onSelect={function(users) {
-                        close();
-                        if (self.isMounted()) self.setState({ fetching: true });
-
-                        Promise.map(users, function(user) {
-                            return self.props.ticket.addHandler(user);
-                        })
-                        .then(function() {
-                            return self.fetchTicket();
-                        })
-                        .catch(captureError("Käsittelijöiden lisääminen epäonnistui"));
-                }}/>
-            );
-        });
-    },
-
-
     /**
      * Mark the ticket as read by the current user and refetch the ticket data
      *
@@ -393,12 +361,6 @@ var Discuss = React.createClass({
 
                     <div className="row ticket-actions-row">
                         <div className="col-md-12">
-                            {user.isManager() &&
-                                <Button bsStyle="primary" onClick={this.handleAddHandler} >
-                                    <i className="fa fa-user"></i>Lisää käsittelijä
-                                </Button> }
-
-
                             {ticket.isHandler(user) &&
                                 <ToggleStatusButton ticket={ticket} user={user} />}
 

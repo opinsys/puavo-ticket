@@ -34,6 +34,7 @@ Please read https://github.com/opinsys/puavo-ticket#styles
 @import "../components/TicketView/Discuss.scss";
 @import "../components/TicketView/TitleUpdate.scss";
 @import "../components/TicketView/CommentUpdate.scss";
+@import "../components/TicketView/HandlerEditor.scss";
 @import "../components/StringDiff.scss";
 @import "../components/CommentForm.scss";
 @import "../components/NotificationBox.scss";
@@ -134,9 +135,6 @@ table td {
       right: 5px;
     }
 
-    h1 {
-        background-color: white;
-    }
 }
 
 .header {
@@ -237,15 +235,6 @@ table td {
 .similar-tickets * {
     font-size: 9pt;
 }
-
-
-.selectuser, .adddevice{
-    max-width: 500px;
-    margin: 0 auto;
-    min-height: 400px;
-}
-
-
 
 
 // Change spinner color once the application css is loaded

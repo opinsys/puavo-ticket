@@ -14,3 +14,5 @@ $open-ticket-color: #13B458;
 $pending-ticket-color: rgb(236, 205, 49);
 $closed-ticket-color: gray;
 
+$ticket-tab-color: orange;
+$ticket-active-tab-color: darken($ticket-tab-color, 10%);
