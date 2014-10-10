@@ -43,7 +43,7 @@ var UserItem = React.createClass({
         var id = _.uniqueId("checkbox");
         var user = this.props.user;
         return (
-            <label className="UserItem" for={id}>
+            <label className="UserItem" htmlFor={id}>
                 <input
                     id={id}
                     type="checkbox"
@@ -117,6 +117,7 @@ var SelectUsers = React.createClass({
 
         var self = this;
         var searchOp = Promise.map(this.getSelectedOrganisations(), function(domain) {
+            if (!domain) return [];
             return User.search(domain, searchString)
             .catch(function(err) {
                 if (err.responseJSON && err.responseJSON.error.message === "Cannot configure organisation for this request") {
