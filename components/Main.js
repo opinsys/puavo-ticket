@@ -37,6 +37,7 @@ var Main = React.createClass({
 
     propTypes: {
         title: React.PropTypes.instanceOf(BrowserTitle).isRequired,
+        user: React.PropTypes.instanceOf(User).isRequired,
         io: React.PropTypes.shape({
             on: React.PropTypes.func.isRequired,
             off: React.PropTypes.func.isRequired
@@ -44,14 +45,12 @@ var Main = React.createClass({
     },
 
     getInitialState: function() {
-        var user = new User(window.USER);
         return {
-            user: user,
             unreadTickets: Ticket.collection({ url: "/api/notifications" }),
             userTickets: Ticket.collection({
                 query: {
                     tags: [
-                        "handler:" + user.get("id"),
+                        "handler:" + this.props.user.get("id"),
                         "status:pending|status:open",
                     ]
                 }
@@ -152,7 +151,7 @@ var Main = React.createClass({
     },
 
     render: function() {
-        var user = this.state.user;
+        var user = this.props.user;
         var unreadTickets = this.state.unreadTickets;
         this.props.title.setNotificationCount(unreadTickets.size());
         this.props.title.activateOnNextTick();
@@ -189,7 +188,7 @@ var Main = React.createClass({
                             <this.props.activeRouteHandler
                                 renderInModal={this.renderInModal}
                                 userTickets={this.state.userTickets}
-                                user={this.state.user} />
+                                user={this.props.user} />
                         </div>
 
                     </div>

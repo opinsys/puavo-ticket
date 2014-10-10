@@ -29,12 +29,6 @@ var TagUpdate = React.createClass({
             case "status:closed":
                 msg = <i>{this.getCreatorName()} asetti tukipyynnön ratkaistuksi</i>;
                 break;
-            default:
-                msg =
-                    <span>
-                        <i>{this.getCreatorName()} lisäsi tagin: </i>
-                        {this.props.update.get("tag")}
-                    </span>;
         }
 
         return <div className="TagUpdate ticket-update small">{msg}</div>;

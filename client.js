@@ -8,6 +8,9 @@ var Backbone = require("backbone");
 Backbone.$ = $;
 var io = require("socket.io-client")();
 window.io = io;
+var Route = require("react-router").Route;
+var Routes = require("react-router").Routes;
+var DefaultRoute = require("react-router").DefaultRoute;
 
 io.on("connect", function(s) {
     console.log("Socket.IO connected");
@@ -53,27 +56,33 @@ var React = require("react/addons");
 // http://fb.me/react-devtools
 window.React = React;
 
-var Route = require("react-router").Route;
-var Routes = require("react-router").Routes;
+
+
+var User = require("app/models/client/User");
 var Main = require("./components/Main");
 var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
 var FrontPage = require("./components/FrontPage");
 var Solved = require("./components/Solved");
 var CustomList = require("./components/CustomList");
+var TagEditor = require("./components/TicketView/TagEditor");
+var Discuss = require("./components/TicketView/Discuss");
 var BrowserTitle = require("./utils/BrowserTitle");
 
+var loggedInUser = new User(window.USER);
 var title = new BrowserTitle({ trailingTitle: window.document.title });
-
 
 React.renderComponent(
     <Routes location="history">
-        <Route handler={Main} io={io} title={title}>
+        <Route handler={Main} io={io} title={title} user={loggedInUser}>
             <Route name="new" handler={TicketForm} />
             <Route name="tickets" path="/" handler={FrontPage} />
             <Route name="solved-tickets" path="/solved" handler={Solved} />
             <Route name="custom-list" path="/custom" handler={CustomList} />
-            <Route name="ticket" path="/tickets/:id" handler={TicketView} io={io} title={title} preserveScrollPosition />
+            <Route name="ticket" path="/tickets/:id" handler={TicketView} user={loggedInUser} >
+                <Route name="tags" path="tags" handler={TagEditor} user={loggedInUser} />
+                <DefaultRoute handler={Discuss} io={io} title={title} user={loggedInUser} />
+            </Route>
         </Route>
     </Routes>, document.getElementById("app"));
 

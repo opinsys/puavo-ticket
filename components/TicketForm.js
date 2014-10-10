@@ -2,8 +2,8 @@
 "use strict";
 var React = require("react/addons");
 var Button = require("react-bootstrap/Button");
-var Router = require("react-router");
 var Promise = require("bluebird");
+var Navigation = require("react-router").Navigation;
 
 var captureError = require("../utils/captureError");
 var SideInfo = require("./SideInfo");
@@ -25,7 +25,7 @@ var Ticket = require("../models/client/Ticket");
  */
 var TicketForm = React.createClass({
 
-    mixins: [BackboneMixin],
+    mixins: [BackboneMixin, Navigation],
 
     getInitialState: function() {
         return {
@@ -73,7 +73,7 @@ var TicketForm = React.createClass({
             self.refs.title.clearBackup();
             self.refs.description.clearBackup();
             self.setState({ uploadProgress: null });
-            Router.transitionTo("ticket", { id: savedTicket.get("id") });
+            self.transitionTo("ticket", { id: savedTicket.get("id") });
         })
         .catch(captureError("Tukipyynnön tallennus epäonnistui"));
     },
