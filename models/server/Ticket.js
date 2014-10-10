@@ -288,12 +288,19 @@ var Ticket = Base.extend({
      * @param {models.server.User} user Creator of the tag
      * @return {Bluebird.Promise} with models.server.Tag
      */
-    addTag: function(tag, user, options) {
-        return Tag.forge({
-            tag: tag,
-            createdById: Base.toId(user),
+    addTag: function(tagName, user, options) {
+        return Tag.fetchOrCreate({
+            tag: tagName,
             ticketId: this.get("id")
-        }, options).save();
+        })
+        .then(function(tag) {
+            if (tag.isNew()) {
+                tag.set({ createdById: Base.toId(user) });
+                return tag.save();
+            }
+            return tag;
+        });
+
     },
 
     /**
