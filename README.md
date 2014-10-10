@@ -120,6 +120,8 @@ it. Ticket will get additional visibilities when:
 
 ## Installation for development
 
+You must use Ubuntu Precise.
+
 You must have node.js and build-essentials installed.
 
     git clone https://github.com/opinsys/puavo-ticket.git
