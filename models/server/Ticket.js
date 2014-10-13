@@ -472,7 +472,6 @@ var Ticket = Base.extend({
                     }
                 }),
 
-                self.addTag("handler:" + Base.toId(handler), addedBy),
                 Promise.try(function(){
                     if (handler.isManager()) {
                         return self.setStatus("open", handler);
