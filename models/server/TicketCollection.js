@@ -77,10 +77,8 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
             attr = "emailSentAt";
         }
 
-        return this.byUserVisibilities(user)
-            .query(function(qb) {
-                qb
-                .distinct()
+        return this.query(function(q) {
+                q.distinct()
                 .join("followers", function() {
                     this.on("tickets.id", "=", "followers.ticketId");
                 })

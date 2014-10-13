@@ -41,8 +41,10 @@ app.post("/api/tickets/:id/read", function(req, res, next) {
  * @apiGroup notifications
  */
 app.get("/api/notifications", function(req, res, next) {
-    Ticket.collection().withUnreadComments(req.user).fetch()
-    .then(function(coll) {
+    Ticket.collection()
+    .byUserVisibilities(req.user)
+    .withUnreadComments(req.user)
+    .fetch().then(function(coll) {
         return coll.models;
     })
     .map(function loadLatestComment(ticket) {
