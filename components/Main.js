@@ -49,8 +49,8 @@ var Main = React.createClass({
             unreadTickets: Ticket.collection({ url: "/api/notifications" }),
             userTickets: Ticket.collection({
                 query: {
+                    follower: this.props.user.get("id"),
                     tags: [
-                        "handler:" + this.props.user.get("id"),
                         "status:pending|status:open",
                     ]
                 }

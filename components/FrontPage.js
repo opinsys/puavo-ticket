@@ -50,7 +50,7 @@ var FrontPage = React.createClass({
         return (
             <div className="FrontPage ticket-wrap row">
                 <Loading visible={this.state.fetching} />
-                <TicketList title="Avoimet tukipyyntösi" tickets={userTickets} user={this.props.user} />
+                <TicketList title="Avoimet tukipyynöt joita seuraat" tickets={userTickets} user={this.props.user} />
                 <Link to="solved-tickets">
                     Näytä ratkaistut tukipyyntösi
                 </Link>
