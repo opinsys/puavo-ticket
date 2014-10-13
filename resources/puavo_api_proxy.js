@@ -60,7 +60,7 @@ app.all("/:domain*", function(req, res, next) {
             res
         ).catch(function(err) {
             console.error("Proxy connection to puavo-rest failed. Tried GET", targetURL, "with forced Host header:", domain);
-            next(err);
+            res.end("proxy connection failed");
         });
     }
 
