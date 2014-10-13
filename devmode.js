@@ -40,10 +40,15 @@ function writeJS() {
     var dotfile = path.join(path.dirname(outfile), '.' + path.basename(outfile));
     var wb = b.bundle();
     wb.on("error", function(err) {
+        compilingJS = false;
         console.error(err.stack);
         sio.sockets.emit("jserror", {
             stack: err.stack
         });
+        if (requestRecompileJS) {
+            requestRecompileJS = false;
+            return writeJS();
+        }
     });
     wb.pipe(fs.createWriteStream(dotfile));
     wb.on("end", function() {
