@@ -15,15 +15,22 @@ describe("/api/tickets", function() {
 
         return helpers.clearTestDatabase()
             .then(function() {
+                return Promise.join(
+                    User.ensureUserFromJWTToken(helpers.user.manager),
+                    User.ensureUserFromJWTToken(helpers.user.teacher),
+                    User.ensureUserFromJWTToken(helpers.user.teacher2)
+                );
+            })
+            .spread(function(manager, teacher, otherTeacher) {
+                self.manager = manager;
+                self.teacher = teacher;
+                self.otherTeacher = otherTeacher;
+            })
+            .then(function() {
                 return helpers.loginAsUser(helpers.user.teacher);
             })
             .then(function(agent) {
                 self.agent = agent;
-
-                return helpers.fetchTestUser();
-            })
-            .then(function(user) {
-                self.user = user;
             });
     });
 
@@ -39,7 +46,7 @@ describe("/api/tickets", function() {
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
-                assert.equal(res.body.createdById, self.user.get("id"));
+                assert.equal(res.body.createdById, self.teacher.get("id"));
                 assert(res.body.id, "has id");
                 self.ticket = res.body;
 
@@ -170,15 +177,13 @@ describe("/api/tickets", function() {
     });
 
     it("can filter by tags", function() {
-        return User.ensureUserFromJWTToken(helpers.user.manager)
-        .then(function(manager) {
-            return Ticket.create("Ticket with foo tag", "plaa", manager)
-            .then(function(ticket) {
-                return ticket.addTag("foo", manager);
-            });
+        var self = this;
+        return Ticket.create("Ticket with foo tag", "plaa", self.teacher)
+        .then(function(ticket) {
+            return ticket.addTag("foo", self.teacher);
         })
         .then(function() {
-            return helpers.loginAsUser(helpers.user.manager);
+            return helpers.loginAsUser(helpers.user.teacher);
         })
         .then(function(agent) {
             return agent.get("/api/tickets?tags=foo").promise();
@@ -194,15 +199,13 @@ describe("/api/tickets", function() {
     });
 
     it("can filter by multiple tags", function() {
-        return User.ensureUserFromJWTToken(helpers.user.manager)
-        .then(function(manager) {
-            return Ticket.create("Ticket with bar tag", "plaa", manager)
-            .then(function(ticket) {
-                return ticket.addTag("bar", manager);
-            });
+        var self = this;
+        return Ticket.create("Ticket with bar tag", "plaa", self.teacher)
+        .then(function(ticket) {
+            return ticket.addTag("bar", self.teacher);
         })
         .then(function() {
-            return helpers.loginAsUser(helpers.user.manager);
+            return helpers.loginAsUser(helpers.user.teacher);
         })
         .then(function(agent) {
             return agent.get("/api/tickets?tags=foo|bar").promise();
@@ -214,18 +217,16 @@ describe("/api/tickets", function() {
     });
 
     it("can require multiple tags", function() {
-        return User.ensureUserFromJWTToken(helpers.user.manager)
-        .then(function(manager) {
-            return Ticket.create("Ticket with foo and bar", "plaa", manager)
-            .then(function(ticket) {
-                return Promise.join(
-                    ticket.addTag("foo", manager),
-                    ticket.addTag("bar", manager)
-                );
-            });
+        var self = this;
+        return Ticket.create("Ticket with foo and bar", "plaa", self.teacher)
+        .then(function(ticket) {
+            return Promise.join(
+                ticket.addTag("foo", self.teacher),
+                ticket.addTag("bar", self.teacher)
+            );
         })
         .then(function() {
-            return helpers.loginAsUser(helpers.user.manager);
+            return helpers.loginAsUser(helpers.user.teacher);
         })
         .then(function(agent) {
             return agent.get("/api/tickets?tags=foo&tags=bar").promise();
