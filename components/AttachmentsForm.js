@@ -4,10 +4,10 @@
 var _ = require("lodash");
 var React = require("react/addons");
 var classSet = React.addons.classSet;
-var Button = require("react-bootstrap/Button");
 var filesize = require("filesize");
 
 var FileItem = require("app/components/FileItem");
+var EditableList = require("app/components/EditableList");
 
 /**
  * AttachmentsForm
@@ -113,15 +113,14 @@ var AttachmentsForm = React.createClass({
                 </form>
 
 
-                <ul>
+                <EditableList>
                     {files.map(function(f) {
                         var isTooLarge = !self.isUnderSizeLimit(f);
                         var classes = classSet({
                             "too-large": isTooLarge
                         });
 
-                        return <li key={toUniqueId(f)} >
-                            <Button className="remove-button" bsStyle="danger" bsSize="xsmall" onClick={self.removeFile.bind(self, f)} >×</Button>
+                        return <EditableList.Item key={toUniqueId(f)} onRemove={self.removeFile.bind(self, f)} >
                             <span className={classes} >
                                 <FileItem mime={f.type} name={f.name} size={f.size} />
                             </span>
@@ -130,12 +129,14 @@ var AttachmentsForm = React.createClass({
                                     Tiedosto on liian suuri ladattavaksi.
                                     Suurin mahdollinen koko on {filesize(self.props.maxSize)}
                                 </div>}
-                        </li>;
+                        </EditableList.Item>;
                     })}
-                    {files.length > 1 && <li className="total">
+
+                    {files.length > 1 && <EditableList.Item permanent className="total">
                         Yhteensä {filesize(totalSize)}
-                    </li>}
-                </ul>
+                    </EditableList.Item>}
+
+                </EditableList>
 
 
                 <a className="select-button" href="#" onClick={this.openFileDialog}>Liitä tiedosto...</a>
