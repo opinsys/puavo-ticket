@@ -2,7 +2,6 @@
 "use strict";
 var React = require("react/addons");
 var Link = require("react-router").Link;
-var Badge = require("react-bootstrap/Badge");
 
 var User = require("../models/client/User");
 
@@ -40,11 +39,6 @@ var TicketList = React.createClass({
                 <td>
                     <Link to="ticket" params={{ id: ticket.get("id")}}>
                         {ticket.getCurrentTitle()}
-
-                        <Badge className="unread-comments" title="Uusia kommentteja">
-                            <i className="fa fa-comment-o"></i>
-                        </Badge>
-
                     </Link>
                 </td>
                 <td className="ticket-creator">
