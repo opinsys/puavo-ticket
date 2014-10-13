@@ -24,7 +24,8 @@ var Handler = Base.extend({
     },
 
     url: function() {
-        return this.parent.url() + "/handlers";
+        if (this.isNew()) return this.parent.url() + "/handlers";
+        return _.result(this.parent, "url") + "/handlers/" + this.get("handledById");
     },
 
     /**

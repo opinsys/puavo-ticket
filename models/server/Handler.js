@@ -66,7 +66,16 @@ var Handler = Base.extend({
      */
     createdBy: function() {
         return this.belongsTo(User, "createdById");
-    }
+    },
+
+    toJSON: function() {
+        // XXX handler field gets overridden by the handler object on the json
+        // response. Add the handler id as handledById to it too
+        var handledById = this.get("handler");
+        var json = Base.prototype.toJSON.apply(this, arguments);
+        json.handledById = handledById;
+        return json;
+    },
 
 });
 

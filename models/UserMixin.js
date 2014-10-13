@@ -123,6 +123,16 @@ var UserMixin = {
     },
 
     /**
+     * @method getAlphabeticName
+     * @return {String}
+     */
+    getAlphabeticName: function(){
+        var data = this.get("externalData");
+        if (!data) return "";
+        return (data.last_name + ", " + data.first_name).trim();
+    },
+
+    /**
      * Get human readable organisation name
      *
      * @method getOrganisationName

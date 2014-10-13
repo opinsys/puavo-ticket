@@ -93,7 +93,7 @@ describe("/api/tickets/:id/handlers", function() {
             .get("/api/tickets/" + self.ticket.get("id"))
             .promise()
             .then(function(res) {
-                assert.equal(200, res.status);
+                assert.equal(200, res.status, res.text);
                 var ticket = res.body;
                 assert(ticket);
                 assert(ticket.handlers, "has handlers array in the response");
@@ -107,6 +107,66 @@ describe("/api/tickets/:id/handlers", function() {
                 }), "has pointyhair as the handler relation creator");
 
             });
+    });
+
+    it("handler can be removed using DELETE", function() {
+        var self = this;
+        return self.agent.delete(
+            "/api/tickets/" + self.ticket.get("id") + "/handlers/" + self.otherUser.get("id")
+        ).promise().then(function(res) {
+            assert.equal(200, res.status, res.text);
+            assert.equal(self.otherUser.get("id"), res.body.handler);
+        });
+    });
+
+    it("the removed handler marked as removed in /api/tickets/:id", function() {
+        var self = this;
+
+        return this.agent
+            .get("/api/tickets/" + self.ticket.get("id"))
+            .promise()
+            .then(function(res) {
+                assert.equal(200, res.status, res.text);
+
+                var handler = _.find(res.body.handlers, {
+                    handledById: self.otherUser.get("id")
+                });
+                assert(handler);
+                assert(handler.deletedAt);
+            });
+    });
+
+    it("can readd deleted handler", function() {
+        var self = this;
+
+        nock("https://test-api.opinsys.example")
+        .get("/v3/users/matti.meikalainen")
+        .matchHeader("Authorization", 'Basic cHVhdm8tdGlja2V0OnBhc3N3b3Jk')
+        .reply(200, self.otherUser.get("externalData"));
+
+        return this.agent
+        .post("/api/tickets/" + self.ticket.get("id") + "/handlers")
+        .send({
+            username: self.otherUser.get("externalData").username,
+            organisation_domain: self.otherUser.get("externalData").organisation_domain
+        })
+        .promise()
+        .then(function(res) {
+            assert.equal(200, res.status);
+
+            return self.agent.get(
+                "/api/tickets/" + self.ticket.get("id")
+            ).promise();
+        })
+        .then(function(res) {
+            assert.equal(200, res.status, res.text);
+
+            var handler = _.find(res.body.handlers, {
+                handledById: self.otherUser.get("id"),
+                deleted: 0
+            });
+            assert(handler, "the handler is not deleted anymore");
+        });
     });
 
 });

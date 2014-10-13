@@ -37,6 +37,9 @@ app.get("/api/tickets", function(req, res, next) {
     tickets.fetch({
         withRelated: [
             "createdBy",
+            {handlers: function(q) {
+                q.where({ deleted: 0 });
+            }},
             "handlers.handler",
             "tags",
             "titles",

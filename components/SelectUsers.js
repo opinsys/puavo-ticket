@@ -5,10 +5,7 @@ var _ = require("lodash");
 var React = require("react/addons");
 var Promise = require("bluebird");
 
-var Button = require("react-bootstrap/Button");
-
 var User = require("../models/client/User");
-var Ticket = require("../models/client/Ticket");
 var captureError = require("../utils/captureError");
 
 
@@ -20,11 +17,15 @@ var captureError = require("../utils/captureError");
  * @constructor
  * @param {Object} props
  * @param {models.client.User} props.user
+ * @param {Function} props.onSelect
  */
 var UserItem = React.createClass({
 
     propTypes: {
         user: React.PropTypes.instanceOf(User).isRequired,
+        onSelect: React.PropTypes.func.isRequired,
+        checked: React.PropTypes.bool,
+        disabled: React.PropTypes.bool,
     },
 
     getDefaultProps: function() {
@@ -34,9 +35,10 @@ var UserItem = React.createClass({
         };
     },
 
+
     handleOnChange: function(e) {
-        if (e.target.checked) this.props.onSelectUser(this.props.user);
-        else this.props.onRemoveUser(this.props.user);
+        if (!e.target.checked) return;
+        this.props.onSelect(this.props.user);
     },
 
     render: function() {
@@ -68,42 +70,36 @@ var UserItem = React.createClass({
  * @class SelectUsers
  * @constructor
  * @param {Object} props
- * @param {models.client.User} props.user
- * @param {models.client.Ticket} props.Ticket
+ * @param {Array} props.searchOrganisations Organisations where the users are searched from
+ * @param {Array} props.selectedUsers Already selected users that should be disabled on the search list
+ * @param {Function} props.onSelect Function to be called on user select
+ * @param {Boolean} props.editOrganisations Enable organisations edit
  */
 var SelectUsers = React.createClass({
 
     propTypes: {
-        user: React.PropTypes.instanceOf(User).isRequired,
-        ticket: React.PropTypes.instanceOf(Ticket).isRequired,
-        buttonLabel: React.PropTypes.string.isRequired
+        searchOrganisations: React.PropTypes.array,
+        selectedUsers: React.PropTypes.array,
+        onSelect: React.PropTypes.func.isRequired,
+        editOrganisations: React.PropTypes.bool,
     },
 
 
     getInitialState: function() {
-        var user = this.props.user;
-        var ticket = this.props.ticket;
-        var creatorDomain = ticket.createdBy().getOrganisationDomain();
-        var currentDomain = user.getOrganisationDomain();
-        var orgs = [user.getOrganisationDomain()];
-
-        // If the user is manager and the ticket creator is from a another
-        // organisation search users from that organisation too.
-        if (creatorDomain !== currentDomain && user.isManager()) {
-            orgs.push(creatorDomain);
-        }
-
         return {
-            organisations: orgs.join(","),
+            customOrganisations: "",
             searchString: "",
             searchOp: null,
             searchedUsers: [],
-            selectedUsers: this.props.currentHandlers
         };
     },
 
-    getSelectedOrganisations: function() {
-        return this.state.organisations.split(",");
+    getSearchOrganisations: function() {
+        if (this.state.customOrganisations.trim()) {
+            return this.state.customOrganisations.split(",");
+        } else {
+            return this.props.searchOrganisations;
+        }
     },
 
     /**
@@ -117,7 +113,7 @@ var SelectUsers = React.createClass({
         this.cancelCurrentSearch();
 
         var self = this;
-        var searchOp = Promise.map(this.getSelectedOrganisations(), function(domain) {
+        var searchOp = Promise.map(this.getSearchOrganisations(), function(domain) {
             if (!domain) return [];
             return User.search(domain, searchString)
             .catch(function(err) {
@@ -130,7 +126,15 @@ var SelectUsers = React.createClass({
             });
         })
         .then(function(users) {
-            self.setState({ searchedUsers: _.flatten(users) });
+            users = _.flatten(users);
+            users.sort(function(a, b) {
+                var aName = a.getFullName();
+                var bName = b.getFullName();
+                if (aName > bName) return 1;
+                if (aName < bName) return -1;
+                return 0;
+            });
+            self.setState({ searchedUsers: users });
         })
         .catch(Promise.CancellationError, function() {
             // cancel is ok
@@ -143,6 +147,7 @@ var SelectUsers = React.createClass({
     componentWillMount: function() {
         // search after 500ms of silence for each mounted component
         this.bouncedSearch = _.debounce(this.doSearch, 500);
+        this.fixOrganisations();
     },
 
     componentDidMount: function() {
@@ -164,49 +169,34 @@ var SelectUsers = React.createClass({
 
     handleSelectUser: function(user) {
         this.refs.search.getDOMNode().focus();
-        if (this.isSelected(user)) return;
-
-        this.setState({
-            selectedUsers: this.state.selectedUsers.concat(user)
-        });
-
+        this.props.onSelect(user);
     },
 
-    handleRemoveUser: function(user) {
-        this.refs.search.getDOMNode().focus();
-        this.setState({
-            selectedUsers: this.state.selectedUsers.filter(function(selectedUser) {
-                return selectedUser.getExternalId() !== user.getExternalId();
-            })
-        });
-    },
-
-    /**
-     * saved handlers cannot be removed yet...
-     */
-    isSaved: function(user) {
-        return this.props.currentHandlers.some(function(selectedUser) {
-            return selectedUser.getExternalId() === user.getExternalId();
-        });
-    },
 
     isSelected: function(user) {
-        return this.state.selectedUsers.some(function(selectedUser) {
+        return this.props.selectedUsers.some(function(selectedUser) {
             return selectedUser.getExternalId() === user.getExternalId();
         });
     },
 
-    handleOk: function(e) {
-        e.preventDefault();
-        var self = this;
-        this.props.onSelect(this.state.selectedUsers.filter(function(user) {
-            return !self.isSaved(user);
-        }));
-    },
 
     handleOrganisationChange: function(e) {
-        this.setState({ organisations: e.target.value });
+        this.setState({ customOrganisations: e.target.value });
         this.bouncedSearch(this.state.searchString);
+    },
+
+    fixOrganisations: function() {
+        if (this.state.customOrganisations.trim()) return;
+        this.setState({
+            customOrganisations: this.props.searchOrganisations.join(",")
+        });
+    },
+
+    handleKeyDown: function(e) {
+        if (e.key !== "Enter") return;
+        var user = this.state.searchedUsers[0];
+        if (this.isSelected(user)) return;
+        if (user) this.props.onSelect(user);
     },
 
     render: function() {
@@ -219,46 +209,28 @@ var SelectUsers = React.createClass({
                         ref="search"
                         placeholder="Aloita kirjoittamaan käsittelijän nimeä"
                         value={self.state.searchString}
+                        onKeyDown={self.handleKeyDown}
                         onChange={self.handleSearchStringChange} />
                 </div>
 
                 <div className="selectuser">
                     <ul className="list-group" >
                         {self.state.searchedUsers.map(function(user) {
+                            var disable = self.isSelected(user);
                             return (
                                 <li key={user.get("externalId")} className="list-group-item" >
                                     <UserItem
                                         user={user}
-                                        disabled={self.isSaved(user)}
-                                        checked={self.isSelected(user)}
-                                        onRemoveUser={self.handleRemoveUser}
-                                        onSelectUser={self.handleSelectUser} />
+                                        disabled={disable}
+                                        checked={disable}
+                                        onSelect={function(user) {
+                                            if (disable) return;
+                                            self.props.onSelect(user);
+                                        }} />
                                 </li>
                             );
                         })}
                     </ul>
-
-                    {self.state.selectedUsers.length > 0 &&
-                        <h3>
-                            Valitut
-                        </h3>
-                    }
-
-                    <ul className="list-group" >
-                        {self.state.selectedUsers.map(function(user) {
-                            return (
-                                <li key={user.get("externalId")} className="list-group-item selected" >
-                                    <UserItem
-                                        user={user}
-                                        checked={self.isSelected(user)}
-                                        disabled={self.isSaved(user)}
-                                        onRemoveUser={self.handleRemoveUser}
-                                        onSelectUser={self.handleSelectUser} />
-                                </li>
-                            );
-                        })}
-                    </ul>
-
                 </div>
 
                 <div className="search-input-wrap">
@@ -266,16 +238,10 @@ var SelectUsers = React.createClass({
                     <input
                         className="form-control"
                         onChange={self.handleOrganisationChange}
-                        value={self.state.organisations}
+                        onBlur={self.fixOrganisations}
+                        value={self.state.customOrganisations}
                     />
                 </div>
-
-                <div className="modal-footer">
-                    <Button onClick={self.handleOk}>
-                        {self.props.buttonLabel}
-                    </Button>
-                </div>
-
             </div>
         );
     },

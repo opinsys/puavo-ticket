@@ -24,6 +24,9 @@
     .ticket-update {
         padding-top: 10px;
         padding-bottom: 10px;
+        &.deleted {
+            text-decoration: line-through;
+        }
         &.small {
             color: gray;
             padding-bottom: 0px;

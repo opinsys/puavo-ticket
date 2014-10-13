@@ -3,6 +3,7 @@
 
 var React = require("react/addons");
 var Button = require("react-bootstrap/Button");
+var Fa = require("./Fa");
 
 
 /**
@@ -37,14 +38,29 @@ var Item = React.createClass({
         permanent: React.PropTypes.bool,
     },
 
+    getInitialState: function() {
+        return {
+            removePending: false
+        };
+    },
+
+
     render: function() {
+        var self = this;
         var className = "Item " + this.props.className;
+        var pending = this.state.removePending;
         return (
             <li className={className} key={this.props.key}>
                 {!this.props.permanent && <Button className="remove-button"
                         bsStyle="danger"
                         bsSize="xsmall"
-                        onClick={this.props.onRemove.bind(null, this.props)}>×</Button>}
+                        disabled={pending}
+                        onClick={function() {
+                            self.setState({ removePending: true });
+                            self.props.onRemove(self.props);
+                        }}>
+                        {pending ? <Fa icon="spinner" spin={true} />  : <Fa icon="times" /> }
+                    </Button>}
                 {this.props.children}
             </li>
         );

@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
+var classSet = React.addons.classSet;
 
 var OnViewportMixin = require("../OnViewportMixin");
 var UpdateMixin = require("./UpdateMixin");
@@ -17,10 +18,17 @@ var HandlerUpdate = React.createClass({
     mixins: [UpdateMixin, OnViewportMixin],
 
     render: function() {
+        var className = classSet({
+            HandlerUpdate: true,
+            "ticket-update": true,
+            small: true,
+            deleted: this.props.update.isSoftDeleted()
+        });
+
         return (
-            <div className="ticket-update small">
+            <div className={className}>
                 <i>{this.getCreatorName()} lisäsi käsittelijäksi käyttäjän </i>
-                <span>{this.props.update.get("handler").externalData.username}</span>
+                <span>{this.props.update.getUser().getFullName()}</span>
             </div>
         );
     },
