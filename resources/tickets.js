@@ -30,6 +30,10 @@ app.get("/api/tickets", function(req, res, next) {
         }));
     }
 
+    if (req.query.follower) {
+        tickets.withFollower(req.query.follower);
+    }
+
     tickets.fetch({
         withRelated: [
             "createdBy",

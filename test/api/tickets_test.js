@@ -241,4 +241,28 @@ describe("/api/tickets", function() {
         });
     });
 
+    it("can filter by follower", function() {
+        return User.ensureUserFromJWTToken(helpers.user.manager)
+        .then(function(manager) {
+            return Ticket.create("Teachet ticket with tag foo", "plaa", manager)
+            .then(function(ticket) {
+                return ticket.addTag("foo", manager);
+            })
+            .then(function() {
+                return helpers.loginAsUser(helpers.user.manager);
+            })
+            .then(function(agent) {
+                return agent.get("/api/tickets?tags=foo&follower=" + manager.get("id")).promise();
+            })
+            .then(function(res) {
+                assert.equal(res.status, 200);
+                assert.equal(1, res.body.length);
+                assert.equal(
+                    "Teachet ticket with tag foo",
+                    res.body[0].titles[0].title
+                );
+            });
+        });
+    });
+
 });

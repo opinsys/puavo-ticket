@@ -63,10 +63,25 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
     },
 
     /**
+     *
+     * @method withFollower
+     * @param {models.server.User|Number} user
+     * @return {Bookshelf.Collection} of models.server.Ticket
+     */
+    withFollower: function(user){
+        var ref = this._genJoinRef("f");
+        return this.query(function(q) {
+            q.join("followers as " + ref, "tickets.id", "=", ref + ".ticketId");
+            q.where(ref + ".followedById", "=",  Base.toId(user));
+            q.whereNull(ref + ".deletedAt");
+        });
+    },
+
+    /**
      * Return collection of tickets that have unread comments by the user
      *
      * @method withUnreadComments
-     * @param {models.client.User|Number} user
+     * @param {models.server.User|Number} user
      * @param {Object} [options]
      * @param {Object} [options.byEmail=false] Get tickets by unsent email notifications
      * @return {Bookshelf.Collection} of models.server.Ticket
