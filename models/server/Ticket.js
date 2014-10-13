@@ -120,12 +120,14 @@ var Ticket = Base.extend({
         return ticket.load(["createdBy", "comments"])
         .then(function(ticket) {
             var user = ticket.relations.createdBy;
-            return Promise.join(
-                ticket.setStatus("pending", user, { force: true }),
-                ticket.addHandler(user, user),
-                ticket.addVisibility(user.getOrganisationAdminVisibility(), user),
-                ticket.addTag("organisation:" + user.getOrganisationDomain(), user)
-            );
+            return ticket.addHandler(user, user)
+            .then(function() {
+                return Promise.join(
+                    ticket.setStatus("pending", user, { force: true }),
+                    ticket.addVisibility(user.getOrganisationAdminVisibility(), user),
+                    ticket.addTag("organisation:" + user.getOrganisationDomain(), user)
+                );
+            });
         });
     },
 
