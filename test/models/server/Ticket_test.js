@@ -1,8 +1,11 @@
 "use strict";
 var Promise = require("bluebird");
 var assert = require("assert");
+var sinon = require("sinon");
+var multiline = require("multiline");
 
 var helpers = require("app/test/helpers");
+var config = require("app/config");
 var Ticket = require("app/models/server/Ticket");
 var User = require("app/models/server/User");
 
@@ -24,11 +27,55 @@ describe("Ticket model", function() {
             });
     });
 
+    beforeEach(function() {
+        this.sendMailSpy = sinon.spy(config.mailTransport, "sendMail");
+    });
+
+    afterEach(function() {
+        this.sendMailSpy.restore();
+    });
+
     it("can be instantiated", function() {
         var self = this;
         var description = "Computer does not work :(";
 
         return Ticket.create("A title", description, self.user)
+            .tap(function(ticket) {
+                assert(
+                    self.sendMailSpy.called,
+                    "email was sent about the new ticket"
+                );
+
+                var email = self.sendMailSpy.args[0][0];
+                assert.equal(
+                    "new-tickets@opinsys.example",
+                    email.to
+                );
+                assert.equal(
+                    "Opinsys tukipalvelu <"+ ticket.getReplyEmailAddress() +">",
+                    email.from
+                );
+                assert.equal(
+                    "Opinsys tukipalvelu <"+ ticket.getReplyEmailAddress() +">",
+                    email.replyTo
+                );
+                assert.equal(
+                    'Uusi tukipyyntö "A title"',
+                    email.subject
+                );
+
+                assert.equal(multiline.stripIndent(function(){/*
+                    Olli Opettaja avasi uuden tukipynnön:
+
+                    A title
+
+                    Computer does not work :(
+
+                    https://support.opinsys.fi/tickets/1
+                 */}).trim(), email.text.trim());
+
+
+            })
             .then(function(ticket) {
                 return Ticket.forge({ id: ticket.get("id") }).fetch({
                     withRelated: ["comments"]

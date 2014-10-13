@@ -195,16 +195,18 @@ var Base = Backbone.Model.extend({
      * http://backbonejs.org/#Model-save
      *
      * @method save
+     * @param {Object} [customData] Custom data to be saved instead of this model
      * @return {Bluebird.Promise} with the new saved model
      */
-    save: function() {
+    save: function(customData) {
+        var self = this;
         if (!this.isNew()) throw new Error("Only new models can be saved!");
-
-        return Promise.resolve($.post(_.result(this, "url"), this.toJSON()))
-            .bind(this)
-            .then(function(res) {
-                return this.optionsClone(res);
-            });
+        return Promise.resolve(
+            $.post(_.result(this, "url"), customData || this.toJSON())
+        )
+        .then(function(res) {
+            return self.optionsClone(res);
+        });
 
     },
 

@@ -2,7 +2,6 @@
 "use strict";
 var React = require("react/addons");
 var Button = require("react-bootstrap/Button");
-var Promise = require("bluebird");
 var Navigation = require("react-router").Navigation;
 
 var captureError = require("../utils/captureError");
@@ -51,23 +50,20 @@ var TicketForm = React.createClass({
         self.setState({ saving: true });
 
         new Ticket({})
-        .save()
+        .save({
+            title: self.state.title,
+            description: self.state.description
+        })
         .then(function(savedTicket) {
-            return Promise.join(
-                savedTicket.addComment(self.state.description),
-                savedTicket.addTitle(self.state.title)
-            ).spread(function(comment) {
-                var files = self.refs.attachments.getFiles();
+            var comment = savedTicket.comments()[0];
+            var files = self.refs.attachments.getFiles();
 
-                if (files.length > 0) {
-                    self.refs.attachments.clear();
-                    return comment.addAttachments(files, { onProgress: function(e) {
-                        self.setState({ uploadProgress: e });
-                    }}).return(savedTicket);
-                }
+            if (files.length === 0) return savedTicket;
 
-                return savedTicket;
-            });
+            self.refs.attachments.clear();
+            return comment.addAttachments(files, {onProgress: function(e) {
+                self.setState({ uploadProgress: e });
+            }}).return(savedTicket);
         })
         .then(function(savedTicket) {
             self.refs.title.clearBackup();

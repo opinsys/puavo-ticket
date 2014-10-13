@@ -91,8 +91,11 @@ app.get("/api/tickets/:id", function(req, res, next) {
  * @apiGroup tickets
  */
 app.post("/api/tickets", function(req, res, next) {
-    Ticket.forge({ createdById: req.user.id })
-    .save()
+    Ticket.create(
+        req.body.title,
+        req.body.description,
+        req.user
+    )
     .then(function(ticket) {
         res.json(ticket);
     })

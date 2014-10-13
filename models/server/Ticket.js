@@ -117,7 +117,9 @@ var Ticket = Base.extend({
     },
 
     _setInitialTicketState: function (ticket) {
-        return ticket.createdBy().fetch().then(function(user) {
+        return ticket.load(["createdBy", "comments"])
+        .then(function(ticket) {
+            var user = ticket.relations.createdBy;
             return Promise.join(
                 ticket.setStatus("pending", user, { force: true }),
                 ticket.addHandler(user, user),
@@ -688,6 +690,16 @@ var Ticket = Base.extend({
     },
 
     /**
+     * Get url to this ticket
+     *
+     * @method getURL
+     * @return {String}
+     */
+    getURL: function(){
+        return "https://support.opinsys.fi/tickets/" + this.get("id");
+    },
+
+    /**
      * @method sendBufferedEmailNotifications
      * @param {models.server.User|Number} user User model or id of the user
      * @return {Bluebird.Promise}
@@ -697,7 +709,6 @@ var Ticket = Base.extend({
         var id = this.get("id");
         var email = user.getEmail();
         var title = this.getCurrentTitle();
-        var url = "https://support.opinsys.fi/tickets/" + id;
         var subject = "Tukipyyntö \"" + title + "\" (" + id + ") on päivittynyt";
 
         return this.unreadComments(user, { byEmail: true }).fetch({
@@ -736,7 +747,7 @@ var Ticket = Base.extend({
                 subject: subject,
                 text: renderEmailBufferedTemplate({
                     comments: comments,
-                    url: url
+                    url: self.getURL()
                 })
             })
             .then(function() {
@@ -841,18 +852,46 @@ var Ticket = Base.extend({
      */
     create: function(title, description, createdBy, opts) {
         return this.forge({ createdById: Base.toId(createdBy) }, opts)
-            .save()
-            .then(function(ticket) {
-                return Promise.join(
-                    ticket.addTitle(title, createdBy),
-                    ticket.addComment(description, createdBy, {
-                        textType: opts && opts.textType
-                    })
-                ).return(ticket);
-            })
-            .then(function(ticket) {
-                return ticket.load(["comments", "comments.createdBy"]);
+        .save()
+        .then(function(ticket) {
+            return Promise.join(
+                ticket.addTitle(title, createdBy),
+                ticket.addComment(description, createdBy, {
+                    textType: opts && opts.textType
+                })
+            ).return(ticket);
+        })
+        .then(function(ticket) {
+            return ticket.load(["titles", "comments", "comments.createdBy"]);
+        })
+        .tap(function(ticket) {
+            var from = "Opinsys tukipalvelu <"+ ticket.getReplyEmailAddress() +">";
+            var title = ticket.relations.titles.first().get("title");
+            var comment = ticket.relations.comments.first();
+
+            var description = comment.get("comment");
+            var creatorFullName = comment.relations.createdBy.getFullName();
+            var subject = 'Uusi tukipyyntö "' + title + '"';
+
+            var text = creatorFullName + " avasi uuden tukipynnön:";
+            text += "\n";
+            text += "\n";
+            text += title;
+            text += "\n";
+            text += "\n";
+            text += description;
+            text += "\n";
+            text += "\n";
+            text += ticket.getURL();
+
+            return ticket.sendMail({
+                from: from,
+                replyTo: from,
+                to: config.forwardTicketsEmail,
+                subject: subject,
+                text: text
             });
+        });
     },
 
 

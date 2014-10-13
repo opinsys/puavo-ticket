@@ -39,6 +39,7 @@ if (process.env.NODE_ENV === "test") {
     config.emailJobSecret = "secret";
     config.emailReplyDomain = "opinsys.example";
     config.mailGunSecret = "secret";
+    config.forwardTicketsEmail = "new-tickets@opinsys.example";
 } else {
     var productionConfig = require("./_config");
     config = _.extend(config, productionConfig);
@@ -66,6 +67,10 @@ if (!config.emailReplyDomain) {
 
 if (!config.mailGunSecret) {
     throw new Error("config.mailGunSecret is not set");
+}
+
+if (!config.forwardTicketsEmail) {
+    throw new Error("config.forwardTicketsEmail is not set");
 }
 
 if (config.smtp) {
