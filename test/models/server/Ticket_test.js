@@ -47,7 +47,7 @@ describe("Ticket model", function() {
     });
 
     it("is not listed with bad visibility", function() {
-        return Ticket.byVisibilities(["badvisibility"])
+        return Ticket.collection().byVisibilities(["badvisibility"])
             .fetch()
             .then(function(coll) {
                 assert.equal(0, coll.size());
@@ -55,7 +55,7 @@ describe("Ticket model", function() {
     });
 
     it("has personal visibility for the creator", function() {
-        return Ticket.byVisibilities([this.user.getPersonalVisibility()])
+        return Ticket.collection().byVisibilities([this.user.getPersonalVisibility()])
             .fetch({ withRelated: "comments" })
             .then(function(coll) {
                 // does not list other tickets by other users
@@ -68,7 +68,7 @@ describe("Ticket model", function() {
     });
 
     it("has organisation admin visibility", function() {
-        return Ticket.byVisibilities([this.user.getOrganisationAdminVisibility()])
+        return Ticket.collection().byVisibilities([this.user.getOrganisationAdminVisibility()])
             .fetch({ withRelated: "comments" })
             .then(function(coll) {
                 assert.equal(2, coll.size(), "does list all tickets in the organisation");
@@ -84,9 +84,9 @@ describe("Ticket model", function() {
             });
     });
 
-    it("ticket is not fetched in Ticket.byVisibilities(...) for a soft deleted visibility", function() {
+    it("ticket is not fetched in Ticket.collection().byVisibilities(...) for a soft deleted visibility", function() {
         var self = this;
-        return Ticket.byVisibilities([self.user.getPersonalVisibility()])
+        return Ticket.collection().byVisibilities([self.user.getPersonalVisibility()])
             .fetch({ withRelated: "visibilities" })
             .then(function(coll) {
                 var visibility = coll.first().related("visibilities")
@@ -97,7 +97,7 @@ describe("Ticket model", function() {
                 return visibility.softDelete(self.user);
             })
             .then(function() {
-                return Ticket.byVisibilities([self.user.getPersonalVisibility()]).fetch();
+                return Ticket.collection().byVisibilities([self.user.getPersonalVisibility()]).fetch();
             })
             .then(function(coll) {
                 assert.equal(0, coll.size());

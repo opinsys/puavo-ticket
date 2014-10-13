@@ -224,7 +224,8 @@ function sendEmails() {
              return;
         }
 
-        return Ticket.withUnreadComments(user, { byEmail: true }).fetch({
+        return Ticket.collection()
+        .withUnreadComments(user, { byEmail: true }).fetch({
             withRelated: "titles"
         }).then(function(coll) {
             return coll.models;

@@ -18,21 +18,19 @@ var app = express.Router();
  * @apiSuccess {Object[]} . List of tickets
  */
 app.get("/api/tickets", function(req, res, next) {
-    Ticket.byUserVisibilities(req.user)
+    var tickets = Ticket.collection()
+    .byUserVisibilities(req.user)
     .query(function(q) {
         q.orderBy("updatedAt", "desc");
+    });
 
-        if (req.query.tags) {
-            [].concat(req.query.tags).forEach(function(tags, i) {
-                tags = tags.split("|");
-                var ref = "t" + i;
-                q.join("tags as " + ref, "tickets.id", "=", ref + ".ticketId");
-                q.whereIn(ref + ".tag", tags);
-                q.whereNull(ref + ".deletedAt");
-            });
-        }
-    })
-    .fetch({
+    if (req.query.tags) {
+        tickets.withTags([].concat(req.query.tags).map(function(tag) {
+            return tag.split("|");
+        }));
+    }
+
+    tickets.fetch({
         withRelated: [
             "createdBy",
             "handlers.handler",

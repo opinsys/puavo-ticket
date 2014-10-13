@@ -16,6 +16,7 @@ var Device = require("./Device");
 var User = require("./User");
 var Notification = require("./Notification");
 var Title = require("./Title");
+var TicketCollection = require("./TicketCollection");
 
 var debugEmail = require("debug")("app:email");
 
@@ -811,6 +812,10 @@ var Ticket = Base.extend({
 
 }, {
 
+    collection: function(rows, options) {
+        return new TicketCollection((rows || []), _.extend({}, options, {model: this}));
+    },
+
     /**
      * Generate secure random secret for email replies
      *
@@ -853,42 +858,6 @@ var Ticket = Base.extend({
 
 
     /**
-     * Fetch tickets by given visibilities.
-     *
-     * @static
-     * @method byVisibilities
-     * @param {Array} visibilities Array of visibility strings. Strings are in the
-     * form of `organisation|school|user:<entity id>`.
-     *
-     *     Example: "school:2"
-     *
-     * @return {models.server.Base.Collection} with models.server.Ticket models
-     */
-    byVisibilities: function(visibilities) {
-        return this.collection()
-            .query(function(queryBuilder) {
-                queryBuilder
-                .join("visibilities", "tickets.id", "=", "visibilities.ticketId")
-                .whereIn("visibilities.entity", visibilities)
-                .whereNull("visibilities.deletedAt");
-            });
-    },
-
-
-    /**
-     * Query tickets with visibilities of the user
-     *
-     * @static
-     * @method
-     * @param {models.server.User} user
-     */
-    byUserVisibilities: function(user) {
-        // Manager is not restricted by visibilities. Just return everything.
-        if (user.isManager()) return this.collection();
-        else return this.byVisibilities(user.getVisibilities());
-    },
-
-    /**
      * Fetch the ticket by id with visibilities of the user
      *
      * @static
@@ -899,51 +868,12 @@ var Ticket = Base.extend({
      * @return {Bluebird.Promise} With models.server.Ticket
      */
     fetchByIdConstrained: function(user, ticketId, opts) {
-        return this.byUserVisibilities(user).query({
+        return this.collection().byUserVisibilities(user).query({
             where: { "tickets.id": Base.toId(ticketId) }
         }).fetchOne(_.extend({ require: true }, opts));
     },
 
-    /**
-     * Return collection of tickets that have unread comments by the user
-     *
-     * @static
-     * @method withUnreadComments
-     * @param {models.client.User|Number} user
-     * @param {Object} [options]
-     * @param {Object} [options.byEmail=false] Get tickets by unsent email notifications
-     * @return {Bookshelf.Collection} of models.server.Ticket
-     */
-    withUnreadComments: function(user, options) {
-        var attr = "readAt";
-        if (options && options.byEmail) {
-            attr = "emailSentAt";
-        }
-
-        return this.byUserVisibilities(user)
-            .query(function(qb) {
-                qb
-                .distinct()
-                .join("followers", function() {
-                    this.on("tickets.id", "=", "followers.ticketId");
-                })
-                .join("notifications", function() {
-                    this.on("tickets.id", "=", "notifications.ticketId");
-                })
-                .join("comments", function() {
-                    this.on("tickets.id", "=", "comments.ticketId");
-                    this.on("notifications." + attr, "<", "comments.createdAt");
-                })
-                .whereNull("followers.deletedAt")
-                .where({
-                    "followers.deleted": 0,
-                    "followers.followedById": Base.toId(user),
-                    "notifications.targetId": Base.toId(user),
-                });
-            });
-    },
 });
-
 
 /**
  * Render buffered email update

@@ -41,7 +41,7 @@ app.post("/api/tickets/:id/read", function(req, res, next) {
  * @apiGroup notifications
  */
 app.get("/api/notifications", function(req, res, next) {
-    Ticket.withUnreadComments(req.user).fetch()
+    Ticket.collection().withUnreadComments(req.user).fetch()
     .then(function(coll) {
         return coll.models;
     })

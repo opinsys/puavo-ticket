@@ -1,0 +1,138 @@
+"use strict";
+var Bookshelf = require("bookshelf");
+
+var Base = require("./Base");
+
+/**
+ * @namespace models.server
+ * @class TicketCollection
+ */
+var TicketCollection = Bookshelf.DB.Collection.extend({
+
+    initialize: function() {
+        this._refSeq = 0;
+    },
+
+    /**
+     * Generate unique string for this collection instance to be used with SQL
+     * joins
+     *
+     * @private
+     * @method _genJoinRef
+     * @param {String} [prefix]
+     * @return {String}
+     */
+    _genJoinRef: function(prefix) {
+        prefix = prefix || "";
+        this._refSeq += 1;
+        return prefix + this._refSeq;
+    },
+
+    /**
+     * Filter this collection with given tag groups. One tag from each tag
+     * group must be present for a ticket to be included.
+     *
+     * Example array of tag groups:
+     *
+     *     [
+     *         // Ticket status must be pending or open
+     *         ["status:pending", "status:open"],
+     *
+     *         // Ticket organisation must be foo or bar
+     *         ["organisation:foo", "organisation:bar"],
+     *
+     *         // Ticket must have an "all" tag
+     *         ["all"]
+     *     ]
+     *
+     *
+     * @method withTags
+     * @param {Array} tagGroups Array of tag groups
+     * @return {Bookshelf.Collection} of models.server.Ticket
+     */
+    withTags: function(tagGroups){
+        var self = this;
+        return this.query(function(q) {
+            tagGroups.forEach(function(tags) {
+                var ref = self._genJoinRef("tg");
+                q.join("tags as " + ref, "tickets.id", "=", ref + ".ticketId");
+                q.whereIn(ref + ".tag", tags);
+                q.whereNull(ref + ".deletedAt");
+            });
+        });
+    },
+
+    /**
+     * Return collection of tickets that have unread comments by the user
+     *
+     * @method withUnreadComments
+     * @param {models.client.User|Number} user
+     * @param {Object} [options]
+     * @param {Object} [options.byEmail=false] Get tickets by unsent email notifications
+     * @return {Bookshelf.Collection} of models.server.Ticket
+     */
+    withUnreadComments: function(user, options) {
+        var attr = "readAt";
+        if (options && options.byEmail) {
+            attr = "emailSentAt";
+        }
+
+        return this.byUserVisibilities(user)
+            .query(function(qb) {
+                qb
+                .distinct()
+                .join("followers", function() {
+                    this.on("tickets.id", "=", "followers.ticketId");
+                })
+                .join("notifications", function() {
+                    this.on("tickets.id", "=", "notifications.ticketId");
+                })
+                .join("comments", function() {
+                    this.on("tickets.id", "=", "comments.ticketId");
+                    this.on("notifications." + attr, "<", "comments.createdAt");
+                })
+                .whereNull("followers.deletedAt")
+                .where({
+                    "followers.deleted": 0,
+                    "followers.followedById": Base.toId(user),
+                    "notifications.targetId": Base.toId(user),
+                });
+            });
+    },
+
+    /**
+     * Query tickets with visibilities of the user
+     *
+     * @method
+     * @param {models.server.User} user
+     */
+    byUserVisibilities: function(user) {
+        // Manager is not restricted by visibilities. Just return everything.
+        if (user.isManager()) return this;
+        else return this.byVisibilities(user.getVisibilities());
+    },
+
+    /**
+     * Fetch tickets by given visibilities.
+     *
+     * @method byVisibilities
+     * @param {Array} visibilities Array of visibility strings. Strings are in the
+     * form of `organisation|school|user:<entity id>`.
+     *
+     *     Example: "school:2"
+     *
+     * @return {models.server.Base.Collection} with models.server.Ticket models
+     */
+    byVisibilities: function(visibilities) {
+        return this.query(function(queryBuilder) {
+                queryBuilder
+                .join("visibilities", "tickets.id", "=", "visibilities.ticketId")
+                .whereIn("visibilities.entity", visibilities)
+                .whereNull("visibilities.deletedAt");
+            });
+    },
+
+});
+
+
+module.exports = TicketCollection;

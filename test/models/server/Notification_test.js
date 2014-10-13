@@ -51,7 +51,7 @@ describe("Ticket notifications", function() {
 
     it("are empty for new own tickets", function() {
         var self = this;
-        return Ticket.withUnreadComments(self.user).fetch()
+        return Ticket.collection().withUnreadComments(self.user).fetch()
             .then(function(coll) {
                 assert.equal(
                     0, coll.size(),
@@ -82,7 +82,7 @@ describe("Ticket notifications", function() {
                 );
             })
             .then(function() {
-                return Ticket.withUnreadComments(self.user).fetch();
+                return Ticket.collection().withUnreadComments(self.user).fetch();
             })
             .then(function(coll) {
                 assert.equal(1, coll.size());
@@ -95,7 +95,7 @@ describe("Ticket notifications", function() {
         return self.ticket.markAsRead(self.user)
             .delay(100)
             .then(function() {
-                return Ticket.withUnreadComments(self.user).fetch();
+                return Ticket.collection().withUnreadComments(self.user).fetch();
             })
             .then(function(coll) {
                 assert.equal(0, coll.size(), "no notifications after marking as read");
@@ -113,7 +113,7 @@ describe("Ticket notifications", function() {
             })
             .delay(100)
             .then(function() {
-                return Ticket.withUnreadComments(self.user).fetch();
+                return Ticket.collection().withUnreadComments(self.user).fetch();
             })
             .then(function(coll) {
                 assert.equal(1, coll.size());
@@ -125,7 +125,7 @@ describe("Ticket notifications", function() {
         var self = this;
         return self.otherTicket.removeFollower(self.user, self.user)
             .then(function() {
-                return Ticket.withUnreadComments(self.user).fetch();
+                return Ticket.collection().withUnreadComments(self.user).fetch();
             })
             .then(function(coll) {
                 assert.equal(0, coll.size());
@@ -151,7 +151,7 @@ describe("Ticket notifications", function() {
             return ticket.addComment("a comment for every ticket", self.otherUser);
         })
         .then(function() {
-            return Ticket.withUnreadComments(self.user).fetch();
+            return Ticket.collection().withUnreadComments(self.user).fetch();
         })
         .then(function(coll) {
             assert.equal(3, coll.size());
