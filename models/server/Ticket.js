@@ -466,14 +466,11 @@ var Ticket = Base.extend({
                 Handler.fetchOrCreate({
                     ticketId: self.get("id"),
                     handler: Base.toId(handler)
-                })
+                }, { noSoftDeleted: true })
                 .then(function(h) {
-                    if (h.isNew()) {
-                        h.set({
-                            createdById: Base.toId(addedBy),
-                        });
-                        return h.save();
-                    }
+                    if (!h.isNew()) return h;
+                    h.set({ createdById: Base.toId(addedBy) });
+                    return h.save();
                 }),
 
                 Promise.try(function(){

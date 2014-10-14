@@ -91,11 +91,17 @@ var Base = Bookshelf.DB.Model.extend({
      *
      * @method fetchOrCreate
      * @param {Object} identifier Object of table columns
+     * @param {Object} [options]
+     * @param {Object} [options.noSoftDeleted] Set to true to ignore soft deleted items
      * @return {Bluebird.Promise} with the model instance
      */
-    fetchOrCreate: function(identifier) {
-        // XXX: handle soft deleted items
+    fetchOrCreate: function(identifier, options) {
         var model =  this.forge(identifier);
+
+        if (options && options.noSoftDeleted) {
+            model.query({ where: { deleted: 0 }});
+        }
+
         return model.fetch()
         .then(function(existing) {
             return existing || model;
