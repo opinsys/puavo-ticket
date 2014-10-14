@@ -1,8 +1,10 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
+
 var OnViewportMixin = require("../OnViewportMixin");
 var UpdateMixin = require("./UpdateMixin");
+var Profile = require("app/components/Profile");
 
 /**
  * Render ticket tag change
@@ -16,18 +18,23 @@ var TagUpdate = React.createClass({
     mixins: [UpdateMixin, OnViewportMixin],
     render: function() {
         var tag = this.props.update.get("tag");
-
         var msg = "";
+        var user = this.props.update.createdBy();
+        var creator = (
+            <Profile.Overlay user={user} tipPlacement="top">
+                {user.getFullName()}
+            </Profile.Overlay>
+        );
 
         switch (tag) {
             case "status:pending":
                 msg = <i>Tukipyyntö odottaa käsittelijää</i>;
                 break;
             case "status:open":
-                msg = <i>{this.getCreatorName()} asetti tukipyynnön käsittelyyn</i>;
+                msg = <i>{creator} asetti tukipyynnön käsittelyyn</i>;
                 break;
             case "status:closed":
-                msg = <i>{this.getCreatorName()} asetti tukipyynnön ratkaistuksi</i>;
+                msg = <i>{creator} asetti tukipyynnön ratkaistuksi</i>;
                 break;
         }
 

@@ -5,6 +5,7 @@ var classSet = React.addons.classSet;
 
 var OnViewportMixin = require("../OnViewportMixin");
 var UpdateMixin = require("./UpdateMixin");
+var Profile = require("app/components/Profile");
 
 /**
  * Render ticket handler change update
@@ -25,10 +26,19 @@ var HandlerUpdate = React.createClass({
             deleted: this.props.update.isSoftDeleted()
         });
 
+        var createdBy = this.props.update.createdBy();
+        var user = this.props.update.getUser();
         return (
             <div className={className}>
-                <i>{this.getCreatorName()} lisäsi käsittelijäksi käyttäjän </i>
-                <span>{this.props.update.getUser().getFullName()}</span>
+                <i>
+                    <Profile.Overlay user={createdBy} tipPlacement="top">
+                        {createdBy.getFullName()}
+                    </Profile.Overlay>
+                    lisäsi käsittelijäksi käyttäjän </i>
+
+                <Profile.Overlay user={user} tipPlacement="top">
+                    {user.getFullName()}
+                </Profile.Overlay>
             </div>
         );
     },
