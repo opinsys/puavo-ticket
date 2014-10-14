@@ -27,7 +27,7 @@ var exec = require("child_process").exec;
 var crypto = require("crypto");
 
 var debug = require("debug")("app:live");
-var debugMem = require("debug")("app:memory");
+var debugMem = require("debug")("memory");
 var serveStatic = require("serve-static");
 var bodyParser = require("body-parser");
 var jwtsso = require("jwtsso");
