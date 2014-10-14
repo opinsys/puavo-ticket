@@ -32,12 +32,13 @@ var TicketList = React.createClass({
     renderTicketMetaInfo: function(ticket) {
         var creator = ticket.createdBy();
         var handlers = ticket.handlers();
+        var ticketId = ticket.get("id");
 
         return (
-            <tr key={ticket.get("id")} >
+            <tr key={ticketId} >
                 <td>#{ticket.get("id")}</td>
                 <td>
-                    <Link to="ticket" params={{ id: ticket.get("id")}}>
+                    <Link to="ticket" params={{ id: ticketId}}>
                         {ticket.getCurrentTitle()}
                     </Link>
                 </td>
@@ -49,7 +50,7 @@ var TicketList = React.createClass({
                 </td>
                 <td className="ticket-handlers">
                     {handlers.map(function(handler) {
-                        return <ProfileBadge tipPlacement="left" size={40} user={handler.getUser()} />;
+                        return <ProfileBadge key={handler.get("id")} tipPlacement="left" size={40} user={handler.getUser()} />;
                     })}
                 </td>
             </tr>
