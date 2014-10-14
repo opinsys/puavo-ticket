@@ -3,7 +3,7 @@
 var React = require("react/addons");
 var classSet = React.addons.classSet;
 
-var ProfileBadge = require("../ProfileBadge");
+var Profile = require("../Profile");
 var OnViewportMixin = require("../OnViewportMixin");
 var UpdateMixin = require("./UpdateMixin");
 var TimeAgo = require("../TimeAgo");
@@ -70,7 +70,9 @@ var CommentUpdate = React.createClass({
 
         return (
             <div className={classes} id={hashId}>
-                <ProfileBadge user={createdBy} />
+                <Profile.Overlay user={createdBy} >
+                    <Profile.Badge user={createdBy} />
+                </Profile.Overlay>
                 <div className="message">
                     <span className="commenter-name">{createdBy.getFullName()}</span>
                     <a className="since" href={"#" + hashId } onClick={this.onHashChange}>

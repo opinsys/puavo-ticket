@@ -5,7 +5,7 @@ var Link = require("react-router").Link;
 
 var User = require("../models/client/User");
 
-var ProfileBadge = require("./ProfileBadge");
+var Profile = require("./Profile");
 var TimeAgo = require("./TimeAgo");
 
 
@@ -50,7 +50,12 @@ var TicketList = React.createClass({
                 </td>
                 <td className="ticket-handlers">
                     {handlers.map(function(handler) {
-                        return <ProfileBadge key={handler.get("id")} tipPlacement="left" size={40} user={handler.getUser()} />;
+                        var user = handler.getUser();
+                        return (
+                            <Profile.Overlay key={handler.get("id")} user={user}>
+                                <Profile.Badge size={40} user={user} />
+                            </Profile.Overlay>
+                        );
                     })}
                 </td>
             </tr>

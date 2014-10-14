@@ -2,8 +2,6 @@
 "use strict";
 
 var React = require("react/addons");
-var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
-var Tooltip = require("react-bootstrap/Tooltip");
 
 var User = require("app/models/client/User");
 
@@ -19,7 +17,6 @@ var User = require("app/models/client/User");
  * @param {models.client.User} props.user
  * @param {Number} [props.size=50]
  * @param {Number} [props.padding=4]
- * @param {String} [props.tipPlacement=right]
  */
 var ProfileBadge = React.createClass({
 
@@ -27,7 +24,6 @@ var ProfileBadge = React.createClass({
         user: React.PropTypes.instanceOf(User).isRequired,
         size: React.PropTypes.number,
         padding: React.PropTypes.number,
-        tipPlacement: React.PropTypes.string
     },
 
     getDefaultProps: function() {
@@ -81,21 +77,6 @@ var ProfileBadge = React.createClass({
         return <img src={this.getImgURL()} width={width} height={height} />;
     },
 
-    renderTooltip: function() {
-        var user = this.props.user;
-        return (
-            <span>
-                {user.getOrganisationName()}
-                <br />
-                {user.getFullName()} ({user.get("id")})
-                <br />
-                {user.getEmail()}
-                {!user.isEmailOnly() && <div>
-                    <b>Puavo:</b> {user.getDomainUsername()} ({user.getExternalId()})
-                </div>}
-            </span>
-        );
-    },
 
     getSizeInCSS: function() {
         return {
@@ -116,19 +97,14 @@ var ProfileBadge = React.createClass({
         var width = Math.round(srcWidth * ratio) - padding;
         var height = Math.round(srcHeight * ratio) - padding;
 
-        return (
-            <OverlayTrigger
-                placement={this.props.tipPlacement}
-                overlay={<Tooltip>{this.renderTooltip()}</Tooltip>}>
-
-                <div className="ProfileBadge">
-                    <div className="wrap" style={this.getSizeInCSS()}>
-                        <div className="inner-wrap">
-                            {this.renderImage(width, height)}
-                        </div>
+        return this.transferPropsTo(
+            <div className="ProfileBadge">
+                <div className="wrap" style={this.getSizeInCSS()}>
+                    <div className="inner-wrap">
+                        {this.renderImage(width, height)}
                     </div>
                 </div>
-            </OverlayTrigger>
+            </div>
         );
     }
 });
