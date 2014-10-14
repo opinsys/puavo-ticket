@@ -7,6 +7,7 @@ var _ = require("lodash");
 var Link = require("react-router").Link;
 var Modal = require("react-bootstrap/Modal");
 var ButtonGroup = require("react-bootstrap/ButtonGroup");
+var Promise = require("bluebird");
 
 var User = require("app/models/client/User");
 var Ticket = require("app/models/client/Ticket");
@@ -59,8 +60,22 @@ var Main = React.createClass({
         };
     },
 
+    componentWillMount: function() {
+        if (this.props.user.isManager()) {
+            this.setBackbone({
+                pendingTickets: Ticket.collection({
+                    query: { tags: ["status:pending"] }
+                })
+            });
+        }
+    },
+
     fetchUnreadTickets: function() {
-        return this.state.unreadTickets.fetch()
+        var ops = [this.state.unreadTickets.fetch()];
+        if (this.state.pendingTickets) {
+            ops.push(this.state.pendingTickets.fetch());
+        }
+        return Promise.all(ops)
         .catch(captureError("Ilmoitusten lataaminen epäonnistui"));
     },
 
@@ -153,6 +168,7 @@ var Main = React.createClass({
     render: function() {
         var user = this.props.user;
         var unreadTickets = this.state.unreadTickets;
+        var pendingTickets = this.state.pendingTickets;
         this.props.title.setNotificationCount(unreadTickets.size());
         this.props.title.activateOnNextTick();
 
@@ -178,7 +194,11 @@ var Main = React.createClass({
                             <Link className="btn btn-default top-button" to="tickets">
                                 <i className="fa fa-home"></i>Omat tukipyynnöt
                             </Link>
-                            <NotificationsHub user={user} tickets={unreadTickets} className="top-button" />
+                            <NotificationsHub className="top-button" >
+                                <NotificationsHub.TicketGroup title="Tukipyynnöt joissa on lukemattomia päivityksiä" tickets={unreadTickets}  />
+                                {pendingTickets &&
+                                    <NotificationsHub.TicketGroup title="Tukipyynnöt jotka odottavat käsittelijää" tickets={pendingTickets}  />}
+                            </NotificationsHub>
                         </ButtonGroup>
                     </div>
 

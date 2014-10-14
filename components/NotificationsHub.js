@@ -5,7 +5,6 @@ var DropdownButton = require("react-bootstrap/DropdownButton");
 var MenuItem = require("react-bootstrap/MenuItem");
 var Link = require("react-router").Link;
 
-var User = require("app/models/client/User");
 var Ticket = require("app/models/client/Ticket");
 
 /**
@@ -15,27 +14,23 @@ var Ticket = require("app/models/client/Ticket");
  * @class NotificationsHub
  * @constructor
  * @param {Object} props
- * @param {models.client.User} props.user
  */
 var NotificationsHub = React.createClass({
 
-    propTypes: {
-        user: React.PropTypes.instanceOf(User).isRequired,
-        tickets: React.PropTypes.instanceOf(Ticket.Collection).isRequired
-    },
-
     render: function() {
-        var tickets = this.props.tickets;
-        var count = "("+tickets.length+")";
+        var count = 0;
+        var items = [];
+        [].concat(this.props.children).forEach(function(child) {
+            if (!child) return;
+            var key = child.props.title;
 
-        var items = <MenuItem header>Ei lukemattomia päivityksiä</MenuItem>;
-
-        if (tickets.length > 0) {
-            items = tickets.map(function(ticket) {
-                return <NotificationItem key={ticket.get("id")} ticket={ticket} />;
+            items.push(<MenuItem key={key} header>{child.props.title}</MenuItem>);
+            child.props.tickets.forEach(function(ticket) {
+                count += 1;
+                var itemKey = key + ticket.get("id");
+                items.push(<NotificationItem key={itemKey} ticket={ticket} />);
             });
-            items.unshift(<MenuItem header>Tukipyynnöt joissa on lukemattomia päivityksiä</MenuItem>);
-        }
+        });
 
         return this.transferPropsTo(
             <DropdownButton pullRight className="NotificationsHub" title={"Ilmoitukset " + count}>
@@ -44,6 +39,24 @@ var NotificationsHub = React.createClass({
         );
     }
 });
+
+/**
+ * @namespace components
+ * @class NotificationsHub.TicketGroup
+ * @constructor
+ * @param {Object} props
+ */
+var TicketGroup = React.createClass({
+    propTypes: {
+        title: React.PropTypes.string.isRequired,
+        tickets: React.PropTypes.instanceOf(Ticket.Collection).isRequired
+    },
+
+    render: function() {
+        throw new Error("Meta component. Do not actually render me.");
+    }
+});
+
 
 /**
  * NotificationItem
@@ -62,20 +75,16 @@ var NotificationItem = React.createClass({
 
     render: function() {
         var ticket = this.props.ticket;
-        var comment = ticket.comments()[0];
-
-        var updateText = comment.createdBy().getFullName() +
-            " lisäsi kommentin tukipyyntöön \"" +
-            ticket.getCurrentTitle() + "\"";
-
+        var title = ticket.getCurrentTitle();
         return (
             <MenuItem header>
                 <Link to="ticket"
                       query={{scrollTo: "firstUnread" }}
-                      params={{id: ticket.get("id")}}>{updateText}</Link>
+                      params={{id: ticket.get("id")}}>{title}</Link>
             </MenuItem>
         );
     }
 });
 
+NotificationsHub.TicketGroup = TicketGroup;
 module.exports = NotificationsHub;
