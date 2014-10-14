@@ -16,10 +16,10 @@
       - name: Install ansible dependencies
         command: apt-get install -y python-apt python-psycopg2
 
-      - name: Add archive.opinsys.fi
+      - name: Add archive.opinsys.fi/git-master
         apt_repository: repo='deb http://{{ archive_server }}/git-master precise main' state=present
 
-      - name: Add archive.opinsys.fi
+      - name: Add archive.opinsys.fi/slapd-old for slapd
         apt_repository: repo='deb http://{{ archive_server }}/slapd-old precise main' state=present
 
       - name: Add key for archive.opinsys.fi
@@ -117,9 +117,8 @@
           - aptirepo-upload
           - puavo-devscripts
 
-      - name: LDAP-configuration
-        command: puavo-init-standalone --unsafe-passwords opinsys.net
-          creates=/etc/puavo
+      - name: Initialize LDAP
+        command: puavo-init-standalone --unsafe-passwords opinsys.net creates=/etc/puavo
 
       - name: Create organisations for test and development
         command: puavo-add-new-organisation --yes {{ item.organisation }} --username {{ item.username }} --password {{ item.password }} --given-name {{ item.givenname }} --surname {{ item.surname }}
@@ -146,8 +145,8 @@
           - { organisation: "heroes",
               username: "admin",
               password: "admin",
-              givenname: "Admin",
-              surname: "Administrator",
+              givenname: "Charles",
+              surname: "Xavier",
               creates: "/var/lib/ldap/dc=edu,dc=heroes,dc=fi" }
 
       - name: Clone puavo-user repository
@@ -160,6 +159,7 @@
       - name: puavo-web, Install Ruby gems, node modules and build assets.
         command: make
           chdir={{ code_dest }}/puavo-users
+          creates={{ code_dest }}/puavo-users/.bundle
         sudo_user: "{{ dev_user }}"
 
       - name: puavo-web configuration
@@ -168,7 +168,7 @@
         sudo_user: "{{ dev_user }}"
 
         # FIXME??
-      - name: Generate test data to Puavo
+      - name: Generate test data for Puavo
         shell: bundle exec rails runner db/seeds.rb && touch db/seed.rb-is-run
           chdir={{ code_dest }}/puavo-users
           creates={{ code_dest }}/puavo-users/db/seed.rb-is-run
@@ -177,6 +177,7 @@
       - name: puavo-rest, Install Ruby gems etc.
         command: make
           chdir={{ code_dest }}/puavo-users/rest
+          creates={{ code_dest }}/puavo-users/rest/.bundle
         sudo_user: "{{ dev_user }}"
 
       - name: Configuration for puavo-rest
@@ -193,6 +194,7 @@
       - name: Install nodejs modules, generate documentation and install git hooks
         command: make
           chdir={{ code_dest }}/puavo-ticket
+          creates={{ code_dest }}/puavo-ticket/node_modules
         sudo_user: "{{ dev_user }}"
 
       - name: Runs puavo-ticket migrations
