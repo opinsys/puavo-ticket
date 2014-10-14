@@ -475,7 +475,7 @@ var Ticket = Base.extend({
 
                 Promise.try(function(){
                     if (handler.isManager()) {
-                        return self.setStatus("open", handler);
+                        return self.setStatus("open", addedBy);
                     }
                 }),
                 self.addFollower(handler, addedBy)
