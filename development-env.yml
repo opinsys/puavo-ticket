@@ -149,8 +149,8 @@
               surname: "Xavier",
               creates: "/var/lib/ldap/dc=edu,dc=heroes,dc=fi" }
 
-      - name: Clone puavo-user repository
-        git: repo=git://github.com/opinsys/puavo-users.git
+      - name: Clone puavo-users repository
+        git: repo=https://github.com/opinsys/puavo-users.git
           accept_hostkey=yes
           dest={{ code_dest }}/puavo-users
           force=no
