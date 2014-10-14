@@ -61,7 +61,7 @@ var Discuss = React.createClass({
     getInitialState: function() {
         return {
             changeTitle: false,
-            fetching: true,
+            fetching: false,
             saving: false,
             showTags: true,
             scrolled: false,
