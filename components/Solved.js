@@ -25,12 +25,11 @@ var Solved = React.createClass({
     },
 
     getInitialState: function() {
-        var user = this.props.user;
         return {
             tickets: Ticket.collection({
                 query: {
+                    follower: this.props.user.get("id"),
                     tags: [
-                        "handler:" + user.get("id"),
                         "status:closed"
                     ]
                 }
