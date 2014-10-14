@@ -143,6 +143,12 @@
               givenname: "Admin",
               surname: "Administrator",
               creates: "/var/lib/ldap/dc=edu,dc=anotherorg,dc=fi" }
+          - { organisation: "heroes",
+              username: "admin",
+              password: "admin",
+              givenname: "Admin",
+              surname: "Administrator",
+              creates: "/var/lib/ldap/dc=edu,dc=heroes,dc=fi" }
 
       - name: Clone puavo-user repository
         git: repo=git://github.com/opinsys/puavo-users.git
