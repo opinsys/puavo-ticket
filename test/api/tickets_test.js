@@ -42,7 +42,10 @@ describe("/api/tickets", function() {
         var self = this;
         return self.agent
             .post("/api/tickets")
-            .send({})
+            .send({
+                title: "A ticket created using POST",
+                description: "foo"
+            })
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
