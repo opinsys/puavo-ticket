@@ -5,6 +5,7 @@ var Promise = require("bluebird");
 var sinon = require("sinon");
 var request = require("supertest");
 var multiline = require("multiline");
+var _ = require("lodash");
 
 var helpers = require("app/test/helpers");
 var app = require("app/server");
@@ -201,12 +202,10 @@ describe("buffered email sending", function() {
                 "no email was sent"
             );
 
-            var mailOb = self.sendMailSpy.args[0][0];
+            var mailOb = _.find(self.sendMailSpy.args, function(args) {
+                return args[0].subject === "Tukipyyntö \"Ticket created for a teacher\" (4) on päivittynyt";
+            })[0];
 
-            assert.equal(
-                "Tukipyyntö \"Ticket created for a teacher\" (4) on päivittynyt",
-                mailOb.subject
-            );
             assert.equal(multiline.stripIndent(function(){/*
                 Tukipyyntösi on päivittynyt seuraavin kommentein
 
