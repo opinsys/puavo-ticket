@@ -168,10 +168,10 @@
         sudo_user: "{{ dev_user }}"
 
         # FIXME??
-      - name: Generate test data for Puavo
-        shell: bundle exec rails runner db/seeds.rb && touch db/seed.rb-is-run
+      - name: Generate data for Puavo
+        shell: bundle exec rails runner db/seeds.rb && touch db/seeds.rb-is-run
           chdir={{ code_dest }}/puavo-users
-          creates={{ code_dest }}/puavo-users/db/seed.rb-is-run
+          creates={{ code_dest }}/puavo-users/db/seeds.rb-is-run
         sudo_user: "{{ dev_user }}"
 
       - name: puavo-rest, Install Ruby gems etc.
