@@ -194,6 +194,7 @@ var SelectUsers = React.createClass({
 
     handleKeyDown: function(e) {
         if (e.key !== "Enter") return;
+        if (this.state.searchedUsers.length === 0) return;
         var user = this.state.searchedUsers[0];
         if (this.isSelected(user)) return;
         if (user) this.props.onSelect(user);
