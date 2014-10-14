@@ -1,0 +1,8 @@
+.NotificationsHub + .dropdown-menu {
+    @include only-on(phones-and-larger) {
+        width: 370px;
+    }
+    li, a {
+        white-space: normal;
+    }
+}

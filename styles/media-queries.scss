@@ -3,6 +3,9 @@
   @if $media == phones-and-smaller {
     @media screen and (max-width: 560px) { @content; }
   }
+  @else if $media == phones-and-larger {
+    @media screen and (min-width: 560px) { @content; }
+  }
   @else if $media == phablets-and-smaller {
     @media screen and (max-width: 768px) { @content; }
   }

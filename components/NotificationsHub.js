@@ -34,10 +34,11 @@ var NotificationsHub = React.createClass({
             items = tickets.map(function(ticket) {
                 return <NotificationItem key={ticket.get("id")} ticket={ticket} />;
             });
+            items.unshift(<MenuItem header>Tukipyynnöt joissa on lukemattomia päivityksiä</MenuItem>);
         }
 
         return this.transferPropsTo(
-            <DropdownButton pullRight title={"Ilmoitukset " + count}>
+            <DropdownButton pullRight className="NotificationsHub" title={"Ilmoitukset " + count}>
                 {items}
             </DropdownButton>
         );
