@@ -8,11 +8,12 @@ var Promise = require("bluebird");
 var Navigation = require("react-router").Navigation;
 
 var Fa = require("../Fa");
-var Ticket = require("../../models/client/Ticket");
-var User = require("../../models/client/User");
+var Ticket = require("app/models/client/Ticket");
+var User = require("app/models/client/User");
 var SelectUsers = require("../SelectUsers");
 var EditableList = require("app/components/EditableList");
-var captureError = require("../../utils/captureError");
+var Profile = require("app/components/Profile");
+var captureError = require("app/utils/captureError");
 
 /**
  *
@@ -40,7 +41,6 @@ var HandlerEditor = React.createClass({
         var self = this;
         var ticket = this.props.ticket;
         self.setState({ saving: true });
-        console.log("removing", handlerRelation);
         Promise.resolve(handlerRelation.destroy())
         .then(function() {
             if (self.isMounted()) {
@@ -97,10 +97,12 @@ var HandlerEditor = React.createClass({
                 <EditableList>
                     {handlerRelations.map(function(handler) {
                         var user = handler.getUser();
-                        return <EditableList.Item key={""+user.get("id")}
-                                                  onRemove={self.removeHandler.bind(self, handler)} >
-                            {user.getFullName()}
-                        </EditableList.Item>;
+                        return (
+                            <EditableList.Item key={""+user.get("id")}
+                                               onRemove={self.removeHandler.bind(self, handler)} >
+                                <Profile.Overlay user={user}>{user.getFullName()}</Profile.Overlay>
+                          </EditableList.Item>
+                        );
                     })}
                 </EditableList>
 
