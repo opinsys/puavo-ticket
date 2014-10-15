@@ -5,6 +5,7 @@ var _ = require("lodash");
 var React = require("react/addons");
 var Promise = require("bluebird");
 
+var Fa = require("./Fa");
 var User = require("../models/client/User");
 var captureError = require("../utils/captureError");
 
@@ -55,7 +56,7 @@ var UserItem = React.createClass({
                     ref="checkbox" />
                 <span className="first-name" >{user.get("externalData").first_name + " "}</span>
                 <span className="last-name" >{user.get("externalData").last_name + " "}</span>
-                <span className="badge" >{user.getDomainUsername()}</span>
+                <span className="badge" >{user.getOrganisationDomain()}</span>
             </label>
         );
     }
@@ -89,6 +90,7 @@ var SelectUsers = React.createClass({
         return {
             customOrganisations: "",
             searchString: "",
+            searching: false,
             searchOp: null,
             searchedUsers: [],
         };
@@ -113,6 +115,7 @@ var SelectUsers = React.createClass({
         this.cancelCurrentSearch();
 
         var self = this;
+        this.setState({ searching: true });
         var searchOp = Promise.map(this.getSearchOrganisations(), function(domain) {
             if (!domain) return [];
             return User.search(domain, searchString)
@@ -134,7 +137,11 @@ var SelectUsers = React.createClass({
                 if (aName < bName) return -1;
                 return 0;
             });
-            self.setState({ searchedUsers: users });
+
+            self.setState({
+                searching: false,
+                searchedUsers: users
+            });
         })
         .catch(Promise.CancellationError, function() {
             // cancel is ok
@@ -202,6 +209,7 @@ var SelectUsers = React.createClass({
 
     render: function() {
         var self = this;
+        var searching = self.state.searching;
         return (
             <div className="SelectUsers">
                 <div className="search-input-wrap">
@@ -212,9 +220,10 @@ var SelectUsers = React.createClass({
                         value={self.state.searchString}
                         onKeyDown={self.handleKeyDown}
                         onChange={self.handleSearchStringChange} />
+
                 </div>
 
-                <div className="selectuser">
+                <div className="search-results">
                     <ul className="list-group" >
                         {self.state.searchedUsers.map(function(user) {
                             var disable = self.isSelected(user);
@@ -232,6 +241,9 @@ var SelectUsers = React.createClass({
                             );
                         })}
                     </ul>
+                    <div className="spinner-wrap">
+                        {searching && <Fa icon="spinner" spin={true} />}
+                    </div>
                 </div>
 
                 <div className="search-input-wrap">

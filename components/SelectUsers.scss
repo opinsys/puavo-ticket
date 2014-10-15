@@ -1,4 +1,6 @@
 .SelectUsers {
+    max-width: 450px;
+
     ul {
         list-style-type: none;
     }
@@ -9,5 +11,17 @@
 
     .list-group-item.selected {
         border-color: orange;
+    }
+
+    .list-group {
+        margin-bottom: 0;
+    }
+
+
+    .search-results, .search-input {
+    }
+
+    .spinner-wrap {
+        text-align: center;
     }
 }
