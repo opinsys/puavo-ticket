@@ -81,9 +81,10 @@ var Ticket = Base.extend({
      * Create comment which is created by a "robot". Used to insert the automatic welcome message
      *
      * @method createRobotComment
+     * @param {String} id Unique comment id
      * @return {models.client.Comment}
      */
-    createRobotComment: function(text) {
+    createRobotComment: function(text, id) {
         // Second after the ticket creation
         var afterTicketCreation = new Date(this.createdAt().getTime() + 2000).toString();
 
@@ -91,7 +92,7 @@ var Ticket = Base.extend({
             createdAt: afterTicketCreation,
             comment: text,
             attachments: [],
-            id: "welcome"
+            id: id
         }, { parent: this });
 
         comment.createdBy = function() {
@@ -110,7 +111,8 @@ var Ticket = Base.extend({
      */
     updates: function(){
         var welcome = this.createRobotComment(
-            "Olemme vastaanottaneet tukipyyntösi. Voit vielä halutessasi täydentää tukipyyntöäsi."
+            "Olemme vastaanottaneet tukipyyntösi. Voit vielä halutessasi täydentää sitä kommentoimalla tähän.",
+            "welcome"
         );
         var updates = [welcome]
         .concat(this.tags().slice(1))
