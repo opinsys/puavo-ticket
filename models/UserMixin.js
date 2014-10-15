@@ -111,11 +111,22 @@ var UserMixin = {
     },
 
     /**
+     * Return the primary email
+     *
      * @method getEmail
      * @return {String}
      */
     getEmail: function(){
         return this.get("externalData").email;
+    },
+
+    /**
+     * @method getAlternativeEmails
+     * @return {Array} Array of email addresses
+     */
+    getAlternativeEmails: function() {
+        // TODO
+        return [];
     },
 
     /**
@@ -127,6 +138,26 @@ var UserMixin = {
         var data = this.get("externalData");
         if (!data) return "";
         return (data.first_name + " " + data.last_name).trim();
+    },
+
+    /**
+     * @method getFirstName
+     * @return {String}
+     */
+    getFirstName: function(){
+        var data = this.get("externalData");
+        if (!data) return "";
+        return data.first_name;
+    },
+
+    /**
+     * @method getLastName
+     * @return {String}
+     */
+    getLastName: function(){
+        var data = this.get("externalData");
+        if (!data) return "";
+        return data.last_name;
     },
 
     /**
@@ -172,7 +203,27 @@ var UserMixin = {
      * @return {Array} of school objects
      */
     getSchools: function(){
-        return this.get("externalData").schools;
+        var data = this.get("externalData");
+        return (data && data.schools) || [];
+    },
+
+    /**
+     * @method getPrimarySchoolId
+     * @return {String}
+     */
+    getPrimarySchoolId: function(){
+        return this.get("externalData").primary_school_id;
+    },
+
+    /**
+     * @method getPrimarySchool
+     * @return {Object}
+     */
+    getPrimarySchool: function(){
+        var id = this.getPrimarySchoolId();
+        return this.getSchools().filter(function(school) {
+            return school.id === id;
+        })[0];
     },
 
     /**
@@ -184,6 +235,31 @@ var UserMixin = {
      */
     isEmailOnly: function(){
         return this.getExternalId() === null;
+    },
+
+
+    /**
+     * @method getPuavoEditURL
+     * @return {String}
+     */
+    getPuavoEditURL: function() {
+        return [
+            "https://",
+            this.getOrganisationDomain(),
+            "/users/",
+            this.getPrimarySchoolId(),
+            "/users/",
+            this.getExternalId(),
+            "/edit"
+        ].join("");
+    },
+
+    /**
+     * @method isPuavoUser
+     * @return {Boolean}
+     */
+    isPuavoUser: function(){
+        return !!this.getExternalId();
     },
 
     toString: function() {

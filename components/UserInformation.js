@@ -33,7 +33,7 @@ var UserInformation = React.createClass({
         return (
             <div className="UserInformation">
 
-                <Profile.Overlay user={this.props.user} tipPlacement="left" >
+                <Profile.Overlay clickForDetails user={this.props.user} tipPlacement="left" >
                     <Profile.Badge user={this.props.user} size={40} />
                 </Profile.Overlay>
 

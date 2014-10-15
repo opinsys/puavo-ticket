@@ -29,6 +29,20 @@
         margin-right: 7px;
     }
 
+    .modal {
+        position: absolute;
+        overflow-y: auto;
+        margin-left: auto;
+        margin-right: auto;
+        &.no-close .close {
+            display: none;
+        }
+    }
+
+    .modal-title {
+        font-size: 11pt;
+    }
+
     @include only-on(phablets-and-smaller) {
 
         .wrapper {

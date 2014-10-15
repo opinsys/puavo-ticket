@@ -1,5 +1,10 @@
-.ProfileOverlay {
+.ProfileOverlay-tooltip {
     .missing-email {
         color: red;
     }
+}
+
+
+.ProfileOverlay-details-click {
+    cursor: pointer;
 }

@@ -70,7 +70,7 @@ var CommentUpdate = React.createClass({
 
         return (
             <div className={classes} id={hashId}>
-                <Profile.Overlay user={createdBy} >
+                <Profile.Overlay clickForDetails user={createdBy} >
                     <Profile.Badge user={createdBy} />
                 </Profile.Overlay>
                 <div className="message">

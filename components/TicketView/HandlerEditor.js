@@ -100,7 +100,7 @@ var HandlerEditor = React.createClass({
                         return (
                             <EditableList.Item key={""+user.get("id")}
                                                onRemove={self.removeHandler.bind(self, handler)} >
-                                <Profile.Overlay user={user}>{user.getFullName()}</Profile.Overlay>
+                                <Profile.Overlay clickForDetails user={user}>{user.getFullName()}</Profile.Overlay>
                           </EditableList.Item>
                         );
                     })}

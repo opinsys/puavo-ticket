@@ -26,23 +26,6 @@ body {
     max-width: 400px;
 }
 
-.modal {
-    position: absolute;
-
-    // FIXME
-    overflow-y: auto;
-    width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-
-   .close {
-     display: none;
-   }
-}
-
-.modal-title {
-    font-size: 11pt;
-}
 
 .table {
     thead {

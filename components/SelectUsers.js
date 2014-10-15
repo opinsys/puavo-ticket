@@ -59,7 +59,7 @@ var UserItem = React.createClass({
 
 
         return (
-            <label className={className} htmlFor={id}>
+            <div className={className}>
                 <input
                     id={id}
                     type="checkbox"
@@ -67,7 +67,8 @@ var UserItem = React.createClass({
                     disabled={disabled}
                     onChange={this.handleOnChange}
                     ref="checkbox" />
-                <Profile.Overlay user={user}>
+
+                <Profile.Overlay clickForDetails user={user}>
                     <span>
                         <span className="name">
                             {user.get("externalData").first_name} {user.get("externalData").last_name}
@@ -75,7 +76,8 @@ var UserItem = React.createClass({
                         <span className="badge" >{user.getOrganisationDomain()}</span>
                     </span>
                 </Profile.Overlay>
-            </label>
+
+            </div>
         );
     }
 });
@@ -232,6 +234,7 @@ var SelectUsers = React.createClass({
             <div className="SelectUsers">
                 <div className="search-input-wrap">
                     <input
+                        type="search"
                         className="form-control search-input"
                         ref="search"
                         placeholder="Aloita kirjoittamaan käsittelijän nimeä"

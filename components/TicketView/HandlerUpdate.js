@@ -31,12 +31,10 @@ var HandlerUpdate = React.createClass({
         return (
             <div className={className}>
                 <i>
-                    <Profile.Overlay user={createdBy} tipPlacement="top">
+                    <Profile.Overlay clickForDetails user={createdBy} tipPlacement="top">
                         {createdBy.getFullName()}
-                    </Profile.Overlay>
-                    lisäsi käsittelijäksi käyttäjän </i>
-
-                <Profile.Overlay user={user} tipPlacement="top">
+                    </Profile.Overlay> lisäsi käsittelijäksi käyttäjän </i>
+                <Profile.Overlay clickForDetails user={user} tipPlacement="top">
                     {user.getFullName()}
                 </Profile.Overlay>
             </div>

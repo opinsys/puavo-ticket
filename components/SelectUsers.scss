@@ -25,6 +25,11 @@
         margin-left: 10px;
     }
 
+    input[type=checkbox] {
+        transform: scale(1.5);
+        cursor: pointer;
+    }
+
     .spinner-wrap {
         text-align: center;
     }

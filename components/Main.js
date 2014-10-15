@@ -2,6 +2,7 @@
 "use strict";
 
 var React = require("react/addons");
+var classSet = React.addons.classSet;
 var Backbone = require("backbone");
 var _ = require("lodash");
 var Link = require("react-router").Link;
@@ -20,6 +21,7 @@ var NotificationsHub = require("./NotificationsHub");
 var NotificationBox = require("./NotificationBox");
 var BrowserTitle = require("app/utils/BrowserTitle");
 var captureError = require("app/utils/captureError");
+
 
 
 /**
@@ -93,6 +95,7 @@ var Main = React.createClass({
         window.addEventListener("focus", this.fetchUnreadTickets);
         Backbone.on("error", this.handleUnhandledError);
         this.props.io.on("followerUpdate", this.handleFollowerUpdate);
+        app.renderInModal = this.renderInModal;
     },
 
     componentWillUnmount: function() {
@@ -114,23 +117,42 @@ var Main = React.createClass({
 
     /**
      * @method renderInModal
-     * @param {String} title
+     * @param {Object} options
+     * @param {Object} options.title
      * @param {Function} renderModalContent
      *      Function returning a React component
      * @param {Function} renderModalContent.close
      *      Call this function to close the modal window
      */
-    renderInModal: function(title, render, cb) {
+    renderInModal: function(options, render, cb) {
         var self = this;
+        if (typeof options === "string") {
+            options = {title: options};
+        }
+
+        var onRequestHide = function() { };
+
+        if (options.allowClose) {
+            onRequestHide = self.closeModal;
+        }
+
+        var className = classSet({
+            "no-close": !options.allowClose
+        });
+
         this.setState({ renderModalContent: function() {
             return (
                 <Modal
-                    onRequestHide={function(){}}
-                    title={title} >
+                    className={className}
+                    onRequestHide={onRequestHide}
+                    title={options.title} >
                     {render(self.closeModal)}
                 </Modal>
             );
-        } }, cb);
+        }}, function() {
+            if (typeof cb === "function") cb();
+            window.scrollTo(0,0);
+        });
     },
 
     closeModal: function(e) {
