@@ -96,7 +96,7 @@ var ErrorMessage = React.createClass({
                 {this.props.customMessage && <h2>{this.props.customMessage}</h2>}
 
                 <p>
-                    Lataa sivu uusiksi ja yritä uudelleen. Jos ongelma ei poistu
+                    <a href="" >Lataa sivu uusiksi</a> ja yritä uudelleen. Jos ongelma ei poistu
                     ota yhteyttä puhelimitse tukeen tai lähetä tämä virheviesti
                     sähköpostitse suoraan kehitystiimille osoitteeseen dev@opinsys.fi <a href={this.getMailtoString()}>
                         tästä
