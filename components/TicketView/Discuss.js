@@ -348,8 +348,15 @@ var Discuss = React.createClass({
         var ticket = this.props.ticket;
         var fetching = this.state.fetching;
         var user = this.props.user;
-        var updates = this.getUpdatesWithMergedComments();
         var title = ticket.getCurrentTitle();
+        var updates = this.getUpdatesWithMergedComments();
+
+        if (user.isManager() && ticket.get("zendeskTicketId")) {
+            updates.unshift(ticket.createRobotComment(
+                "Tämä tukipyyntö tuotiin Zendeskistä https://opinsys.zendesk.com/tickets/" + ticket.get("zendeskTicketId"),
+                "zendesk"));
+        }
+
 
         this.props.title.setTitle(title);
         this.props.title.activateOnNextTick();
