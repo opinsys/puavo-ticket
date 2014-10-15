@@ -100,7 +100,14 @@ var UserMixin = {
      * @return {String}
      */
     getExternalId: function() {
-        return String(this.get("externalData").id);
+        var externalId = this.get("externalId");
+        if (externalId) return externalId;
+
+        var externalData = this.get("externalData");
+        externalId = externalData && externalData.id;
+        if (externalId) return externalId;
+
+        return null;
     },
 
     /**
@@ -176,7 +183,7 @@ var UserMixin = {
      * @return {Boolean}
      */
     isEmailOnly: function(){
-        return !this.getExternalId();
+        return this.getExternalId() === null;
     },
 
     toString: function() {
