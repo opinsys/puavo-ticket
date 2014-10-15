@@ -9,6 +9,7 @@ var Modal = require("react-bootstrap/Modal");
 var ButtonGroup = require("react-bootstrap/ButtonGroup");
 var Promise = require("bluebird");
 
+var app = require("app");
 var User = require("app/models/client/User");
 var Ticket = require("app/models/client/Ticket");
 var Comment = require("app/models/client/Comment");

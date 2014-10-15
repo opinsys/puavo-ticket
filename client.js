@@ -12,6 +12,8 @@ var Route = require("react-router").Route;
 var Routes = require("react-router").Routes;
 var Redirect = require("react-router").Redirect;
 
+var app = require("app");
+
 io.on("connect", function(s) {
     console.log("Socket.IO connected");
 });
@@ -70,21 +72,21 @@ var HandlerEditor = require("./components/TicketView/HandlerEditor");
 var Discuss = require("./components/TicketView/Discuss");
 var BrowserTitle = require("./utils/BrowserTitle");
 
-var loggedInUser = new User(window.USER);
+app.currentUser = new User(window.USER);
 var title = new BrowserTitle({ trailingTitle: window.document.title });
 
 React.renderComponent(
     <Routes location="history">
-        <Route handler={Main} io={io} title={title} user={loggedInUser}>
+        <Route handler={Main} io={io} title={title} user={app.currentUser}>
             <Route name="new" handler={TicketForm} />
             <Route name="tickets" path="/" handler={FrontPage} />
             <Route name="solved-tickets" path="/solved" handler={Solved} />
             <Route name="custom-list" path="/custom" handler={CustomList} />
             <Redirect from="/tickets/:id" to="discuss" />
-            <Route name="ticket" path="/tickets/:id" handler={TicketView} user={loggedInUser} >
-                <Route name="tags" path="tags" handler={TagEditor} user={loggedInUser} />
-                <Route name="handlers" path="handlers" handler={HandlerEditor} user={loggedInUser} />
-                <Route name="discuss" handler={Discuss} io={io} title={title} user={loggedInUser} />
+            <Route name="ticket" path="/tickets/:id" handler={TicketView} >
+                <Route name="tags" path="tags" handler={TagEditor} />
+                <Route name="handlers" path="handlers" handler={HandlerEditor} />
+                <Route name="discuss" handler={Discuss} io={io} title={title} />
             </Route>
         </Route>
     </Routes>, document.getElementById("app"));

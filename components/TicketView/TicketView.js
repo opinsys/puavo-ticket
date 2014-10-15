@@ -3,9 +3,9 @@
 var React = require("react/addons");
 var Link = require("react-router").Link;
 
+var app = require("app");
 var Ticket = require("app/models/client/Ticket");
 var BackboneMixin = require("app/components/BackboneMixin");
-var User = require("app/models/client/User");
 var captureError = require("../../utils/captureError");
 
 /**
@@ -15,17 +15,12 @@ var captureError = require("../../utils/captureError");
  * @class TicketView
  * @constructor
  * @param {Object} props
- * @param {models.client.User} props.user
  * @param {Socket.IO} props.io Socket.IO socket
  * @param {BrowserTitle} props.title BrowserTitle instance
  */
 var TicketView = React.createClass({
 
     mixins: [BackboneMixin],
-
-    propTypes: {
-        user: React.PropTypes.instanceOf(User).isRequired,
-    },
 
     createInitialState: function(props) {
         return {
@@ -62,7 +57,7 @@ var TicketView = React.createClass({
 
     render: function() {
         var ticketId = this.props.params.id;
-        var user = this.props.user;
+        var user = app.currentUser;
         var ticket = this.state.ticket;
 
         return (

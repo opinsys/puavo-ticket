@@ -10,12 +10,12 @@ var Navigation = require("react-router").Navigation;
 var Badge = require("react-bootstrap/Badge");
 var Alert = require("react-bootstrap/Alert");
 
+var app = require("app");
 var Loading = require("../Loading");
 var CommentForm = require("../CommentForm");
 var AttachmentsForm = require("../AttachmentsForm");
 var captureError = require("../../utils/captureError");
 var Ticket = require("../../models/client/Ticket");
-var User = require("../../models/client/User");
 var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
 var EditableText = require("../EditableText");
@@ -42,7 +42,6 @@ var UPDATE_COMPONENTS = {
  * @class Discuss
  * @constructor
  * @param {Object} props
- * @param {models.client.User} props.user
  * @param {Socket.IO} props.io Socket.IO socket
  * @param {BrowserTitle} props.title BrowserTitle instance
  */
@@ -52,7 +51,6 @@ var Discuss = React.createClass({
 
     propTypes: {
         title: React.PropTypes.instanceOf(BrowserTitle).isRequired,
-        user: React.PropTypes.instanceOf(User).isRequired,
         ticket: React.PropTypes.instanceOf(Ticket).isRequired,
         io: React.PropTypes.shape({
             on: React.PropTypes.func.isRequired,
@@ -146,7 +144,7 @@ var Discuss = React.createClass({
      * @method scrollToAnchoredElement
      */
     scrollToAnchoredElement: function() {
-        var unread = this.props.ticket.firstUnreadUpdateFor(this.props.user);
+        var unread = this.props.ticket.firstUnreadUpdateFor(app.currentUser);
 
         // Remove ?scrollTo=firstUnread query string and set
         // window.location.hash
@@ -347,7 +345,7 @@ var Discuss = React.createClass({
         var self = this;
         var ticket = this.props.ticket;
         var fetching = this.state.fetching;
-        var user = this.props.user;
+        var user = app.currentUser;
         var title = ticket.getCurrentTitle();
         var updates = this.getUpdatesWithMergedComments();
 
@@ -405,9 +403,8 @@ var Discuss = React.createClass({
                             }
 
                             var className = classSet({
-                                unread: update.isUnreadBy(self.props.user)
+                                unread: update.isUnreadBy(app.currentUser)
                             });
-
 
                             return (
                                 <div key={update.getUniqueId()} className={className}>

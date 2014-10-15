@@ -7,9 +7,9 @@ var _ = require("lodash");
 var Promise = require("bluebird");
 var Navigation = require("react-router").Navigation;
 
+var app = require("app");
 var Fa = require("../Fa");
 var Ticket = require("app/models/client/Ticket");
-var User = require("app/models/client/User");
 var SelectUsers = require("../SelectUsers");
 var EditableList = require("app/components/EditableList");
 var Profile = require("app/components/Profile");
@@ -21,6 +21,7 @@ var captureError = require("app/utils/captureError");
  * @class HandlerEditor
  * @constructor
  * @param {Object} props
+ * @param {models.client.Ticket} props.ticket
  */
 var HandlerEditor = React.createClass({
 
@@ -28,7 +29,6 @@ var HandlerEditor = React.createClass({
 
     propTypes: {
         ticket: React.PropTypes.instanceOf(Ticket).isRequired,
-        user: React.PropTypes.instanceOf(User).isRequired,
     },
 
     getInitialState: function() {
@@ -75,7 +75,7 @@ var HandlerEditor = React.createClass({
     render: function() {
         var self = this;
         var ticket = this.props.ticket;
-        var user = this.props.user;
+        var user = app.currentUser;
         var saving = this.state.saving;
         var handlerRelations = ticket.handlers().filter(function(h) {
             return !h.isSoftDeleted();
