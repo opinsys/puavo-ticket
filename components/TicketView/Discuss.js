@@ -2,10 +2,10 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
-var Router = require("react-router");
 var classSet = React.addons.classSet;
 var _ = require("lodash");
 var debug = require("debug")("app:read");
+var Navigation = require("react-router").Navigation;
 
 var Badge = require("react-bootstrap/Badge");
 var Alert = require("react-bootstrap/Alert");
@@ -47,6 +47,8 @@ var UPDATE_COMPONENTS = {
  * @param {BrowserTitle} props.title BrowserTitle instance
  */
 var Discuss = React.createClass({
+
+    mixins: [Navigation],
 
     propTypes: {
         title: React.PropTypes.instanceOf(BrowserTitle).isRequired,
@@ -149,7 +151,7 @@ var Discuss = React.createClass({
         // Remove ?scrollTo=firstUnread query string and set
         // window.location.hash
         if (unread && this.props.query.scrollTo === "firstUnread") {
-            Router.replaceWith(this.props.name, this.props.params);
+            this.replaceWith(this.props.name, this.props.params);
             window.location.hash = unread.getUniqueId();
         }
 
