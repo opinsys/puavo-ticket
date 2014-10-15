@@ -169,8 +169,6 @@ var Main = React.createClass({
         var user = this.props.user;
         var unreadTickets = this.state.unreadTickets;
         var pendingTickets = this.state.pendingTickets;
-        this.props.title.setNotificationCount(unreadTickets.size());
-        this.props.title.activateOnNextTick();
 
         return (
             <div className="Main">
@@ -194,7 +192,7 @@ var Main = React.createClass({
                             <Link className="btn btn-default top-button" to="tickets">
                                 <i className="fa fa-home"></i>Omat tukipyynnöt
                             </Link>
-                            <NotificationsHub className="top-button" >
+                            <NotificationsHub title={this.props.title} className="top-button" >
                                 <NotificationsHub.TicketGroup title="Tukipyynnöt joissa on lukemattomia päivityksiä" tickets={unreadTickets}  />
                                 {pendingTickets &&
                                     <NotificationsHub.TicketGroup title="Tukipyynnöt jotka odottavat käsittelijää" tickets={pendingTickets}  />}

@@ -5,6 +5,7 @@ var DropdownButton = require("react-bootstrap/DropdownButton");
 var MenuItem = require("react-bootstrap/MenuItem");
 var Link = require("react-router").Link;
 
+var BrowserTitle = require("app/utils/BrowserTitle");
 var Ticket = require("app/models/client/Ticket");
 
 /**
@@ -14,12 +15,18 @@ var Ticket = require("app/models/client/Ticket");
  * @class NotificationsHub
  * @constructor
  * @param {Object} props
+ * @param {BrowserTitle} props.title BrowserTitle instance
  */
 var NotificationsHub = React.createClass({
+
+    propTypes: {
+        title: React.PropTypes.instanceOf(BrowserTitle).isRequired,
+    },
 
     render: function() {
         var count = 0;
         var items = [];
+
         [].concat(this.props.children).forEach(function(child) {
             if (!child) return;
             var key = child.props.title;
@@ -32,6 +39,8 @@ var NotificationsHub = React.createClass({
             });
         });
 
+        this.props.title.setNotificationCount(count);
+        this.props.title.activateOnNextTick();
         return this.transferPropsTo(
             <DropdownButton pullRight className="NotificationsHub" title={"Ilmoitukset " + count}>
                 {items}
