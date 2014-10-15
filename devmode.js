@@ -11,6 +11,7 @@ var path = require("path");
 var spawn = require("child_process").spawn;
 var watchify = require("watchify");
 var watch = require("glob-watcher");
+var _ = require("lodash");
 
 
 var sio;
@@ -93,7 +94,7 @@ var cssWatcher = watch([
     "components/**/*.scss"
 ]);
 cssWatcher.on("error", console.error);
-cssWatcher.on("change", writeCSS);
+cssWatcher.on("change", _.debounce(writeCSS, 100));
 
 
 /**
