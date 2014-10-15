@@ -29,6 +29,7 @@ function byCreation(a, b) {
 var opinsysRobot = new User({
     id: -1,
     externalData: {
+        id: "-1",
         email: "tuki@opinsys.fi",
         first_name: "Opinsys",
         last_name: "Oy",
@@ -36,6 +37,7 @@ var opinsysRobot = new User({
     }
 });
 
+opinsysRobot.robot = true;
 opinsysRobot.getProfileImage = function() {
     return "/images/support_person.png";
 };

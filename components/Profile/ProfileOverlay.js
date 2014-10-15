@@ -51,6 +51,9 @@ var ProfileOverlay = React.createClass({
             children = <div>{children}</div>;
         }
 
+        if (this.props.user.robot) {
+            return children;
+        }
 
         return (
             <OverlayTrigger
