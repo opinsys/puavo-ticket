@@ -227,8 +227,9 @@ var SelectUsers = React.createClass({
                     <ul className="list-group" >
                         {self.state.searchedUsers.map(function(user) {
                             var disable = self.isSelected(user);
+                            var key = user.get("externalData").id;
                             return (
-                                <li key={user.get("externalId")} className="list-group-item" >
+                                <li key={key} className="list-group-item" >
                                     <UserItem
                                         user={user}
                                         disabled={disable}
