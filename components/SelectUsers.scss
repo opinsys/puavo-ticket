@@ -17,8 +17,12 @@
         margin-bottom: 0;
     }
 
+    .email-missing .name {
+        text-decoration: line-through;
+    }
 
-    .search-results, .search-input {
+    .badge {
+        margin-left: 10px;
     }
 
     .spinner-wrap {

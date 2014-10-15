@@ -3,10 +3,12 @@
 
 var _ = require("lodash");
 var React = require("react/addons");
+var classSet = React.addons.classSet;
 var Promise = require("bluebird");
 
 var Fa = require("./Fa");
 var User = require("../models/client/User");
+var Profile = require("./Profile");
 var captureError = require("../utils/captureError");
 
 
@@ -45,18 +47,34 @@ var UserItem = React.createClass({
     render: function() {
         var id = _.uniqueId("checkbox");
         var user = this.props.user;
+        var disabled = this.props.disabled;
+        var emailMissing = !user.getEmail();
+
+        if (emailMissing) disabled = true;
+
+        var className = classSet({
+            UserItem: true,
+            "email-missing": emailMissing
+        });
+
+
         return (
-            <label className="UserItem" htmlFor={id}>
+            <label className={className} htmlFor={id}>
                 <input
                     id={id}
                     type="checkbox"
                     checked={this.props.checked}
-                    disabled={this.props.disabled}
+                    disabled={disabled}
                     onChange={this.handleOnChange}
                     ref="checkbox" />
-                <span className="first-name" >{user.get("externalData").first_name + " "}</span>
-                <span className="last-name" >{user.get("externalData").last_name + " "}</span>
-                <span className="badge" >{user.getOrganisationDomain()}</span>
+                <Profile.Overlay user={user}>
+                    <span>
+                        <span className="name">
+                            {user.get("externalData").first_name} {user.get("externalData").last_name}
+                        </span>
+                        <span className="badge" >{user.getOrganisationDomain()}</span>
+                    </span>
+                </Profile.Overlay>
             </label>
         );
     }

@@ -24,14 +24,19 @@ var ProfileOverlay = React.createClass({
     renderTooltip: function() {
         var user = this.props.user;
         return (
-            <span>
+            <span className="ProfileOverlay">
                 {user.getOrganisationName()}
                 <br />
-                {user.getFullName()} ({user.get("id")})
+                {user.getFullName()} {parens(user.get("id"))}
                 <br />
+
                 {user.getEmail()}
+                {!user.getEmail() && <span className="missing-email">
+                    Sähköposti puuttuu Puavosta!
+                </span>}
+
                 {!user.isEmailOnly() && <div>
-                    <b>Puavo:</b> {user.getDomainUsername()} ({user.getExternalId()})
+                    <b>Puavo:</b> {user.getDomainUsername()} {parens(user.getExternalId())}
                 </div>}
             </span>
         );
@@ -42,6 +47,8 @@ var ProfileOverlay = React.createClass({
 
         if (typeof children === "string") {
             children = <span>{children}</span>;
+        } else if (children.length > 1) {
+            children = <div>{children}</div>;
         }
 
 
@@ -52,5 +59,14 @@ var ProfileOverlay = React.createClass({
         );
     }
 });
+
+
+/**
+ * wrap content with parens if any
+ */
+function parens(content) {
+    if (!content) return "";
+    return "(" + content + ")";
+}
 
 module.exports = ProfileOverlay;
