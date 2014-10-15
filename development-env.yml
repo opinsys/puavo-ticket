@@ -123,6 +123,7 @@
       - name: Create organisations for test and development
         command: puavo-add-new-organisation --yes {{ item.organisation }} --username {{ item.username }} --password {{ item.password }} --given-name {{ item.givenname }} --surname {{ item.surname }}
           creates={{ item.creates }}
+        notify: Seed LDAP database
         with_items:
           - { organisation: "hogwarts",
               username: "albus",
@@ -167,13 +168,6 @@
           chdir={{ code_dest }}/puavo-users
         sudo_user: "{{ dev_user }}"
 
-        # FIXME??
-      - name: Generate data for Puavo
-        shell: bundle exec rails runner db/seeds.rb && touch db/seeds.rb-is-run
-          chdir={{ code_dest }}/puavo-users
-          creates={{ code_dest }}/puavo-users/db/seeds.rb-is-run
-        sudo_user: "{{ dev_user }}"
-
       - name: puavo-rest, Install Ruby gems etc.
         command: make
           chdir={{ code_dest }}/puavo-users/rest
@@ -200,4 +194,10 @@
       - name: Runs puavo-ticket migrations
         command: make migrate
           chdir={{ code_dest }}/puavo-ticket
+        sudo_user: "{{ dev_user }}"
+
+  handlers:
+      - name: Seed LDAP database
+        shell: bundle exec rails runner db/seeds.rb
+          chdir={{ code_dest }}/puavo-users
         sudo_user: "{{ dev_user }}"
