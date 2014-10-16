@@ -22,6 +22,10 @@ app.post("/api/tickets/:id/tags", function(req, res, next) {
         req.body.tag, req.params.id
      );
 
+     if (!req.user.isManager()) {
+        return res.status(401).json({ error: "permission denied" });
+     }
+
     Ticket.fetchByIdConstrained(req.user, req.params.id)
     .then(function(ticket) {
         if (!ticket) return res.json(404, { error: "no such ticket" });
