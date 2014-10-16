@@ -172,8 +172,8 @@ var SelectUsers = React.createClass({
     },
 
     componentWillMount: function() {
-        // search after 500ms of silence for each mounted component
-        this.bouncedSearch = _.debounce(this.doSearch, 500);
+        // search after a second of silence
+        this.bouncedSearch = _.debounce(this.doSearch, 1000);
         this.fixOrganisations();
     },
 
@@ -220,11 +220,9 @@ var SelectUsers = React.createClass({
     },
 
     handleKeyDown: function(e) {
-        if (e.key !== "Enter") return;
-        if (this.state.searchedUsers.length === 0) return;
-        var user = this.state.searchedUsers[0];
-        if (this.isSelected(user)) return;
-        if (user) this.props.onSelect(user);
+        if (e.key === "Enter") {
+            this.doSearch(this.state.searchString);
+        }
     },
 
     render: function() {
