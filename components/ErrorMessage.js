@@ -2,18 +2,11 @@
 "use strict";
 
 var React = require("react/addons");
-var _ = require("lodash");
 
 function mailtoEscape(value) {
     // borrowed from https://github.com/oncletom/mailto/blob/02aa8796cf6e2a0d66276693bab57e892dd0f7c1/lib/mailto.js#L120
     // fixing *nix line break encoding to follow RFC spec
     return encodeURIComponent(value).replace(/%0A(?!%)/g, '%0D%0A');
-}
-
-function objToBody(ob) {
-    return Object.keys(ob).map(function(key) {
-        return key + ":\n\n" + ob[key] + "\n\n";
-    }).join("").trim();
 }
 
 function isjQueryAjaxError(err) {
@@ -41,32 +34,39 @@ var ErrorMessage = React.createClass({
         subject: "Ongelma tukipalvelussa"
     },
 
-    /**
-     * Format the error object to email suitable string
-     *
-     * @method formatError
-     * @return {String}
-     */
-    formatError: function() {
-        var ob = {
-            "Selain": window.navigator.userAgent,
-            "URL": window.location.toString()
-        };
+    statics: {
+        /**
+         * Format the error object to email suitable string
+         *
+         * @static
+         * @method formatError
+         * @param {Error} error
+         * @param {String} errorSource
+         * @return {String}
+         */
+        formatError: function(error, errorSource) {
+            var errorDetails = [];
 
-        if (isjQueryAjaxError(this.props.error)) {
-             _.extend(ob, {
-                "Server error": this.props.error.responseText,
-                "Status": this.props.error.status,
-                "Status code": this.props.error.statusCode()
-            });
-        } else {
-            _.extend(ob, {
-                "Virhe": this.props.error.message,
-                "Stack": this.props.error.stack
-            });
-        }
+            if (isjQueryAjaxError(error)) {
+                errorDetails.push({ key: "Server error", value: error.responseText });
+                errorDetails.push({ key: "Status", value: error.status });
+                errorDetails.push({ key: "Status Code", value: error.statusCode() });
+            } else {
+                errorDetails.push({ key: "Virhe", value: error.message });
+                errorDetails.push({ key: "Stack", value: error.stack });
+            }
 
-        return objToBody(ob);
+            errorDetails.push({ key: "Selain", value: window.navigator.userAgent });
+            errorDetails.push({ key: "URL", value: window.location.toString() });
+
+            if (errorSource) {
+                errorDetails.push({ key: "Error Source", value: errorSource });
+            }
+
+            return errorDetails.map(function(ob) {
+                return ob.key + ": " + ob.value;
+            }).join("\n\n");
+        },
     },
 
     getMailBody: function() {
@@ -77,7 +77,7 @@ var ErrorMessage = React.createClass({
             "\n\n",
             "#### Taustatiedot ####",
             "\n\n",
-            this.formatError()
+            ErrorMessage.formatError(this.props.error)
         ].join("");
     },
 
@@ -97,7 +97,7 @@ var ErrorMessage = React.createClass({
 
                 <p>
                     <a href="" >Lataa sivu uusiksi</a> ja yritä uudelleen. Jos ongelma ei poistu
-                    ota yhteyttä puhelimitse tukeen tai lähetä tämä virheviesti
+                    ota yhteyttä puhelimitse tukeen (<a href="tel:014-4591625">014-4591625</a>) tai lähetä tämä virheviesti
                     sähköpostitse suoraan kehitystiimille osoitteeseen dev@opinsys.fi <a href={this.getMailtoString()}>
                         tästä
                     </a>.

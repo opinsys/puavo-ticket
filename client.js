@@ -70,10 +70,12 @@ var CustomList = require("./components/CustomList");
 var TagEditor = require("./components/TicketView/TagEditor");
 var HandlerEditor = require("./components/TicketView/HandlerEditor");
 var Discuss = require("./components/TicketView/Discuss");
+var ErrorMessage = require("./components/ErrorMessage");
 var BrowserTitle = require("./utils/BrowserTitle");
 
 app.currentUser = new User(window.USER);
 var title = new BrowserTitle({ trailingTitle: window.document.title });
+var appContainer = document.getElementById("app");
 
 React.renderComponent(
     <Routes location="history">
@@ -89,11 +91,51 @@ React.renderComponent(
                 <Route name="discuss" handler={Discuss} io={io} title={title} />
             </Route>
         </Route>
-    </Routes>, document.getElementById("app"));
+    </Routes>, appContainer);
 
 
-window.onerror = function(message, url, linenum) {
-    var msg = "Unhandled client Javascript error: '" + message + "' on " + url + ":" + linenum;
-    Backbone.trigger("error", new Error(msg));
-};
+/**
+ * Render given error to the body using plain javascript overriding everything else
+ */
+function renderLowLevelErrorMessage(error, source) {
+    try {
+        React.unmountComponentAtNode(appContainer);
+    } catch (err) { }
+    var html = "<h1>Virhe :(</h1>";
+    html += "Sovellus kaatui. ";
+    html += '<a href="" >Lataa sivu uusiksi</a> ja yritä uudelleen. ';
+    html += 'Jos ongelma ei poistu ota yhteyttä puhelimitse tukeen <a href="tel:014-4591625">014-4591625</a> ';
+    html += '<pre id="errorContainer"></pre>';
+    document.body.innerHTML = html;
+    var errorContainer = document.getElementById("errorContainer");
+    errorContainer.textContent = ErrorMessage.formatError(error, source);
+    throw error;
+}
+
+if (process.env.NODE_ENV === "production") {
+    // On unhandled errors the UI might get just stuck which is very confusing
+    // for the user. So force render a proper error message for the user so
+    // she/he will know that an error happened.
+    window.onerror = function(message, filename, lineno, colno, error) {
+        window.onerror = null;
+        if (error) {
+            // If the browser actually provides an error object render it
+            renderLowLevelErrorMessage(error, "window.onerror");
+        } else {
+            // Otherwise create one
+            renderLowLevelErrorMessage(new Error("window.onerror: " + message), "window.onerror");
+        }
+    };
+
+    Promise.onPossiblyUnhandledRejection(function(error, promise) {
+        renderLowLevelErrorMessage(error, "Promise");
+    });
+
+} else {
+    // In development just throw the promise error so that the devtools can capture it
+    Promise.onPossiblyUnhandledRejection(function(error, promise) {
+        console.warn("Possibly unhandled rejection: " + error.message);
+        throw error;
+    });
+}
 
