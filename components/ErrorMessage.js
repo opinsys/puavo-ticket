@@ -90,6 +90,7 @@ var ErrorMessage = React.createClass({
     },
 
     render: function() {
+        var error = this.props.error;
         return (
             <div className="ErrorMessage">
 
@@ -105,7 +106,7 @@ var ErrorMessage = React.createClass({
 
                 <h2>Virheviesti</h2>
 
-                <pre>{this.formatError()}</pre>
+                <pre>{ErrorMessage.formatError(error)}</pre>
 
             </div>
         );
