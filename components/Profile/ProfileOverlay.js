@@ -49,7 +49,7 @@ var ProfileOverlay = React.createClass({
     handleOnClick: function() {
         var user = this.props.user;
         app.renderInModal({
-            title: "Käyttäjä tiedot",
+            title: "Käyttäjätiedot",
             allowClose: true
         }, function() {
             return <ProfileDetails user={user} />;
