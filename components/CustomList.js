@@ -86,6 +86,7 @@ var CustomList = React.createClass({
                     Esimerkiksi: <a href={exampleUrl}>{exampleUrl}</a>
                     </p>
                 </div>}
+                <div className="clearfix"></div>
             </div>
         );
     }
