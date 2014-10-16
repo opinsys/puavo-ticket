@@ -1,1 +1,2 @@
+// Application global
 module.exports = {};

@@ -97,10 +97,15 @@ React.renderComponent(
 /**
  * Render given error to the body using plain javascript overriding everything else
  */
-function renderLowLevelErrorMessage(error, source) {
+var renderLowLevelErrorMessage = function (error, source) {
+    // Only render the initial error message
+    renderLowLevelErrorMessage = function(e) { throw e; };
+
+    // Try to remove the application
     try {
         React.unmountComponentAtNode(appContainer);
     } catch (err) { }
+
     var html = "<h1>Virhe :(</h1>";
     html += "Sovellus kaatui. ";
     html += '<a href="" >Lataa sivu uusiksi</a> ja yritä uudelleen. ';
@@ -110,14 +115,13 @@ function renderLowLevelErrorMessage(error, source) {
     var errorContainer = document.getElementById("errorContainer");
     errorContainer.textContent = ErrorMessage.formatError(error, source);
     throw error;
-}
+};
 
 if (process.env.NODE_ENV === "production") {
     // On unhandled errors the UI might get just stuck which is very confusing
     // for the user. So force render a proper error message for the user so
     // she/he will know that an error happened.
     window.onerror = function(message, filename, lineno, colno, error) {
-        window.onerror = null;
         if (error) {
             // If the browser actually provides an error object render it
             renderLowLevelErrorMessage(error, "window.onerror");
