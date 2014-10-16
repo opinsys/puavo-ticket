@@ -24,7 +24,9 @@ var Tag = Base.extend({
     },
 
     url: function() {
-        return this.parent.url() + "/tags";
+        var u = this.parent.url() + "/tags";
+        if (this.isNew()) return u;
+        return u + "/" + this.get("tag");
     }
 
 });

@@ -243,15 +243,23 @@ var Ticket = Base.extend({
     /**
      * @method addTag
      * @param {String} tagName
-     * @param {models.client.User} createdBy
      * @return {Bluebird.Promise}
      */
-    addTag: function(tagName, createdBy) {
+    addTag: function(tagName) {
         var model = new Tag({
-            tag: tagName,
-            createdBy: createdBy.toJSON()
+            tag: tagName
         }, { parent: this });
         return model.save();
+    },
+
+    /**
+     * @method hasTag
+     * @return {Boolen}
+     */
+    hasTag: function(tag){
+        return this.tags().some(function(tagOb) {
+            return !tagOb.isSoftDeleted() && tagOb.get("tag") === tag;
+        });
     },
 
     /**

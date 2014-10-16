@@ -75,13 +75,11 @@ var TicketView = React.createClass({
                         </Link>
                     </li>
 
-                    {/*
                     <li>
                         <Link to="tags" params={{ id: ticketId }}>
                             Tagit
                         </Link>
                     </li>
-                    */}
 
                 </ul>}
 
