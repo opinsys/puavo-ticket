@@ -2,11 +2,9 @@
 "use strict";
 
 var React = require("react/addons");
-var classSet = React.addons.classSet;
 var Backbone = require("backbone");
 var _ = require("lodash");
 var Link = require("react-router").Link;
-var Modal = require("react-bootstrap/Modal");
 var ButtonGroup = require("react-bootstrap/ButtonGroup");
 var Promise = require("bluebird");
 
@@ -14,6 +12,7 @@ var app = require("app");
 var User = require("app/models/client/User");
 var Ticket = require("app/models/client/Ticket");
 var Comment = require("app/models/client/Comment");
+var Modal = require("./Modal");
 var BackboneMixin = require("./BackboneMixin");
 var ErrorMessage = require("./ErrorMessage");
 var UserInformation = require("./UserInformation");
@@ -107,10 +106,11 @@ var Main = React.createClass({
     handleUnhandledError: function(error, customMessage) {
         console.error(customMessage + ":", error.message);
         if (error.stack) console.error(error.stack);
-        this.renderInModal("Uups! Jotain odottamatonta tapahtui :(", function(){
+        this.renderInModal({
+            title: "Uups! Jotain odottamatonta tapahtui :(",
+            permanent: true
+        }, function(){
             return <ErrorMessage error={error} customMessage={customMessage} />;
-        }, function() {
-            window.scrollTo(0, 0);
         });
     },
 
@@ -130,29 +130,16 @@ var Main = React.createClass({
             options = {title: options};
         }
 
-        var onRequestHide = function() { };
-
-        if (options.allowClose) {
-            onRequestHide = self.closeModal;
-        }
-
-        var className = classSet({
-            "no-close": !options.allowClose
-        });
-
         this.setState({ renderModalContent: function() {
             return (
                 <Modal
-                    className={className}
-                    onRequestHide={onRequestHide}
+                    onRequestHide={self.closeModal}
+                    permanent={!!options.permanent}
                     title={options.title} >
                     {render(self.closeModal)}
                 </Modal>
             );
-        }}, function() {
-            if (typeof cb === "function") cb();
-            window.scrollTo(0,0);
-        });
+        }}, cb);
     },
 
     closeModal: function(e) {
