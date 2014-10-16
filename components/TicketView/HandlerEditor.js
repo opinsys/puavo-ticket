@@ -81,15 +81,7 @@ var HandlerEditor = React.createClass({
             return !h.isSoftDeleted();
         });
 
-        var creatorDomain = ticket.createdBy().getOrganisationDomain();
-        var currentDomain = user.getOrganisationDomain();
-        var searchOrganisations = [user.getOrganisationDomain()];
-
-        // If the user is manager and the ticket creator is from a another
-        // organisation search users from that organisation too.
-        if (creatorDomain !== currentDomain && user.isManager()) {
-            searchOrganisations.push(creatorDomain);
-        }
+        var searchOrganisations = ticket.getRelatedOrganisationDomains();
 
         return (
             <div className="HandlerEditor">

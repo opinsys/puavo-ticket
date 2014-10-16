@@ -3,6 +3,7 @@ var debug = require("debug")("puavo-ticket:models/client/Ticket");
 var Promise = require("bluebird");
 var _ = require("lodash");
 
+var app = require("app");
 var Base = require("./Base");
 var Tag = require("./Tag");
 var Handler = require("./Handler");
@@ -100,6 +101,42 @@ var Ticket = Base.extend({
         };
 
         return comment;
+    },
+
+    /**
+     * Return array of all organisation domains that are related to this ticket
+     *
+     * @method getRelatedOrganisationDomains
+     * @return {Array}
+     */
+    getRelatedOrganisationDomains: function(){
+        var domains = {};
+
+        domains[this.createdBy().getOrganisationDomain()] = true;
+        domains[app.currentUser.getOrganisationDomain()] = true;
+
+        this.comments().forEach(function(comment) {
+            domains[comment.createdBy().getOrganisationDomain()] = true;
+        });
+        this.handlers().forEach(function(handler) {
+            domains[handler.createdBy().getOrganisationDomain()] = true;
+            domains[handler.getUser().getOrganisationDomain()] = true;
+        });
+
+        return _.uniq(
+            Object.keys(domains).concat(this.getTaggedOrganisationDomains())
+        );
+    },
+
+    /**
+     * @method getTaggedOrganisationDomains
+     * @return {Array}
+     */
+    getTaggedOrganisationDomains: function(){
+        return this.tags().map(function(tag) {
+            var m = /^organisation\:(.+)$/.exec(tag.get("tag"));
+            return m && m[1];
+        }).filter(Boolean);
     },
 
     /**
