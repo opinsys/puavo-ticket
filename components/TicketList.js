@@ -52,7 +52,7 @@ var TicketList = React.createClass({
                     {handlers.map(function(handler) {
                         var user = handler.getUser();
                         return (
-                            <Profile.Overlay key={handler.get("id")} user={user}>
+                            <Profile.Overlay clickForDetails tipPlacement="left" key={handler.get("id")} user={user}>
                                 <Profile.Badge size={40} user={user} />
                             </Profile.Overlay>
                         );
