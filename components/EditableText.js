@@ -29,7 +29,8 @@ var EditableText = React.createClass({
         return {
             text: "",
             disabled: false,
-            onSubmit: function(){}
+            onSubmit: function(){},
+            className: ""
         };
     },
 
@@ -64,9 +65,13 @@ var EditableText = React.createClass({
         if (e.key === "Enter") this.submit();
     },
 
+    getClassName: function() {
+        return "EditableText " + this.props.className;
+    },
+
     renderTitle: function() {
         return (
-            <div className="EditableText">
+            <div className={this.getClassName()}>
                 <span className="content-wrap" ref="content">{this.props.children}</span>
 
                 {!this.props.disabled &&
@@ -83,7 +88,7 @@ var EditableText = React.createClass({
 
     renderInput: function() {
         return (
-            <div className="EditableText">
+            <div className={this.getClassName()}>
                 <input
                     className="form-control"
                     type="text"
