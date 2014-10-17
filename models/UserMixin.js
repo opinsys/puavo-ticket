@@ -68,11 +68,17 @@ var UserMixin = {
     },
 
     /**
+     * Return organisation domain string or null is the use is not a puavo user
+     *
      * @method getOrganisationDomain
-     * @return {String}
+     * @return {String|null}
      */
     getOrganisationDomain: function(){
-        return this.get("externalData").organisation_domain;
+        if (this.isPuavoUser()) {
+            return this.get("externalData").organisation_domain;
+        }
+
+        return null;
     },
 
     /**
