@@ -173,20 +173,25 @@ var Base = Backbone.Model.extend({
     },
 
     /**
-     * Return relation data for given key or throw if it's not loaded
+     * Return relation data for given key or throws if it's not loaded
+     *
+     * Assumes that a matching method is available for the relation
      *
      * @method rel
      * @param {String} key
      * @return {Object|Array} Relation data
      */
-    rel: function(key){
+    rel: function(key, arg){
         var data = this.get(key);
         if (!data) {
             var err =  new Error("Relation for key '" + key + "' is not loaded for '" + this.get("type") + "' model");
             err.model = this;
             throw err;
         }
-        return data;
+        if (typeof this[key] !== "function") {
+            throw new Error("There is no method for relation '" + key + "'");
+        }
+        return this[key](arg);
     },
 
 
