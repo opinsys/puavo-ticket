@@ -36,6 +36,7 @@ Please read https://github.com/opinsys/puavo-ticket#styles
 @import "../components/TicketView/Discuss.scss";
 @import "../components/TicketView/TitleUpdate.scss";
 @import "../components/TicketView/CommentUpdate.scss";
+@import "../components/TicketView/SpeechBubble.scss";
 @import "../components/TicketView/HandlerEditor.scss";
 @import "../components/TicketView/TagEditor.scss";
 @import "../components/StringDiff.scss";
@@ -212,10 +213,6 @@ table td {
             font-size: 160%;
             margin: 0;
         }
-    }
-    textarea {
-        margin: 0.5rem 0;
-        min-height: 3em;
     }
 }
 
