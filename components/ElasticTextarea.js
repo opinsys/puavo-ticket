@@ -28,6 +28,7 @@ var ElasticTextarea = React.createClass({
     getDefaultProps: function() {
         return {
             minRows: 1,
+            onKeyDown: function(){},
             onResize: function(){}
         };
     },
@@ -99,6 +100,7 @@ var ElasticTextarea = React.createClass({
             onKeyDown={function(e) {
                 // Enter always adds a line break. Resize instantly.
                 if (e.key === "Enter") setTimeout(self._resize, 0);
+                self.props.onKeyDown(e);
             }}
             ref="textarea"
             className={"ElasticTextarea " + this.props.className}></textarea>
