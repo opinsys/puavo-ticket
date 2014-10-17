@@ -181,6 +181,21 @@ describe("Ticket model", function() {
 
     });
 
+    it("has organisation:unknown tag for tickets created by email only users", function() {
+        return User.ensureUserByEmail("email-only@example.com", "Evil", "Emailer")
+        .then(function(user) {
+            return Ticket.create("Created by email only user", "foo", user);
+        })
+        .then(function(ticket) {
+            return ticket.load("tags");
+        })
+        .then(function(ticket) {
+            assert(
+                ticket.hasTag("organisation:unknown"),
+                "has organisation:unknown tag"
+            );
+        });
+    });
 
 });
 

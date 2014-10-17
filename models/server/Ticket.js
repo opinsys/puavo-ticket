@@ -124,10 +124,11 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
             var user = ticket.relations.createdBy;
             return ticket.addHandler(user, user)
             .then(function() {
+                var organisation = user.getOrganisationDomain() || "unknown";
                 return Promise.join(
                     ticket.setStatus("pending", user, { force: true }),
                     ticket.addVisibility(user.getOrganisationAdminVisibility(), user),
-                    ticket.addTag("organisation:" + user.getOrganisationDomain(), user)
+                    ticket.addTag("organisation:" + organisation, user)
                 );
             });
         });
