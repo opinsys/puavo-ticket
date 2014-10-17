@@ -38,7 +38,7 @@ var TagEditor = React.createClass({
         var tag = this.getTag();
         if (!tag) return "warning";
         if (this.props.ticket.hasTag(tag)) return "error";
-        if (!/^[a-z0-9:]+$/.test(tag)) return "error";
+        if (!/^[a-z0-9:\.]+$/.test(tag)) return "error";
         // TODO disable status tags here when we have proper component for status changes
         // if (/^status:.*$/.test(tag)) return "error";
         return "success";
