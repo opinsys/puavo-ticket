@@ -72,7 +72,7 @@ var ProfileDetails = React.createClass({
 
         return (
             <div className="ProfileDetails">
-                <ProfileBadge user={user} size={100} />
+                <ProfileBadge user={user} size={150} padding={10} />
                 <h1>{user.getFullName()}</h1>
 
                 <h2>Yleiset tiedot</h2>

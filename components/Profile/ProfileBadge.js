@@ -16,7 +16,7 @@ var User = require("app/models/client/User");
  * @param {Object} props
  * @param {models.client.User} props.user
  * @param {Number} [props.size=50]
- * @param {Number} [props.padding=4]
+ * @param {Number} [props.padding=5]
  */
 var ProfileBadge = React.createClass({
 
@@ -30,7 +30,7 @@ var ProfileBadge = React.createClass({
         return {
             tipPlacement: "right",
             size: 50,
-            padding: 4
+            padding: 5
         };
     },
 
