@@ -13,25 +13,22 @@
         color: $comment-secondary;
     }
 
-    .message {
-        background-color: white;
+    .title {
         padding: 10px;
+    }
+
+    .bubble {
+        background-color: white;
         margin-left: 49px + $triangle-length;
         border-radius: 5px;
 
         position: relative;
         border: 2px solid $bubble-border-color;
         border-radius: 5px;
-
         font-size: 10pt;
-
-        p {
-            padding: 0px;
-            margin: 0px;
-        }
     }
 
-    .message:after {
+    .bubble:after {
         content: "";
         position: absolute;
         top: 7px;
@@ -45,10 +42,10 @@
     }
 
 
-    &.selected .message:after {
+    &.selected .bubble:after {
         border-color: transparent $highlight-color;
     }
-    &.selected .message {
+    &.selected .bubble {
         border-color: $highlight-color;
     }
 

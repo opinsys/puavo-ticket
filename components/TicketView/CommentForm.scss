@@ -3,6 +3,9 @@
         border: 0;
         outline: 0;
         padding: 0;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-bottom: 10px;
         box-shadow: none;
     }
 
@@ -13,7 +16,8 @@
     .btn {
         width: 100%;
         margin: 0;
-        margin-top: 20px;
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
     }
 
     .warning {
