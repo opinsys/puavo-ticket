@@ -55,7 +55,7 @@ var ToggleStatusButton = React.createClass({
             </Button>
         );
 
-        if (this.getTicketStatus() === "open") return (
+        if (this.getTicketStatus() === "open" || this.getTicketStatus() === "pending") return (
             <Button
                 bsStyle="primary"
                 className="close-ticket"
