@@ -13,6 +13,7 @@ var User = require("./User");
 var Title = require("./Title");
 var Tag = require("./Tag");
 var Notification = require("./Notification");
+var TicketMixin = require("../TicketMixin");
 
 function byCreation(a, b) {
     if (a.createdAt().getTime() > b.createdAt().getTime()) return 1;
@@ -55,7 +56,7 @@ opinsysRobot.getDomainUsername = function() {
  * @extends models.client.Base
  * @uses models.TicketMixin
  */
-var Ticket = Base.extend({
+var Ticket = Base.extend(_.extend({}, TicketMixin, {
 
     url: function() {
         if (this.get("id")) {
@@ -461,7 +462,7 @@ var Ticket = Base.extend({
     },
 
 
-}, {
+}), {
 
 
     /**
