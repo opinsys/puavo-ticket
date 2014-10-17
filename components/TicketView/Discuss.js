@@ -12,7 +12,7 @@ var Alert = require("react-bootstrap/Alert");
 
 var app = require("app");
 var Loading = require("../Loading");
-var CommentForm = require("../CommentForm");
+var CommentForm = require("./CommentForm");
 var AttachmentsForm = require("../AttachmentsForm");
 var captureError = require("../../utils/captureError");
 var Ticket = require("../../models/client/Ticket");
@@ -423,7 +423,7 @@ var Discuss = React.createClass({
                         })}
                     </div>
 
-                    <CommentForm onSubmit={this.saveComment} >
+                    <CommentForm onSubmit={this.saveComment} user={app.currentUser} >
                         Lähetä {this.state.saving && <Loading.Spinner />}
                     </CommentForm>
                     <UploadProgress progress={this.state.uploadProgress} />

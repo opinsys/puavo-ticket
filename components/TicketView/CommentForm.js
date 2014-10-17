@@ -2,16 +2,20 @@
 "use strict";
 
 var React = require("react/addons");
+var classSet = React.addons.classSet;
 var $ = require("jquery");
 var _ = require("lodash");
-
-var ElasticTextarea = require("./ElasticTextarea");
-var BackupInput = require("app/components/BackupInput");
 
 var Button = require("react-bootstrap/Button");
 var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
 var Tooltip = require("react-bootstrap/Tooltip");
 var Label = require("react-bootstrap/Label");
+
+var User = require("app/models/client/User");
+var ElasticTextarea = require("app/components/ElasticTextarea");
+var BackupInput = require("app/components/BackupInput");
+var SpeechBubble = require("./SpeechBubble");
+
 
 function scrollElBottom(el, padding) {
     padding = padding || 0;
@@ -52,10 +56,12 @@ function isScrolledIntoView(elem, padding) {
  * @param {Object} props
  * @param {Function} [props.onSubmit] Called when the form is submitted with
  * the button or the keyboard shortcut
+ * @param {models.client.User} props.user
  */
 var CommentForm = React.createClass({
 
     propTypes: {
+        user: React.PropTypes.instanceOf(User).isRequired,
         onSubmit: React.PropTypes.func
     },
 
@@ -67,7 +73,8 @@ var CommentForm = React.createClass({
 
     getInitialState: function() {
         return {
-            comment: ""
+            comment: "",
+            focus: false
         };
     },
 
@@ -180,9 +187,20 @@ var CommentForm = React.createClass({
 
     render: function() {
         var self = this;
+        var user = this.props.user;
         var tip = this.getTipText();
+        var warning = "";
+        if (this.state.comment) {
+            warning = <span className="warning">lähettämätön kommentti</span>;
+        }
+
+        var className = classSet({
+            CommentForm: true,
+            selected: this.state.focus
+        });
+
         return (
-            <div className="CommentForm">
+            <SpeechBubble className={className} user={user} title={warning} >
 
                 <OverlayTrigger placement="left" overlay={<Tooltip>{tip.desc}</Tooltip>}>
                     <Label bsStyle={tip.bsStyle} className="linemode-tooltip">{tip.title}</Label>
@@ -193,12 +211,18 @@ var CommentForm = React.createClass({
                     backupKey="ticketcomment"
                     ref="textarea"
 
-                    placeholder="Kommentti..."
+                    placeholder="Kirjoita uusi kommentti tähän..."
                     className="form-control"
                     value={this.state.comment}
                     onChange={this._handleCommentChange}
                     minRows={1}
                     onKeyDown={this._handleKeyDown}
+                    onFocus={function() {
+                        self.setState({ focus: true });
+                    }}
+                    onBlur={function() {
+                        self.setState({ focus: false });
+                    }}
                     onResize={function(e) {
                         if (e.active) self.scrollToCommentButton();
                     }}
@@ -213,7 +237,7 @@ var CommentForm = React.createClass({
                     </Button>
                 </div>
 
-            </div>
+            </SpeechBubble>
         );
     },
 

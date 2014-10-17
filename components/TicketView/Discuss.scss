@@ -1,15 +1,5 @@
 .Discuss {
 
-    .linemode-tooltip {
-        margin-bottom: 2px;
-        cursor: help;
-        font-size: 8pt;
-        float: right;
-    }
-    .tooltip .tooltip-inner {
-        text-align: left;
-    }
-
     .Loading {
         position: absolute;
         right: 0px;
@@ -19,6 +9,12 @@
     // Force comment color
     .TimeAgo, .TimeAgo:hover {
         color: $comment-secondary;
+    }
+
+    $bubble-user-width: 65px;
+
+    .AttachmentsForm {
+        margin-left: $bubble-user-width;
     }
 
     .ticket-update {
@@ -32,7 +28,7 @@
             padding-bottom: 0px;
             padding-top: 0px;
             font-size: 80%;
-            margin-left: 65px;
+            margin-left: $bubble-user-width;
         }
     }
 
@@ -40,7 +36,6 @@
         margin-left: 5px;
         margin-right: 5px;
     }
-
 
 
     .ticket-status {
