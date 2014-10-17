@@ -252,15 +252,6 @@ var Ticket = Base.extend({
         return model.save();
     },
 
-    /**
-     * @method hasTag
-     * @return {Boolen}
-     */
-    hasTag: function(tag){
-        return this.tags().some(function(tagOb) {
-            return !tagOb.isSoftDeleted() && tagOb.get("tag") === tag;
-        });
-    },
 
     /**
      * Add handler for the ticket

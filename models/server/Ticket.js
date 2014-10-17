@@ -16,6 +16,7 @@ var Device = require("./Device");
 var User = require("./User");
 var Notification = require("./Notification");
 var Title = require("./Title");
+var TicketMixin = require("../TicketMixin");
 var TicketCollection = require("./TicketCollection");
 
 var debugEmail = require("debug")("app:email");
@@ -57,9 +58,10 @@ var queries = {
  *
  * @namespace models.server
  * @extends models.server.Base
+ * @uses models.TicketMixin
  * @class Ticket
  */
-var Ticket = Base.extend({
+var Ticket = Base.extend(_.extend({}, TicketMixin, {
     tableName: "tickets",
 
     defaults: function() {
@@ -819,7 +821,7 @@ var Ticket = Base.extend({
         return "ticket:" + this.get("id");
     }
 
-}, {
+}), {
 
     collection: function(rows, options) {
         return new TicketCollection((rows || []), _.extend({}, options, {model: this}));

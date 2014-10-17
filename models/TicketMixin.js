@@ -8,12 +8,14 @@
 var TicketMixin = {
 
     /**
-     * Bar method
-     *
-     * @method methodFromMixin
+     * @method hasTag
+     * @param {String} tag
+     * @return {Boolen}
      */
-    methodFromMixin: function() {
-    
+    hasTag: function(tag){
+        return this.rel("tags").some(function(tagOb) {
+            return !tagOb.isSoftDeleted() && tagOb.get("tag") === tag;
+        });
     },
 
     toString: function() {
