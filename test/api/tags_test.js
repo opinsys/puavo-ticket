@@ -16,12 +16,12 @@ describe("/api/tickets/:id/tags", function() {
 
         return helpers.clearTestDatabase()
             .then(function() {
-                return helpers.loginAsUser(helpers.user.teacher);
+                return helpers.loginAsUser(helpers.user.manager);
             })
             .then(function(agent) {
                 self.agent = agent;
 
-                return User.byExternalId(helpers.user.teacher.id).fetch();
+                return User.byExternalId(helpers.user.manager.id).fetch();
             })
             .then(function(user) {
                 self.user = user;
