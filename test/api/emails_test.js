@@ -98,7 +98,8 @@ describe("Email handler", function() {
                     "createdBy",
                     "titles",
                     "comments",
-                    "comments.createdBy"
+                    "comments.createdBy",
+                    "tags"
                 ]
             });
         })
@@ -133,6 +134,11 @@ describe("Email handler", function() {
             assert.equal(
                 "esa-matti.suuronen@outlook.com",
                 firstComment.relations.createdBy.getEmail()
+            );
+
+            assert(
+                ticket.hasTag("emailed"),
+                "has emailed tag"
             );
 
             return Email.collection().fetch();

@@ -198,7 +198,9 @@ var Email = Base.extend({
                 self.getBody(),
                 user,
                 { textType: "email" }
-            );
+            ).tap(function(ticket) {
+                return ticket.addTag("emailed", user);
+            });
         })
         .then(function(ticket) {
             var comment = ticket.relations.comments.first();
