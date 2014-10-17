@@ -32,7 +32,7 @@ var ElasticTextarea = React.createClass({
         };
     },
 
-    _resizeTextarea: function(reset) {
+    _resize: function(reset) {
 
         var el = this.refs.textarea.getDOMNode();
 
@@ -66,17 +66,20 @@ var ElasticTextarea = React.createClass({
     },
 
     componentDidMount: function() {
-        this._resizeTextarea = _.throttle(this._resizeTextarea, 100);
-        window.addEventListener("resize", this._resizeTextarea);
+        this._throttledResize = _.throttle(this._resize, 500, {
+            leading: false
+        });
+        window.addEventListener("resize", this._throttledResize);
+        this._resize();
     },
 
     componentWillUnmount: function() {
-        window.removeEventListener("resize", this._resizeTextarea);
+        window.removeEventListener("resize", this._resize);
     },
 
     componentDidUpdate: function() {
         // Resize only if the content has changed
-        if (this.state.didChange) this._resizeTextarea();
+        if (this.state.didChange) this._throttledResize();
     },
 
 
@@ -89,9 +92,14 @@ var ElasticTextarea = React.createClass({
     },
 
     render: function() {
+        var self = this;
         return this.transferPropsTo(<textarea
             style={this.style}
             rows={this.props.minRows}
+            onKeyDown={function(e) {
+                // Enter always adds a line break. Resize instantly.
+                if (e.key === "Enter") setTimeout(self._resize, 0);
+            }}
             ref="textarea"
             className={"ElasticTextarea " + this.props.className}></textarea>
         );
