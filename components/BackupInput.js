@@ -32,6 +32,10 @@ var BackupInput = React.createClass({
 
     componentDidMount: function() {
         this.backupValue = _.throttle(this.backupValue, 200);
+        var value = this._getBackupValue();
+        if (value) {
+            this.props.onChange({target: {value: value}});
+        }
     },
 
     _getFullBackupKey: function() {
