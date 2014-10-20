@@ -60,22 +60,28 @@ var UserItem = React.createClass({
 
         return (
             <div className={className}>
-                <input
-                    id={id}
-                    type="checkbox"
-                    checked={this.props.checked}
-                    disabled={disabled}
-                    onChange={this.handleOnChange}
-                    ref="checkbox" />
+                <label>
+                    <input
+                        id={id}
+                        type="checkbox"
+                        autofocus
+                        checked={this.props.checked}
+                        disabled={disabled}
+                        onChange={this.handleOnChange}
+                        ref="checkbox" />
+                        <Profile.Overlay user={user} tipPlacement="top">
+                            <span>
+                                <span className="name">
+                                    {user.get("externalData").first_name} {user.get("externalData").last_name}
+                                </span>
+                                <span className="badge" >{user.getOrganisationDomain()}</span>
+                            </span>
+                        </Profile.Overlay>
+                    </label>
 
-                <Profile.Overlay clickForDetails user={user}>
-                    <span>
-                        <span className="name">
-                            {user.get("externalData").first_name} {user.get("externalData").last_name}
-                        </span>
-                        <span className="badge" >{user.getOrganisationDomain()}</span>
-                    </span>
-                </Profile.Overlay>
+                    <Profile.Overlay user={user} clickForDetails tipPlacement="left">
+                        <a href="#" className="SelectUsers-details-link" >tiedot</a>
+                    </Profile.Overlay>
 
             </div>
         );

@@ -30,7 +30,15 @@
         cursor: pointer;
     }
 
+    label {
+        cursor: pointer;
+    }
+
     .spinner-wrap {
         text-align: center;
     }
+}
+
+.SelectUsers-details-link {
+    margin-left: 5px;
 }
