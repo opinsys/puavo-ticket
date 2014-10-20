@@ -103,7 +103,26 @@ var Main = React.createClass({
         this.props.io.off("followerUpdate", this.handleFollowerUpdate);
     },
 
+    displayLogoutError: function() {
+        this.renderInModal({
+            title: "Uups! Jotain odottamatonta tapahtui :(",
+            permanent: true
+        }, function() {
+            // TODO proper padding
+            return (
+                <p>
+                    Istuntosi on vanhentunut tai olet kirjautunut ulos toisessa
+                    ikkunassa. <a href="">Kirjaudu uudestaan</a> jatkaaksesi.
+                </p>
+            );
+        });
+    },
+
     handleUnhandledError: function(error, customMessage) {
+        if (error && error.data && error.data.code === "NOAUTH") {
+            return this.displayLogoutError();
+        }
+
         console.error(customMessage + ":", error.message);
         if (error.stack) console.error(error.stack);
         this.renderInModal({

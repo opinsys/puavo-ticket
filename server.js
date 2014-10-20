@@ -175,7 +175,13 @@ app.use(require("./resources/emails"));
  */
 app.use(function ensureAuthentication(req, res, next) {
     if (!req.session.jwt) {
-        console.log("Not auth!");
+        if (/^\/api/.test(req.path)) {
+            return res.status(403).json({
+                error: "No credentials",
+                code: "NOAUTH"
+            });
+        }
+
         return res.requestJwt();
     }
 
