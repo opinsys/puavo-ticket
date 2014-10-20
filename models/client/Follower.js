@@ -1,6 +1,4 @@
 "use strict";
-var $ = require("jquery");
-var Promise = require("bluebird");
 
 var Base = require("./Base");
 var User = require("./User");
@@ -35,16 +33,6 @@ var Follower = Base.extend({
         }
     },
 
-    /**
-     * @method destroy
-     * @return {Bluebird.Promise}
-     */
-    destroy: function() {
-        return Promise.cast($.ajax({
-           url: this.url(),
-           type: "DELETE"
-        }));
-    },
 
     /**
      * Return the handler user object

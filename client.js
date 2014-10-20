@@ -138,7 +138,7 @@ if (process.env.NODE_ENV === "production") {
 } else {
     // In development just throw the promise error so that the devtools can capture it
     Promise.onPossiblyUnhandledRejection(function(error, promise) {
-        console.warn("Possibly unhandled rejection: " + error.message);
+        console.warn("Possibly unhandled rejection: " + error.message, error);
         throw error;
     });
 }

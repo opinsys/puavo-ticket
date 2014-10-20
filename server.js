@@ -32,6 +32,7 @@ var serveStatic = require("serve-static");
 var bodyParser = require("body-parser");
 var jwtsso = require("jwtsso");
 var cookieParser = require("cookie-parser");
+var csrf = require("csurf");
 var session = require("express-session");
 var RedisStore = require("connect-redis")(session);
 
@@ -122,8 +123,8 @@ app.use(require("./utils/middleware/createSlowInternet")());
 app.use(require("./utils/middleware/createResponseLogger")());
 app.use(bodyParser());
 app.use(cookieParser());
-
 app.use(sessionMiddleware);
+app.use(csrf());
 
 app.use(jwtsso({
 
@@ -243,6 +244,7 @@ app.get("/*", function(req, res) {
     }
 
     res.render("index.ejs", {
+        csrfToken: req.csrfToken(),
         jsBundle: jsBundle,
         cssBundle: cssBundle,
         cacheKey: cacheKey,
@@ -255,7 +257,13 @@ app.get("/*", function(req, res) {
 });
 
 app.use(function(err, req, res, next) {
-    if (err instanceof User.EmailCollisionError) return res.status("406").render("emailCollisionError.ejs");
+    if (err instanceof User.EmailCollisionError) {
+        return res.status("406").render("emailCollisionError.ejs");
+    }
+
+    if (err.code === "EBADCSRFTOKEN") {
+        return res.status(403).json({ error: "invalid csrf token" });
+    }
 
     if (process.env.NODE_ENV !== "test") next(err);
     res.status(500).send(err.stack);

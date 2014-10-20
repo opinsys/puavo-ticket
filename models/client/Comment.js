@@ -2,6 +2,7 @@
 var Promise = require("bluebird");
 var _ = require("lodash");
 var marked = require("marked");
+var fetch = require("app/utils/fetch");
 
 var Base = require("./Base");
 var UpdateMixin = require("./UpdateMixin");
@@ -133,6 +134,7 @@ var Comment = Base.extend({
             });
 
             xhr.open("POST", url, true);
+            xhr.setRequestHeader("x-csrf-token", fetch.getCsrfToken());
             xhr.send(formData);
         });
 

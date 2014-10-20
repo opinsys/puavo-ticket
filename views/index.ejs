@@ -81,6 +81,7 @@
         </pre>
 
         <script charset="utf-8">
+        window.CSRF_TOKEN = "<%- csrfToken %>";
         window.USER = <%- JSON.stringify(user, null, "    ") %>;
         </script>
         <script src="<%= jsBundle %>?cache=<%= cacheKey %>" charset="utf-8"></script>

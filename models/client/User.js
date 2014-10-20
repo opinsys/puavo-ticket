@@ -1,9 +1,9 @@
 "use strict";
 
 var Cocktail = require("backbone.cocktail");
-var $ = require("jquery");
-var Promise = require("bluebird");
+var url = require("url");
 
+var fetch = require("app/utils/fetch");
 var Base = require("./Base");
 var UserMixin = require("../UserMixin");
 
@@ -37,13 +37,15 @@ var User = Base.extend({
      * @return {Bluebird.Promise} Array of user objects
      */
     search: function(domain, keywords) {
-        return Promise.cast($.get("/api/puavo/" + domain + "/v3/users/_search", {
-                q: keywords
-            }))
-            .cancellable()
-            .map(function(userData) {
-                return new User({ externalData: userData });
-            });
+        return fetch.get(url.format({
+            pathname: "/api/puavo/" + domain + "/v3/users/_search",
+            query: {q: keywords}
+        }))
+        .cancellable()
+        .then(function(res) { return res.data; })
+        .map(function(data) {
+            return new User({ externalData: data });
+        });
     },
 });
 

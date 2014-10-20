@@ -9,8 +9,8 @@ function mailtoEscape(value) {
     return encodeURIComponent(value).replace(/%0A(?!%)/g, '%0D%0A');
 }
 
-function isjQueryAjaxError(err) {
-    return err && typeof err.pipe === "function";
+function isAxiosErrorResponse(err) {
+    return err && err.config && err.config.url;
 }
 
 /**
@@ -47,13 +47,24 @@ var ErrorMessage = React.createClass({
         formatError: function(error, errorSource) {
             var errorDetails = [];
 
-            if (isjQueryAjaxError(error)) {
-                errorDetails.push({ key: "Server error", value: error.responseText });
-                errorDetails.push({ key: "Status", value: error.status });
-                errorDetails.push({ key: "Status Code", value: error.statusCode() });
-            } else {
+            if (error instanceof Error) {
                 errorDetails.push({ key: "Virhe", value: error.message });
                 errorDetails.push({ key: "Stack", value: error.stack });
+            } else if (isAxiosErrorResponse(error)) {
+
+                errorDetails.push({ key: "Ajax error", value: "true" });
+                errorDetails.push({ key: "Method", value: error.config.method });
+                errorDetails.push({ key: "Request URL", value: error.config.url });
+                errorDetails.push({ key: "Status", value: error.status });
+
+                try {
+                    errorDetails.push({ key: "Response", value: JSON.stringify(error.data) });
+                } catch (e) {
+                    errorDetails.push({ key: "Response", value: error.data });
+                }
+
+            } else {
+                errorDetails.push({ key: "Virhe", value: "unknown error" });
             }
 
             errorDetails.push({ key: "Selain", value: window.navigator.userAgent });

@@ -4,11 +4,10 @@
 "use strict";
 var Backbone = require("backbone");
 var _ = require("lodash");
-var $ = require("jquery");
-var Promise = require("bluebird");
 var Cocktail = require("backbone.cocktail");
 var url = require("url");
 
+var fetch = require("app/utils/fetch");
 var BaseMixin = require("../BaseMixin");
 
 
@@ -61,16 +60,10 @@ function createReplaceMixin(parentPrototype) {
                 query: _.extend({}, resourceURL.query, this.query, options && options.query)
             });
 
-            var op = Promise.resolve($.get(resourceURL))
+            var op = fetch.get(resourceURL)
             .bind(this)
-            .catch(function(err) {
-                if (err && err.status === 404) {
-                    throw new NotFound("404 response from API", url, err);
-                }
-                throw err;
-            })
             .then(function(res) {
-                return this.optionsClone(res);
+                return this.optionsClone(res.data);
             });
 
             this.trigger("replace", op);
@@ -223,13 +216,19 @@ var Base = Backbone.Model.extend({
     save: function(customData) {
         var self = this;
         if (!this.isNew()) throw new Error("Only new models can be saved!");
-        return Promise.resolve(
-            $.post(_.result(this, "url"), customData || this.toJSON())
-        )
+        return fetch.post(_.result(this, "url"), customData || this.toJSON())
         .then(function(res) {
-            return self.optionsClone(res);
+            return self.optionsClone(res.data);
         });
 
+    },
+
+    /**
+     * @method destroy
+     * @return {Bluebird.Promise}
+     */
+    destroy: function() {
+        return fetch.delete(this.url());
     },
 
 
