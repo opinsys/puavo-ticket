@@ -70,7 +70,7 @@ var BackupInput = React.createClass({
      * @method clearBackup
      */
     clearBackup: function() {
-        window.localStorage[this._getFullBackupKey()] = "";
+        this.backupValue("");
     },
 
     render: function() {
