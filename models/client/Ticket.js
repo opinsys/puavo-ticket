@@ -80,11 +80,6 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
         return {
             title: "",
             description: "",
-            tags: [],
-            titles: [],
-            comments: [],
-            handlers: [],
-            followers: [],
             createdAt: new Date().toString()
         };
     },
