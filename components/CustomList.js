@@ -34,7 +34,7 @@ var CustomList = React.createClass({
 
         if (u.query.tags) {
             state.tags = [].concat(u.query.tags);
-            state.tickets = Ticket.collection({
+            state.tickets = Ticket.collection([], {
                 query: {
                     tags: u.query.tags
                 }

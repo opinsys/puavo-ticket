@@ -5,7 +5,6 @@ var marked = require("marked");
 
 var Base = require("./Base");
 var UpdateMixin = require("./UpdateMixin");
-var Attachment = require("./Attachment");
 
 /**
  * Client Comment model
@@ -19,6 +18,12 @@ var Attachment = require("./Attachment");
 var Comment = Base.extend({
 
     _htmlCache: null,
+
+    relationsMap: function() {
+        return {
+            attachments: require("./Attachment"),
+        };
+    },
 
     defaults: function() {
         return {
@@ -85,10 +90,7 @@ var Comment = Base.extend({
      * @return {Array} of models.client.Attachment
      */
     attachments: function() {
-        var self = this;
-        return this.rel("attachments").map(function(data) {
-            return new Attachment(data, { parent: self });
-        });
+        throw new Error("bloo");
     },
 
 

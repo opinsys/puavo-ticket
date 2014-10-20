@@ -49,8 +49,8 @@ var Main = React.createClass({
 
     getInitialState: function() {
         return {
-            unreadTickets: Ticket.collection({ url: "/api/notifications" }),
-            userTickets: Ticket.collection({
+            unreadTickets: Ticket.collection([], { url: "/api/notifications" }),
+            userTickets: Ticket.collection([], {
                 query: {
                     follower: this.props.user.get("id"),
                     tags: [
@@ -65,7 +65,7 @@ var Main = React.createClass({
     componentWillMount: function() {
         if (this.props.user.isManager()) {
             this.setBackbone({
-                pendingTickets: Ticket.collection({
+                pendingTickets: Ticket.collection([], {
                     query: { tags: ["status:pending"] }
                 })
             });

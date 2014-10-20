@@ -66,19 +66,6 @@ var Base = Bookshelf.DB.Model.extend({
     },
 
     /**
-     * Return relation data for given key or throw if it's not loaded
-     *
-     * @method rel
-     * @param {String} key
-     * @return {Object|Array} Relation data
-     */
-    rel: function(key) {
-        var rel = this.relations[key];
-        if (!rel) throw new Error("Relation '" + key + "' is not loaded");
-        return rel;
-    },
-
-    /**
      * Set timestamp to deletedAt
      *
      * @method softDelete

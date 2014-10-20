@@ -77,9 +77,8 @@ var TagEditor = React.createClass({
         var self = this;
         var ticket = this.props.ticket;
         var saving = this.state.saving;
-        console.log("render saving", saving);
 
-        var tags = ticket.tags().filter(function(h) {
+        var tags = ticket.rel("tags").filter(function(h) {
             return !h.isSoftDeleted();
         });
 

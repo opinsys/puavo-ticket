@@ -25,6 +25,19 @@ var Title = Base.extend({
         return this.parent.url() + "/titles";
     },
 
+}, {
+
+    collection: function(models, options, modelOptions) {
+        var previousTitle = "";
+        models = models.map(function(data) {
+            var newData = _.extend({}, data, {previousTitle: previousTitle});
+            previousTitle = data.title;
+            return newData;
+        });
+
+        return Base.collection.call(this, models, options, modelOptions);
+    }
+
 });
 
 _.extend(Title.prototype, UpdateMixin);

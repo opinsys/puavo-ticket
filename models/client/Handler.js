@@ -23,6 +23,12 @@ var Handler = Base.extend({
         };
     },
 
+    relationsMap: function() {
+        return {
+            handler: User
+        };
+    },
+
     url: function() {
         if (this.isNew()) return this.parent.url() + "/handlers";
         return _.result(this.parent, "url") + "/handlers/" + this.get("handledById");
@@ -35,7 +41,7 @@ var Handler = Base.extend({
      * @return {models.client.User}
      */
     getUser: function(){
-        return new User(this.get("handler"));
+        return this.rel("handler");
     },
 
 });

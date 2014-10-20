@@ -51,8 +51,8 @@ var CommentUpdate = React.createClass({
         var commentString = comment.get("comment");
         var hashId = comment.getUniqueId();
         var mergedComments = comment.getMergedComments();
-        var attachments = comment.attachments().concat(mergedComments.reduce(function(a, comment) {
-            return a.concat(comment.attachments());
+        var attachments = comment.rel("attachments").toArray().concat(mergedComments.reduce(function(a, comment) {
+            return a.concat(comment.rel("attachments").toArray());
         }, []));
 
         var currentHashId = window.location.hash.slice(1);

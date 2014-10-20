@@ -109,6 +109,11 @@ function NotFound(message, url, xhr) {
 }
 NotFound.prototype = new Error();
 
+
+var defaultRelationsMap = function() {
+    return { createdBy: require("./User") };
+};
+
 /**
  * Base class for client models
  *
@@ -124,9 +129,44 @@ var Base = Backbone.Model.extend({
 
     _type: "model",
 
+
+    /**
+     *
+     * @property relationsMap
+     * @type {Object}
+     */
+    relationsMap: {},
+
+    /**
+     * The same as http://bookshelfjs.org/#Model-relations
+     *
+     * @property relations
+     * @type {Object}
+     */
+    relations: null,
+
     constructor: function(attrs, opts) {
+        var self = this;
         this.parent = opts && opts.parent;
         Backbone.Model.apply(this, arguments);
+
+        self.relations = {};
+        var map = _.extend(
+            {}, defaultRelationsMap(), _.result(self, "relationsMap")
+        );
+
+        _.forOwn(map, function(Klass, key) {
+            if (!Klass) return;
+            var data = self.get(key);
+            if (typeof data === "undefined") return;
+
+            if (_.isArray(data)) {
+                self.relations[key] = Klass.collection(data, null, { parent: self });
+            } else {
+                self.relations[key] = new Klass(data, { parent: self });
+            }
+        });
+
         ["set", "clear", "unset"].forEach(disabledMethod.bind(this));
     },
 
@@ -136,8 +176,7 @@ var Base = Backbone.Model.extend({
     },
 
     createdBy: function() {
-        var User = require("./User");
-        return new User(this.get("createdBy"));
+        return this.rel("createdBy");
     },
 
     push: function(attr, value) {
@@ -170,28 +209,6 @@ var Base = Backbone.Model.extend({
         var id = this.get("id");
         if (!id || !type) throw new Error("bad unique id");
         return type + "-" + id;
-    },
-
-    /**
-     * Return relation data for given key or throws if it's not loaded
-     *
-     * Assumes that a matching method is available for the relation
-     *
-     * @method rel
-     * @param {String} key
-     * @return {Object|Array} Relation data
-     */
-    rel: function(key, arg){
-        var data = this.get(key);
-        if (!data) {
-            var err =  new Error("Relation for key '" + key + "' is not loaded for '" + this.get("type") + "' model");
-            err.model = this;
-            throw err;
-        }
-        if (typeof this[key] !== "function") {
-            throw new Error("There is no method for relation '" + key + "'");
-        }
-        return this[key](arg);
     },
 
 
@@ -251,61 +268,47 @@ var Base = Backbone.Model.extend({
 
     NotFound: NotFound,
 
+    Collection: Backbone.Collection.extend({
+
+        _type: "collection",
+
+        comparator: "createdAt",
+
+        constructor: function() {
+            Backbone.Collection.apply(this, arguments);
+            [
+                "add",
+                "remove",
+                "push",
+                "pop",
+                "sort",
+                "unshift",
+                "shift"
+            ].forEach(disabledMethod.bind(this));
+        }
+    }),
+
     /**
-     * Create instance of models.client.Base.Collection with this model class
-     * as the `model` property
+     * Return empty collection of tickets
      *
      * @static
      * @method collection
-     * @param {Array} [models] Array of models.client.Base models
-     * @param {Object} [options] http://backbonejs.org/#Collection-constructor
-     * @return {models.client.Base.Collection}
+     * @param {Array} [models]
+     * @param {Object} [options]
+     * @param {Object} [modelOptions]
+     * @return {models.client.Ticket.Collection}
      */
-    collection: function(models, options) {
-        var Klass = this.Collection.extend({
-            model: this
+    collection: function(models, options, modelOptions) {
+        var Klass = this.Collection.extend({ model: this });
+        var self = this;
+        models = (models || []).map(function(attrs) {
+            return new self(attrs, modelOptions);
         });
         return new Klass(models, options);
     },
 
 });
 
-/**
- * Base class for client model collections
- *
- * http://backbonejs.org/#Collection
- *
- * @class Base.Collection
- * @extends Backbone.Collection
- * @uses models.client.ReplaceMixin
- */
-Base.Collection = Backbone.Collection.extend({
-
-    _type: "collection",
-
-    constructor: function() {
-        Backbone.Collection.apply(this, arguments);
-        [
-            "add",
-            "remove",
-            "push",
-            "pop",
-            "sort",
-            "unshift",
-            "shift"
-        ].forEach(disabledMethod.bind(this));
-    },
-
-    /**
-     * http://backbonejs.org/#Collection-model
-     *
-     * @property model
-     * @type models.client.Base
-     */
-    model: Base
-
-
-});
 
 
 

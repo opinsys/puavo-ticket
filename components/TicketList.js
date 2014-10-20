@@ -31,7 +31,7 @@ var TicketList = React.createClass({
 
     renderTicketMetaInfo: function(ticket) {
         var creator = ticket.createdBy();
-        var handlers = ticket.handlers();
+        var handlers = ticket.rel("handlers").toArray();
         var ticketId = ticket.get("id");
 
         return (

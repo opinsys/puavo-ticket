@@ -21,6 +21,12 @@ var Follower = Base.extend({
         };
     },
 
+    relationsMap: function() {
+        return {
+            follower: User
+        };
+    },
+
     url: function() {
         if (this.isNew()) {
             return this.parent.url() + "/followers";
@@ -47,7 +53,7 @@ var Follower = Base.extend({
      * @return {models.client.User}
      */
     getUser: function(){
-        return new User(this.get("follower"));
+        return this.rel("follower");
     },
 
 });

@@ -58,6 +58,17 @@ opinsysRobot.getDomainUsername = function() {
  */
 var Ticket = Base.extend(_.extend({}, TicketMixin, {
 
+    relationsMap: function() {
+        return {
+            comments: require("./Comment"),
+            tags: require("./Tag"),
+            titles: require("./Title"),
+            handlers: require("./Handler"),
+            followers: require("./Follower"),
+            notification: require("./Notification"),
+        };
+    },
+
     url: function() {
         if (this.get("id")) {
             return "/api/tickets/" + this.get("id");
@@ -116,10 +127,10 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
         domains[this.createdBy().getOrganisationDomain()] = true;
         domains[app.currentUser.getOrganisationDomain()] = true;
 
-        this.comments().forEach(function(comment) {
+        this.rel("comments").forEach(function(comment) {
             domains[comment.createdBy().getOrganisationDomain()] = true;
         });
-        this.handlers().forEach(function(handler) {
+        this.rel("handlers").forEach(function(handler) {
             domains[handler.createdBy().getOrganisationDomain()] = true;
             domains[handler.getUser().getOrganisationDomain()] = true;
         });
@@ -130,11 +141,13 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
     },
 
     /**
+     * Example return: ["foo.opinsys.net", "bar.opinsys.net"]
+     * k
      * @method getTaggedOrganisationDomains
      * @return {Array}
      */
     getTaggedOrganisationDomains: function(){
-        return this.tags().map(function(tag) {
+        return this.rel("tags").map(function(tag) {
             var m = /^organisation\:(.+)$/.exec(tag.get("tag"));
             return m && m[1];
         }).filter(Boolean);
@@ -153,10 +166,10 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
             "welcome"
         );
         var updates = [welcome]
-        .concat(this.tags().slice(1))
-        .concat(this.handlers().slice(1))
-        .concat(this.titles())
-        .concat(this.comments())
+        .concat(this.rel("tags").slice(1))
+        .concat(this.rel("handlers").slice(1))
+        .concat(this.rel("titles").toArray())
+        .concat(this.rel("comments").toArray())
         ;
         return updates.sort(byCreation);
     },
@@ -167,7 +180,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {models.client.Base}
      */
     firstUnreadUpdateFor: function(user) {
-        return _.find(this.comments().sort(byCreation), function(comment) {
+        return this.rel("comments").find(function(comment) {
             return comment.isUnreadBy(user);
         });
     },
@@ -177,6 +190,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Array} Array of Tag models
      */
     tags: function() {
+        console.warn("Deprecated 'tags' relations method. Use Model#rel(key) instead");
         var self = this;
         return this.get("tags").map(function(data) {
             return new Tag(data, { parent: self });
@@ -189,6 +203,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Array} Array of Title models
      */
     titles: function(){
+        console.warn("Deprecated 'titles' relations method. Use Model#rel(key) instead");
         var self = this;
         var previousTitle = "";
         return this.get("titles").map(function(data) {
@@ -212,8 +227,9 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
     },
 
     comments: function() {
+        console.warn("Deprecated 'comments' relations method. Use Model#rel(key) instead");
         var self = this;
-        return this.rel("comments").map(function(data) {
+        return this.get("comments").map(function(data) {
             return new Comment(data, { parent: self });
         }).sort(byCreation);
     },
@@ -291,23 +307,12 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
     },
 
     /**
-     * Resets the model attributes back to defaults.  Comment collection cache
-     * is also cleared.
-     *
-     * @method reset
-     */
-    reset: function() {
-        this.clear();
-        this.set(_.result(this, "defaults"));
-    },
-
-
-    /**
      *
      * @method handlers
      * @return {models.client.Base.Collection} Collection of models.client.Handler models
      */
     handlers: function() {
+        console.warn("Deprecated 'handlers' relations method. Use Model#rel(key) instead");
         var self = this;
         return this.get("handlers").map(function(data) {
             return new Handler(data, { parent: self });
@@ -321,7 +326,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Boolean}
      */
     isHandler: function(user) {
-        return this.handlers().some(function(handler) {
+        return this.rel("handlers").toArray().some(function(handler) {
             return handler.getUser().isSame(user);
         });
     },
@@ -332,6 +337,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Array} of models.client.Followers
      */
     followers: function(){
+        console.warn("Deprecated 'followers' relations method. Use Model#rel(key) instead");
         var self = this;
         return this.get("followers").filter(Boolean).map(function(data) {
             return new Follower(data, { parent: self });
@@ -345,7 +351,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Boolean}
      */
     isFollower: function(user) {
-        return this.followers().some(function(follower) {
+        return this.rel("followers").some(function(follower) {
             return follower.getUser().isSame(user);
         });
     },
@@ -367,7 +373,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Bluebird.Promise}
      */
     removeFollower: function(user){
-        return Promise.all(this.followers().filter(function(follower) {
+        return Promise.all(this.rel("followers").filter(function(follower) {
             return follower.getUser().isSame(user);
         }).map(function(follower) {
             return follower.destroy();
@@ -383,14 +389,13 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      */
     getCurrentStatus: function() {
 
-        var statusTags = this.tags().filter(function(tag) {
+        var statusTags = this.rel("tags").filter(function(tag) {
             return tag.isStatusTag() && !tag.get("deletedAt");
         });
 
         if (statusTags.length === 0) {
             return null;
         }
-
 
         return _.max(statusTags,  function(update) {
             return update.createdAt().getTime();
@@ -402,10 +407,10 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {String}
      */
     getCurrentTitle: function(){
-        var titles = this.titles();
+        var titles = this.rel("titles");
         if (titles.length === 0) return null;
 
-        return _.max(titles,  function(m) {
+        return titles.max(function(m) {
             return m.createdAt().getTime();
         }).get("title");
     },
@@ -464,126 +469,21 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
 
 }), {
 
-
     /**
-     * Return empty collection of tickets
+     * Client-side collection if tickets
      *
-     * @static
-     * @method collection
-     * @param {Object} [options]
-     * @return {models.client.Ticket.Collection}
+     * @namespace models.client
+     * @class Ticket.Collection
+     * @extends models.client.Base.Collection
      */
-    collection: function(options) {
-        return new Collection(options.models, options);
-    }
+    Collection: Base.Collection.extend({
+        url: function() {
+            return "/api/tickets";
+        }
+    })
 
 });
 
-/**
- *
- * Client-side collection if tickets
- *
- * @namespace models.client
- * @class Ticket.Collection
- * @extends models.client.Base.Collection
- */
-var Collection = Base.Collection.extend({
-
-    url: function() {
-        return "/api/tickets";
-    },
-
-    /**
-     * http://backbonejs.org/#Collection-model
-     *
-     * @property model
-     * @type {models.client.Ticket}
-     */
-    model: Ticket,
-
-    /**
-     * Select tickets that are closed
-     *
-     * @method selectClosed
-     * @return {Array} of models.client.Ticket
-     */
-    selectClosed: function() {
-        return this.filter(function(t) {
-            return t.getCurrentStatus() === "closed";
-        });
-    },
-
-    /**
-     * Select tickets that are open
-     *
-     * @method selectOpen
-     * @return {Array} of models.client.Ticket
-     */
-    selectOpen: function() {
-        return this.filter(function(t) {
-            return t.getCurrentStatus() === "open";
-        });
-    },
-
-    /**
-     * Select tickets that have no manager handler
-     *
-     * @method selectPending
-     * @return {Array} of models.client.Ticket
-     */
-    selectPending: function() {
-        return this.selectOpen().filter(function(t) {
-            // None of the handlers are manager
-            return !t.handlers().some(function(h) {
-                return h.getUser().isManager();
-            });
-        });
-    },
-
-    /**
-     * Select tickets that handled by the given user
-     *
-     * @method selectHandledBy
-     * @param {models.client.User} user
-     * @return {Array} of models.client.Ticket
-     */
-    selectHandledBy: function(user) {
-        return this.selectOpen().filter(function(t) {
-            // One of the handlers is me
-            return t.handlers().some(function(h) {
-                return h.getUser().get("id") === user.get("id");
-            });
-        });
-    },
-
-    /**
-     * Select tickets that handled by other managers than the given one
-     *
-     * @method selectHandledByOtherManagers
-     * @param {models.client.User} user
-     * @return {Array} of models.client.Ticket
-     */
-    selectHandledByOtherManagers: function(user) {
-        return this.selectOpen().filter(function(t) {
-
-            var managers = t.handlers().map(function(h) {
-                return h.getUser();
-            }).filter(function(u) {
-                return u.isManager();
-            });
-
-            // No manager handlers - the ticket is pending
-            if (managers.length === 0) return false;
-
-            // Every manager is not me
-            return managers.every(function(manager) {
-                return manager.get("id") !== user.get("id");
-            });
-
-        });
-    },
-
-});
 
 module.exports = Ticket;
 
