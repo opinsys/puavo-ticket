@@ -35,6 +35,11 @@ var ElasticTextarea = React.createClass({
 
     _resize: function(reset) {
 
+        if (!this.refs.textarea) {
+            console.warn("ElasticTextarea: Cannot access textarea dom node. Cannot resize");
+            return;
+        }
+
         var el = this.refs.textarea.getDOMNode();
 
         // Resizing the textarea causes some scrolling glitches when the
