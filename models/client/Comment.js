@@ -22,6 +22,7 @@ var Comment = Base.extend({
     relationsMap: function() {
         return {
             attachments: require("./Attachment"),
+            ticket: require("./Ticket"),
         };
     },
 
@@ -71,8 +72,7 @@ var Comment = Base.extend({
      * @return {models.client.Ticket}
      */
     ticket: function() {
-        var Ticket = require("./Ticket");
-        return new Ticket(this.rel("ticket"));
+        return this.rel("ticket");
     },
 
     /**
