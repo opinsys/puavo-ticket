@@ -271,8 +271,6 @@ var Base = Backbone.Model.extend({
 
         _type: "collection",
 
-        comparator: "createdAt",
-
         constructor: function() {
             Backbone.Collection.apply(this, arguments);
             [
