@@ -146,12 +146,12 @@ var SelectUsers = React.createClass({
             if (!domain) return [];
             return User.search(domain, searchString)
             .catch(function(err) {
-                if (err.responseJSON && err.responseJSON.error.message === "Cannot configure organisation for this request") {
-                    // User just typed an invalid organisation domain
-                    console.error("Bad organisation domain", err.responseJSON);
-                    return [];
-                }
-                throw err;
+                // Don't touch plain javascript errors
+                if (err instanceof Error) throw err;
+                // Just log puavo-rest errors. Will happen on invalid
+                // organisation domains etc.
+                console.error("Bad organisation domain " + domain, err.data);
+                return [];
             });
         })
         .then(function(users) {
