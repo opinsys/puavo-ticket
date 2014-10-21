@@ -41,7 +41,9 @@ var BackboneMixin = {
 
         });
 
-        self.setState(attrs, cb);
+        process.nextTick(function() {
+            self.setState(attrs, cb);
+        });
     },
 
     componentWillMount: function() {
