@@ -124,7 +124,13 @@ app.use(require("./utils/middleware/createResponseLogger")());
 app.use(bodyParser());
 app.use(cookieParser());
 app.use(sessionMiddleware);
-app.use(csrf());
+
+var csrfMiddleware = csrf();
+app.use(function(req, res, next) {
+    // /api/emails is a remote api. Allow calls without a csrf token
+    if (/^\/api\/emails/.test(req.path)) return next();
+    csrfMiddleware(req, res, next);
+});
 
 app.use(jwtsso({
 
