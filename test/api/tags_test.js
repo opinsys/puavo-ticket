@@ -51,6 +51,19 @@ describe("/api/tickets/:id/tags", function() {
             });
     });
 
+    it("is available in /api/tickets/:id", function() {
+        var self = this;
+        return self.agent.get(
+            "/api/tickets/" + self.ticket.get("id")
+        ).promise().then(function(res) {
+            assert.equal(200, res.status, res.text);
+            assert(
+                _.find(res.body.tags, { tag: "footag", deleted: 0 }),
+                "footag"
+            );
+        });
+    });
+
     it("is available in /api/tickets as an array", function() {
         var self = this;
         return this.agent
@@ -65,6 +78,7 @@ describe("/api/tickets/:id/tags", function() {
                 return self.agent.get("/api/tickets").promise();
             })
             .then(function(res) {
+                assert.equal(200, res.status, res.text);
                 assert.equal(2, res.body.length);
 
                 var ticket = _.find(res.body, {
@@ -86,6 +100,43 @@ describe("/api/tickets/:id/tags", function() {
 
             });
 
+    });
+
+    it("can delete tags with DELETE", function() {
+        var self = this;
+        return this.agent
+        .delete("/api/tickets/" + self.ticket.get("id") + "/tags/footag")
+        .set("x-csrf-token", self.agent.csrfToken)
+        .send({})
+        .promise()
+        .then(function(res) {
+            assert.equal(200, res.status, res.text);
+            assert.equal(1, res.body.length);
+            assert.equal("footag", res.body[0].tag);
+
+            return self.agent.get(
+                "/api/tickets/" + self.ticket.get("id")
+            ).promise();
+        })
+        .then(function(res) {
+            assert.equal(200, res.status, res.text);
+            var tag = _.find(res.body.tags, { tag: "footag" });
+            assert(tag);
+            assert(tag.deleted !== 0, "the footag should have been soft deleted");
+        });
+    });
+
+    it("DELETE on unknown tickets responds 404", function() {
+        var self = this;
+        return this.agent
+        .delete("/api/tickets/69/tags/footag")
+        .set("x-csrf-token", self.agent.csrfToken)
+        .send({})
+        .promise()
+        .then(function(res) {
+            assert.equal(404, res.status, res.text);
+            assert.equal("ticket not found", res.body.error);
+        });
     });
 
 

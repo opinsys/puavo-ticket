@@ -38,4 +38,25 @@ app.post("/api/tickets/:id/tags", function(req, res, next) {
     .catch(next);
 });
 
+app.delete("/api/tickets/:id/tags/:tagName", function(req, res, next) {
+    Ticket.fetchByIdConstrained(req.user, req.params.id)
+    .then(function(ticket) {
+        return ticket.tags().query(function(q) {
+            q.where({ tag: req.params.tagName, deleted: 0 });
+        })
+        .fetch();
+    })
+    .then(function(coll) {
+        if (coll.size() === 0) throw new Ticket.NotFoundError();
+        return coll.models;
+    })
+    .map(function(tag) {
+        return tag.softDelete(req.user);
+    })
+    .then(function(deletedTags) {
+        res.json(deletedTags);
+    })
+    .catch(next);
+});
+
 module.exports = app;
