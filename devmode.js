@@ -12,6 +12,7 @@ var spawn = require("child_process").spawn;
 var watchify = require("watchify");
 var watch = require("glob-watcher");
 var _ = require("lodash");
+var prettyMs = require("pretty-ms");
 
 
 var sio;
@@ -33,6 +34,7 @@ function writeJS() {
         return;
     }
     compilingJS = true;
+    var started = Date.now();
 
     debug("Starting js write");
     sio.sockets.emit("jschangebegin");
@@ -64,7 +66,7 @@ function writeJS() {
 
             if (err) return;
 
-            debug("js ok");
+            debug("JS ok in %s", prettyMs(Date.now() - started));
             sio.sockets.emit("jschange");
             sio.sockets.emit("assetchange");
         });
@@ -79,7 +81,7 @@ function writeCSS() {
     p.on("error", console.error);
     p.on("exit", function(code) {
         if (code !== 0) return;
-        debug("css ok");
+        debug("CSS ok");
         sio.sockets.emit("csschange");
         sio.sockets.emit("assetchange");
     });
