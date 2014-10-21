@@ -73,6 +73,7 @@ app.get("/api/tickets/:id", function(req, res, next) {
             "handlers.handler",
             "handlers.createdBy",
             "followers.follower",
+            "titles",
             "titles.createdBy",
             { notifications: function(qb) {
                 qb.where({ targetId: req.user.get("id") });
