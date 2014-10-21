@@ -64,16 +64,20 @@ function loginAsUser(userData){
     };
 
     return new Promise(function(resolve, reject){
-        agent
-        .get("/?jwt=" + jwtToken)
-        .end(function(err, res) {
+        agent.get("/?jwt=" + jwtToken).end(function(err, res) {
             if (err) return reject(err);
-            assert.equal(res.status, 302, "should get redirect after login");
+            assert.equal(302, res.status, "should get redirect after login");
             assert.equal(
                 res.headers.location, "/",
                 "should have been redirected to front-page after login"
             );
-            return resolve(agent);
+            agent.get("/").end(function(err, res) {
+                if (err) return reject(err);
+                assert.equal(200, res.status, res.text);
+                assert(res.headers["x-csrf-token"], "has csrf token");
+                agent.csrfToken = res.headers["x-csrf-token"];
+                resolve(agent);
+            });
         });
     });
 }

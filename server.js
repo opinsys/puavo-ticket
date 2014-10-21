@@ -243,6 +243,7 @@ app.use("/api/puavo", require("./resources/puavo_api_proxy")(config));
 
 
 app.get("/*", function(req, res) {
+    var csrfToken = req.csrfToken();
 
     var jsBundle = "/build/bundle.min.js";
     var cssBundle = "/build/styles.min.css";
@@ -255,8 +256,9 @@ app.get("/*", function(req, res) {
         cacheKey = Date.now();
     }
 
+    res.header("x-csrf-token", csrfToken);
     res.render("index.ejs", {
-        csrfToken: req.csrfToken(),
+        csrfToken: csrfToken,
         jsBundle: jsBundle,
         cssBundle: cssBundle,
         cacheKey: cacheKey,
