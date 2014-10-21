@@ -48,7 +48,7 @@ describe("/api/tickets", function() {
             })
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200);
+                assert.equal(res.status, 200, res.text);
                 assert.equal(res.body.createdById, self.teacher.get("id"));
                 assert(res.body.id, "has id");
                 self.ticket = res.body;
@@ -134,7 +134,7 @@ describe("/api/tickets", function() {
             })
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200);
+                assert.equal(200, res.status, res.text);
                 assert.equal(res.body[0].entity, "organisation:testing.opinsys.fi");
             })
             .then(function() {

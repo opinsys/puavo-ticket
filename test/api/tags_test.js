@@ -44,7 +44,7 @@ describe("/api/tickets/:id/tags", function() {
             .send({ tag: "footag" })
             .promise()
             .then(function(res) {
-                assert.equal(200, res.status);
+                assert.equal(200, res.status, res.text);
                 assert.equal("footag", res.body.tag);
             });
     });
@@ -56,7 +56,7 @@ describe("/api/tickets/:id/tags", function() {
             .send({ tag: "bartag" })
             .promise()
             .then(function(res) {
-                assert.equal(200, res.status);
+                assert.equal(200, res.status, res.text);
                 assert.equal("bartag", res.body.tag);
 
                 return self.agent.get("/api/tickets").promise();

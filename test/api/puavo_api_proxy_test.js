@@ -35,7 +35,7 @@ describe("puavo-rest api proxy", function() {
             .get("/api/puavo/testing.opinsys.fi/v3/devices")
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200);
+                assert.equal(200, res.status, res.text);
                 assert.deepEqual(res.body, [{ username:"foo" }]);
             });
     });
@@ -51,7 +51,7 @@ describe("puavo-rest api proxy", function() {
             .get("/api/puavo/testing.opinsys.fi/v3/devices?foo=bar")
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200);
+                assert.equal(200, res.status, res.text);
                 assert.deepEqual(res.body, [{ username:"bar" }]);
             });
     });
@@ -62,7 +62,7 @@ describe("puavo-rest api proxy", function() {
             .send({ hostname: "afat" })
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 401);
+                assert.equal(401, res.status, res.text);
             });
     });
 
@@ -91,7 +91,7 @@ describe("puavo-rest api proxy", function() {
                 return managerAgent.get("/api/puavo/other.opinsys.fi/v3/users/foo").promise();
             })
             .then(function(res) {
-                assert.equal(res.status, 200, res.text);
+                assert.equal(200, res.status, res.text);
             });
     });
 
@@ -106,7 +106,7 @@ describe("puavo-rest api proxy", function() {
             .get("/api/puavo/managertesting.opinsys.net/v3/users/pointyhair/profile.jpg")
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200, res.text);
+                assert.equal(200, res.status, res.text);
             });
 
     });

@@ -52,7 +52,7 @@ describe("/api/tickets/:id/followers", function() {
             .get("/api/tickets/" + self.ticket.id)
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200, res.text);
+                assert.equal(200, res.status, res.text);
                 assert(res.body.followers, "has followers property");
                 assert.equal(res.body.followers.length, 1,  "has one follower");
                 assert.equal(
@@ -66,14 +66,15 @@ describe("/api/tickets/:id/followers", function() {
         var self = this;
         return self.agent
             .post("/api/tickets/" + self.ticket.id + "/followers")
+            .set("x-csrf-token", self.agent.csrfToken)
             .send({})
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200, res.text);
+                assert.equal(200, res.status, res.text);
                 return self.agent.get("/api/tickets/" + self.ticket.id).promise();
             })
             .then(function(res) {
-                assert.equal(res.status, 200, res.text);
+                assert.equal(200, res.status, res.text);
                 assert(res.body.followers, "has followers property");
                 assert.equal(res.body.followers.length, 2,  "has two followers");
 
@@ -87,13 +88,14 @@ describe("/api/tickets/:id/followers", function() {
         var self = this;
         return self.agent
             .delete("/api/tickets/" + self.ticket.id + "/followers/" + self.manager.get("id"))
+            .set("x-csrf-token", self.agent.csrfToken)
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200, res.text);
+                assert.equal(200, res.status, res.text);
                 return self.agent.get("/api/tickets/" + self.ticket.id).promise();
             })
             .then(function(res) {
-                assert.equal(res.status, 200, res.text);
+                assert.equal(200, res.status, res.text);
                 assert(res.body.followers, "has followers property");
                 assert.equal(res.body.followers.length, 1,  "has only one follower");
                 assert(_.findWhere(res.body.followers, function(f) {
@@ -107,10 +109,11 @@ describe("/api/tickets/:id/followers", function() {
         return helpers.loginAsUser(helpers.user.teacher2)
             .then(function(agent) {
                 return agent.post("/api/tickets/" + self.ticket.id + "/followers")
+                    .set("x-csrf-token", agent.csrfToken)
                     .send({}).promise();
             })
             .then(function(res) {
-                assert.equal(res.status, 404, res.text);
+                assert.equal(404, res.status, res.text);
             });
     });
 

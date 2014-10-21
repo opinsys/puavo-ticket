@@ -64,12 +64,13 @@ describe("/api/tickets/:id/comments", function() {
         var self = this;
         return this.agent
             .post("/api/tickets/" + self.ticket.get("id") + "/comments")
+            .set("x-csrf-token", self.agent.csrfToken)
             .send({
                 comment: "another test comment"
             })
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200);
+                assert.equal(200, res.status, res.text);
                 assert.equal(res.body.comment, "another test comment");
                 assert.equal(res.body.ticketId, self.ticket.get("id"));
                 assert.equal(res.body.createdById, self.teacher.id);
@@ -82,7 +83,7 @@ describe("/api/tickets/:id/comments", function() {
             .get("/api/tickets/" + self.ticket.get("id"))
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200);
+                assert.equal(200, res.status, res.text);
                 assert(res.body.comments);
                 var comment = _.findWhere(res.body.comments, { comment: "another test comment" });
                 assert(comment);
@@ -106,7 +107,7 @@ describe("/api/tickets/:id/comments", function() {
                 // promise chain. Wait for it to complete.
                 .delay(100)
                 .then(function(res) {
-                    assert.equal(res.status, 200, res.text);
+                    assert.equal(200, res.status, res.text);
 
                     assert(
                         _.find(self.toStub.args, [ self.ticket.getSocketIORoom() ]),

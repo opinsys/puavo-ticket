@@ -58,11 +58,12 @@ describe("/api/tickets/:ticketId/comments/:commentId/attachments", function() {
         var self = this;
         return this.agent
             .post("/api/tickets/" + self.ticket.get("id") + "/comments/" + this.comment.get("id") + "/attachments")
+            .set("x-csrf-token", self.agent.csrfToken)
             .set('Content-Type', 'multipart/form-data')
             .attach("file1", TEST_IMAGE_PATH)
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200, res.text);
+                assert.equal(200, res.status, res.text);
                 // one file was added
                 assert.equal(1, res.body.length);
                 var fileRes = res.body[0];
@@ -82,7 +83,7 @@ describe("/api/tickets/:ticketId/comments/:commentId/attachments", function() {
         return self.agent.get("/api/tickets/" + self.ticket.get("id"))
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200, res.text);
+                assert.equal(200, res.status, res.text);
                 // has two comments
                 var comment = _.find(res.body.comments, { comment: "comment with attachments" });
                 assert(comment, "has the comment");

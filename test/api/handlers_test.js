@@ -53,13 +53,14 @@ describe("/api/tickets/:id/handlers", function() {
 
         return this.agent
             .post("/api/tickets/" + self.ticket.get("id") + "/handlers")
+            .set("x-csrf-token", self.agent.csrfToken)
             .send({
                 username: self.otherUser.get("externalData").username,
                 organisation_domain: self.otherUser.get("externalData").organisation_domain
             })
             .promise()
             .then(function(res) {
-                assert.equal(200, res.status);
+                assert.equal(200, res.status, res.text);
                 assert(res.body.id, "got handler relation id");
                 assert(_.isObject(res.body.handler), "has handler object");
                 assert.equal(self.otherUser.get("id"), res.body.handler.id);
@@ -74,7 +75,7 @@ describe("/api/tickets/:id/handlers", function() {
             .get("/api/tickets/")
             .promise()
             .then(function(res) {
-                assert.equal(200, res.status);
+                assert.equal(200, res.status, res.text);
                 var ticket = _.find(res.body, { id: self.ticket.get("id")});
                 assert(ticket);
                 assert(ticket.handlers, "has handlers array in the response");

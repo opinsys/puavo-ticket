@@ -48,7 +48,7 @@ describe("/api/tickets/:id/titles", function() {
             })
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200);
+                assert.equal(200, res.status, res.text);
                 assert.equal(res.body.title, "another test title");
                 assert.equal(res.body.ticketId, ticket.get("id"));
                 assert.equal(res.body.createdById, self.user.id);
@@ -60,7 +60,7 @@ describe("/api/tickets/:id/titles", function() {
             .get("/api/tickets/" + ticket.get("id"))
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200);
+                assert.equal(200, res.status, res.text);
                 assert(res.body.titles);
                 var title = _.findWhere(res.body.titles, { title: "another test title" });
                 assert(title);

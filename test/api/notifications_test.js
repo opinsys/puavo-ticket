@@ -64,10 +64,11 @@ describe("/api/tickets/:id/read", function() {
         var self = this;
         return this.agent
             .post("/api/tickets/" + self.ticket.get("id") + "/read")
+            .set("x-csrf-token", self.agent.csrfToken)
             .send()
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200, res.text);
+                assert.equal(200, res.status, res.text);
                 // The Notification object is returned
                 assert.equal("notifications", res.body.type);
             })
@@ -85,7 +86,7 @@ describe("/api/tickets/:id/read", function() {
             .get("/api/tickets")
             .promise()
             .then(function(res) {
-                assert.equal(res.status, 200, res.text);
+                assert.equal(200, res.status, res.text);
                 assert(_.find(res.body[0].titles, { title: "The Ticket" }));
                 assert.equal(self.ticket.get("id"), res.body[0].notifications[0].ticketId);
                 assert.equal(self.user.get("id"), res.body[0].notifications[0].targetId);
@@ -98,7 +99,7 @@ describe("/api/tickets/:id/read", function() {
                 .get("/api/notifications")
                 .promise()
                 .then(function(res) {
-                    assert.equal(res.status, 200, res.text);
+                    assert.equal(200, res.status, res.text);
                     assert.deepEqual([], res.body);
                 });
         });
@@ -110,7 +111,7 @@ describe("/api/tickets/:id/read", function() {
                     return self.agent.get("/api/notifications").promise();
                 })
                 .then(function(res) {
-                    assert.equal(res.status, 200, res.text);
+                    assert.equal(200, res.status, res.text);
                     assert.equal(1, res.body.length);
                     var data = res.body[0];
 
@@ -141,7 +142,7 @@ describe("/api/tickets/:id/read", function() {
                     return self.agent.get("/api/notifications").promise();
                 })
                 .then(function(res) {
-                    assert.equal(res.status, 200, res.text);
+                    assert.equal(200, res.status, res.text);
                     var data = res.body[0];
                     assert.equal(1, data.titles.length);
                     assert.equal("A new title", data.titles[0].title);
@@ -161,7 +162,7 @@ describe("/api/tickets/:id/read", function() {
                     return self.agent.get("/api/notifications").promise();
                 })
                 .then(function(res) {
-                    assert.equal(res.status, 200, res.text);
+                    assert.equal(200, res.status, res.text);
                     assert.equal(2, res.body.length);
 
                     assert.equal(1, res.body[0].titles.length, "first ticket has one title loaded");
