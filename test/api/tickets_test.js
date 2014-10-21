@@ -38,10 +38,12 @@ describe("/api/tickets", function() {
         return this.agent.logout();
     });
 
+
     it("can create a ticket using POST", function() {
         var self = this;
         return self.agent
             .post("/api/tickets")
+            .set("x-csrf-token", self.agent.csrfToken)
             .send({
                 title: "A ticket created using POST",
                 description: "foo"
@@ -55,9 +57,11 @@ describe("/api/tickets", function() {
 
                 return Promise.join(
                     self.agent.post("/api/tickets/" + res.body.id + "/titles")
+                        .set("x-csrf-token", self.agent.csrfToken)
                         .send({ title: "A title" })
                         .promise(),
                     self.agent.post("/api/tickets/" + res.body.id + "/comments")
+                        .set("x-csrf-token", self.agent.csrfToken)
                         .send({ comment: "Computer does not work"})
                         .promise()
                 );
@@ -127,8 +131,10 @@ describe("/api/tickets", function() {
     });
 
     it("user in the same organisation can see the ticket if ticket has the organisation visibility", function() {
+        var self = this;
         return this.agent
             .post("/api/tickets/" + this.ticket.id + "/visibilities")
+            .set("x-csrf-token", self.agent.csrfToken)
             .send({
                 visibilities: [ "organisation:" + helpers.user.teacher2.organisation_domain ]
             })
@@ -266,6 +272,18 @@ describe("/api/tickets", function() {
                 );
             });
         });
+    });
+
+    it("cannot create ticket without a csrf token", function() {
+        var self = this;
+        return self.agent
+            .post("/api/tickets")
+            .send({ title: "Hacker's ticket", description: "foo" })
+            .promise()
+            .then(function(res) {
+                assert.equal(403, res.status, res.text);
+                assert.equal("invalid csrf token", res.body.error);
+            });
     });
 
 });

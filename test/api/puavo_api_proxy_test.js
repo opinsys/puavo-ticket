@@ -59,6 +59,7 @@ describe("puavo-rest api proxy", function() {
     it("does not allow POST requests", function() {
         return agent
             .post("/api/puavo/testing.opinsys.fi/v3/devices")
+            .set("x-csrf-token", agent.csrfToken)
             .send({ hostname: "afat" })
             .promise()
             .then(function(res) {

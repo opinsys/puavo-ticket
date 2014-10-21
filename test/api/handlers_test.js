@@ -114,7 +114,8 @@ describe("/api/tickets/:id/handlers", function() {
         var self = this;
         return self.agent.delete(
             "/api/tickets/" + self.ticket.get("id") + "/handlers/" + self.otherUser.get("id")
-        ).promise().then(function(res) {
+        ).set("x-csrf-token", self.agent.csrfToken)
+        .promise().then(function(res) {
             assert.equal(200, res.status, res.text);
             assert.equal(self.otherUser.get("id"), res.body.handler);
         });
@@ -147,6 +148,7 @@ describe("/api/tickets/:id/handlers", function() {
 
         return this.agent
         .post("/api/tickets/" + self.ticket.get("id") + "/handlers")
+        .set("x-csrf-token", self.agent.csrfToken)
         .send({
             username: self.otherUser.get("externalData").username,
             organisation_domain: self.otherUser.get("externalData").organisation_domain

@@ -99,6 +99,7 @@ describe("/api/tickets/:id/comments", function() {
         .then(function() {
             return self.agent
                 .post("/api/tickets/" + self.ticket.get("id") + "/comments")
+                .set("x-csrf-token", self.agent.csrfToken)
                 .send({
                     comment: "socket.io message is sent about this comment"
                 })

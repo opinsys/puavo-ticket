@@ -39,8 +39,10 @@ describe("/api/tickets/:id/tags", function() {
     });
 
     it("sets the tag for a ticket", function() {
+        var self = this;
         return this.agent
-            .post("/api/tickets/" + this.ticket.get("id") + "/tags")
+            .post("/api/tickets/" + self.ticket.get("id") + "/tags")
+            .set("x-csrf-token", self.agent.csrfToken)
             .send({ tag: "footag" })
             .promise()
             .then(function(res) {
@@ -53,6 +55,7 @@ describe("/api/tickets/:id/tags", function() {
         var self = this;
         return this.agent
             .post("/api/tickets/" + this.otherTicket.get("id") + "/tags")
+            .set("x-csrf-token", self.agent.csrfToken)
             .send({ tag: "bartag" })
             .promise()
             .then(function(res) {

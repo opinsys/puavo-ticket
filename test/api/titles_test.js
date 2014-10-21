@@ -43,6 +43,7 @@ describe("/api/tickets/:id/titles", function() {
         var self = this;
         return this.agent
             .post("/api/tickets/" + ticket.get("id") + "/titles")
+            .set("x-csrf-token", self.agent.csrfToken)
             .send({
                 title: "another test title"
             })
