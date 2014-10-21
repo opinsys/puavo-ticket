@@ -270,6 +270,16 @@ app.get("/*", function(req, res) {
     });
 });
 
+app.use("/api", function(err, req, res, next) {
+    if (err instanceof Ticket.NotFoundError) {
+        return res.status(404).json({
+            error: "ticket not found",
+            message: err.message
+        });
+    }
+    next(err);
+});
+
 app.use(function(err, req, res, next) {
     if (err instanceof User.EmailCollisionError) {
         return res.status("406").render("emailCollisionError.ejs");
