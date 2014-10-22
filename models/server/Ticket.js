@@ -292,11 +292,13 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * Add Tag to the ticket
      *
      * @method addTag
-     * @param {String} tag
+     * @param {String|models.server.Tag} tag
      * @param {models.server.User} user Creator of the tag
      * @return {Bluebird.Promise} with models.server.Tag
      */
     addTag: function(tagName, user, options) {
+        if (Base.isModel(tagName))  tagName = tagName.get("tag");
+
         return Tag.fetchOrCreate({
             tag: tagName,
             ticketId: this.get("id"),
@@ -534,6 +536,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
         return this.belongsToMany(User, "handlers", "ticketId", "handler");
     },
 
+
     /**
      * Returns true if the user is handler for this ticket
      *
@@ -541,16 +544,12 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * with Ticket#load("handlerUsers")
      *
      * @method isHandler
-     * @param {models.server.User|Number}
+     * @param {models.server.User}
      * @return {Boolean}
      */
     isHandler: function(user){
-        if (!this.relations.handlerUsers) {
-            throw new Error("'handlerUsers' relation not loaded");
-        }
-
-        return this.relations.handlerUsers.some(function(handlerUser) {
-            return handlerUser.get("id") === Base.toId(user);
+        return this.rel("handlerUsers").some(function(handlerUser) {
+            return handlerUser.get("id") === user.get("id");
         });
     },
 

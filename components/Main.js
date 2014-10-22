@@ -63,7 +63,7 @@ var Main = React.createClass({
     },
 
     componentWillMount: function() {
-        if (this.props.user.isManager()) {
+        if (this.props.user.acl.canSeePendingTickets()) {
             this.setBackbone({
                 pendingTickets: Ticket.collection([], {
                     query: { tags: ["status:pending"] }

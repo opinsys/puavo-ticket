@@ -54,7 +54,7 @@ var FrontPage = React.createClass({
                 <Link to="solved-tickets">
                     Näytä ratkaistut tukipyyntösi
                 </Link>
-                {user.isManager() && <p>
+                {user.acl.canUseCustomViews() && <p>
                     <Link to="custom-list">
                         Mukautetut listat
                     </Link>

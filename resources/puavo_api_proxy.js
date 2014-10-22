@@ -71,7 +71,6 @@ app.all("/:domain*", function(req, res, next) {
         });
     }
 
-    var userDomain = req.user.get("externalData").organisation_domain;
     var domain = req.params.domain;
 
     var targetSearch =  url.parse(req.url).search; // querystring
@@ -84,18 +83,12 @@ app.all("/:domain*", function(req, res, next) {
         search: targetSearch
     });
 
-    // Allow proxying if the user is accessing his own organisation
-    if (userDomain === domain) {
-        return proxyPass(targetURL);
-    }
-
-    // Allow access to profile images of other organisations
+    // Allow access to profile images for everybody
     if (puavoURL.isProfileImage(targetPath)) {
         return proxyPass(targetURL);
     }
 
-    // Managers can access everything
-    if (req.user.isManager()) {
+    if (req.user.acl.canAccessOrganisation(domain)) {
         return proxyPass(targetURL);
     }
 

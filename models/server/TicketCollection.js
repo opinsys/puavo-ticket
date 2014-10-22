@@ -121,7 +121,7 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
      */
     byUserVisibilities: function(user) {
         // Manager is not restricted by visibilities. Just return everything.
-        if (user.isManager()) return this;
+        if (user.acl.canSeeAllTickets()) return this;
         else return this.byVisibilities(user.getVisibilities());
     },
 

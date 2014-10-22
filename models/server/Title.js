@@ -2,8 +2,6 @@
 
 require("../../db");
 
-var Promise = require("bluebird");
-
 var User = require("./User");
 var Base = require("./Base");
 
@@ -23,21 +21,6 @@ var Title = Base.extend({
             createdAt: new Date(),
             updatedAt: new Date()
         };
-    },
-
-    initialize: function() {
-        this.on("creating", this._assertCreatorIsHandler.bind(this));
-    },
-
-    _assertCreatorIsHandler: function() {
-        return Promise.all([
-            this.ticket().fetch({ withRelated: "handlerUsers", require: true  }),
-            this.createdBy().fetch({ require: true })
-        ]).spread(function(ticket, user) {
-            if (!ticket.isHandler(user)) {
-                throw new Error("Only handlers can add titles");
-            }
-        });
     },
 
     /**

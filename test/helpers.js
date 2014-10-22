@@ -28,6 +28,7 @@ var app = require("../server");
 var Ticket = require("../models/server/Ticket");
 var Comment = require("../models/server/Comment");
 var User = require("../models/server/User");
+var Base = require("../models/server/Base");
 
 
 
@@ -44,6 +45,7 @@ var User = require("../models/server/User");
  * @return {Bluebird.Promise} supertest agent instance wrapped in a promise
  */
 function loginAsUser(userData){
+    if (Base.isModel(userData)) userData = userData.toJSON();
 
     userData.iat = Math.round(Date.now() / 1000);
     var jwtToken = jwt.encode(userData, "secret");

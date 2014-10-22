@@ -59,27 +59,30 @@ var TicketView = React.createClass({
         var ticketId = this.props.params.id;
         var user = app.currentUser;
         var ticket = this.state.ticket;
+        var canSeeActionTabs = user.acl.canEditHandlers() || user.acl.canEditTags();
 
         return (
             <div className="TicketView">
 
-                {user.isManager() && <ul className="nav nav-tabs" role="tablist">
+                {canSeeActionTabs && <ul className="nav nav-tabs" role="tablist">
+
                     <li>
                         <Link to="discuss" params={{ id: ticketId }}>
                             Keskustelu
                         </Link>
                     </li>
-                    <li>
+
+                    {user.acl.canEditHandlers() && <li>
                         <Link to="handlers" params={{ id: ticketId }}>
                             Käsittelijät
                         </Link>
-                    </li>
+                    </li>}
 
-                    <li>
+                    {user.acl.canEditTags() && <li>
                         <Link to="tags" params={{ id: ticketId }}>
                             Tagit
                         </Link>
-                    </li>
+                    </li>}
 
                 </ul>}
 

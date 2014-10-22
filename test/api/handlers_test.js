@@ -7,6 +7,7 @@ var _ = require("lodash");
 
 var helpers = require("app/test/helpers");
 var User = require("app/models/server/User");
+var Ticket = require("app/models/server/Ticket");
 
 
 
@@ -17,10 +18,10 @@ describe("/api/tickets/:id/handlers", function() {
 
         return helpers.clearTestDatabase()
             .then(function() {
-                return Promise.all([
+                return Promise.join(
                     User.ensureUserFromJWTToken(helpers.user.teacher),
                     User.ensureUserFromJWTToken(helpers.user.teacher2)
-                ]);
+                );
             })
             .spread(function(user, otherUser) {
                 self.user = user;
@@ -31,10 +32,14 @@ describe("/api/tickets/:id/handlers", function() {
             .then(function(agent) {
                 self.agent = agent;
 
-                return helpers.insertTestTickets(self.user);
+                return Ticket.create(
+                    "Handler testing ticket",
+                    "foo",
+                    self.user
+                );
             })
-            .then(function(tickets) {
-                self.ticket = tickets.ticket;
+            .then(function(ticket) {
+                self.ticket = ticket;
             });
     });
 
@@ -42,8 +47,27 @@ describe("/api/tickets/:id/handlers", function() {
         return this.agent.logout();
     });
 
+    it("creator cannot add handlers", function() {
+        var self = this;
+        return helpers.loginAsUser(helpers.user.teacher)
+        .then(function(agent) {
+            return agent
+            .post("/api/tickets/" + self.ticket.get("id") + "/handlers")
+            .set("x-csrf-token", agent.csrfToken)
+            .send({
+                username: self.otherUser.get("externalData").username,
+                organisation_domain: self.otherUser.get("externalData").organisation_domain
+            })
+            .promise();
+        })
+        .then(function(res) {
+            assert.equal(403, res.status, res.text);
+            assert.equal("permission denied", res.body.error);
+        });
+    });
 
-    it("can add a handler to a ticket", function() {
+
+    it("manager can add a handler to a ticket", function() {
         var self = this;
 
         nock("https://test-api.opinsys.example")
@@ -110,7 +134,22 @@ describe("/api/tickets/:id/handlers", function() {
             });
     });
 
-    it("handler can be removed using DELETE", function() {
+    it("creator cannot delete handlers", function() {
+        var self = this;
+        return helpers.loginAsUser(helpers.user.teacher)
+        .then(function(agent) {
+            return agent.delete(
+                "/api/tickets/" + self.ticket.get("id") + "/handlers/" + self.otherUser.get("id")
+            ).set("x-csrf-token", agent.csrfToken)
+            .promise();
+        })
+        .then(function(res) {
+            assert.equal(403, res.status, res.text);
+            assert.equal("permission denied", res.body.error);
+        });
+    });
+
+    it("handler can be removed using DELETE by manager", function() {
         var self = this;
         return self.agent.delete(
             "/api/tickets/" + self.ticket.get("id") + "/handlers/" + self.otherUser.get("id")

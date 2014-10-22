@@ -75,22 +75,6 @@ describe("Ticket handlers", function() {
         });
     });
 
-    it("only managers can add handlers", function() {
-        var self = this;
-
-        return User.ensureUserFromJWTToken(helpers.user.teacher3)
-            .then(function(normalUser) {
-                return self.ticket.addHandler(normalUser, normalUser)
-                    .catch(function(err) {
-                        return err;
-                    })
-                    .then(function(err) {
-                        assert(err instanceof Error, "must have error");
-                        assert.equal("Only managers or owners can add handlers", err.message);
-                    });
-            });
-    });
-
 
     it("personal visibility is given to the handler", function() {
         var self = this;

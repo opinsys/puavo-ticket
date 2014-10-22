@@ -349,7 +349,7 @@ var Discuss = React.createClass({
         var title = ticket.getCurrentTitle();
         var updates = this.getUpdatesWithMergedComments();
 
-        if (user.isManager() && ticket.get("zendeskTicketId")) {
+        if (user.acl.canSeeZendeskLink() && ticket.get("zendeskTicketId")) {
             updates.unshift(ticket.createRobotComment(
                 "Tämä tukipyyntö tuotiin Zendeskistä https://opinsys.zendesk.com/tickets/" + ticket.get("zendeskTicketId"),
                 "zendesk"));
@@ -380,7 +380,7 @@ var Discuss = React.createClass({
 
                     <div className="row title-row">
                         <div className="col-md-12">
-                            <EditableText onSubmit={this.changeTitle} text={title} disabled={!ticket.isHandler(user)}>
+                            <EditableText onSubmit={this.changeTitle} text={title} disabled={!user.acl.canEditTitle(ticket)}>
                                 <h3>
                                     {this.renderBadge()}
 

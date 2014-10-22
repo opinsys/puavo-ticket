@@ -6,6 +6,7 @@
 var express = require("express");
 
 var Ticket = require("../models/server/Ticket");
+var Acl = require("../models/Acl");
 
 var app = express.Router();
 
@@ -18,8 +19,13 @@ var app = express.Router();
  * @apiParam {String} title
  */
 app.post("/api/tickets/:id/titles", function(req, res, next) {
-    Ticket.fetchByIdConstrained(req.user, req.params.id)
+    Ticket.fetchByIdConstrained(req.user, req.params.id, {
+        withRelated: "handlerUsers"
+    })
     .then(function(ticket) {
+        if (!req.user.acl.canEditTitle(ticket)) {
+            throw new Acl.PermissionDeniedError();
+        }
         return ticket.addTitle(req.body.title, req.user);
     })
     .then(function(title) {

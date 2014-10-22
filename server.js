@@ -37,6 +37,7 @@ var session = require("express-session");
 var RedisStore = require("connect-redis")(session);
 
 var User = require("./models/server/User");
+var Acl = require("./models/Acl");
 var Ticket = require("./models/server/Ticket");
 
 var config = require("./config");
@@ -277,6 +278,14 @@ app.use("/api", function(err, req, res, next) {
             message: err.message
         });
     }
+
+    if (err instanceof Acl.PermissionDeniedError) {
+        return res.status(403).json({
+            error: "permission denied",
+            message: err.message
+        });
+    }
+
     next(err);
 });
 

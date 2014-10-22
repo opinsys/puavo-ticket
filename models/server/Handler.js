@@ -1,9 +1,6 @@
-
 "use strict";
 
 require("../../db");
-
-var Promise = require("bluebird");
 
 var Base = require("./Base");
 var User = require("./User");
@@ -19,22 +16,6 @@ var User = require("./User");
 var Handler = Base.extend({
 
     tableName: "handlers",
-
-    initialize: function() {
-        this.on("creating", this._assertCreatorIsManagerOrOwner.bind(this));
-    },
-
-    _assertCreatorIsManagerOrOwner: function() {
-        return Promise.all([
-            User.byId(this.get("createdById")).fetch({ require: true }),
-            this.ticket().fetch({ require: true })
-        ])
-        .spread(function(user, ticket){
-            if (user.isManager()) return;
-            if (ticket.get("createdById") === user.get("id")) return;
-            throw new Error("Only managers or owners can add handlers");
-        });
-    },
 
     defaults: function() {
         return {

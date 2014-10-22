@@ -2,6 +2,7 @@
 
 require("../../db");
 var Base = require("./Base");
+var Acl = require("../Acl");
 var Cocktail = require("backbone.cocktail");
 var Bookshelf = require("bookshelf");
 var UserMixin = require("../UserMixin");
@@ -26,6 +27,10 @@ var User = Base.extend({
             createdAt: new Date(),
             updatedAt: new Date()
         };
+    },
+
+    initialize: function() {
+        this.acl = new Acl(this);
     },
 
     /**

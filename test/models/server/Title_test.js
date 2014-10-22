@@ -49,21 +49,4 @@ describe("Title model", function() {
             });
     });
 
-    it("other users cannot add titles", function() {
-        var self = this;
-        var catchCalled = false;
-        return self.ticket.addTitle("bad user", self.otherUser)
-            .catch(function(err) {
-                assert.equal(
-                    "Only handlers can add titles",
-                    err.message
-                );
-                catchCalled = true;
-            })
-            .then(function() {
-                assert(catchCalled, "catch was not called");
-            });
-    });
-
-
 });

@@ -1,10 +1,10 @@
 "use strict";
 
 var express = require("express");
-var Promise = require("bluebird");
 
 var Ticket = require("../models/server/Ticket");
 var User = require("../models/server/User");
+var Acl = require("../models/Acl");
 
 var app = express.Router();
 
@@ -17,16 +17,18 @@ var app = express.Router();
  * @apiParam {String} username Username for the handler
  */
 app.post("/api/tickets/:id/handlers", function(req, res, next) {
-    if (!req.user.isManager()) {
-        return res.status(403).json({ error: "permission denied" });
-    }
 
-    Promise.all([
-        User.ensureUserByUsername(req.body.username, req.body.organisation_domain),
-        Ticket.fetchByIdConstrained(req.user, req.params.id)
-    ])
-    .spread(function(handler, ticket) {
-        return ticket.addHandler(handler, req.user);
+    Ticket.fetchByIdConstrained(req.user, req.params.id)
+    .then(function(ticket) {
+        if (!req.user.acl.canEditHandlers(ticket)) {
+            throw new Acl.PermissionDeniedError();
+        }
+        return User.ensureUserByUsername(
+            req.body.username,
+            req.body.organisation_domain
+         ).then(function(handlerUser) {
+            return ticket.addHandler(handlerUser, req.user);
+         });
     })
     .then(function(handler) {
         return handler.load(["createdBy", "handler"]);
@@ -38,12 +40,8 @@ app.post("/api/tickets/:id/handlers", function(req, res, next) {
 });
 
 app.delete("/api/tickets/:id/handlers/:userId", function(req, res, next) {
-    if (!req.user.isManager()) {
-        return res.status(403).json({ error: "permission denied" });
-    }
-
     Ticket.collection()
-    .query({ where: { id: req.params.id }})
+    .query({ where: { "tickets.id": req.params.id }})
     .byUserVisibilities(req.user)
     .fetch({
         require: true,
@@ -57,7 +55,13 @@ app.delete("/api/tickets/:id/handlers/:userId", function(req, res, next) {
         ]
     })
     .then(function(tickets) {
+        if (tickets.size() > 1) {
+            throw new Error("found extra tickets wtf?");
+        }
         var ticket = tickets.first();
+        if (!req.user.acl.canEditHandlers(ticket)) {
+            throw new Acl.PermissionDeniedError();
+        }
         var handler = ticket.relations.handlers.first();
         return handler.softDelete(req.user).return(handler);
     })

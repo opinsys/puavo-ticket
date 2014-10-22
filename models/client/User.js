@@ -3,6 +3,7 @@
 var Cocktail = require("backbone.cocktail");
 var url = require("url");
 
+var Acl = require("../Acl");
 var fetch = require("app/utils/fetch");
 var Base = require("./Base");
 var UserMixin = require("../UserMixin");
@@ -16,6 +17,10 @@ var UserMixin = require("../UserMixin");
  * @uses models.UserMixin
  */
 var User = Base.extend({
+
+    initialize: function() {
+        this.acl = new Acl(this);
+    },
 
     /**
      * Return true if the user is a manager

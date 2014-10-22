@@ -5,6 +5,8 @@ var express = require("express");
 var debug = require("debug")("app:resources/tags");
 
 var Ticket = require("../models/server/Ticket");
+var Tag = require("../models/server/Tag");
+var Acl = require("../models/Acl");
 
 var app = express.Router();
 
@@ -22,14 +24,18 @@ app.post("/api/tickets/:id/tags", function(req, res, next) {
         req.body.tag, req.params.id
      );
 
-     if (!req.user.isManager()) {
-        return res.status(401).json({ error: "permission denied" });
-     }
+     var tag = new Tag({ tag: req.body.tag });
 
-    Ticket.fetchByIdConstrained(req.user, req.params.id)
+    Ticket.fetchByIdConstrained(req.user, req.params.id, {
+        withRelated: "handlerUsers"
+    })
     .then(function(ticket) {
-        if (!ticket) return res.json(404, { error: "no such ticket" });
-        return ticket.addTag(req.body.tag, req.user)
+        if (!ticket) throw Ticket.NotFoundError();
+        if (!req.user.acl.canEditTag(ticket, tag)) {
+            throw new Acl.PermissionDeniedError();
+        }
+
+        return ticket.addTag(tag, req.user)
         .then(function(tag) {
             debug("tag %s ok", req.body.tag);
             res.json(tag.toJSON());
@@ -39,8 +45,15 @@ app.post("/api/tickets/:id/tags", function(req, res, next) {
 });
 
 app.delete("/api/tickets/:id/tags/:tagName", function(req, res, next) {
-    Ticket.fetchByIdConstrained(req.user, req.params.id)
+    var tag = new Tag({ tag: req.params.tagName });
+
+    Ticket.fetchByIdConstrained(req.user, req.params.id, {
+        withRelated: "handlerUsers"
+    })
     .then(function(ticket) {
+        if (!req.user.acl.canEditTag(ticket, tag)) {
+            throw new Acl.PermissionDeniedError();
+        }
         return ticket.tags().query(function(q) {
             q.where({ tag: req.params.tagName, deleted: 0 });
         })
