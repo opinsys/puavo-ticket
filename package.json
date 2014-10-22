@@ -36,6 +36,7 @@
     "filesize": "^2.0.3",
     "font-awesome": "^4.2.0",
     "jquery": "~2.1.1",
+    "json-human": "git+https://github.com/marianoguerra/json.human.js",
     "jwt-simple": "~0.2.0",
     "jwtsso": "opinsys/node-jwtsso",
     "kexec": "^0.2.0",

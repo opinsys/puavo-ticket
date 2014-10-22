@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title><%- path %></title>
+        <link rel="stylesheet" media="all" href="/json-human/css/json.human.css" />
+    </head>
+    <body>
+        <h1><%- path %></h1>
+        <script src="/json-human/lib/crel.js" charset="utf-8"></script>
+        <script src="/json-human/src/json.human.js" charset="utf-8"></script>
+        <script>
+              var data = <%- JSON.stringify(data, null, "    ") %>;
+              var node = JsonHuman.format(data);
+              document.body.appendChild(node);
+        </script>
+    </body>
+</html>

@@ -159,6 +159,7 @@ app.use("/styles", serveStatic(__dirname + "/styles"));
 app.use("/components", serveStatic(__dirname + "/components"));
 app.use("/bootstrap", serveStatic(__dirname + "/node_modules/bootstrap"));
 app.use("/font-awesome", serveStatic(__dirname + "/node_modules/font-awesome"));
+app.use("/json-human", serveStatic(__dirname + "/node_modules/json-human"));
 app.use(serveStatic(__dirname + "/public"));
 app.use("/doc", serveStatic(__dirname + "/doc"));
 
@@ -230,6 +231,7 @@ app.get("/debugmode", function(req, res, next) {
     // });
 });
 
+app.use("/api", require("./resources/json-human"));
 app.use(require("./resources/tickets"));
 app.use(require("./resources/comments"));
 app.use(require("./resources/attachments"));
