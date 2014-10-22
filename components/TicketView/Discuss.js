@@ -368,7 +368,7 @@ var Discuss = React.createClass({
 
                     <div className="row ticket-actions-row">
                         <div className="col-md-12">
-                            {ticket.isHandler(user) &&
+                            {user.acl.canChangeStatus(ticket) &&
                                 <ToggleStatusButton ticket={ticket} user={user} />}
 
                                 <this.props.activeRouteHandler />
