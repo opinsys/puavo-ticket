@@ -80,7 +80,7 @@ var ElasticTextarea = React.createClass({
     },
 
     componentWillUnmount: function() {
-        window.removeEventListener("resize", this._resize);
+        window.removeEventListener("resize", this._throttledResize);
     },
 
     componentDidUpdate: function() {
