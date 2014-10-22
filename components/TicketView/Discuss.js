@@ -373,7 +373,7 @@ var Discuss = React.createClass({
 
                                 <this.props.activeRouteHandler />
 
-                            {ticket.createdBy().get("id") !== user.get("id") &&
+                            {user.acl.canFollow(ticket) &&
                                 <ToggleFollowButton ticket={ticket} user={user} />}
                         </div>
                     </div>
