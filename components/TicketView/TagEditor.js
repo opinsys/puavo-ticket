@@ -30,8 +30,15 @@ var TagEditor = React.createClass({
         };
     },
 
-    removeTag: function() {
-        alert("todo");
+    removeTag: function(tag) {
+        var ticket = this.props.ticket;
+
+        tag.destroy()
+        .catch(captureError("Tagin poisto epäonnistui"))
+        .then(function() {
+            return ticket.fetch();
+        })
+        .catch(captureError("Tukipyynnön päivitys epäonnistui"));
     },
 
     validateBsStyle: function() {
