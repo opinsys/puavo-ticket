@@ -47,28 +47,10 @@ var Tag = Base.extend({
                             tagModel.get("createdById")
                         );
                     }
-                })
-                .then(function() {
-                    return this._assertOnlyHandlerCanChangeStatus(options);
                 });
         });
     },
 
-
-    _assertOnlyHandlerCanChangeStatus: function(options) {
-        if (!this.isStatusTag()) return;
-        if (options && options.force) return;
-        return this.ticket().fetch({
-                require: true,
-                withRelated: "handlerUsers"
-            })
-            .bind(this)
-            .then(function(ticket) {
-                if (!ticket.isHandler(this.get("createdById"))) {
-                    throw new Error("Only handlers can change status");
-                }
-            });
-    },
 
     /**
     * Return Collection for clones of this tag
