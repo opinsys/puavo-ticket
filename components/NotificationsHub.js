@@ -42,7 +42,7 @@ var NotificationsHub = React.createClass({
         this.props.title.setNotificationCount(count);
         this.props.title.activateOnNextTick();
         return this.transferPropsTo(
-            <DropdownButton pullRight className="NotificationsHub" title={"Ilmoitukset " + count}>
+            <DropdownButton pullRight className="NotificationsHub NotificationsHub-label" title={"Ilmoitukset " + count}>
                 {items}
             </DropdownButton>
         );
@@ -86,7 +86,7 @@ var NotificationItem = React.createClass({
         var ticket = this.props.ticket;
         var title = ticket.getCurrentTitle();
         return (
-            <MenuItem header>
+            <MenuItem header className="NotificationsHub-item">
                 <Link to="ticket"
                       query={{scrollTo: "firstUnread" }}
                       params={{id: ticket.get("id")}}>{title}</Link>

@@ -88,17 +88,17 @@ var Main = React.createClass({
     },
 
     componentDidMount: function() {
-        this.fetchUnreadTickets = _.throttle(this.fetchUnreadTickets, 2000);
-        this.fetchUnreadTickets();
-        Ticket.on("markedAsRead", this.fetchUnreadTickets);
-        window.addEventListener("focus", this.fetchUnreadTickets);
+        process.nextTick(this.fetchUnreadTickets);
+        this.throttledFetchUnreadTickets = _.throttle(this.fetchUnreadTickets, 2000);
+        Ticket.on("markedAsRead", this.throttledFetchUnreadTickets);
+        window.addEventListener("focus", this.throttledFetchUnreadTickets);
         Backbone.on("error", this.handleUnhandledError);
         this.props.io.on("followerUpdate", this.handleFollowerUpdate);
         app.renderInModal = this.renderInModal;
     },
 
     componentWillUnmount: function() {
-        window.removeEventListener("focus", this.fetchUnreadTickets);
+        window.removeEventListener("focus", this.throttledFetchUnreadTickets);
         Backbone.off("error", this.handleUnhandledError);
         this.props.io.off("followerUpdate", this.handleFollowerUpdate);
     },
