@@ -6,12 +6,16 @@ module.exports = {
     beforeEach: function(browser, done) {
         helpers.clearTestDatabase()
         .then(done.bind(null))
-        .catch(done);
+        .catch(function(err) {
+            console.error(err);
+            console.error(err.stack);
+            process.exit(1);
+        });
     },
 
     "Login test": function (browser) {
         browser
-        .puavoRestLogin("bruce.wayne@heroes.opinsys.net", "secret")
+        .puavoRestLogin("clark.kent@heroes.opinsys.net", "secret")
 
         .click(".Main-new-ticket")
         .setValue(".TicketForm-title", "Test ticket title")
