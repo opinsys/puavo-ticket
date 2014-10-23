@@ -26,8 +26,11 @@ module.exports = {
 
         .setValue(".CommentForm-input", "A comment")
         .click(".CommentForm-save-comment")
-        .waitForElementNotVisible(".Loading,.fa-spin", 5000)
-        .assert.containsText(".Discuss-update-item:last-of-type .comment", "A comment")
+        .waitForAjax()
+        .assert.containsText(
+            ".Discuss-update-item:last-of-type .comment",
+            "A comment"
+        )
         .end();
     },
 
