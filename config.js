@@ -22,14 +22,16 @@ var config = {
     redis: {}
 };
 
+var productionConfig = require("./_config");
 
-if (process.env.NODE_ENV === "test") {
+if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "acceptance") {
     config.database.connection = {
         host: "127.0.0.1",
         user: "puavo-ticket",
         password: "password",
         database: "puavo-ticket-test"
     };
+    config.domain = "support.opinsys.net";
     config.puavo.restServerAddress = "https://test-api.opinsys.example";
     config.puavo.sharedSecret = "secret";
     config.puavo.username = "puavo-ticket";
@@ -40,8 +42,16 @@ if (process.env.NODE_ENV === "test") {
     config.emailReplyDomain = "opinsys.example";
     config.mailGunSecret = "secret";
     config.forwardTicketsEmail = "new-tickets@opinsys.example";
+
+    if (process.env.NODE_ENV === "acceptance") {
+         config.port = productionConfig.port;
+         config.domain = productionConfig.domain;
+         config.restServerAddress = productionConfig.restServerAddress;
+         config.managerOrganisationDomain = productionConfig.managerOrganisationDomain;
+         config.puavo = productionConfig.puavo;
+    }
+
 } else {
-    var productionConfig = require("./_config");
     config = _.extend(config, productionConfig);
 
     if (!config.puavo.sharedSecret) {
@@ -79,4 +89,9 @@ if (config.smtp) {
     console.warn("'smtp' config is missing from config. Email sending is disabled.");
     config.mailTransport = nodemailer.createTransport(stubTransport());
 }
+
+if (process.env.PORT) {
+    config.port = process.env.PORT;
+}
+
 module.exports = config;

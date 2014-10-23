@@ -212,7 +212,7 @@ var CommentForm = React.createClass({
                     ref="textarea"
 
                     placeholder="Kirjoita uusi kommentti tähän..."
-                    className="form-control"
+                    className="form-control CommentForm-input"
                     value={this.state.comment}
                     onChange={this._handleCommentChange}
                     minRows={1}
@@ -230,6 +230,7 @@ var CommentForm = React.createClass({
 
                 <div className="ticket-update-buttons">
                     <Button
+                        className="CommentForm-save-comment"
                         ref="commentButton"
                         onClick={this._submit}
                         disabled={!this.hasComment()} >

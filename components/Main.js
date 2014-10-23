@@ -214,7 +214,7 @@ var Main = React.createClass({
                         </div>
 
                         <ButtonGroup className="top-buttons">
-                            <Link className="btn btn-default top-button" to="new">
+                            <Link className="btn btn-default top-button Main-new-ticket" to="new">
                                 <i className="fa fa-pencil-square-o"></i>Uusi tukipyyntö
                             </Link>
 

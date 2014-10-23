@@ -113,6 +113,8 @@ it. Ticket will get additional visibilities when:
   - [Mocha][] tests for the server-side models
 - `test/models/client/`
   - [Mocha][] tests for the client-side models
+- `test/nightwatch/`
+  - Acceptance tests
 - `extra/`
   - Various helper script that are not scritly part of the application
 - `vendor-documentation/`
@@ -224,9 +226,9 @@ Start PostgreSQL psql repl use `make psql`.
 
 Both of these respect the the `NODE_ENV=test` environment variable.
 
-## Running tests
+## Tests
 
-Use
+Basics
 
   - `make jshint` to run jshint for all project \*.js files
   - `make test-server` to run all server-side tests
@@ -236,6 +238,47 @@ Use
   - `make serve-tests` to manually run the client-side tests from
     <http://localhost:1234/> for debugging
     - This will open a browser for you using `xdg-open` if you have a X server running
+
+### Acceptance tests
+
+The test are written using [Nightwatch.js](http://nightwatchjs.org/) which uses
+Selenium as under the hood. The Ansible rules will configure upstart scripts
+for Selenium and Xvbf X server for you.
+
+To run the tests type
+
+    node_modules/.bin/nightwatch
+
+If you need debugger use
+
+    node debug node_modules/.bin/nightwatch
+
+The tests them shelf are in `test/nightwatch/tests/`. Any file placed there
+will be automatically picked by Nightwatch as a test case.
+
+
+If you want to debug the tests in a local browser you must run the Selenium
+server on your local machine and forward it to the puavo-ticket development
+machine.
+
+First stop the Selenium service on the puavo-ticket machine
+
+    sudo stop selenium
+
+Then on the local machine fetch the Selenium server
+
+    wget http://selenium-release.storage.googleapis.com/2.43/selenium-server-standalone-2.43.1.jar
+
+Start it
+
+    java -jar selenium-server-standalone-*.jar
+
+And forward it to the puavo-ticket machine
+
+    ssh <puavo-ticket machine host> -R 4444:localhost:4444
+
+Now the `nightwatch` command run the browsers on your local machine.
+
 
 ## Debug browser Javascript
 

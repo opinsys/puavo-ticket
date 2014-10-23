@@ -119,12 +119,16 @@ test-browsers-watch: browserify-test
 test-server: jshint
 	mocha test/models/server/*_test.js test/api/*_test.js test/utils/*_test.js
 
+test-acceptance:
+	START_TEST_SERVER=1 PORT=2000 nightwatch
+
 .PHONY: test
 test:
 	NODE_ENV=test $(MAKE) migrate
 	$(MAKE) jshint
 	$(MAKE) test-server
 	$(MAKE) test-browsers
+	$(MAKE) test-acceptance
 
 
 

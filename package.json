@@ -48,6 +48,7 @@
     "moment": "~2.8.0",
     "multiline": "^1.0.0",
     "multiparty": "~3.3.0",
+    "nightwatch": "^0.5.31",
     "node-sass": "~0.9.3",
     "nodemailer": "~1.0.0",
     "nodemailer-smtp-transport": "~0.1.12",

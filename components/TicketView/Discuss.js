@@ -403,7 +403,8 @@ var Discuss = React.createClass({
                             }
 
                             var className = classSet({
-                                unread: update.isUnreadBy(app.currentUser)
+                                unread: update.isUnreadBy(app.currentUser),
+                                "Discuss-update-item": true
                             });
 
                             return (

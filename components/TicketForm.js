@@ -90,7 +90,7 @@ var TicketForm = React.createClass({
                         backupKey="newtickettitle"
                         ref="title"
 
-                        className="form-control"
+                        className="TicketForm-title form-control"
                         disabled={this.state.saving}
                         autoFocus
                         type="text"
@@ -102,7 +102,7 @@ var TicketForm = React.createClass({
                         backupKey="newticketdescription"
 
                         minRows={10}
-                        className="form-control"
+                        className="TicketForm-description form-control"
                         disabled={this.state.saving}
                         ref="description"
                         placeholder="Tarkka kuvaus tuen tarpeesta."
@@ -112,7 +112,7 @@ var TicketForm = React.createClass({
 
                     <div className="button-wrap">
                         <Button
-                            className="button save-button"
+                            className="TicketForm-save-ticket button save-button"
                             disabled={!this.isFormOk() || this.state.saving}
                             onClick={this.handleSave} >
                             Lähetä {this.state.saving && <Loading.Spinner />}

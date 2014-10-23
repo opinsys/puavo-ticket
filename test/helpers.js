@@ -9,7 +9,7 @@
  */
 
 // Ensure testing env
-process.env.NODE_ENV = "test";
+if (!process.env.NODE_ENV) process.env.NODE_ENV = "test";
 process.env.BLUEBIRD_DEBUG = "true";
 
 
@@ -23,7 +23,6 @@ var request = require("supertest");
 var jwt = require("jwt-simple");
 
 var db = require("app/db");
-var app = require("../server");
 
 var Ticket = require("../models/server/Ticket");
 var Comment = require("../models/server/Comment");
@@ -50,6 +49,9 @@ function loginAsUser(userData){
     userData.iat = Math.round(Date.now() / 1000);
     var jwtToken = jwt.encode(userData, "secret");
 
+    // The server module adds something that prevents nightwatch from exiting.
+    // Require it only when actually needed.
+    var app = require("../server");
     var agent = request.agent(app);
 
     agent.logout = function() {

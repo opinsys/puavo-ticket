@@ -5,6 +5,7 @@ var STARTED = Date.now();
 var VERSION = "loading";
 var HOSTNAME = require("os").hostname();
 require("moment/locale/fi");
+console.log("NODE_ENV is ", process.env.NODE_ENV);
 
 if (!PRODUCTION) {
     // Use environment variable to set the Bluebird long stack traces in order
@@ -315,42 +316,43 @@ if (require.main === module) {
         console.log('Listening on  http://%s:%d', addr.address, addr.port);
     });
 
-    if (!PRODUCTION) {
+    if (!PRODUCTION && !process.env.START_TEST_SERVER) {
         require("./devmode")(sio);
     }
-}
 
 
-if (debugMem.name === "enabled") {
-    var filesize = require("filesize");
-    var last = process.memoryUsage().rss;
-    setInterval(function() {
-        var current = process.memoryUsage().rss;
-        var change = current - last;
-        last = current;
+    if (debugMem.name === "enabled") {
+        var filesize = require("filesize");
+        var last = process.memoryUsage().rss;
+        setInterval(function() {
+            var current = process.memoryUsage().rss;
+            var change = current - last;
+            last = current;
 
-        if (Math.abs(change) < 1024) return;
-        debugMem(
-            "Memory usage %s change from last %s",
-            filesize(current), filesize(change)
-        );
-    }, 500);
-}
-
-exec("dpkg -s puavo-ticket", function(err, stdout) {
-    if (err) {
-        return console.error("Failed to read puavo-ticket deb package version");
+            if (Math.abs(change) < 1024) return;
+            debugMem(
+                "Memory usage %s change from last %s",
+                filesize(current), filesize(change)
+            );
+        }, 500);
     }
-    var re = /^Version: *(.+)/;
 
-    VERSION = stdout.split("\n").filter(function(line) {
-        return re.test(line);
-    }).map(function(line) {
-        return re.exec(line)[1];
-    })[0];
+    exec("dpkg -s puavo-ticket", function(err, stdout) {
+        if (err) {
+            return console.error("Failed to read puavo-ticket deb package version");
+        }
+        var re = /^Version: *(.+)/;
 
-    if (!PRODUCTION) return;
+        VERSION = stdout.split("\n").filter(function(line) {
+            return re.test(line);
+        }).map(function(line) {
+            return re.exec(line)[1];
+        })[0];
 
-    var shasum = crypto.createHash("sha1");
-    CACHE_KEY = shasum.update(VERSION).digest("hex");
-});
+        if (!PRODUCTION) return;
+
+        var shasum = crypto.createHash("sha1");
+        CACHE_KEY = shasum.update(VERSION).digest("hex");
+    });
+
+}

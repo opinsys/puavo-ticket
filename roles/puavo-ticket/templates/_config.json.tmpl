@@ -1,7 +1,7 @@
 {
     "port": 3002,
     "managerOrganisationDomain": "hogwarts.opinsys.net",
-    "publicURL": "http://{{ hostname_command["stdout"] }}:{{ puavo_ticket_port }}",
+    "domain": "{{ hostname_command["stdout"] }}",
     "sessionSecret": "secret",
     "emailJobSecret": "secret",
     "emailReplyDomain": "opinsys.net",
