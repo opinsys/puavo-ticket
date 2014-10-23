@@ -30,7 +30,6 @@ Cool new ticketing system with deep puavo integration.
 
 
 
-
 ## Roles
 
 The system has currently only to types of users. Managers (Opinsys staff in our
