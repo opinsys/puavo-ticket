@@ -1,0 +1,189 @@
+- name: Create en_US.UTF-8 locale
+  locale_gen: name=en_US.UTF-8 state=present
+
+- name: Set default locale
+  copy: src=locale dest=/etc/default/locale
+
+- name: Install ansible dependencies
+  command: apt-get install -y python-apt python-psycopg2
+
+- name: Add archive.opinsys.fi/git-master
+  apt_repository: repo='deb http://{{ archive_server }}/git-master precise main' state=present
+
+- name: Add archive.opinsys.fi/slapd-old for slapd
+  apt_repository: repo='deb http://{{ archive_server }}/slapd-old precise main' state=present
+
+- name: Add key for archive.opinsys.fi
+  apt_key: url=http://{{ archive_server }}/key state=present
+
+- name: Add apt.postgresql.org
+  apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' state=present
+
+- name: Add key for apt.postgresql.org
+  apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc state=present
+
+- name: install postgresql
+  apt: pkg=postgresql-9.3 state=present force=yes update_cache=yes
+
+- name: Install devtools
+  action: apt pkg={{item}} state=present force=yes
+  with_items:
+    - tmux
+    - git
+    - wget
+    - curl
+    - bash-completion
+    - inotify-tools
+    - vim-nox
+
+- name: Install browsers
+  action: apt pkg={{item}} state=present
+  with_items:
+    - firefox
+    - chromium-browser
+
+- name: Install xvfb for headless testing
+  apt: pkg=xvfb state=present
+
+- name: Install node.js
+  apt: pkg=nodejs-bundle state=present force=yes
+
+- name: Install build tools
+  apt: pkg=build-essential  state=present
+
+- name: Create databases
+  sudo_user: postgres
+  action: postgresql_db name={{item}}
+                        encoding='UTF-8'
+                        lc_collate='en_US.UTF-8'
+                        lc_ctype='en_US.UTF-8'
+  with_items:
+    - puavo-ticket
+    - puavo-ticket-test
+
+
+- name: Add Postgresql user
+  sudo_user: postgres
+  postgresql_user: name=puavo-ticket password=password role_attr_flags=LOGIN
+
+- name: Grant permissions to postgres user for puavo-ticket databases
+  sudo_user: postgres
+  action: postgresql_privs db={{item}}
+                           privs=ALL
+                           type=database
+                           roles=puavo-ticket
+  with_items:
+    - puavo-ticket
+    - puavo-ticket-test
+
+
+- name: Install Puavo dependencies
+  action: apt pkg={{item}} state=present force=yes
+  with_items:
+    - puavo-standalone
+    - ruby1.9.1
+    - ruby1.9.1-dev
+    - libxml2-dev
+    - libxslt-dev
+    - libsqlite3-dev
+    - libmagickwand-dev
+    - ldap-utils
+    - libpq-dev
+    - libssl-dev
+    - build-essential
+    - libopenssl-ruby
+    - xpdf-utils
+    - git
+    - libreadline6-dev
+    - libxml2-dev
+    - libxslt1-dev
+    - libpq-dev
+    - libmagickwand-dev
+    - libsqlite3-dev
+    - ruby-bundler
+    - puavo-client
+    - nodejs-bundle
+    - puavo-ca-rails
+    - redis-server
+    - aptirepo-upload
+    - puavo-devscripts
+
+- name: Initialize LDAP
+  command: puavo-init-standalone --unsafe-passwords opinsys.net creates=/etc/puavo
+
+- name: Create organisations for test and development
+  command: puavo-add-new-organisation --yes {{ item.organisation }} --username {{ item.username }} --password {{ item.password }} --given-name {{ item.givenname }} --surname {{ item.surname }}
+    creates={{ item.creates }}
+  notify: Seed LDAP database
+  with_items:
+    - { organisation: "hogwarts",
+        username: "albus",
+        password: "albus",
+        givenname: "Albus",
+        surname: "Dumbledore",
+        creates: "/var/lib/ldap/dc=edu,dc=hogwarts,dc=fi" }
+    - { organisation: "example",
+        username: "cucumber",
+        password: "cucumber",
+        givenname: "cucumber",
+        surname: "cucumber",
+        creates: "/var/lib/ldap/dc=edu,dc=example,dc=fi" }
+    - { organisation: "anotherorg",
+        username: "admin",
+        password: "admin",
+        givenname: "Admin",
+        surname: "Administrator",
+        creates: "/var/lib/ldap/dc=edu,dc=anotherorg,dc=fi" }
+    - { organisation: "heroes",
+        username: "admin",
+        password: "admin",
+        givenname: "Charles",
+        surname: "Xavier",
+        creates: "/var/lib/ldap/dc=edu,dc=heroes,dc=fi" }
+
+- name: Clone puavo-users repository
+  git: repo=https://github.com/opinsys/puavo-users.git
+    accept_hostkey=yes
+    dest={{ code_dest }}/puavo-users
+    force=no
+  sudo_user: "{{ dev_user }}"
+
+- name: puavo-web, Install Ruby gems, node modules and build assets.
+  command: make
+    chdir={{ code_dest }}/puavo-users
+    creates={{ code_dest }}/puavo-users/.bundle
+  sudo_user: "{{ dev_user }}"
+
+- name: puavo-web configuration
+  command: bundle exec rake puavo:configuration
+    chdir={{ code_dest }}/puavo-users
+  sudo_user: "{{ dev_user }}"
+
+- name: puavo-rest, Install Ruby gems etc.
+  command: make
+    chdir={{ code_dest }}/puavo-users/rest
+    creates={{ code_dest }}/puavo-users/rest/.bundle
+  sudo_user: "{{ dev_user }}"
+
+- name: Configuration for puavo-rest
+  copy: src=puavo-rest.yml dest=/etc/puavo-rest.yml
+
+- name: Get hostname
+  command: hostname -f
+  register: hostname_command
+
+- name: Configuration for puavo-ticket
+  template: src=_config.json.tmpl dest={{ code_dest }}/puavo-ticket/_config.json
+    owner={{ dev_user }}
+
+- name: Install nodejs modules, generate documentation and install git hooks
+  command: make
+    chdir={{ code_dest }}/puavo-ticket
+    creates={{ code_dest }}/puavo-ticket/node_modules
+  sudo_user: "{{ dev_user }}"
+
+- name: Runs puavo-ticket migrations
+  command: make migrate
+    chdir={{ code_dest }}/puavo-ticket
+  sudo_user: "{{ dev_user }}"
+
