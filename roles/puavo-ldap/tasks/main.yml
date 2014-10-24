@@ -25,6 +25,7 @@
 - name: Install latest puavo-standalone puavo-web and puavo-rest
   action: apt pkg={{item}} state=present force=yes
   with_items:
+    - puavo-devscripts
     - puavo-standalone
     - puavo-web
     - puavo-rest
