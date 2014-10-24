@@ -12,17 +12,13 @@
 
 - shell: locale
   register: result
-  environment:
-    LANG: "en_US.UTF-8"
-    LC_CTYPE: "en_US.UTF-8"
+  environment: postgresql_env
 
 - debug: var=result
 
 - name: install postgresql
   apt: pkg=postgresql-9.3 state=present force=yes update_cache=yes
-  environment:
-    LANG: "en_US.UTF-8"
-    LC_CTYPE: "en_US.UTF-8"
+  environment: postgresql_env
 
 - name: Install browsers
   action: apt pkg={{item}} state=present
@@ -45,9 +41,7 @@
   with_items:
     - puavo-ticket
     - puavo-ticket-test
-  environment:
-    LANG: "en_US.UTF-8"
-    LC_CTYPE: "en_US.UTF-8"
+  environment: postgresql_env
 
 - name: Add Postgresql user
   sudo_user: postgres
