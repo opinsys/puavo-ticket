@@ -70,7 +70,8 @@ function loginAsUser(userData){
     return new Promise(function(resolve, reject){
         agent.get("/?jwt=" + jwtToken).end(function(err, res) {
             if (err) return reject(err);
-            assert.equal(302, res.status, "should get redirect after login");
+            // should get redirect after login
+            assert.equal(302, res.status, res.text);
             assert.equal(
                 res.headers.location, "/",
                 "should have been redirected to front-page after login"
