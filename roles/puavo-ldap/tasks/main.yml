@@ -1,8 +1,5 @@
-- name: Create en_US.UTF-8 locale
-  locale_gen: name=en_US.UTF-8 state=present
-
-- name: Set default locale
-  copy: src=locale dest=/etc/default/locale
+- name: Install ansible dependencies
+  command: apt-get install -y python-apt python-psycopg2
 
 - name: Add archive.opinsys.fi/git-master
   apt_repository: repo='deb http://{{ archive_server }}/git-master precise main' state=present
@@ -68,6 +65,8 @@
 - name: Configuration for puavo-rest
   copy: src=puavo-rest.yml dest=/etc/puavo-rest.yml
   notify: Restart puavo-rest
+
+- file: dest=/etc/puavo-web
 
 - name: Add ldap configuration for puavo-web
   copy: src=puavo-web/ldap.yml dest=/etc/puavo-web/ldap.yml
