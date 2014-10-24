@@ -39,6 +39,7 @@
                         encoding=UTF-8
                         lc_collate={{ postgresql_locale }}
                         lc_ctype={{ postgresql_locale }}
+                        template=template0
   with_items:
     - puavo-ticket
     - puavo-ticket-test
