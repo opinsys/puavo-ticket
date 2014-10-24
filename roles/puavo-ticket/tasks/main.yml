@@ -1,8 +1,8 @@
-- name: Create en_US.UTF-8 locale
-  locale_gen: name=en_US.UTF-8 state=present
-
 - name: Set default locale
   copy: src=locale dest=/etc/default/locale
+
+- name: Create en_US.UTF-8 locale
+  locale_gen: name=en_US.UTF-8 state=present
 
 - name: Add apt.postgresql.org
   apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' state=present
