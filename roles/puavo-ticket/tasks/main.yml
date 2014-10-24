@@ -36,7 +36,7 @@
   sudo_user: postgres
   environment: postgresql_env
   action: postgresql_db name={{item}}
-                        encoding=UNICODE
+                        encoding=UTF-8
                         lc_collate={{ postgresql_locale }}
                         lc_ctype={{ postgresql_locale }}
   with_items:
