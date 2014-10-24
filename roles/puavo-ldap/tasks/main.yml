@@ -31,6 +31,9 @@
     - puavo-web
     - puavo-rest
 
+- name: Install redis for puavo-web & puavo-rest
+  apt: pkg=redis-server state=present
+
 - name: Initialize LDAP
   command: puavo-init-standalone --unsafe-passwords opinsys.net creates=/etc/puavo
 
