@@ -23,10 +23,11 @@
 - debug: var=result
 
 - name: Remove old postgresql versions
-  action: apt pkg={{item}} state=absent purge=yes force=yes
-  with_items:
-    - postgresql-9.1
-    - postgresql-client-9.1
+  shell: apt-get purge -y --force-yes postgresql-9.1 postgresql-client-9.1
+  # action: apt pkg={{item}} state=absent purge=yes force=yes
+  # with_items:
+  #   - postgresql-9.1
+  #   - postgresql-client-9.1
 
 - name: install postgresql
   apt: pkg=postgresql-9.3 state=present force=yes update_cache=yes
