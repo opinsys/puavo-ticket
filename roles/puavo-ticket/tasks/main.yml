@@ -16,6 +16,12 @@
 
 - debug: var=result
 
+- name: Remove old postgresql
+  apt: pkg=postgresql-9.2 state=absent
+
+- name: Remove old postgresql
+  apt: pkg=postgresql state=absent
+
 - name: install postgresql
   apt: pkg=postgresql-9.3 state=present force=yes update_cache=yes
   environment: postgresql_env
