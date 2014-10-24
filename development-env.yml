@@ -8,8 +8,8 @@
     archive_server: archive.opinsys.fi
     postgresql_locale: "en_US.UTF-8"
     postgresql_env:
-      LC_ALL: "{{ postgresql_env }}"
-      LC_LCTYPE: "{{ postgresql_env }}"
+      LC_ALL: "{{ postgresql_locale }}"
+      LC_LCTYPE: "{{ postgresql_locale }}"
 
   roles:
     - selenium
