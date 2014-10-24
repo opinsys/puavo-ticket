@@ -9,7 +9,7 @@
   notify: Restart Selenium
 
 - name: Add selenium user
-  user: name=selenium system=yes createhome=no uid=2345
+  user: name=selenium system=yes uid=2345
 
 - name: Install browsers
   action: apt pkg={{item}} state=present
