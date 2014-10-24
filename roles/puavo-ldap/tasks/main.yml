@@ -13,6 +13,7 @@
 - name: Install devtools
   action: apt pkg={{item}} state=present force=yes
   with_items:
+    - build-essential
     - tmux
     - git
     - wget
