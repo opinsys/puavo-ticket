@@ -72,6 +72,9 @@
   template: src=_config.json.tmpl dest={{ code_dest }}/puavo-ticket/_config.json
     owner={{ dev_user }}
 
+- name: Install postgresql headers for the node.js postgresql module
+  apt: pkg=libpq-dev state=present
+
 - name: Install nodejs modules, generate documentation and install git hooks
   command: make
     chdir={{ code_dest }}/puavo-ticket
