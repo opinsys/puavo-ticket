@@ -1,4 +1,0 @@
-- name: Seed LDAP database
-  shell: bundle exec rails runner db/seeds.rb
-    chdir={{ code_dest }}/puavo-users
-  sudo_user: "{{ dev_user }}"
