@@ -275,7 +275,7 @@ Start it
 
 And forward it to the puavo-ticket machine
 
-    ssh <puavo-ticket machine host> -R 4444:localhost:4444
+    ssh <puavo-ticket machine host> -R 4444:localhost:4444 -o "ExitOnForwardFailure yes" read
 
 Now the `nightwatch` command run the browsers on your local machine.
 
