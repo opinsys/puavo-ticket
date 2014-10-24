@@ -1,6 +1,9 @@
 - name: Install Java runtime for Selenium
   apt: pkg=default-jre state=present
 
+- name: Install xvfb for headless testing
+  apt: pkg=xvfb state=present
+
 - name: Download Selenium server
   get_url: url=http://selenium-release.storage.googleapis.com/2.43/selenium-server-standalone-2.43.1.jar dest=/usr/local/lib/selenium-server-standalone.jar
   notify: Restart Selenium
