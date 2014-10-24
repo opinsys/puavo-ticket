@@ -12,6 +12,9 @@
 
 - shell: locale
   register: result
+  environment:
+    LANG: "en_US.UTF-8"
+    LC_CTYPE: "en_US.UTF-8"
 
 - debug: var=result
 
