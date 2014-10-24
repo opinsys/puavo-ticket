@@ -11,6 +11,7 @@ export HOME=/home/ci
 
 sudo apt-get update
 sudo make install-ansible
+sudo apt-get install -y --force-yes aptirepo-upload puavo-devscripts
 
 sudo -E ansible-playbook development-env.yml --extra-vars dev_user=$USER --extra-vars code_dest=/cirun --extra-vars archive_server=new-archive.opinsys.fi
 
