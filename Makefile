@@ -161,20 +161,6 @@ install-git-hooks:
 	@echo Installed a git pre-commit hook to .git/hooks/pre-commit
 	@echo
 
-install-ansible:
-	apt-get install -y python-software-properties
-	apt-add-repository ppa:rquillo/ansible --yes
-	apt-get update
-	apt-get install -y --force-yes ansible
-
-dev-install:
-	# FIXME locale?
-	#sudo su -c "echo 'LANG=\"en_US.UTF-8\"' > /etc/default/locale"
-	#sudo locale-gen en_US.UTF-8
-	#sudo dpkg-reconfigure locales
-	ansible-playbook development-env.yml --extra-vars dev_user=$(USER) --extra-vars code_dest=$(HOME)
-
-puavo-start:
-	tmux -2 new-session -d -s puavo 'cd /home/opinsys/puavo-users; bundle exec rails s -p 3001'
-	tmux split-window -v -d 'cd /home/opinsys/puavo-users/rest; make serve-dev'
-	tmux -2 attach-session -t puavo
+install-build-dep:
+	mk-build-deps --install debian.default/control \
+		--tool "apt-get --yes --force-yes" --remove
