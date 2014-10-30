@@ -22,7 +22,13 @@ var config = {
     redis: {}
 };
 
-var productionConfig = require("./_config");
+var productionConfig = null;
+try {
+    productionConfig = require("./_config");
+} catch(err) {
+    if (err.code !== "MODULE_NOT_FOUND") throw err;
+    productionConfig = require("/etc/puavo-ticket/config");
+}
 
 if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "acceptance") {
     config.database.connection = {
