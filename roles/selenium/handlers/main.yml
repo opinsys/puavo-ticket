@@ -1,5 +1,0 @@
-- name: Restart Selenium
-  service: name=selenium state=restarted
-
-- name: Restart Xvbf
-  service: name=xvbf state=restarted

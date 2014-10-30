@@ -122,61 +122,26 @@ it. Ticket will get additional visibilities when:
 
 ## Installation for development
 
-You must use Ubuntu Precise.
+Apply Ansible rules from [puavo-standalone](https://github.com/opinsys/puavo-standalone).
 
-You must have node.js and build-essentials installed.
+Clone this repository and install build dependencies
 
-    git clone https://github.com/opinsys/puavo-ticket.git
-    cd puavo-ticket
+    sudo make install-build-dep
+
+Install node.js modules and build Javascript assets
+
     make
 
-Create `_config.json` with
+Run database migrations for testing database
 
-```json
-{
-    "puavo": {
-        "sharedSecret":"secret",
-        "authEndpoint": "https://rest.example.com/v3/sso",
-        "mountPoint": "https://ticket.example.com",
-        "user": "admin",
-        "pass": "xxxxx"
-    }
-}
-```
+    NODE_ENV=test make migrate
 
-where `xxxxx` is the sso secret of puavo and `puavo` is an authentication object
-for puavo api [requests](https://github.com/mikeal/request#http-authentication).
 
-Run database migrations
+Stop the puavo-standalone installed puavo-ticket server and start a development
+server
 
-    make migrate
-
-and start the server with
-
+    sudo stop puavo-ticket
     node server.js
-
-### or configure full development machine with Ansible
-
-..or install puavo-ticket with puavo-web and puavo-rest (ansible)
-
-```bash
-sudo apt-get install -y python-software-properties git
-sudo apt-add-repository ppa:rquillo/ansible --yes
-sudo apt-get update
-sudo apt-get install -y ansible
-
-
-git clone https://github.com/opinsys/puavo-ticket.git
-cd puavo-ticket
-sudo ansible-playbook development-env.yml --extra-vars dev_user=$USER --extra-vars code_dest=$HOME
-```
-
-or if you are really crazy try this
-
-```
-sh <(wget -qO - https://github.com/opinsys/puavo-ticket/raw/master/bootstrap.sh)
-```
-
 
 ## Development tools
 

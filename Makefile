@@ -164,3 +164,9 @@ install-git-hooks:
 install-build-dep:
 	mk-build-deps --install debian.default/control \
 		--tool "apt-get --yes --force-yes" --remove
+
+deb:
+	rm -rf debian
+	cp -a debian.default debian
+	puavo-dch 0.1.0
+	dpkg-buildpackage -us -uc

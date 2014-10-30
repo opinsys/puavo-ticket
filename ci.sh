@@ -10,10 +10,7 @@ env
 export HOME=/home/ci
 
 sudo apt-get update
-sudo make install-ansible
-sudo apt-get install -y --force-yes aptirepo-upload puavo-devscripts
-
-sudo -E ansible-playbook development-env.yml --extra-vars dev_user=$USER --extra-vars code_dest=/cirun --extra-vars archive_server=new-archive.opinsys.fi
+sudo apt-get install -y --force-yes aptirepo-upload puavo-devscripts wget
 
 export DISPLAY=:99
 
@@ -24,9 +21,9 @@ sudo npm set registry http://registry.npmjs.org/
 
 export NODE_ENV=test
 
+wget -qO - https://github.com/opinsys/puavo-standalone/raw/master/setup.sh | sudo sh
 
-puavo-build-debian-dir
-puavo-dch 0.1.0
-dpkg-buildpackage -us -uc
+sudo make install-build-dep
+make deb
 
 aptirepo-upload -r $APTIREPO_REMOTE -b "git-$(echo "$GIT_BRANCH" | cut -d / -f 2)" ../puavo-ticket*.changes
