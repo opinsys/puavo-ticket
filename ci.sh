@@ -6,6 +6,7 @@ export HOME=/home/ci ## fix home for now
 export DISPLAY=:99
 export NODE_ENV=test
 
+sudo apt-get update
 sudo apt-get install wget
 
 # Apply puavo-standalone Ansible rules
