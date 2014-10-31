@@ -72,6 +72,7 @@
     "underscore": "~1.6.0",
     "uuid": "^2.0.1",
     "watchify": "^1.0.5",
+    "wd": "^0.3.10",
     "xtend": "~3.0.0"
   },
   "devDependencies": {
