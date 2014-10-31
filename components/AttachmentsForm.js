@@ -108,8 +108,8 @@ var AttachmentsForm = React.createClass({
 
         return (
             <div className="AttachmentsForm" style={{ display: "block" }}>
-                <form ref="form" style={{ display: "none" }}>
-                    <input type="file" ref="file" multiple onChange={self.handleFileChange} />
+                <form ref="form" className="AttachmentsForm-form" style={{ display: "none" }}>
+                    <input className="AttachmentsForm-file-input" type="file" ref="file" multiple onChange={self.handleFileChange} />
                 </form>
 
 

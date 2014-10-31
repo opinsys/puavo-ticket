@@ -77,7 +77,7 @@ var FileItem = React.createClass({
         return (
             <span className="FileItem">
                 <i className={"fa " + this.getFAIcon()} />
-                {name}
+                <span className="FileItem-name">{name}</span>
                 <span className="size">({this.getHumanFilesize()})</span>
             </span>
         );
