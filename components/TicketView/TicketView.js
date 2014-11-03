@@ -67,13 +67,13 @@ var TicketView = React.createClass({
                 {canSeeActionTabs && <ul className="nav nav-tabs" role="tablist">
 
                     <li>
-                        <Link to="discuss" params={{ id: ticketId }}>
+                        <Link className="TicketView-tab-discuss" to="discuss" params={{ id: ticketId }}>
                             Keskustelu
                         </Link>
                     </li>
 
                     {user.acl.canEditHandlers() && <li>
-                        <Link to="handlers" params={{ id: ticketId }}>
+                        <Link className="TicketView-tab-handlers" to="handlers" params={{ id: ticketId }}>
                             Käsittelijät
                         </Link>
                     </li>}

@@ -254,7 +254,6 @@ app.get("/*", function(req, res) {
     var cacheKey = CACHE_KEY;
 
     if (req.debugMode) {
-        console.log("Using debugmode for", req.user.getDomainUsername());
         jsBundle = "/build/bundle.js";
         cssBundle = "/build/styles.css";
         cacheKey = Date.now();

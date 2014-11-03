@@ -48,9 +48,10 @@ var ToggleStatusButton = React.createClass({
     },
 
     render: function() {
+        var className = "ToggleStatusButton";
 
         if (this.state.saving) return (
-            <Button disabled >
+            <Button disabled className={className} >
                 <Spinner /> Tallennetaan...
             </Button>
         );
@@ -58,7 +59,7 @@ var ToggleStatusButton = React.createClass({
         if (this.getTicketStatus() === "open" || this.getTicketStatus() === "pending") return (
             <Button
                 bsStyle="primary"
-                className="close-ticket"
+                className={"close-ticket " + className}
                 onClick={this.handleChangeState} >
                 <i className="fa fa-check"></i>Aseta ratkaistuksi</Button>
         );
@@ -66,7 +67,7 @@ var ToggleStatusButton = React.createClass({
         return (
             <Button
                 bsStyle="primary"
-                className="reopen-ticket"
+                className={"reopen-ticket " + className}
                 onClick={this.handleChangeState} >
                 <i className="fa fa-refresh"></i>Avaa uudelleen</Button>
         );

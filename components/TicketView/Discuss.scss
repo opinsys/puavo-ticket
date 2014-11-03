@@ -38,12 +38,6 @@
     }
 
 
-    .ticket-status {
-        padding: 10px;
-        vertical-align: middle;
-        font-size: 20px;
-        margin-bottom: 8px;
-    }
 
     .ticket-title {
         padding: 10px;
@@ -55,19 +49,6 @@
     }
 
 
-    .ticket-closed {
-        background-color:  $closed-ticket-color;
-        p {
-            margin: 0 0 1em 0 ;
-        }
-    }
-    .ticket-open {
-        background-color: $open-ticket-color;
-    }
-
-    .ticket-pending {
-        background-color: $pending-ticket-color;
-    }
 
     .ticket-header {
         float: left;
@@ -91,3 +72,24 @@
     }
 }
 
+.Discuss-status {
+    padding: 10px;
+    vertical-align: middle;
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.Discuss-status-closed {
+    background-color:  $closed-ticket-color;
+    p {
+        margin: 0 0 1em 0 ;
+    }
+}
+
+.Discuss-status-open {
+    background-color: $open-ticket-color;
+}
+
+.Discuss-status-pending {
+    background-color: $pending-ticket-color;
+}

@@ -239,7 +239,7 @@ var SelectUsers = React.createClass({
                 <div className="search-input-wrap">
                     <input
                         type="search"
-                        className="form-control search-input"
+                        className="form-control SelectUsers-search-input"
                         ref="search"
                         placeholder="Aloita kirjoittamaan käsittelijän nimeä"
                         value={self.state.searchString}
@@ -248,7 +248,7 @@ var SelectUsers = React.createClass({
 
                 </div>
 
-                <div className="search-results">
+                <div className="SelectUsers-search-results">
                     <ul className="list-group" >
                         {self.state.searchedUsers.map(function(user) {
                             var disable = self.isSelected(user);

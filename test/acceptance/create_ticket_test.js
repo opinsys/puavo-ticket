@@ -1,26 +1,17 @@
 "use strict";
-process.env.NODE_ENV = "acceptance";
 
+var aHelpers = require("./helpers");
 var assert = require("assert");
-var wd = require("wd");
 
 var helpers = require("app/test/helpers");
-var config = require("app/config");
+var browser = aHelpers.browser;
 
-var browser = wd.promiseChainRemote();
-
-var url = "http://" + config.domain + ":" + config.port;
-
-process.on("exit", function() {
-    browser.quit();
-});
-
-describe("basic", function() {
+describe("Create ticket", function() {
 
     before(function() {
         return helpers.clearTestDatabase()
-        .then(function() {
-            return browser.init({ browserName: "firefox" });
+        .then(function initBrowser() {
+            return browser.init({ browserName: aHelpers.browserName });
         });
     });
 
@@ -29,12 +20,7 @@ describe("basic", function() {
     });
 
     it("can login", function() {
-        return browser.get(url)
-        .elementByCss("input[name=username]").type("bob@hogwarts.opinsys.net")
-        .elementByCss("input[name=password]").type("secret")
-        .elementByCss("input[type=submit]").click()
-        .waitForElementByCss(".Main")
-        ;
+        return aHelpers.login("bob@hogwarts.opinsys.net", "secret");
     });
 
     it("can navigate to ticket creation page", function() {

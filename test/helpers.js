@@ -24,6 +24,7 @@ var jwt = require("jwt-simple");
 
 var db = require("app/db");
 
+var app = require("../server");
 var Ticket = require("../models/server/Ticket");
 var Comment = require("../models/server/Comment");
 var User = require("../models/server/User");
@@ -49,9 +50,6 @@ function loginAsUser(userData){
     userData.iat = Math.round(Date.now() / 1000);
     var jwtToken = jwt.encode(userData, "secret");
 
-    // The server module adds something that prevents nightwatch from exiting.
-    // Require it only when actually needed.
-    var app = require("../server");
     var agent = request.agent(app);
 
     agent.logout = function() {
