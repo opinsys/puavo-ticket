@@ -11,7 +11,6 @@ Cool new ticketing system with deep puavo integration.
 - [Development Documentation](#user-content-development-documentation)
 	- [Project structure](#user-content-project-structure)
 	- [Installation for development](#user-content-installation-for-development)
-		- [or configure full development machine with Ansible](#user-content-or-configure-full-development-machine-with-ansible)
 	- [Development tools](#user-content-development-tools)
 		- [Editors](#user-content-editors)
 		- [Setup PATH](#user-content-setup-path)
