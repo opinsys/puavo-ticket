@@ -35,10 +35,7 @@ drop-db:
 	sudo -u postgres psql -c "drop database \"puavo-ticket-test\"";
 
 drop-tables:
-	sudo -u postgres psql -c "DROP TABLE IF EXISTS attachments,attachments,titles,comments,devices,followers,handlers,knex_migrations, \
-		\"notifications\",\"relatedUsers\",tags,tickets,users,visibilities,chunks CASCADE" puavo-ticket
-	sudo -u postgres psql -c "DROP TABLE IF EXISTS attachments,attachments,titles,comments,devices,followers,handlers,knex_migrations, \
-		\"notifications\",\"relatedUsers\",tags,tickets,users,visibilities,chunks CASCADE" puavo-ticket-test
+	node extra/dropAllTables.js
 
 rollback:
 	knex migrate:rollback

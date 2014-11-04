@@ -41,6 +41,23 @@ function deleteAndReset(tables) {
     });
 }
 
+
+db.tables = [
+    "views",
+    "chunks",
+    "emailArchive",
+    "attachments",
+    "comments",
+    "visibilities",
+    "followers",
+    "tags",
+    "handlers",
+    "notifications",
+    "titles",
+    "tickets",
+    "users"
+];
+
 /**
  * Ensure empty database
  *
@@ -52,19 +69,9 @@ db.emptyAllRows = function() {
     // the chunks table has no incrementing id column
     return Bookshelf.DB.knex("chunks").del()
     .then(function() {
-        return deleteAndReset([
-            "attachments",
-            "emailArchive",
-            "comments",
-            "visibilities",
-            "followers",
-            "tags",
-            "handlers",
-            "notifications",
-            "titles",
-            "tickets",
-            "users"
-        ]);
+        return deleteAndReset(db.tables.filter(function(t) {
+            return t !== "chunks";
+        }));
     });
 };
 
