@@ -121,14 +121,22 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
     _setInitialTicketState: function (ticket) {
         return ticket.load(["createdBy", "comments"])
         .then(function(ticket) {
-            var user = ticket.relations.createdBy;
-            return ticket.addHandler(user, user)
+            var creator = ticket.relations.createdBy;
+            return ticket.addHandler(creator, creator)
             .then(function() {
-                var organisation = user.getOrganisationDomain() || "unknown";
+                var organisation = creator.getOrganisationDomain() || "unknown";
+
+                var status = null;
+                if (creator.isManager()) {
+                    status = ticket.setStatus("open", creator);
+                } else {
+                    status = ticket.setStatus("pending", creator);
+                }
+
                 return Promise.join(
-                    ticket.setStatus("pending", user, { force: true }),
-                    ticket.addVisibility(user.getOrganisationAdminVisibility(), user),
-                    ticket.addTag("organisation:" + organisation, user)
+                    status,
+                    ticket.addVisibility(creator.getOrganisationAdminVisibility(), creator),
+                    ticket.addTag("organisation:" + organisation, creator)
                 );
             });
         });
@@ -296,7 +304,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @param {models.server.User} user Creator of the tag
      * @return {Bluebird.Promise} with models.server.Tag
      */
-    addTag: function(tagName, user, options) {
+    addTag: function(tagName, user) {
         if (Base.isModel(tagName))  tagName = tagName.get("tag");
 
         return Tag.fetchOrCreate({

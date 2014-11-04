@@ -18,12 +18,14 @@ describe("Ticket model", function() {
             .then(function() {
                 return Promise.all([
                     User.ensureUserFromJWTToken(helpers.user.teacher),
-                    User.ensureUserFromJWTToken(helpers.user.teacher2)
+                    User.ensureUserFromJWTToken(helpers.user.teacher2),
+                    User.ensureUserFromJWTToken(helpers.user.manager)
                 ]);
             })
-            .spread(function(user, otherUser) {
+            .spread(function(user, otherUser, manager) {
                 self.user = user;
                 self.otherUser = otherUser;
+                self.manager = manager;
             });
     });
 
@@ -194,6 +196,28 @@ describe("Ticket model", function() {
                 ticket.hasTag("organisation:unknown"),
                 "has organisation:unknown tag"
             );
+        });
+    });
+
+    it("status of a ticket created by normal user is pending", function() {
+        var self = this;
+        return Ticket.create("Ticket by normal user", "foo", self.user)
+        .then(function(ticket) {
+            return ticket.load("tags");
+        })
+        .then(function(ticket) {
+            assert.equal("pending", ticket.getCurrentStatus());
+        });
+    });
+
+    it("status of a ticket created by manager user is open", function() {
+        var self = this;
+        return Ticket.create("Ticket by normal user", "foo", self.manager)
+        .then(function(ticket) {
+            return ticket.load("tags");
+        })
+        .then(function(ticket) {
+            assert.equal("open", ticket.getCurrentStatus());
         });
     });
 
