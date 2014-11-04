@@ -375,27 +375,6 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
         }));
     },
 
-    /**
-     * Get ticket status using the updates relation. Ticket updates must be
-     * fetched with `this.updates().fetch() for this to work.
-     *
-     * @method getCurrentStatus
-     * @return {String}
-     */
-    getCurrentStatus: function() {
-
-        var statusTags = this.rel("tags").filter(function(tag) {
-            return tag.isStatusTag() && !tag.get("deletedAt");
-        });
-
-        if (statusTags.length === 0) {
-            return null;
-        }
-
-        return _.max(statusTags,  function(update) {
-            return update.createdAt().getTime();
-        }).getStatus();
-    },
 
     /**
      * @method getCurrentTitle
