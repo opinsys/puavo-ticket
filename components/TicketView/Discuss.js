@@ -322,7 +322,13 @@ var Discuss = React.createClass({
                 next.get("type") === "comments"
             );
 
-            if (bothComments && prev.wasCreatedInVicinityOf(next)) {
+            // Do not merge emailed comments
+            var bothWebSubmitted = (
+                prev.get("textType") !== "email" &&
+                next.get("textType") !== "email"
+            );
+
+            if (bothComments && bothWebSubmitted && prev.wasCreatedInVicinityOf(next)) {
                 a.push(prev.merge(next));
                 return a;
             }
