@@ -112,7 +112,7 @@ it. Ticket will get additional visibilities when:
   - [Mocha][] tests for the server-side models
 - `test/models/client/`
   - [Mocha][] tests for the client-side models
-- `test/nightwatch/`
+- `test/acceptance/`
   - Acceptance tests
 - `extra/`
   - Various helper script that are not scritly part of the application
@@ -205,21 +205,13 @@ Basics
 
 ### Acceptance tests
 
-The test are written using [Nightwatch.js](http://nightwatchjs.org/) which uses
-Selenium as under the hood. The Ansible rules will configure upstart scripts
-for Selenium and Xvbf X server for you.
+The test are written using the [wd](https://github.com/admc/wd) module and
+Selenium WebDriver. The Ansible rules will configure upstart scripts for
+Selenium and Xvbf X server for you.
 
 To run the tests type
 
-    node_modules/.bin/nightwatch
-
-If you need debugger use
-
-    node debug node_modules/.bin/nightwatch
-
-The tests them shelf are in `test/nightwatch/tests/`. Any file placed there
-will be automatically picked by Nightwatch as a test case.
-
+    make test-acceptance
 
 If you want to debug the tests in a local browser you must run the Selenium
 server on your local machine and forward it to the puavo-ticket development
@@ -240,8 +232,6 @@ Start it
 And forward it to the puavo-ticket machine
 
     ssh <puavo-ticket machine host> -R 4444:localhost:4444 -o "ExitOnForwardFailure yes" read
-
-Now the `nightwatch` command run the browsers on your local machine.
 
 
 ## Debug browser Javascript
