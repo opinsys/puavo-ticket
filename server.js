@@ -242,6 +242,7 @@ app.use(require("./resources/handlers"));
 app.use(require("./resources/tags"));
 app.use(require("./resources/notifications"));
 app.use(require("./resources/titles"));
+app.use(require("./resources/views"));
 
 if (!PRODUCTION) {
     app.use(require("./resources/views"));
