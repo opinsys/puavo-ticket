@@ -243,6 +243,10 @@ app.use(require("./resources/tags"));
 app.use(require("./resources/notifications"));
 app.use(require("./resources/titles"));
 
+if (!PRODUCTION) {
+    app.use(require("./resources/views"));
+}
+
 app.use("/api/puavo", require("./resources/puavo_api_proxy")(config));
 
 
