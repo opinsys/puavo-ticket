@@ -1,2 +1,3 @@
 --reporter spec
 --no-colors
+--timeout 15000
