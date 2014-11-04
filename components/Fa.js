@@ -42,9 +42,7 @@ var Fa = React.createClass({
 
         className += " fa-" + this.props.icon;
         className += " " + this.props.className;
-        return (
-            <i className={className.trim()} style={this.getStyles()}></i>
-        );
+        return this.transferPropsTo(<i className={className.trim()} style={this.getStyles()}></i>);
     }
 });
 

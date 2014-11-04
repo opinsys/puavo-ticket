@@ -2,7 +2,10 @@
 "use strict";
 var React = require("react/addons");
 var classSet = React.addons.classSet;
+var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
+var Tooltip = require("react-bootstrap/Tooltip");
 
+var Fa = require("app/components/Fa");
 var SpeechBubble = require("./SpeechBubble");
 var OnViewportMixin = require("../OnViewportMixin");
 var UpdateMixin = require("./UpdateMixin");
@@ -73,9 +76,18 @@ var CommentUpdate = React.createClass({
             <SpeechBubble user={createdBy}
                 className={classes}
                 id={hashId}
-                title={<a className="since" href={"#" + hashId } onClick={this.onHashChange}>
-                    <TimeAgo date={createdAt} />
-                </a>}>
+                title={<span>
+                    <a className="since" href={"#" + hashId } onClick={this.onHashChange}>
+                        <TimeAgo date={createdAt} />
+                    </a>
+
+                    {comment.get("textType") === "email" &&
+                        <OverlayTrigger placement="top" overlay={<Tooltip>Tämä lähetettiin sähköpostilla</Tooltip>}>
+                            <Fa icon="envelope" className="CommentUpdate-email-icon" />
+                        </OverlayTrigger>
+                    }
+
+                </span>}>
                 <ForcedLinebreaks className="comment" key={hashId} id={hashId} >
                     {commentString}
                 </ForcedLinebreaks>
