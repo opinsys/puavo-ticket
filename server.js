@@ -301,7 +301,7 @@ app.use(function(err, req, res, next) {
     }
 
     if (process.env.NODE_ENV !== "test") next(err);
-    res.status(500).send(err.stack);
+    res.status(500).send(err.message + "\n" + err.stack);
 });
 
 module.exports = app;
