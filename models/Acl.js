@@ -49,6 +49,8 @@ Acl.prototype = {
         return ticket.isHandler(this.user);
     },
 
+
+
     /**
      * Whether user can edit a given tag
      *
@@ -152,6 +154,23 @@ Acl.prototype = {
 
         // Other can only access their own organisation data
         return this.user.getOrganisationDomain() === organisationDomain;
+    },
+
+
+    /**
+     * @method canAddHiddenComments
+     * @return {Boolean}
+     */
+    canAddHiddenComments: function(){
+        return this.user.isManager();
+    },
+
+    /**
+     * @method canSeeHiddenComments
+     * @return {Boolean}
+     */
+    canSeeHiddenComments: function(){
+        return this.canAddHiddenComments();
     },
 
 };

@@ -251,6 +251,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @param {Boolean} [opts]
      * @param {Boolean} [opts.silent=false] Set to true to disable update notifications
      * @param {Boolean} [opts.textType=plain] Set custom textType
+     * @param {Boolean} [opts.hidden=false] Set comment as hidden
      * @return {Bluebird.Promise} with models.server.Comment
      */
     addComment: function(comment, user, opts) {
@@ -260,6 +261,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
                 ticketId: self.get("id"),
                 comment: comment,
                 createdById: Base.toId(user),
+                hidden: !!(opts && opts.hidden),
                 textType: (opts && opts.textType) || "plain"
             }).save(),
             self.addFollower(user, user)
@@ -723,9 +725,15 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
         return this.unreadComments(user, { byEmail: true }).fetch({
             withRelated: ["createdBy"]
         })
-        .then(function(coll) {
+        .then(function(collection) {
 
-            var lastComment = coll.max(function(comment) {
+            comments = collection.filter(function(comment) {
+                return !comment.get("hidden");
+            });
+
+            if (comments.length === 0) return;
+
+            var lastComment = _.max(comments, function(comment) {
                 return comment.createdAt();
             });
 
@@ -739,7 +747,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
                 return;
             }
 
-            var comments = coll.map(function(comment) {
+            var comments = comments.map(function(comment) {
                 return comment.toPlainText();
             }).join("\n----------------------------------------------\n");
 

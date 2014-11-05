@@ -7,6 +7,7 @@ var Promise = require("bluebird");
 var express = require("express");
 
 var Ticket = require("../models/server/Ticket");
+var Acl = require("../models/Acl");
 
 var app = express.Router();
 
@@ -19,19 +20,34 @@ var app = express.Router();
  * @apiParam {String} comment
  */
 app.post("/api/tickets/:id/comments", function(req, res, next) {
+
+    var hidden = !!req.body.hidden;
+    if (hidden && !req.user.acl.canAddHiddenComments()) {
+        return next(new Acl.PermissionDeniedError());
+    }
+
     Ticket.fetchByIdConstrained(req.user, req.params.id)
     .then(function(ticket) {
         return Promise.join(
-            ticket.addComment(req.body.comment, req.user),
+            ticket.addComment(req.body.comment, req.user, {
+                hidden: hidden
+            }),
             ticket
         );
     })
     .spread(function(comment, ticket) {
 
-        // Intentionally do this outside of the current Promise chain.
-        ticket.sendLiveNotifications(comment, req.sio)
-        .catch(console.error);
+        if (!hidden) {
+            return ticket.sendLiveNotifications(
+                comment,
+                req.sio
+            ).return(comment);
+        }
 
+        return comment;
+
+    })
+    .then(function(comment) {
         res.json(comment);
     })
     .catch(next);

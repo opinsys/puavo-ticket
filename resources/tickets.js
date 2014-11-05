@@ -65,6 +65,11 @@ app.get("/api/tickets/:id", function(req, res, next) {
     Ticket.fetchByIdConstrained(req.user, req.params.id, {
         withRelated: [
             "createdBy",
+            {comments: function(q) {
+                if (!req.user.acl.canSeeHiddenComments()) {
+                    q.where({ hidden: false });
+                }
+            }},
             "comments.createdBy",
             "comments.attachments",
             "tags",
@@ -75,7 +80,7 @@ app.get("/api/tickets/:id", function(req, res, next) {
             "followers.follower",
             "titles",
             "titles.createdBy",
-            { notifications: function(qb) {
+            {notifications: function(qb) {
                 qb.where({ targetId: req.user.get("id") });
             }}
         ],
