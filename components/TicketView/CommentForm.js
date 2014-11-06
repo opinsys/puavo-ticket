@@ -123,7 +123,10 @@ var CommentForm = React.createClass({
      */
     clear: function() {
         this.refs.textarea.clearBackup();
-        this.setState({ comment: "" });
+        this.setState({
+            comment: "",
+            hidden: false
+        });
     },
 
     /**
