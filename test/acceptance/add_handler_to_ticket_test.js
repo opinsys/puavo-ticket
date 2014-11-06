@@ -12,7 +12,7 @@ var browser = aHelpers.browser;
 var User = require("app/models/server/User");
 var Ticket = require("app/models/server/Ticket");
 
-describe("Create ticket", function() {
+describe("ticket handlers", function() {
 
     before(function() {
         return helpers.clearTestDatabase()
