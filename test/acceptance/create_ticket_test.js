@@ -20,7 +20,10 @@ describe("Create ticket", function() {
     });
 
     it("can login", function() {
-        return aHelpers.login("bob@hogwarts.opinsys.net", "secret");
+        return browser.get(aHelpers.url)
+        .then(function() {
+            return aHelpers.login("bob@hogwarts.opinsys.net", "secret");
+        });
     });
 
     it("can navigate to ticket creation page", function() {

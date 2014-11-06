@@ -11,6 +11,7 @@ var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
 var Tooltip = require("react-bootstrap/Tooltip");
 var Label = require("react-bootstrap/Label");
 
+var Fa = require("app/components/Fa");
 var User = require("app/models/client/User");
 var ElasticTextarea = require("app/components/ElasticTextarea");
 var BackupInput = require("app/components/BackupInput");
@@ -74,6 +75,7 @@ var CommentForm = React.createClass({
     getInitialState: function() {
         return {
             comment: "",
+            hidden: false,
             focus: false
         };
     },
@@ -148,6 +150,7 @@ var CommentForm = React.createClass({
 
         this.props.onSubmit({
             comment: this.state.comment,
+            hidden: this.state.hidden,
             clear: this.clear,
             scrollToCommentButton: this.scrollToCommentButton
         });
@@ -185,6 +188,10 @@ var CommentForm = React.createClass({
         scrollElBottom($el, 50);
     },
 
+    toggleHidden: function() {
+        this.setState({ hidden: !this.state.hidden });
+    },
+
     render: function() {
         var self = this;
         var user = this.props.user;
@@ -199,12 +206,29 @@ var CommentForm = React.createClass({
             selected: this.state.focus
         });
 
+        var hiddenToggleClasses = classSet({
+            "CommentForm-hidden-toggle": true,
+            active: this.state.hidden
+        });
+
+
         return (
             <SpeechBubble className={className} user={user} title={warning} >
 
-                <OverlayTrigger placement="left" overlay={<Tooltip>{tip.desc}</Tooltip>}>
-                    <Label bsStyle={tip.bsStyle} className="linemode-tooltip">{tip.title}</Label>
-                </OverlayTrigger>
+                <span className="CommentForm-tools-row">
+
+                    {user.acl.canAddHiddenComments() &&
+                        <OverlayTrigger placement="left"
+                            overlay={<Tooltip>Tee kommentista piilotettu kommentti jonka vain toiset ylläpitäjät näkevät</Tooltip>}>
+                            <button className={hiddenToggleClasses} onClick={self.toggleHidden}>
+                                <Fa icon="eye-slash" />
+                            </button>
+                        </OverlayTrigger>}
+
+                    <OverlayTrigger placement="left" overlay={<Tooltip>{tip.desc}</Tooltip>}>
+                        <Label bsStyle={tip.bsStyle} className="linemode-tooltip">{tip.title}</Label>
+                    </OverlayTrigger>
+                </span>
 
                 <BackupInput
                     input={ElasticTextarea}

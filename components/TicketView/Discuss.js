@@ -178,7 +178,7 @@ var Discuss = React.createClass({
         e.clear();
         self.setState({ saving: true });
 
-        self.props.ticket.addComment(e.comment)
+        self.props.ticket.addComment(e.comment, {hidden: e.hidden})
         .then(function(comment) {
             var files = self.refs.attachments.getFiles();
             if (files.length > 0) {

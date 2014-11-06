@@ -33,6 +33,9 @@ describe("Create ticket", function() {
             return browser.init({ browserName: aHelpers.browserName });
         })
         .then(function() {
+            return browser.get(aHelpers.url);
+        })
+        .then(function() {
             return aHelpers.login("bob@hogwarts.opinsys.net", "secret");
         });
     });

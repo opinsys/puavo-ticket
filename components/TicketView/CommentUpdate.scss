@@ -32,6 +32,10 @@
     a:hover {
         text-decoration: none;
     }
+
+    &.hidden-comment .bubble {
+        background-color: rgb(223, 223, 223);
+    }
 }
 
 .unread .CommentUpdate .message {
@@ -40,4 +44,16 @@
 
 .CommentUpdate-email-icon {
     margin-left: 5px;
+}
+
+
+.CommentUpdate-hidden-icon-wrap {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    .fa {
+        cursor: help;
+        font-size: 45pt;
+        color: $input-color;
+    }
 }

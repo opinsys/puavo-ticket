@@ -233,10 +233,15 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      *
      * @method addComment
      * @param {String} comment
+     * @param {Object} [options]
+     * @param {Object} [options.hidden=false] Create the comment as hidden comment
      * @return {Bluebird.Promise}
      */
-    addComment: function(comment){
-        var model = new Comment({ comment: comment }, { parent: this });
+    addComment: function(comment, options){
+        var model = new Comment({
+            comment: comment,
+            hidden: !!(options && options.hidden)
+        }, { parent: this });
         return model.save();
     },
 

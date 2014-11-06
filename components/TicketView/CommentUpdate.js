@@ -68,6 +68,7 @@ var CommentUpdate = React.createClass({
 
         var classes = classSet({
             CommentUpdate: true,
+            "hidden-comment": comment.get("hidden"),
             "ticket-update": true,
             selected: isSelectedByAddress
         });
@@ -84,10 +85,17 @@ var CommentUpdate = React.createClass({
                     {comment.get("textType") === "email" &&
                         <OverlayTrigger placement="top" overlay={<Tooltip>Tämä lähetettiin sähköpostilla</Tooltip>}>
                             <Fa icon="envelope" className="CommentUpdate-email-icon" />
-                        </OverlayTrigger>
-                    }
+                        </OverlayTrigger>}
 
                 </span>}>
+
+                {comment.get("hidden") &&
+                    <OverlayTrigger placement="left" overlay={<Tooltip>Tämä on piilotettu kommentti jonka vain ylläpitäjät näkevät</Tooltip>}>
+                        <span className="CommentUpdate-hidden-icon-wrap">
+                            <Fa icon="eye-slash" />
+                        </span>
+                    </OverlayTrigger>}
+
                 <ForcedLinebreaks className="comment" key={hashId} id={hashId} >
                     {commentString}
                 </ForcedLinebreaks>

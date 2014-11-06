@@ -14,12 +14,16 @@ var url = "http://" + config.domain + ":" + config.port;
 
 
 function login(username, password) {
-    return browser.get(url)
+    return browser
     .elementByCss("input[name=username]").type(username)
     .elementByCss("input[name=password]").type(password)
     .elementByCss("input[type=submit]").click()
     .waitForElementByCss(".Main")
     ;
+}
+
+function logout() {
+    return browser.get(url + "/logout");
 }
 
 before(function() {
@@ -36,5 +40,6 @@ module.exports = {
     url: url,
     browserName: "firefox",
     browser: browser,
-    login: login
+    login: login,
+    logout: logout
 };
