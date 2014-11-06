@@ -193,6 +193,7 @@ var CommentForm = React.createClass({
 
     toggleHidden: function() {
         this.setState({ hidden: !this.state.hidden });
+        this.refs.textarea.getDOMNode().focus();
     },
 
     render: function() {
