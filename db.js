@@ -43,7 +43,6 @@ function deleteAndReset(tables) {
 
 
 db.tables = [
-    "views",
     "chunks",
     "emailArchive",
     "attachments",
