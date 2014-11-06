@@ -88,7 +88,6 @@ var NotificationItem = React.createClass({
         return (
             <MenuItem header className="NotificationsHub-item">
                 <Link to="ticket"
-                      query={{scrollTo: "firstUnread" }}
                       params={{id: ticket.get("id")}}>{title}</Link>
             </MenuItem>
         );

@@ -186,8 +186,7 @@ var Main = React.createClass({
             <NotificationBox onDismiss={this.dismissNotificationBox} timeout={1000*10}>
                 <Link to="ticket"
                     onClick={this.dismissNotificationBox}
-                    params={{id: comment.get("ticketId") }}
-                    query={{scrollTo: "firstUnread" }}>
+                    params={{id: comment.get("ticketId") }}>
                     <b>{creator.getFullName()}</b> lisäsi kommentin <b>{commentString}</b> tukipyyntöön <b>{ticket.getCurrentTitle()}</b>
                 </Link>
             </NotificationBox>

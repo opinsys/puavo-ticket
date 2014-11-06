@@ -144,15 +144,6 @@ var Discuss = React.createClass({
      * @method scrollToAnchoredElement
      */
     scrollToAnchoredElement: function() {
-        var unread = this.props.ticket.firstUnreadUpdateFor(app.currentUser);
-
-        // Remove ?scrollTo=firstUnread query string and set
-        // window.location.hash
-        if (unread && this.props.query.scrollTo === "firstUnread") {
-            this.replaceWith(this.props.name, this.props.params);
-            window.location.hash = unread.getUniqueId();
-        }
-
         // Nothing selected
         if (!window.location.hash) return;
 
@@ -160,8 +151,9 @@ var Discuss = React.createClass({
         if (this.state.scrolled) return;
 
         var el = document.getElementById(window.location.hash.slice(1));
+
         // Element not rendered yet - or it just does not exists
-        if (!el) return;
+        if (!el)  return;
 
         el.scrollIntoView();
         this.setState({ scrolled: true });
