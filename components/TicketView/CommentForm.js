@@ -206,6 +206,7 @@ var CommentForm = React.createClass({
 
         var className = classSet({
             CommentForm: true,
+            "hidden-comment": this.state.hidden,
             selected: this.state.focus
         });
 

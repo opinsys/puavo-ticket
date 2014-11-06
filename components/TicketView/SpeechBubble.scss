@@ -50,6 +50,10 @@
         border-color: $highlight-color;
     }
 
+    &.hidden-comment .bubble {
+        background-color: $hidden-comment-color;
+    }
+
 }
 
 .SpeechBubble-name {
