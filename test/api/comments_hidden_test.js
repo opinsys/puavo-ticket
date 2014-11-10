@@ -147,4 +147,15 @@ describe("Hidden comments", function() {
         });
     });
 
+    it("does not emit any notifications", function() {
+        return helpers.loginAsUser(helpers.user.teacher)
+        .then(function(agent) {
+            return agent.get("/api/notifications").promise();
+        })
+        .then(function(res) {
+            assert.equal(200, res.status, res.text);
+            assert.equal(0, res.body.length);
+        });
+    });
+
 });

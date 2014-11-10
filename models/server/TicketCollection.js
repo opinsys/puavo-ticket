@@ -106,6 +106,7 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
                 })
                 .whereNull("followers.deletedAt")
                 .where({
+                    "comments.hidden": false, // hidden comment must not emit any notifications
                     "followers.deleted": 0,
                     "followers.followedById": Base.toId(user),
                     "notifications.targetId": Base.toId(user),
