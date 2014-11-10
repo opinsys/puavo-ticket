@@ -20,4 +20,34 @@ app.post("/api/views", function(req, res, next) {
 });
 
 
+app.get("/api/views", function(req, res, next) {
+
+    View.collection()
+    .query(function(q) {
+        q.where({ createdById: req.user.get("id") });
+    })
+    .fetch({
+        columns: ["name", "id"]
+    })
+    .then(function(coll) {
+        res.json(coll);
+    })
+    .catch(next);
+
+});
+
+app.get("/api/views/:id", function(req, res, next) {
+
+    View.forge({
+        createdById: req.user.get("id"),
+        id: req.params.id
+    })
+    .fetch({ require: true })
+    .then(function(view) {
+        res.json(view);
+    })
+    .catch(next);
+
+});
+
 module.exports = app;
