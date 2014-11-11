@@ -16,17 +16,20 @@ var _ = require("lodash");
  * @constructor
  * @param {Object} props.input The input component constructor
  * @param {String} props.backupKey Key used to uniquely identify the input instance
+ * @param {Function} props.onBackup Called with `{{target: {value: "input value"}}` when the value is restore from backup
  */
 var BackupInput = React.createClass({
 
     propTypes: {
         input: React.PropTypes.func.isRequired,
-        backupKey: React.PropTypes.string.isRequired
+        backupKey: React.PropTypes.string.isRequired,
+        onRestore: React.PropTypes.func,
     },
 
     getDefaultProps: function() {
         return {
-            onChange: function(){}
+            onChange: function(){},
+            onRestore: function(){}
         };
     },
 
@@ -34,7 +37,7 @@ var BackupInput = React.createClass({
         this.backupValue = _.throttle(this.backupValue, 200);
         var value = this._getBackupValue();
         if (value) {
-            this.props.onChange({target: {value: value}});
+            this.props.onRestore({ target: { value: value }});
         }
     },
 

@@ -95,6 +95,7 @@ var TicketForm = React.createClass({
                         autoFocus
                         type="text"
                         onChange={this.handleChange}
+                        onRestore={this.handleChange}
                         value={this.state.title}
                         placeholder="Tukipyyntöä kuvaava otsikko" />
                     <BackupInput
@@ -108,6 +109,7 @@ var TicketForm = React.createClass({
                         placeholder="Tarkka kuvaus tuen tarpeesta."
                         value={this.state.description}
                         onChange={this.handleChange}
+                        onRestore={this.handleChange}
                     />
 
                     <div className="button-wrap">

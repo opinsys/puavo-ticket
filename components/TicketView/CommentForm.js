@@ -244,6 +244,7 @@ var CommentForm = React.createClass({
                     className="form-control CommentForm-input"
                     value={this.state.comment}
                     onChange={this._handleCommentChange}
+                    onRestore={this._handleCommentChange}
                     minRows={1}
                     onKeyDown={this._handleKeyDown}
                     onFocus={function() {
