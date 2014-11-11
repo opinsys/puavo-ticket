@@ -26,9 +26,7 @@ app.get("/api/views", function(req, res, next) {
     .query(function(q) {
         q.where({ createdById: req.user.get("id") });
     })
-    .fetch({
-        columns: ["name", "id"]
-    })
+    .fetch()
     .then(function(coll) {
         res.json(coll);
     })

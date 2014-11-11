@@ -64,9 +64,9 @@ var User = require("app/models/client/User");
 var Main = require("./components/Main");
 var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
-var FrontPage = require("./components/FrontPage");
+var Views = require("./components/Views");
 var Solved = require("./components/Solved");
-var CustomList = require("./components/CustomList");
+var ViewEditor = require("./components/ViewEditor");
 var TagEditor = require("./components/TicketView/TagEditor");
 var HandlerEditor = require("./components/TicketView/HandlerEditor");
 var Discuss = require("./components/TicketView/Discuss");
@@ -81,9 +81,10 @@ React.renderComponent(
     <Routes location="history">
         <Route handler={Main} io={io} title={title} user={app.currentUser}>
             <Route name="new" handler={TicketForm} />
-            <Route name="tickets" path="/" handler={FrontPage} />
+            <Route name="tickets" path="/" handler={Views} />
+            <Route name="view" path="/views/:id" handler={Views} />
             <Route name="solved-tickets" path="/solved" handler={Solved} />
-            <Route name="custom-list" path="/custom" handler={CustomList} />
+            <Route name="custom-list" path="/custom" handler={ViewEditor} />
             <Redirect from="/tickets/:id" to="discuss" />
             <Route name="ticket" path="/tickets/:id" handler={TicketView} >
                 <Route name="tags" path="tags" handler={TagEditor} />

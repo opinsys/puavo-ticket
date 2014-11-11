@@ -3,29 +3,22 @@
 var React = require("react/addons");
 var Link = require("react-router").Link;
 
-var User = require("../models/client/User");
-
 var Profile = require("./Profile");
 var TimeAgo = require("./TimeAgo");
 
 
 /**
- * List of tickets under a title
+ * List of tickets
  *
  * @namespace components
  * @class TicketList
  * @constructor
  * @param {Object} props
- * @param {String} props.title Title for the list
- * @param {models.client.User} props.user The current user. Used to render
- * unread highlights
  * @param {Array} props.tickets Array of models.client.Ticket
  */
 var TicketList = React.createClass({
 
     propTypes: {
-        title: React.PropTypes.string.isRequired,
-        user: React.PropTypes.instanceOf(User).isRequired,
         tickets: React.PropTypes.array.isRequired,
     },
 
@@ -69,10 +62,6 @@ var TicketList = React.createClass({
 
         return (
             <div className="TicketList ticket-division col-md-12">
-                <div className="header">
-                    <h3>{this.props.title}</h3>
-                    <span className="numberOfTickets">({tickets.length})</span>
-                </div>
 
                 <div className="ticketlist">
                     <table ref="list" className="table table-striped table-responsive">
