@@ -5,6 +5,7 @@ var Link = require("react-router").Link;
 
 var app = require("app");
 var Ticket = require("app/models/client/Ticket");
+var Tabs = require("app/components/Tabs");
 var BackboneMixin = require("app/components/BackboneMixin");
 var captureError = require("../../utils/captureError");
 
@@ -64,7 +65,7 @@ var TicketView = React.createClass({
         return (
             <div className="TicketView">
 
-                {canSeeActionTabs && <ul className="nav nav-tabs" role="tablist">
+                {canSeeActionTabs && <Tabs>
 
                     <li>
                         <Link className="TicketView-tab-discuss" to="discuss" params={{ id: ticketId }}>
@@ -84,7 +85,7 @@ var TicketView = React.createClass({
                         </Link>
                     </li>}
 
-                </ul>}
+                </Tabs>}
 
                 {ticket.hasData() &&
                     <this.props.activeRouteHandler ticket={ticket} />}

@@ -1,0 +1,14 @@
+.Tabs {
+    margin-bottom: 1em;
+    li a {
+        padding: 2px 20px 2px 20px;
+        color: white;
+        background-color: $ticket-tab-color;
+        &:hover {
+            background-color: $ticket-tab-color;
+        }
+        &.active {
+            background-color: $ticket-active-tab-color;
+        }
+    }
+}
