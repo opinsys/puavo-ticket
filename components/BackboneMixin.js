@@ -8,11 +8,36 @@ function isBackboneEventEmitter(o) {
 var BackboneMixin = {
 
     /**
-     * Like React setState but assumes all values to be Backbone event
-     * emitters.
+     * Listen backbone models in attrs for replace events
      *
-     * Listens for `replace` events. The first event argument is assumed to be
-     * a replacement event emitter for the given key.
+     * @private
+     * @method _listenBackboneModels
+     * @param {Object}
+     */
+    _listenBackboneModels: function(attrs) {
+        var self = this;
+        Object.keys(attrs).forEach(function(stateKey) {
+            var newModel = attrs[stateKey];
+            if (!isBackboneEventEmitter(newModel)) return;
+
+            var currentModel = self.state[stateKey];
+
+            newModel.once("replace", function(op) {
+                Promise.resolve(op).then(function(replaceModel) {
+                    if (currentModel) currentModel.off();
+                    if (!self.isMounted()) return;
+                    var o = {};
+                    o[stateKey] = replaceModel;
+                    self.setBackbone(o);
+                }, self);
+            });
+        });
+    },
+
+    /**
+     * Like React setState but listens for `replace` events on Backbone event
+     * emitters. The first event argument is assumed to be a replacement event
+     * emitter for the given key.
      *
      * @method setBackbone
      * @param {Object} attrs
@@ -20,34 +45,14 @@ var BackboneMixin = {
      */
     setBackbone: function(attrs, cb) {
         var self = this;
-
-        Object.keys(attrs).forEach(function(stateKey) {
-            var newModel = attrs[stateKey];
-            if (!isBackboneEventEmitter(newModel)) return;
-
-
-            var currentModel = self.state[stateKey];
-            if (currentModel) currentModel.off();
-
-            newModel.once("replace", function(op) {
-                Promise.resolve(op).then(function(replaceModel) {
-                    if (!self.isMounted()) return;
-                    var o = {};
-                    o[stateKey] = replaceModel;
-                    self.setBackbone(o);
-                }, self);
-
-            });
-
-        });
-
+        this._listenBackboneModels(attrs);
         process.nextTick(function() {
             self.setState(attrs, cb);
         });
     },
 
     componentWillMount: function() {
-        if (this.state) this.setBackbone(this.state);
+        if (this.state) this._listenBackboneModels(this.state);
     },
 
     componentWillUnmount: function() {
