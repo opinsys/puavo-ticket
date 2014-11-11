@@ -167,7 +167,6 @@ var Discuss = React.createClass({
      */
     saveComment: function(e) {
         var self = this;
-        e.clear();
         self.setState({ saving: true });
 
         self.props.ticket.addComment(e.comment, {hidden: e.hidden})
@@ -181,6 +180,7 @@ var Discuss = React.createClass({
             }
         })
         .then(function() {
+            e.clear();
             self.setState({ uploadProgress: null });
             return self.fetchTicket();
         })
