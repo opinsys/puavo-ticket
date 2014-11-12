@@ -271,6 +271,10 @@ var Base = Backbone.Model.extend({
 
         _type: "collection",
 
+        url: function() {
+            return this.model.prototype.collectionURL;
+        },
+
         constructor: function() {
             Backbone.Collection.apply(this, arguments);
             [
