@@ -1,5 +1,6 @@
 /** @jsx React.DOM */
 "use strict";
+require("./polyfills");
 
 var Promise = require("bluebird");
 Promise.longStackTraces();
