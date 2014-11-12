@@ -2,13 +2,16 @@
 "use strict";
 var React = require("react/addons");
 var Link = require("react-router").Link;
+var Navigation = require("react-router").Navigation;
 
 var Ticket = require("app/models/client/Ticket");
 var View = require("app/models/client/View");
+var Button = require("react-bootstrap/Button");
+var ButtonGroup = require("react-bootstrap/ButtonGroup");
 
+var captureError = require("app/utils/captureError");
 var BackboneMixin = require("./BackboneMixin");
 var Tabs = require("app/components/Tabs");
-var Loading = require("app/components/Loading");
 var TicketList = require("./TicketList");
 
 /**
@@ -18,40 +21,60 @@ var TicketList = require("./TicketList");
  * @param {Object} props
  */
 var Views = React.createClass({
-    mixins: [BackboneMixin],
 
-    getInitialState: function() {
+    mixins: [BackboneMixin, Navigation],
+
+    getInitialState: function(foo) {
         return {
             tickets: Ticket.collection(),
-            currentView: this.generateDefaultView(),
-            views: View.collection([], { url: "/api/views" })
+            views: View.collection()
         };
     },
 
     componentDidMount: function() {
-        this.state.views.fetch();
+        var self = this;
+        console.log("Mounting");
+        this.fetchViews()
+        .then(function() {
+            return self.fetchTickets();
+        });
     },
+
 
     componentWillReceiveProps: function(nextProps) {
-        var view = null;
-
-        if (!nextProps.params.id && this.props.params) {
-            view = this.generateDefaultView();
-        } else if (this.props.params !== nextProps.params.id) {
-            view = this.getView(nextProps.params.id);
-        }
-
-        if (view) {
-            var tickets = Ticket.collection([], {
-                query: view.get("query")
-            });
-            this.setBackbone({ tickets: tickets });
-            this.setState({ currentView: view });
-            tickets.fetch();
+        console.log("componentWillReceiveProps");
+        if (this.props.params !== nextProps.params.id) {
+            process.nextTick(this.fetchTickets);
         }
     },
 
+    fetchTickets: function() {
+        if (!this.isMounted()) return;
+        var view = this.getCurrentView();
 
+        var tickets = Ticket.collection([], {
+            query: view.get("query")
+        });
+        this.setBackbone({
+            tickets: tickets
+        });
+
+        console.log("Fetching tickets");
+        return tickets.fetch()
+        .catch(captureError("Tukipyyntöjen haku epäonnistui"));
+    },
+
+    fetchViews: function() {
+        return this.state.views.fetch()
+        .then(function() {
+            console.log("views fetch ok");
+        })
+        .catch(captureError("Näkymien haku epäonnistui"));
+    },
+
+    getCurrentView: function() {
+        return this.getView(this.props.params.id) || this.generateDefaultView();
+    },
 
     getView: function(id) {
         return this.state.views.findWhere({ id: parseInt(id, 10) });
@@ -59,7 +82,7 @@ var Views = React.createClass({
 
     generateDefaultView: function() {
         return new View({
-            name: "Avoimet",
+            name: "Default",
             query: {
                 follower: this.props.user.get("id"),
                 tags: [
@@ -69,45 +92,67 @@ var Views = React.createClass({
         });
     },
 
+    deleteView: function() {
+        var view = this.getCurrentView();
+        var self = this;
+
+        return view.destroy()
+        .catch(captureError("Näkymän poisto epäonnistui"))
+        .then(function() {
+            return self.fetchViews();
+        })
+        .then(function() {
+            self.transitionTo("tickets");
+        });
+    },
+
     render: function() {
+        var self = this;
         var views = this.state.views;
         var tickets = this.state.tickets;
-        var view = this.state.currentView;
+        var view = this.getCurrentView();
 
         return (
             <div className="Views">
-                    <Tabs>
-                        <li>
-                            <Link to="tickets">
-                                Avoimet
+                <Tabs>
+                    <li>
+                        <Link to="tickets">
+                            Avoimet
+                        </Link>
+                    </li>
+
+                    {views.size() > 0 && views.map(function(view) {
+                        return <li>
+                            <Link to="view" params={{ id: view.get("id") }}>
+                                {view.get("name")}
                             </Link>
-                        </li>
-
-                        {views.size() > 0 && views.map(function(view) {
-                            return <li>
-                                <Link to="view" params={{ id: view.get("id") }}>
-                                    {view.get("name")}
-                                </Link>
-                            </li>;
-                        })}
+                        </li>;
+                    })}
 
 
-                        <li>
-                            <a>+</a>
-                        </li>
+                    <li>
+                        <Link to="view-editor" query={view.get("query")} >+</Link>
+                    </li>
 
 
-                    </Tabs>
+                </Tabs>
 
-                    <TicketList tickets={tickets.toArray()} />
+                <TicketList tickets={tickets.toArray()} />
 
-                    <Link to="custom-list" query={view.get("query")} >Muokkaa</Link>
+                {!view.isNew() &&
+                <ButtonGroup>
+                    <Link className="btn btn-default"
+                        to="view-editor"
+                        query={view.get("query")}
+                        params={{name: view.get("name")}} >Muokkaa</Link>
 
-                    {view && <pre>
-                        {JSON.stringify(view.get("query"))}
-                    </pre>}
+                    <Button bsStyle="danger" onClick={function(e) {
+                        e.preventDefault();
+                        if (window.confirm("Oikeasti?")) self.deleteView();
+                    }}>Poista</Button>
+                </ButtonGroup>}
 
-
+                <div className="clearfix"></div>
 
             </div>
         );

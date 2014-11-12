@@ -79,13 +79,13 @@ var title = new BrowserTitle({ trailingTitle: window.document.title });
 var appContainer = document.getElementById("app");
 
 React.renderComponent(
-    <Routes location="history">
+    <Routes location="history" scrollBehavior="none">
         <Route handler={Main} io={io} title={title} user={app.currentUser}>
             <Route name="new" handler={TicketForm} />
             <Route name="tickets" path="/" handler={Views} />
+            <Route name="view-editor" path="/views/edit/:name?" handler={ViewEditor} />
             <Route name="view" path="/views/:id" handler={Views} />
             <Route name="solved-tickets" path="/solved" handler={Solved} />
-            <Route name="custom-list" path="/custom" handler={ViewEditor} />
             <Redirect from="/tickets/:id" to="discuss" />
             <Route name="ticket" path="/tickets/:id" handler={TicketView} >
                 <Route name="tags" path="tags" handler={TagEditor} />

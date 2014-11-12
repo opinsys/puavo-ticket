@@ -1,8 +1,4 @@
 "use strict";
-var Promise = require("bluebird");
-var _ = require("lodash");
-var marked = require("marked");
-var fetch = require("app/utils/fetch");
 
 var Base = require("./Base");
 
@@ -16,6 +12,8 @@ var Base = require("./Base");
  * @uses models.client.UpdateMixin
  */
 var View = Base.extend({
+
+    collectionURL: "/api/views",
 
     url: function() {
         if (this.get("id")) {

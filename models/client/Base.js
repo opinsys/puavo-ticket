@@ -300,6 +300,7 @@ var Base = Backbone.Model.extend({
      * @return {models.client.Ticket.Collection}
      */
     collection: function(models, options, modelOptions) {
+
         var Klass = this.Collection.extend({ model: this });
         var self = this;
         models = (models || []).map(function(attrs) {

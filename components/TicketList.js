@@ -74,7 +74,7 @@ var TicketList = React.createClass({
                                 <th data-column-id="handlers">Käsittelijä(t)</th>
                             </tr>
 
-                            {this.props.tickets.map(function(ticket) {
+                            {tickets.map(function(ticket) {
                                 return self.renderTicketMetaInfo(ticket);
                             })}
                         </tbody>

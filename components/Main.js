@@ -218,7 +218,7 @@ var Main = React.createClass({
                             </Link>
 
                             <Link className="btn btn-default top-button" to="tickets">
-                                <i className="fa fa-home"></i>Omat tukipyynnöt
+                                <i className="fa fa-home"></i>Listaa
                             </Link>
                             <NotificationsHub title={this.props.title} className="top-button" >
                                 <NotificationsHub.TicketGroup title="Tukipyynnöt joissa on lukemattomia päivityksiä" tickets={unreadTickets}  />
