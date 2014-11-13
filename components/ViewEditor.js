@@ -36,6 +36,7 @@ var ViewEditor = React.createClass({
         return {
             saving: false,
             searching: false,
+            name: this.props.params.name,
             queryString: this.parseQueryString(),
         };
     },
@@ -115,8 +116,9 @@ var ViewEditor = React.createClass({
      * @param {String} name
      */
     setName: function(name) {
+        this.setState({ name: name });
         var params = Object.assign({}, this.props.params, { name: name });
-        this.replaceWith("view-editor", params, this.props.query);
+        this.replaceWithDebounced("view-editor", params, this.props.query);
     },
 
     render: function() {
@@ -134,7 +136,7 @@ var ViewEditor = React.createClass({
                         <Input
                             type="text"
                             label="Nimi"
-                            value={this.props.params.name}
+                            value={this.state.name}
                             onChange={function(e) {
                                 self.setName( e.target.value );
                             }}

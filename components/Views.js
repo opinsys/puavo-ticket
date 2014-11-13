@@ -3,11 +3,14 @@
 var React = require("react/addons");
 var Link = require("react-router").Link;
 var Navigation = require("react-router").Navigation;
+var url = require("url");
 
+var app = require("app");
 var Ticket = require("app/models/client/Ticket");
 var View = require("app/models/client/View");
 var Button = require("react-bootstrap/Button");
 var ButtonGroup = require("react-bootstrap/ButtonGroup");
+var Input = require("react-bootstrap/Input");
 
 var captureError = require("app/utils/captureError");
 var BackboneMixin = require("./BackboneMixin");
@@ -33,7 +36,6 @@ var Views = React.createClass({
 
     componentDidMount: function() {
         var self = this;
-        console.log("Mounting");
         this.fetchViews()
         .then(function() {
             return self.fetchTickets();
@@ -42,7 +44,6 @@ var Views = React.createClass({
 
 
     componentWillReceiveProps: function(nextProps) {
-        console.log("componentWillReceiveProps");
         if (this.props.params !== nextProps.params.id) {
             process.nextTick(this.fetchTickets);
         }
@@ -59,16 +60,12 @@ var Views = React.createClass({
             tickets: tickets
         });
 
-        console.log("Fetching tickets");
         return tickets.fetch()
         .catch(captureError("Tukipyyntöjen haku epäonnistui"));
     },
 
     fetchViews: function() {
         return this.state.views.fetch()
-        .then(function() {
-            console.log("views fetch ok");
-        })
         .catch(captureError("Näkymien haku epäonnistui"));
     },
 
@@ -103,6 +100,28 @@ var Views = React.createClass({
         })
         .then(function() {
             self.transitionTo("tickets");
+        });
+    },
+
+    displayShareWindow: function() {
+        var self = this;
+        var view = this.getCurrentView();
+        var u = url.parse(window.location.toString());
+        var editUrl = u.protocol + "//" + u.host + self.makePath("view-editor", {name: view.get("name")}, view.get("query"));
+
+        app.renderInModal("Jaa", function(close) {
+            return (
+                <div className="modal-body">
+                    <p>
+                        Näkymän asetukset ovat tallennettu tähän osoitteeseen.
+                        Lähetä se jakaaksesi näkymän.
+                    </p>
+                    <Input type="textarea"
+                        onChange={function(){/*supress react warning*/}}
+                        value={editUrl} />
+                    <Button onClick={close} >ok</Button>
+                </div>
+            );
         });
     },
 
@@ -146,10 +165,16 @@ var Views = React.createClass({
                         query={view.get("query")}
                         params={{name: view.get("name")}} >Muokkaa</Link>
 
+                    <Button onClick={function(e) {
+                        e.preventDefault();
+                        self.displayShareWindow();
+                    }}>Jaa</Button>
+
                     <Button bsStyle="danger" onClick={function(e) {
                         e.preventDefault();
                         if (window.confirm("Oikeasti?")) self.deleteView();
                     }}>Poista</Button>
+
                 </ButtonGroup>}
 
                 <div className="clearfix"></div>
