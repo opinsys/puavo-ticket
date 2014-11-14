@@ -69,19 +69,18 @@ var UserItem = React.createClass({
                         disabled={disabled}
                         onChange={this.handleOnChange}
                         ref="checkbox" />
-                        <Profile.Overlay user={user} tipPlacement="top">
-                            <span>
-                                <span className="name">
-                                    {user.get("externalData").first_name} {user.get("externalData").last_name}
-                                </span>
-                                <span className="badge" >{user.getOrganisationDomain()}</span>
-                            </span>
-                        </Profile.Overlay>
-                    </label>
+                    <span>
+                        <span className="name">
+                            {user.getAlphabeticName()}
+                        </span>
+                    </span>
+                </label>
 
-                    <Profile.Overlay user={user} clickForDetails tipPlacement="left">
-                        <a href="#" className="SelectUsers-details-link" >tiedot</a>
-                    </Profile.Overlay>
+                <span className="badge" >{user.getOrganisationDomain()}</span>
+
+                <Profile.Overlay user={user} clickForDetails tipPlacement="left">
+                    <a href="#" className="SelectUsers-details-link" >tiedot</a>
+                </Profile.Overlay>
 
             </div>
         );
@@ -157,8 +156,8 @@ var SelectUsers = React.createClass({
         .then(function(users) {
             users = _.flatten(users);
             users.sort(function(a, b) {
-                var aName = a.getFullName();
-                var bName = b.getFullName();
+                var aName = a.getAlphabeticName();
+                var bName = b.getAlphabeticName();
                 if (aName > bName) return 1;
                 if (aName < bName) return -1;
                 return 0;
