@@ -56,6 +56,14 @@ app.all("/:domain*", function(req, res, next) {
                 },
                 // XXX: How to use our cert auth?
                 strictSSL: false
+            }).on("response", function(response) {
+                // Do not forward basic auth request "WWW-Authenticate:Basic"
+                // headers because they cause a basic auth pop to be displayed
+                // in the browser
+                var authHeader = (response.headers["www-authenticate"] || "").toLowerCase();
+                if (authHeader.indexOf("basic") !== -1) {
+                    response.headers["www-authenticate"] =  "x-suppressed-basic";
+                }
             }),
             res
         ).catch(function(err) {

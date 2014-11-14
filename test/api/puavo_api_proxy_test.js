@@ -112,5 +112,23 @@ describe("puavo-rest api proxy", function() {
 
     });
 
+    it("filter basic auth requests", function() {
+         nock("https://test-api.opinsys.example")
+        .get("/v3/devices")
+        .matchHeader("Host", "testing.opinsys.fi")
+        .reply(401, [{ error: "permission denied" }], {
+            "WWW-Authenticate": "Basic"
+        });
+
+        return agent
+            .get("/api/puavo/testing.opinsys.fi/v3/devices")
+            .promise()
+            .then(function(res) {
+                assert.equal(401, res.status, res.text);
+                assert.equal("x-suppressed-basic", res.headers["www-authenticate"]);
+            });
+    });
+
+
 });
 
