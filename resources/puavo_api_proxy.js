@@ -18,10 +18,7 @@ var puavoURL = {
     }
 };
 
-
 /**
- *
- *
  * @api {get} /api/puavo/* Proxy GET requests to api.opinsys.fi
  * @apiName ApiProxy
  * @apiGroup puavo_api

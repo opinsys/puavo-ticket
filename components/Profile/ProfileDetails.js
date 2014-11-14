@@ -5,6 +5,9 @@ var React = require("react/addons");
 var Table = require("react-bootstrap/Table");
 
 var app = require("app");
+var BackboneMixin = require("app/components/BackboneMixin");
+var Fa = require("app/components/Fa");
+var captureError = require("app/utils/captureError");
 var User = require("app/models/client/User");
 var ProfileBadge = require("./ProfileBadge");
 
@@ -17,15 +20,37 @@ var ProfileBadge = require("./ProfileBadge");
  */
 var ProfileDetails = React.createClass({
 
+    mixins: [BackboneMixin],
+
     propTypes: {
         user: React.PropTypes.instanceOf(User).isRequired,
     },
 
+    getInitialState: function() {
+        return {
+            syncing: false,
+            user: this.props.user
+        };
+    },
+
+    componentDidMount: function() {
+        var self = this;
+        this.setState({ syncing: true });
+        this.state.user.sync()
+        .delay(2000)
+        .then(function(user) {
+            if (!self.isMounted()) return;
+            self.setState({ syncing: false });
+        })
+        .catch(captureError("Käyttäjän haku puavosta epäonnistui"));
+    },
+
     renderPuavoDetails: function() {
-        var user = this.props.user;
+        var user = this.state.user;
         if (!user.isPuavoUser()) {
             return <p className="no-puavo">Käyttäjä ei ole Puavo-käyttäjä.</p>;
         }
+        var schools = user.getSchools();
 
         return (
             <div>
@@ -50,7 +75,8 @@ var ProfileDetails = React.createClass({
                             <th>Koulut</th>
                             <td>
                                 <ul>
-                                    {user.getSchools().map(function(school) {
+                                    {schools.length === 0 && "(ACL:t on vielä rikki)"}
+                                    {schools.map(function(school) {
                                         var url = "https://" + user.getOrganisationDomain() + "/users/schools/" + school.id;
                                         return (
                                             <li key={url}>
@@ -68,14 +94,21 @@ var ProfileDetails = React.createClass({
     },
 
     render: function() {
-        var user = this.props.user;
+        var user = this.state.user;
+        var syncing = this.state.syncing;
 
         return (
             <div className="ProfileDetails">
                 <ProfileBadge user={user} size={150} padding={10} />
                 <h1>{user.getFullName()}</h1>
 
+
                 <h2>Yleiset tiedot</h2>
+
+                {syncing && <span>
+                    <Fa icon="spinner" spin /> Pävitetään tietoja
+                </span>}
+
                 <Table condensed hover>
                     <tbody>
                         <tr>

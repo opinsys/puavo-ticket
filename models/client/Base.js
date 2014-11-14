@@ -23,7 +23,7 @@ function createReplaceMixin(parentPrototype) {
         },
 
         /**
-         * Return empty clone of this model instance with same options
+         * Create new instance of the same model and options but with new data
          *
          * @method optionsClone
          * @return {models.server.Base}
@@ -33,6 +33,7 @@ function createReplaceMixin(parentPrototype) {
                 {}, this.options, { parent: this.parent }
             ));
         },
+
 
 
         /**

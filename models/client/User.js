@@ -23,6 +23,24 @@ var User = Base.extend({
     },
 
     /**
+     * Update user data from puavo-rest
+     *
+     * @method sync
+     * @return {Bluebird.Promise} with models.client.User
+     */
+    sync: function() {
+        var self = this;
+        return fetch.post("/api/users", {
+            username: this.getUsername(),
+            domain: this.getOrganisationDomain()
+        }).then(function(res) {
+            var m = self.optionsClone(res.data);
+            self.trigger("replace", m);
+            return m;
+        });
+    },
+
+    /**
      * Return true if the user is a manager
      *
      * @method isManager
