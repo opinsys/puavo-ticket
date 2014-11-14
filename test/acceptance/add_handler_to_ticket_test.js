@@ -82,14 +82,14 @@ describe("ticket handlers", function() {
         .elementByCss(".SelectUsers-search-input").type("alice")
         .waitForElementByCss(".SelectUsers-search-results .UserItem .name").text()
         .then(function(val) {
-            assert.equal("Alice Brown", val);
+            assert.equal("Brown, Alice", val);
         });
     });
 
     it("can add alice as a handler", function(){
         return browser
         .waitForElementByCss(".SelectUsers-search-results .UserItem .name").click()
-        .waitForElementByCss(".EditableList .Item", asserters.textInclude("Alice Brown"))
+        .waitForElementByCss(".EditableList .Item", asserters.textInclude("Brown, Alice"))
         ;
 
     });
