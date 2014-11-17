@@ -9,12 +9,12 @@ var Button = require("react-bootstrap/Button");
 var Navigation = require("react-router").Navigation;
 
 
+var app = require("app");
 var captureError = require("app/utils/captureError");
 var BackboneMixin = require("app/components/BackboneMixin");
 var Fa = require("app/components/Fa");
 var TicketList = require("./TicketList");
 var Ticket = require("app/models/client/Ticket");
-var User = require("app/models/client/User");
 var View = require("app/models/client/View");
 
 /**
@@ -27,10 +27,6 @@ var View = require("app/models/client/View");
 var ViewEditor = React.createClass({
 
     mixins: [BackboneMixin, Navigation],
-
-    propTypes: {
-        user: React.PropTypes.instanceOf(User).isRequired,
-    },
 
     getInitialState: function() {
         return {
@@ -82,7 +78,7 @@ var ViewEditor = React.createClass({
         view.save()
         .then(function(view) {
             self.setState({ saving: false });
-            self.transitionTo("view", { id: view.get("id") });
+            self.props.onNewView(view);
         })
         .catch(captureError("Näkymän tallennus epäonnistui"));
     },
@@ -123,7 +119,7 @@ var ViewEditor = React.createClass({
 
     render: function() {
         var self = this;
-        var user = this.props.user;
+        var user = app.currentUser;
         var tickets = this.state.tickets;
         var tagGroups = [].concat(this.props.query.tags).filter(Boolean);
         var saving = this.state.saving;

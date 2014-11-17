@@ -1,111 +1,107 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
-var Link = require("react-router").Link;
 var Navigation = require("react-router").Navigation;
-var url = require("url");
-
-var app = require("app");
-var Ticket = require("app/models/client/Ticket");
-var View = require("app/models/client/View");
+var Promise = require("bluebird");
+var Link = require("react-router").Link;
 var Button = require("react-bootstrap/Button");
 var ButtonGroup = require("react-bootstrap/ButtonGroup");
+var url = require("url");
 var Input = require("react-bootstrap/Input");
+var _ = require("lodash");
 
+var app = require("app");
+var View = require("app/models/client/View");
+var Ticket = require("app/models/client/Ticket");
 var captureError = require("app/utils/captureError");
 var BackboneMixin = require("./BackboneMixin");
-var Tabs = require("app/components/Tabs");
 var TicketList = require("./TicketList");
+var Loading = require("./Loading");
 
 /**
  * @namespace components
  * @class Views
  * @constructor
  * @param {Object} props
+ * @param {models.client.View} props.view
  */
 var Views = React.createClass({
+
+    propTypes: {
+        view: React.PropTypes.instanceOf(View).isRequired,
+        onViewDelete: React.PropTypes.func.isRequired,
+    },
 
     mixins: [BackboneMixin, Navigation],
 
     getInitialState: function(foo) {
         return {
+            fetching: false,
             tickets: Ticket.collection(),
-            views: View.collection()
         };
     },
 
     componentDidMount: function() {
-        var self = this;
-        this.fetchViews()
-        .then(function() {
-            return self.fetchTickets();
-        });
+        this.fetchTickets();
     },
 
 
     componentWillReceiveProps: function(nextProps) {
-        if (this.props.params !== nextProps.params.id) {
+        console.log("PROPS", this.props.view.get("name"), nextProps.view.get("name"));
+        if (!_.isEqual(this.props.view.get("query"),  nextProps.view.get("query"))) {
+            console.log("change view", nextProps.view.get("name"));
             process.nextTick(this.fetchTickets);
         }
     },
 
     fetchTickets: function() {
         if (!this.isMounted()) return;
-        var view = this.getCurrentView();
+        if (this.state.fetching && this.state.fetching.isPending()) {
+            this.state.fetching.cancel();
+        }
+
+        var view = this.props.view;
 
         var tickets = Ticket.collection([], {
             query: view.get("query")
         });
-        this.setBackbone({
-            tickets: tickets
+
+        var op = tickets.fetch().cancellable();
+
+        this.setState({
+            tickets: tickets,
+            fetching: op
         });
 
-        return tickets.fetch()
+        var self = this;
+        op.then(function(tickets) {
+            if (!self.isMounted()) return;
+            console.log("SEtting tickets", tickets);
+            self.setState({
+                tickets: tickets,
+                fetching: false
+            });
+        })
+        .catch(Promise.CancellationError, function(err) {
+            console.log("Canceled");
+        })
         .catch(captureError("Tukipyyntöjen haku epäonnistui"));
     },
 
-    fetchViews: function() {
-        return this.state.views.fetch()
-        .catch(captureError("Näkymien haku epäonnistui"));
-    },
-
-    getCurrentView: function() {
-        return this.getView(this.props.params.id) || this.generateDefaultView();
-    },
-
-    getView: function(id) {
-        return this.state.views.findWhere({ id: parseInt(id, 10) });
-    },
-
-    generateDefaultView: function() {
-        return new View({
-            name: "Default",
-            query: {
-                follower: this.props.user.get("id"),
-                tags: [
-                    "status:pending|status:open",
-                ]
-            }
-        });
-    },
-
     deleteView: function() {
-        var view = this.getCurrentView();
+        var view = this.props.view;
         var self = this;
 
         return view.destroy()
         .catch(captureError("Näkymän poisto epäonnistui"))
         .then(function() {
-            return self.fetchViews();
-        })
-        .then(function() {
-            self.transitionTo("tickets");
+            self.props.onViewDelete();
         });
     },
 
     displayShareWindow: function() {
         var self = this;
-        var view = this.getCurrentView();
+        var view = this.props.view;
         var u = url.parse(window.location.toString());
         var editUrl = u.protocol + "//" + u.host + self.makePath("view-editor", {name: view.get("name")}, view.get("query"));
 
@@ -127,77 +123,38 @@ var Views = React.createClass({
 
     render: function() {
         var self = this;
-        var views = this.state.views;
         var tickets = this.state.tickets;
-        var view = this.getCurrentView();
+        var fetching = this.state.fetching;
+        var view = this.props.view;
 
         return (
             <div className="Views">
-                <Tabs>
-                    <li>
-                        <Link to="tickets">
-                            Avoimet
-                        </Link>
-                    </li>
-
-                    {views.size() > 0 && views.map(function(view) {
-                        return <li>
-                            <Link to="view" params={{ id: view.get("id") }}>
-                                {view.get("name")}
-                            </Link>
-                        </li>;
-                    })}
-
-
-                    <li>
-                        <Link to="view-editor" query={view.get("query")} >+</Link>
-                    </li>
-
-
-                </Tabs>
+                <Loading visible={fetching} />
 
                 <TicketList tickets={tickets.toArray()} />
-
+                <div className="clearfix"></div>
                 {!view.isNew() &&
-                <ButtonGroup>
-                    <Link className="btn btn-default"
-                        to="view-editor"
-                        query={view.get("query")}
-                        params={{name: view.get("name")}} >Muokkaa</Link>
+                    <ButtonGroup>
+                        <Link className="btn btn-default"
+                            to="view-editor"
+                            query={view.get("query")}
+                            params={{name: view.get("name")}} >Muokkaa</Link>
 
-                    <Button onClick={function(e) {
-                        e.preventDefault();
-                        self.displayShareWindow();
-                    }}>Jaa</Button>
+                        <Button onClick={function(e) {
+                            e.preventDefault();
+                            self.displayShareWindow();
+                        }}>Jaa</Button>
 
-                    <Button bsStyle="danger" onClick={function(e) {
-                        e.preventDefault();
-                        if (window.confirm("Oikeasti?")) self.deleteView();
-                    }}>Poista</Button>
+                        <Button bsStyle="danger" onClick={function(e) {
+                            e.preventDefault();
+                            if (window.confirm("Oikeasti?")) self.deleteView();
+                        }}>Poista</Button>
 
                 </ButtonGroup>}
-
-                <div className="clearfix"></div>
-
             </div>
         );
-    }
+    },
+
 });
 
-/**
- * @namespace components
- * @class Views.ViewContent
- * @constructor
- * @param {Object} props
- */
-var ViewContent = React.createClass({
-    render: function() {
-        return (
-            <div className="ViewContent"></div>
-        );
-    }
-});
-
-
-Views.View = ViewContent;
 module.exports = Views;

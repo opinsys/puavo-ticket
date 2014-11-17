@@ -42,7 +42,7 @@ var NotificationsHub = React.createClass({
         this.props.title.setNotificationCount(count);
         this.props.title.activateOnNextTick();
         return this.transferPropsTo(
-            <DropdownButton pullRight className="NotificationsHub NotificationsHub-label" title={"Ilmoitukset " + count}>
+            <DropdownButton className="NotificationsHub NotificationsHub-label" title={"Ilmoitukset " + count}>
                 {items}
             </DropdownButton>
         );

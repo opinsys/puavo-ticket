@@ -66,6 +66,7 @@ var Main = require("./components/Main");
 var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
 var Views = require("./components/Views");
+var ViewTabs = require("./components/ViewTabs");
 var Solved = require("./components/Solved");
 var ViewEditor = require("./components/ViewEditor");
 var TagEditor = require("./components/TicketView/TagEditor");
@@ -82,9 +83,13 @@ React.renderComponent(
     <Routes location="history" scrollBehavior="none">
         <Route handler={Main} io={io} title={title} user={app.currentUser}>
             <Route name="new" handler={TicketForm} />
-            <Route name="tickets" path="/" handler={Views} />
-            <Route name="view-editor" path="/views/edit/:name?" handler={ViewEditor} />
-            <Route name="view" path="/views/:id" handler={Views} />
+            <Redirect name="tickets" from="/" to="view" params={{id: "open"}} />
+            <Route name="view-editor" path="/edit-view/:name?" handler={ViewTabs} >
+                <Route handler={ViewEditor} />
+            </Route>
+            <Route name="view" path="/views/:id" handler={ViewTabs} >
+                <Route handler={Views} />
+            </Route>
             <Route name="solved-tickets" path="/solved" handler={Solved} />
             <Redirect from="/tickets/:id" to="discuss" />
             <Route name="ticket" path="/tickets/:id" handler={TicketView} >
