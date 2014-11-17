@@ -166,6 +166,14 @@ Acl.prototype = {
     },
 
     /**
+     * @method canCreateCustomTabs
+     * @return {Boolean}
+     */
+    canCreateCustomTabs: function(){
+        return this.user.isManager();
+    },
+
+    /**
      * @method canSeeHiddenComments
      * @return {Boolean}
      */
