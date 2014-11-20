@@ -137,7 +137,7 @@ var ProfileDetails = React.createClass({
                     </tbody>
                 </Table>
 
-                {app.currentUser.isManager() && <div>
+                {app.currentUser.acl.canSeePuavoInfo() && <div>
                     <h2>Puavo tiedot</h2>
                     {this.renderPuavoDetails()}
                 </div>}

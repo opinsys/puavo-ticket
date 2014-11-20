@@ -181,6 +181,14 @@ Acl.prototype = {
         return this.canAddHiddenComments();
     },
 
+    /**
+     * @method canSeeUserPuavoInfo
+     * @return {Boolean}
+     */
+    canSeeUserPuavoInfo: function() {
+        return this.user.isManager();
+    },
+
 };
 
 /**
