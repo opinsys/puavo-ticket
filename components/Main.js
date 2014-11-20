@@ -95,6 +95,7 @@ var Main = React.createClass({
         Backbone.on("error", this.handleUnhandledError);
         this.props.io.on("followerUpdate", this.handleFollowerUpdate);
         app.renderInModal = this.renderInModal;
+        app.closeModal = this.closeModal;
     },
 
     componentWillUnmount: function() {

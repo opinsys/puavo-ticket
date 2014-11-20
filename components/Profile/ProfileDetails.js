@@ -3,6 +3,7 @@
 
 var React = require("react/addons");
 var Table = require("react-bootstrap/Table");
+var Link = require("react-router").Link;
 
 var app = require("app");
 var BackboneMixin = require("app/components/BackboneMixin");
@@ -43,6 +44,35 @@ var ProfileDetails = React.createClass({
             self.setState({ syncing: false });
         })
         .catch(captureError("Käyttäjän haku puavosta epäonnistui"));
+    },
+
+    renderTicketLinks: function() {
+        var user = this.state.user;
+
+        return (
+            <div>
+                <h2>Käyttäjän tukipyynnöt</h2>
+
+                {/* XXX: change follower query to handler */}
+                <ul>
+                    <li>
+                        <Link
+                            to="view-editor"
+                            onClick={app.closeModal}
+                            query={{follower: user.get("id"), tags: ["status:open|status:pending"]}}
+                            params={{name: "Käyttäjän " + user.getFullName() + " seuraamat avoimet tukipyynnöt"}} >Avoimet</Link>
+                    </li>
+                    <li>
+                        <Link
+                            onClick={app.closeModal}
+                            to="view-editor"
+                            query={{follower: user.get("id"), tags: ["status:closed"]}}
+                            params={{name: "Käyttäjän " + user.getFullName() + " seuraamat suljetut tukipyynnöt"}} >Suljetut</Link>
+                    </li>
+                </ul>
+
+            </div>
+        );
     },
 
     renderPuavoDetails: function() {
@@ -137,10 +167,12 @@ var ProfileDetails = React.createClass({
                     </tbody>
                 </Table>
 
-                {app.currentUser.acl.canSeePuavoInfo() && <div>
+                {app.currentUser.acl.canSeeUserPuavoInfo() && <div>
                     <h2>Puavo tiedot</h2>
                     {this.renderPuavoDetails()}
                 </div>}
+
+                {this.renderTicketLinks()}
 
             </div>
         );
