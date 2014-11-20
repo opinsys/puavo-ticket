@@ -47,6 +47,7 @@ var BackboneMixin = {
         var self = this;
         this._listenBackboneModels(attrs);
         process.nextTick(function() {
+            if (!self.isMounted()) return;
             self.setState(attrs, cb);
         });
     },
