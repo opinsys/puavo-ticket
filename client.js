@@ -9,9 +9,10 @@ var Backbone = require("backbone");
 Backbone.$ = $;
 var io = require("socket.io-client")();
 window.io = io;
-var Router = require("react-router");
 
+var User = require("app/models/client/User");
 var app = require("app");
+app.currentUser = new User(window.USER);
 
 io.on("connect", function(s) {
     console.log("Socket.IO connected");
@@ -58,51 +59,19 @@ var React = require("react/addons");
 window.React = React;
 
 
-
-var User = require("app/models/client/User");
-var Main = require("./components/Main");
-var TicketForm = require("./components/TicketForm");
-var TicketView = require("./components/TicketView");
-var Views = require("./components/Views");
-var ViewTabs = require("./components/ViewTabs");
-var Solved = require("./components/Solved");
-var ViewEditor = require("./components/ViewEditor");
-var TagEditor = require("./components/TicketView/TagEditor");
-var HandlerEditor = require("./components/TicketView/HandlerEditor");
-var Discuss = require("./components/TicketView/Discuss");
 var ErrorMessage = require("./components/ErrorMessage");
 var BrowserTitle = require("./utils/BrowserTitle");
 
-app.currentUser = new User(window.USER);
 app.title = new BrowserTitle({ trailingTitle: window.document.title });
 app.io = io;
 
 var appContainer = document.getElementById("app");
 
-var Route = Router.Route;
-var Redirect = Router.Redirect;
-var routes = (
-    <Route handler={Main} >
-        <Route name="new" handler={TicketForm} />
-        <Redirect name="tickets" from="/" to="view" params={{id: "open"}} />
-        <Route name="view-editor" path="/edit-view/:name?" handler={ViewTabs} >
-            <Route handler={ViewEditor} />
-        </Route>
-        <Route name="view" path="/views/:id" handler={ViewTabs} >
-            <Route handler={Views} />
-        </Route>
-        <Route name="solved-tickets" path="/solved" handler={Solved} />
-        <Redirect from="/tickets/:id" to="discuss" />
-        <Route name="ticket" path="/tickets/:id" handler={TicketView} >
-            <Route name="tags" path="tags" handler={TagEditor} />
-            <Route name="handlers" path="handlers" handler={HandlerEditor} />
-            <Route name="discuss" handler={Discuss} />
-        </Route>
-    </Route>
-);
 
+var router = require("./router");
+app.router = router;
 
-Router.run(routes, Router.HistoryLocation, function(Handler, state) {
+router.run(function(Handler, state) {
     React.render(<Handler params={state.params} query={state.query} />, appContainer);
 });
 

@@ -17,6 +17,7 @@ var captureError = require("app/utils/captureError");
 var BackboneMixin = require("./BackboneMixin");
 var TicketList = require("./TicketList");
 var Loading = require("./Loading");
+var ViewActions = require("app/actions").ViewActions;
 
 /**
  * @namespace components
@@ -29,7 +30,6 @@ var Views = React.createClass({
 
     propTypes: {
         view: React.PropTypes.instanceOf(View).isRequired,
-        onViewDelete: React.PropTypes.func.isRequired,
     },
 
     mixins: [BackboneMixin, Navigation],
@@ -85,15 +85,9 @@ var Views = React.createClass({
         .catch(captureError("Tukipyyntöjen haku epäonnistui"));
     },
 
-    deleteView: function() {
-        var view = this.props.view;
-        var self = this;
-
-        return view.destroy()
-        .catch(captureError("Näkymän poisto epäonnistui"))
-        .then(function() {
-            self.props.onViewDelete();
-        });
+    destroyView: function() {
+        ViewActions.destroyView(this.props.view);
+        app.router.transitionTo("view", {id: "open"});
     },
 
     displayShareWindow: function() {
@@ -144,7 +138,7 @@ var Views = React.createClass({
 
                         <Button bsStyle="danger" onClick={function(e) {
                             e.preventDefault();
-                            if (window.confirm("Oikeasti?")) self.deleteView();
+                            if (window.confirm("Oikeasti?")) self.destroyView();
                         }}>Poista</Button>
 
                 </ButtonGroup>}

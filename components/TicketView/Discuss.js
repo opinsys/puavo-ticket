@@ -49,10 +49,6 @@ var Discuss = React.createClass({
 
     propTypes: {
         ticket: React.PropTypes.instanceOf(Ticket).isRequired,
-        io: React.PropTypes.shape({
-            on: React.PropTypes.func.isRequired,
-            off: React.PropTypes.func.isRequired
-        }).isRequired
     },
 
     getInitialState: function() {

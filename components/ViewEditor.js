@@ -6,16 +6,15 @@ var qs = require("querystring");
 var Badge = require("react-bootstrap/Badge");
 var Input = require("react-bootstrap/Input");
 var Button = require("react-bootstrap/Button");
-var Navigation = require("react-router").Navigation;
+var Router = require("react-router");
 
 
+var ViewActions = require("app/actions").ViewActions;
 var app = require("app");
-var captureError = require("app/utils/captureError");
-var BackboneMixin = require("app/components/BackboneMixin");
 var Fa = require("app/components/Fa");
 var TicketList = require("./TicketList");
 var Ticket = require("app/models/client/Ticket");
-var View = require("app/models/client/View");
+var BackboneMixin = require("app/components/BackboneMixin");
 
 /**
  *
@@ -26,12 +25,11 @@ var View = require("app/models/client/View");
  */
 var ViewEditor = React.createClass({
 
-    mixins: [BackboneMixin, Navigation],
+    mixins: [Router.Navigation, BackboneMixin],
 
     getInitialState: function() {
         return {
             saving: false,
-            searching: false,
             name: this.props.params.name,
             queryString: this.parseQueryString(),
         };
@@ -68,19 +66,13 @@ var ViewEditor = React.createClass({
 
     saveView: function() {
         if (!this.isViewOk()) return;
-        var self = this;
-        self.setState({ saving: true });
-        var view = new View({
+        this.setState({ saving: true });
+        ViewActions.addView({
             name: this.props.params.name,
             query: this.props.query
+        }, function(view) {
+            app.router.transitionTo("view", {id: view.get("id")});
         });
-
-        view.save()
-        .then(function(view) {
-            self.setState({ saving: false });
-            self.props.onNewView(view);
-        })
-        .catch(captureError("Näkymän tallennus epäonnistui"));
     },
 
     isViewOk: function() {
