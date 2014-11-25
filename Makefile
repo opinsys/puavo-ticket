@@ -59,14 +59,14 @@ doc-js:
 	rm -f test/components/bundle.js test/bundle.js
 	yuidoc \
 		--themedir yuidoc-theme \
-		--exclude test/vendor,node_modules,doc,resources \
+		--exclude test/vendor,node_modules,doc,resources,build,migrations \
 		--outdir doc/ .
 
 doc-rest:
 	mkdir -p doc/rest
 	apidoc -i resources/ -o doc/rest
 
-doc: doc-js doc-rest
+doc: doc-js
 
 doc-watch:
 	watch make doc
