@@ -78,7 +78,7 @@ var EditableText = React.createClass({
                 <OverlayTrigger
                     placement="top"
                     overlay={<Tooltip>Muokkaa otsikkoa</Tooltip>}>
-                        <button className="start-edit" onClick={this.startEditing} >
+                        <button className="EditableText-start-button" onClick={this.startEditing} >
                             <Glyphicon glyph="edit" />
                         </button>
                 </OverlayTrigger>}
@@ -90,12 +90,12 @@ var EditableText = React.createClass({
         return (
             <div className={this.getClassName()}>
                 <input
-                    className="form-control"
+                    className="form-control EditableText-input"
                     type="text"
                     value={this.state.value}
                     onChange={this.onInputChange}
                     onKeyDown={this.handleKeyDown} />
-                <Button onClick={this.submit}>Tallenna</Button>
+                <Button className="EditableText-save-button" onClick={this.submit}>Tallenna</Button>
                 <Button bsStyle="danger" onClick={this.cancel}>Peruuta</Button>
             </div>
         );

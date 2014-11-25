@@ -57,7 +57,7 @@ describe("ticket handlers", function() {
         return browser
         .elementByCss(".NotificationsHub-label").click()
         .elementByCss(".NotificationsHub-item a").click()
-        .waitForElementByCss(".Discuss .ticket-title").text()
+        .waitForElementByCss(".Discuss-title").text()
         .then(function(val) {
             assert.equal("Capture Joker", val);
         });

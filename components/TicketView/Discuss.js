@@ -384,7 +384,7 @@ var Discuss = React.createClass({
                                 <h3>
                                     {this.renderBadge()}
 
-                                    <span className="ticket-title">
+                                    <span className="Discuss-title">
                                         {title || <Redacted>Ladataan otsikkoa</Redacted>}
                                     </span>
                                     {this.state.changingTitle && <Loading.Spinner />}
