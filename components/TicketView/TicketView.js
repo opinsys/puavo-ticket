@@ -1,7 +1,9 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
-var Link = require("react-router").Link;
+var Router = require("react-router");
+var Link = Router.Link;
+var RouteHandler = Router.RouteHandler;
 
 var app = require("app");
 var Ticket = require("app/models/client/Ticket");
@@ -16,8 +18,6 @@ var captureError = require("../../utils/captureError");
  * @class TicketView
  * @constructor
  * @param {Object} props
- * @param {Socket.IO} props.io Socket.IO socket
- * @param {BrowserTitle} props.title BrowserTitle instance
  */
 var TicketView = React.createClass({
 
@@ -35,7 +35,6 @@ var TicketView = React.createClass({
 
     componentWillReceiveProps: function(nextProps) {
         if (this.props.params.id !== nextProps.params.id) {
-            console.log("TicketView ticket fetch from componentWillReceiveProps");
             this.setBackbone(this.createInitialState(nextProps), this.fetchTicket);
             return;
         }
@@ -57,6 +56,7 @@ var TicketView = React.createClass({
 
 
     render: function() {
+        var self = this;
         var ticketId = this.props.params.id;
         var user = app.currentUser;
         var ticket = this.state.ticket;
@@ -88,7 +88,7 @@ var TicketView = React.createClass({
                 </Tabs>}
 
                 {ticket.hasData() &&
-                    <this.props.activeRouteHandler ticket={ticket} />}
+                    <RouteHandler ticket={ticket} params={self.props.params} query={self.props.query} />}
             </div>
         );
     },

@@ -147,7 +147,6 @@ var CommentForm = React.createClass({
      */
     _submit: function() {
         if (!this.hasComment()) {
-            console.log("No comment, no submit");
             return;
         }
 

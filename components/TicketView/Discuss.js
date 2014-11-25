@@ -6,6 +6,7 @@ var classSet = React.addons.classSet;
 var _ = require("lodash");
 var debug = require("debug")("app:read");
 var Navigation = require("react-router").Navigation;
+var RouteHandler = require("react-router").RouteHandler;
 
 var Badge = require("react-bootstrap/Badge");
 var Alert = require("react-bootstrap/Alert");
@@ -19,7 +20,6 @@ var Ticket = require("../../models/client/Ticket");
 var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
 var EditableText = require("../EditableText");
-var BrowserTitle = require("app/utils/BrowserTitle");
 var UploadProgress = require("app/components/UploadProgress");
 
 var ToggleStatusButton = require("./ToggleStatusButton");
@@ -42,15 +42,12 @@ var UPDATE_COMPONENTS = {
  * @class Discuss
  * @constructor
  * @param {Object} props
- * @param {Socket.IO} props.io Socket.IO socket
- * @param {BrowserTitle} props.title BrowserTitle instance
  */
 var Discuss = React.createClass({
 
     mixins: [Navigation],
 
     propTypes: {
-        title: React.PropTypes.instanceOf(BrowserTitle).isRequired,
         ticket: React.PropTypes.instanceOf(Ticket).isRequired,
         io: React.PropTypes.shape({
             on: React.PropTypes.func.isRequired,
@@ -87,7 +84,7 @@ var Discuss = React.createClass({
      * @method startWatching
      */
     startWatching: function() {
-        this.props.io.emit("startWatching", {
+        app.io.emit("startWatching", {
             ticketId: this.props.ticket.get("id")
         });
     },
@@ -107,10 +104,10 @@ var Discuss = React.createClass({
 
     componentDidMount: function() {
         window.scrollTo(0, 0);
-        this.props.io.on("watcherUpdate", this._handleWatcherUpdate);
+        app.io.on("watcherUpdate", this._handleWatcherUpdate);
         this.startWatching();
 
-        this.props.io.on("connect", this._handleSocketConnect);
+        app.io.on("connect", this._handleSocketConnect);
 
         /**
          * Lazy version of the `markAsRead()` method. It will mark the ticket
@@ -122,13 +119,13 @@ var Discuss = React.createClass({
     },
 
     componentWillUnmount: function() {
-        this.props.io.emit("stopWatching", {
+        app.io.emit("stopWatching", {
             ticketId: this.props.ticket.get("id")
         });
-        this.props.io.off("watcherUpdate", this._handleWatcherUpdate);
-        this.props.io.off("connect", this._handleSocketConnect);
-        this.props.title.setTitle("");
-        this.props.title.activateOnNextTick();
+        app.io.off("watcherUpdate", this._handleWatcherUpdate);
+        app.io.off("connect", this._handleSocketConnect);
+        app.title.setTitle("");
+        app.title.activateOnNextTick();
     },
 
     componentDidUpdate: function() {
@@ -359,8 +356,8 @@ var Discuss = React.createClass({
         }
 
 
-        this.props.title.setTitle(title);
-        this.props.title.activateOnNextTick();
+        app.title.setTitle(title);
+        app.title.activateOnNextTick();
 
         return (
             <div className="row Discuss">
@@ -374,7 +371,7 @@ var Discuss = React.createClass({
                             {user.acl.canChangeStatus(ticket) &&
                                 <ToggleStatusButton ticket={ticket} user={user} />}
 
-                                <this.props.activeRouteHandler />
+                                <RouteHandler params={self.props.params} query={self.props.query} />
 
                             {user.acl.canFollow(ticket) &&
                                 <ToggleFollowButton ticket={ticket} user={user} />}

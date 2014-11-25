@@ -5,11 +5,11 @@ var React = require("react/addons");
 var Backbone = require("backbone");
 var _ = require("lodash");
 var Link = require("react-router").Link;
+var RouteHandler = require("react-router").RouteHandler;
 var ButtonGroup = require("react-bootstrap/ButtonGroup");
 var Promise = require("bluebird");
 
 var app = require("app");
-var User = require("app/models/client/User");
 var Ticket = require("app/models/client/Ticket");
 var Comment = require("app/models/client/Comment");
 var Modal = require("./Modal");
@@ -18,7 +18,6 @@ var ErrorMessage = require("./ErrorMessage");
 var UserInformation = require("./UserInformation");
 var NotificationsHub = require("./NotificationsHub");
 var NotificationBox = require("./NotificationBox");
-var BrowserTitle = require("app/utils/BrowserTitle");
 var captureError = require("app/utils/captureError");
 
 
@@ -31,28 +30,18 @@ var captureError = require("app/utils/captureError");
  * @extends react.ReactComponent
  * @constructor
  * @param {Object} props
- * @param {Socket.IO} props.io Socket.IO socket
- * @param {BrowserTitle} props.title BrowserTitle instance
  */
 var Main = React.createClass({
 
     mixins: [BackboneMixin],
 
-    propTypes: {
-        title: React.PropTypes.instanceOf(BrowserTitle).isRequired,
-        user: React.PropTypes.instanceOf(User).isRequired,
-        io: React.PropTypes.shape({
-            on: React.PropTypes.func.isRequired,
-            off: React.PropTypes.func.isRequired
-        }).isRequired
-    },
 
     getInitialState: function() {
         return {
             unreadTickets: Ticket.collection([], { url: "/api/notifications" }),
             userTickets: Ticket.collection([], {
                 query: {
-                    follower: this.props.user.get("id"),
+                    follower: app.currentUser.get("id"),
                     tags: [
                         "status:pending|status:open",
                     ]
@@ -63,7 +52,7 @@ var Main = React.createClass({
     },
 
     componentWillMount: function() {
-        if (this.props.user.acl.canSeePendingTickets()) {
+        if (app.currentUser.acl.canSeePendingTickets()) {
             this.setBackbone({
                 pendingTickets: Ticket.collection([], {
                     query: { tags: ["status:pending"] }
@@ -93,7 +82,7 @@ var Main = React.createClass({
         Ticket.on("markedAsRead", this.throttledFetchUnreadTickets);
         window.addEventListener("focus", this.throttledFetchUnreadTickets);
         Backbone.on("error", this.handleUnhandledError);
-        this.props.io.on("followerUpdate", this.handleFollowerUpdate);
+        app.io.on("followerUpdate", this.handleFollowerUpdate);
         app.renderInModal = this.renderInModal;
         app.closeModal = this.closeModal;
     },
@@ -101,7 +90,7 @@ var Main = React.createClass({
     componentWillUnmount: function() {
         window.removeEventListener("focus", this.throttledFetchUnreadTickets);
         Backbone.off("error", this.handleUnhandledError);
-        this.props.io.off("followerUpdate", this.handleFollowerUpdate);
+        app.io.off("followerUpdate", this.handleFollowerUpdate);
     },
 
     displayLogoutError: function() {
@@ -195,7 +184,7 @@ var Main = React.createClass({
     },
 
     render: function() {
-        var user = this.props.user;
+        var self = this;
         var unreadTickets = this.state.unreadTickets;
         var pendingTickets = this.state.pendingTickets;
 
@@ -210,7 +199,7 @@ var Main = React.createClass({
                     <div className="topmenu row">
 
                         <div className="user-info pull-right">
-                            <UserInformation user={user} />
+                            <UserInformation user={app.currentUser} />
                         </div>
 
                         <ButtonGroup className="top-buttons">
@@ -232,7 +221,9 @@ var Main = React.createClass({
                     <div className="main-wrap clearfix" >
                         <div className="main-content">
 
-                            <this.props.activeRouteHandler
+                            <RouteHandler
+                                params={self.props.params}
+                                query={self.props.query}
                                 renderInModal={this.renderInModal}
                                 userTickets={this.state.userTickets}
                                 user={this.props.user} />

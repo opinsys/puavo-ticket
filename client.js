@@ -9,9 +9,7 @@ var Backbone = require("backbone");
 Backbone.$ = $;
 var io = require("socket.io-client")();
 window.io = io;
-var Route = require("react-router").Route;
-var Routes = require("react-router").Routes;
-var Redirect = require("react-router").Redirect;
+var Router = require("react-router");
 
 var app = require("app");
 
@@ -76,30 +74,37 @@ var ErrorMessage = require("./components/ErrorMessage");
 var BrowserTitle = require("./utils/BrowserTitle");
 
 app.currentUser = new User(window.USER);
-var title = new BrowserTitle({ trailingTitle: window.document.title });
+app.title = new BrowserTitle({ trailingTitle: window.document.title });
+app.io = io;
+
 var appContainer = document.getElementById("app");
 
-React.render(
-    <Routes location="history" scrollBehavior="none">
-        <Route handler={Main} io={io} title={title} user={app.currentUser}>
-            <Route name="new" handler={TicketForm} />
-            <Redirect name="tickets" from="/" to="view" params={{id: "open"}} />
-            <Route name="view-editor" path="/edit-view/:name?" handler={ViewTabs} >
-                <Route handler={ViewEditor} />
-            </Route>
-            <Route name="view" path="/views/:id" handler={ViewTabs} >
-                <Route handler={Views} />
-            </Route>
-            <Route name="solved-tickets" path="/solved" handler={Solved} />
-            <Redirect from="/tickets/:id" to="discuss" />
-            <Route name="ticket" path="/tickets/:id" handler={TicketView} >
-                <Route name="tags" path="tags" handler={TagEditor} />
-                <Route name="handlers" path="handlers" handler={HandlerEditor} />
-                <Route name="discuss" handler={Discuss} io={io} title={title} />
-            </Route>
+var Route = Router.Route;
+var Redirect = Router.Redirect;
+var routes = (
+    <Route handler={Main} >
+        <Route name="new" handler={TicketForm} />
+        <Redirect name="tickets" from="/" to="view" params={{id: "open"}} />
+        <Route name="view-editor" path="/edit-view/:name?" handler={ViewTabs} >
+            <Route handler={ViewEditor} />
         </Route>
-    </Routes>, appContainer);
+        <Route name="view" path="/views/:id" handler={ViewTabs} >
+            <Route handler={Views} />
+        </Route>
+        <Route name="solved-tickets" path="/solved" handler={Solved} />
+        <Redirect from="/tickets/:id" to="discuss" />
+        <Route name="ticket" path="/tickets/:id" handler={TicketView} >
+            <Route name="tags" path="tags" handler={TagEditor} />
+            <Route name="handlers" path="handlers" handler={HandlerEditor} />
+            <Route name="discuss" handler={Discuss} />
+        </Route>
+    </Route>
+);
 
+
+Router.run(routes, Router.HistoryLocation, function(Handler, state) {
+    React.render(<Handler params={state.params} query={state.query} />, appContainer);
+});
 
 /**
  * Render given error to the body using plain javascript overriding everything else

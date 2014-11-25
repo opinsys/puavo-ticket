@@ -58,7 +58,7 @@
     "promisepipe": "~1.0.1",
     "react": "~0.12.1",
     "react-bootstrap": "~0.13.0",
-    "react-router": "~0.10.2",
+    "react-router": "~0.11.2",
     "reactify": "~0.17.1",
     "repl-promised": "^0.1.0",
     "request": "~2.37.0",
