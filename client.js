@@ -79,7 +79,7 @@ app.currentUser = new User(window.USER);
 var title = new BrowserTitle({ trailingTitle: window.document.title });
 var appContainer = document.getElementById("app");
 
-React.renderComponent(
+React.render(
     <Routes location="history" scrollBehavior="none">
         <Route handler={Main} io={io} title={title} user={app.currentUser}>
             <Route name="new" handler={TicketForm} />

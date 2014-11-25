@@ -99,16 +99,18 @@ var ElasticTextarea = React.createClass({
 
     render: function() {
         var self = this;
-        return this.transferPropsTo(<textarea
-            style={this.style}
-            rows={this.props.minRows}
-            onKeyDown={function(e) {
-                // Enter always adds a line break. Resize instantly.
-                if (e.key === "Enter") setTimeout(self._resize, 0);
-                self.props.onKeyDown(e);
-            }}
-            ref="textarea"
-            className={"ElasticTextarea " + this.props.className}></textarea>
+        return (
+            <textarea
+                {...self.props}
+                style={this.style}
+                rows={this.props.minRows}
+                onKeyDown={function(e) {
+                    // Enter always adds a line break. Resize instantly.
+                    if (e.key === "Enter") setTimeout(self._resize, 0);
+                    self.props.onKeyDown(e);
+                }}
+                ref="textarea"
+                className={"ElasticTextarea " + this.props.className}></textarea>
         );
     }
 

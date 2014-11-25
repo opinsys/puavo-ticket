@@ -47,9 +47,7 @@ var Views = React.createClass({
 
 
     componentWillReceiveProps: function(nextProps) {
-        console.log("PROPS", this.props.view.get("name"), nextProps.view.get("name"));
         if (!_.isEqual(this.props.view.get("query"),  nextProps.view.get("query"))) {
-            console.log("change view", nextProps.view.get("name"));
             process.nextTick(this.fetchTickets);
         }
     },
@@ -76,14 +74,13 @@ var Views = React.createClass({
         var self = this;
         op.then(function(tickets) {
             if (!self.isMounted()) return;
-            console.log("SEtting tickets", tickets);
             self.setState({
                 tickets: tickets,
                 fetching: false
             });
         })
         .catch(Promise.CancellationError, function(err) {
-            console.log("Canceled");
+            // pass
         })
         .catch(captureError("Tukipyyntöjen haku epäonnistui"));
     },

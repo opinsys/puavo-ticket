@@ -108,7 +108,7 @@ var ViewTabs = React.createClass({
                     </li>
 
                     {user.acl.canCreateCustomTabs() && views.size() > 0 && views.map(function(view) {
-                        return <li>
+                        return <li key={view.get("id")}>
                             <Link to="view" params={{ id: view.get("id") }}>
                                 {view.get("name")}
                             </Link>

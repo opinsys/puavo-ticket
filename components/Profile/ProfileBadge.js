@@ -97,8 +97,8 @@ var ProfileBadge = React.createClass({
         var width = Math.round(srcWidth * ratio) - padding;
         var height = Math.round(srcHeight * ratio) - padding;
 
-        return this.transferPropsTo(
-            <div className="ProfileBadge">
+        return (
+            <div {...this.props} className="ProfileBadge">
                 <div className="wrap" style={this.getSizeInCSS()}>
                     <div className="inner-wrap">
                         {this.renderImage(width, height)}

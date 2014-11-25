@@ -78,13 +78,8 @@ var BackupInput = React.createClass({
 
     render: function() {
         var Input = this.props.input;
-        var inputProps = _.extend({}, this.props);
-
-        inputProps.onChange = this._onChange;
-        inputProps.value = this.props.value || this._getBackupValue();
-        inputProps.ref = "input";
-
-        return Input(inputProps, this.children);
+        var value = this.props.value || this._getBackupValue();
+        return <Input {...this.props} onChange={this._onChange} value={value} ref="input" />;
     }
 });
 

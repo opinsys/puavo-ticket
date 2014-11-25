@@ -72,7 +72,7 @@ var TimeAgo = React.createClass({
 
         return (
             <OverlayTrigger placement="top" overlay={<Tooltip>{formatted}</Tooltip>}>
-                {this.transferPropsTo(<span className="TimeAgo" title={formatted}>{fromNow}</span>)}
+                {<span {...this.props} className="TimeAgo" title={formatted}>{fromNow}</span>}
             </OverlayTrigger>
         );
     }
