@@ -2,14 +2,15 @@
 "use strict";
 
 var React = require("react/addons");
-var Backbone = require("backbone");
 var _ = require("lodash");
 var Link = require("react-router").Link;
 var RouteHandler = require("react-router").RouteHandler;
 var ButtonGroup = require("react-bootstrap/ButtonGroup");
 var Promise = require("bluebird");
+var Reflux = require("reflux");
 
 var app = require("app");
+var ErrorActions = require("app/actions/ErrorActions");
 var Ticket = require("app/models/client/Ticket");
 var Comment = require("app/models/client/Comment");
 var Modal = require("./Modal");
@@ -18,7 +19,6 @@ var ErrorMessage = require("./ErrorMessage");
 var UserInformation = require("./UserInformation");
 var NotificationsHub = require("./NotificationsHub");
 var NotificationBox = require("./NotificationBox");
-var captureError = require("app/utils/captureError");
 
 
 
@@ -33,8 +33,10 @@ var captureError = require("app/utils/captureError");
  */
 var Main = React.createClass({
 
-    mixins: [BackboneMixin],
-
+    mixins: [
+        BackboneMixin,
+        Reflux.listenTo(ErrorActions.displayError, "handleUnhandledError")
+    ],
 
     getInitialState: function() {
         return {
@@ -67,7 +69,7 @@ var Main = React.createClass({
             ops.push(this.state.pendingTickets.fetch());
         }
         return Promise.all(ops)
-        .catch(captureError("Ilmoitusten lataaminen epäonnistui"));
+        .catch(ErrorActions.haltChain("Ilmoitusten lataaminen epäonnistui"));
     },
 
     handleFollowerUpdate: function(update) {
@@ -81,7 +83,6 @@ var Main = React.createClass({
         this.throttledFetchUnreadTickets = _.throttle(this.fetchUnreadTickets, 2000);
         Ticket.on("markedAsRead", this.throttledFetchUnreadTickets);
         window.addEventListener("focus", this.throttledFetchUnreadTickets);
-        Backbone.on("error", this.handleUnhandledError);
         app.io.on("followerUpdate", this.handleFollowerUpdate);
         app.renderInModal = this.renderInModal;
         app.closeModal = this.closeModal;
@@ -89,7 +90,6 @@ var Main = React.createClass({
 
     componentWillUnmount: function() {
         window.removeEventListener("focus", this.throttledFetchUnreadTickets);
-        Backbone.off("error", this.handleUnhandledError);
         app.io.off("followerUpdate", this.handleFollowerUpdate);
     },
 
@@ -108,18 +108,18 @@ var Main = React.createClass({
         });
     },
 
-    handleUnhandledError: function(error, customMessage) {
+    handleUnhandledError: function(error) {
         if (error && error.data && error.data.code === "NOAUTH") {
             return this.displayLogoutError();
         }
 
-        console.error(customMessage + ":", error.message);
+        console.error(error.message + ":", error.message);
         if (error.stack) console.error(error.stack);
         this.renderInModal({
             title: "Uups! Jotain odottamatonta tapahtui :(",
             permanent: true
         }, function(){
-            return <ErrorMessage error={error} customMessage={customMessage} />;
+            return <ErrorMessage error={error.error} customMessage={error.message} />;
         });
     },
 

@@ -3,9 +3,8 @@
 var Reflux = require("reflux");
 
 var app = require("app");
-var captureError = require("app/utils/captureError");
 var View = require("app/models/client/View");
-var ViewActions = require("app/actions").ViewActions;
+var ViewActions = require("app/actions/ViewActions");
 
 /**
  * Reflux store for the ticket tabs on the front-page
@@ -73,39 +72,20 @@ var ViewStore = Reflux.createStore({
         return this.views.findWhere({ id: parseInt(id, 10) });
     },
 
+    onSetViews: function(views) {
+        this.views = views;
+        this.loading = false;
+        this.emitState();
+    },
+
     onLoadViews: function() {
-        var self = this;
         this.loading = true;
         this.emitState();
-
-        return this.views.fetch()
-        .catch(captureError("Näkymien päivitys epännistui"))
-        .then(function(views) {
-            self.views = views;
-            self.loading = false;
-            process.nextTick(self.emitState);
-        });
     },
 
     onAddView: function(viewData, onSuccess) {
-        var self = this;
-        var view = new View({
-            name: viewData.name,
-            query: viewData.query
-        });
-
-        view.save()
-        .catch(captureError("Näkymän tallennus epäonnistui"))
-        .then(function(view) {
-            return self.onLoadViews().return(view);
-        })
-        .then(onSuccess);
-    },
-
-    onDestroyView: function(view) {
-        view.destroy()
-        .catch(captureError("Näkymän poisto epäonnistui"))
-        .then(this.onLoadViews);
+        this.loading = true;
+        this.emitState();
     },
 
 });

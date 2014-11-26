@@ -13,11 +13,11 @@ var _ = require("lodash");
 var app = require("app");
 var View = require("app/models/client/View");
 var Ticket = require("app/models/client/Ticket");
-var captureError = require("app/utils/captureError");
 var BackboneMixin = require("./BackboneMixin");
 var TicketList = require("./TicketList");
 var Loading = require("./Loading");
-var ViewActions = require("app/actions").ViewActions;
+var ViewActions = require("app/actions/ViewActions");
+var ErrorActions = require("app/actions/ErrorActions");
 
 /**
  * @namespace components
@@ -82,7 +82,7 @@ var Views = React.createClass({
         .catch(Promise.CancellationError, function(err) {
             // pass
         })
-        .catch(captureError("Tukipyyntöjen haku epäonnistui"));
+        .catch(ErrorActions.haltChain("Tukipyyntöjen haku epäonnistui"));
     },
 
     destroyView: function() {
