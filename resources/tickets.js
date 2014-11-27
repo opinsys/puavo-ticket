@@ -25,9 +25,7 @@ app.get("/api/tickets", function(req, res, next) {
     });
 
     if (req.query.tags) {
-        tickets.withTags([].concat(req.query.tags).map(function(tag) {
-            return tag.split("|");
-        }));
+        tickets.withTags([].concat(req.query.tags).map(tag => tag.split("|")));
     }
 
     if (req.query.follower) {

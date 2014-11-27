@@ -77,9 +77,7 @@ var HandlerEditor = React.createClass({
         var ticket = this.props.ticket;
         var user = app.currentUser;
         var saving = this.state.saving;
-        var handlerRelations = ticket.rel("handlers").filter(function(h) {
-            return !h.isSoftDeleted();
-        });
+        var handlerRelations = ticket.rel("handlers").filter(h => !h.isSoftDeleted());
 
         var searchOrganisations = ticket.getRelatedOrganisationDomains();
 

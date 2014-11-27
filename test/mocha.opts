@@ -1,3 +1,4 @@
 --reporter spec
 --no-colors
 --timeout 15000
+--require 6to5/register

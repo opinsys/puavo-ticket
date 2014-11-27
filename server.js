@@ -1,4 +1,7 @@
 "use strict";
+// Register 6to5 compiler before require any code XXX ES6 is not usable in this
+// file. We should wrap it
+require("6to5/register");
 var PRODUCTION = process.env.NODE_ENV === "production";
 var CACHE_KEY = Date.now();
 var STARTED = Date.now();

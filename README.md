@@ -174,7 +174,7 @@ See <http://facebook.github.io/react/docs/tooling-integration.html#syntax-highli
 You might want to put locally installed node.js tools to your path
 
     export PATH="$(pwd)/node_modules/.bin:$PATH"
-    
+
 or use the shortcut
 
     . .bash_node_modules
@@ -290,7 +290,23 @@ or for the browser using a Javascript console:
 debug.enable("app:*");
 ```
 
-## Styles
+## Coding conventions
+
+### ECMAScript 6
+
+We use [6to5](http://6to5.github.io/) (node) and react-tools es6 option
+(browser) for ECMAScript 6 support. Please use the features conservatively.
+
+Only
+
+  - fat arrows
+  - classes
+  - destructuring
+  - rest and spread operators
+
+Mainly fat arrows and classes for now.
+
+### Styles
 
 We are using Bootstrap, Bourbon and React Bootstrap. See documentation in:
 
