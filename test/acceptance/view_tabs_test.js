@@ -53,7 +53,7 @@ describe("View tabs", function() {
     });
 
     after(function() {
-        // return browser.quit();
+        return browser.quit();
     });
 
     it("has the open ticket on the default tab", function() {
