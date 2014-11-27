@@ -214,7 +214,7 @@ by manager
 ----------------------------------------------
 Pääset tarkastelemaan tukipyyntöä kokonaisuudessaan osoitteessa https://support.opinsys.fi/tickets/4
 Tämä viesti on lähetetty Opinsysin tukipalvelusta
-            `, mailOb.text.trim());
+            `.trim(), mailOb.text.trim());
 
         });
     });
