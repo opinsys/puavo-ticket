@@ -31,7 +31,7 @@ var TicketList = React.createClass({
             <tr key={ticketId} >
                 <td>#{ticketId}</td>
                 <td>
-                    <Link to="ticket" params={{id: ticketId}}>
+                    <Link to="ticket" className="TicketList-ticket-title" params={{id: ticketId}}>
                         {ticket.getCurrentTitle()}
                     </Link>
                 </td>

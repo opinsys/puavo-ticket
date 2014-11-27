@@ -124,6 +124,7 @@ var ViewEditor = React.createClass({
                         <Input
                             type="text"
                             label="Nimi"
+                            className="ViewEditor-name-input"
                             value={this.state.name}
                             onChange={function(e) {
                                 self.setName( e.target.value );
@@ -133,6 +134,7 @@ var ViewEditor = React.createClass({
                         <Input
                             type="text"
                             label="Query"
+                            className="ViewEditor-query-input"
                             value={self.state.queryString}
                             onChange={function(e) {
                                 self.setQuery(e.target.value);
@@ -141,7 +143,10 @@ var ViewEditor = React.createClass({
                                 if (e.key === "Enter") self.setTickets();
                             }}
                         />
-                        <Button disabled={!self.isViewOk() || saving} onClick={self.saveView}>
+                        <Button
+                            className="ViewEditor-save-button"
+                            disabled={!self.isViewOk() || saving}
+                            onClick={self.saveView}>
                             Tallenna
                             {saving && <Fa className="ViewEditor-save-spinner" icon="spinner" spin />}
                         </Button>
@@ -158,7 +163,7 @@ var ViewEditor = React.createClass({
                         return <Badge key={tags} >{tags.split("|").join(" tai ")}</Badge>;
                     })}
                 </p>
-                {tickets && <div>
+                {tickets && <div className="ViewEditor-preview">
                     <TicketList title="Mukautettu listaus" user={user} tickets={tickets.toArray()} />
                 </div>}
 

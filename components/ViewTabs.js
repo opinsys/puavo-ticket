@@ -58,7 +58,7 @@ var ViewTabs = React.createClass({
 
 
                     {user.acl.canCreateCustomTabs() && <li>
-                        <Link to="view-editor" query={view && view.get("query")} >+</Link>
+                        <Link to="view-editor" className="ViewTabs-new-tab-button" query={view && view.get("query")} >+</Link>
                     </li>}
 
                 </Tabs>
