@@ -303,10 +303,10 @@ We use [6to5](http://6to5.github.io/) (node) and react-tools es6 option
 
 Only
 
-  - fat arrows
-  - classes
-  - destructuring
-  - rest and spread operators
+  - [arrow functions](http://6to5.github.io/features.html#arrow-functions)
+  - [classes](http://6to5.github.io/features.html#classes-1)
+  - [destructuring](http://6to5.github.io/features.html#destructuring)
+  - [rest](http://6to5.github.io/features.html#rest-parameters) and [spread](http://6to5.github.io/features.html#rest-parameters) operators
 
 Mainly fat arrows and classes for now.
 
