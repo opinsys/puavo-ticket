@@ -70,6 +70,7 @@ var appContainer = document.getElementById("app");
 
 var router = require("./router");
 app.router = router;
+require("./ajax");
 
 router.run(function(Handler, state) {
     React.render(<Handler params={state.params} query={state.query} />, appContainer);

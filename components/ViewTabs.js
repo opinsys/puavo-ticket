@@ -11,7 +11,7 @@ var Reflux = require("reflux");
 var app = require("app");
 var Loading = require("./Loading");
 var ViewStore = require("app/stores/ViewStore");
-var ViewActions = require("app/actions/ViewActions");
+var ViewActions = ViewStore.Actions;
 
 /**
  * @namespace components

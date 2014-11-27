@@ -9,7 +9,7 @@ var Button = require("react-bootstrap/Button");
 var Router = require("react-router");
 
 
-var ViewActions = require("app/actions/ViewActions");
+var ViewActions = require("app/stores/ViewStore").Actions;
 var app = require("app");
 var Fa = require("app/components/Fa");
 var TicketList = require("./TicketList");

@@ -4,7 +4,54 @@ var Reflux = require("reflux");
 
 var app = require("app");
 var View = require("app/models/client/View");
-var ViewActions = require("app/actions/ViewActions");
+
+
+
+/**
+ * Refluxjs actions for the view tabs
+ *
+ * https://github.com/spoike/refluxjs
+ * @namespace stores
+ * @static
+ * @class ViewStore.Actions
+ */
+var Actions = Reflux.createActions([
+    /**
+     * Refresh views
+     *
+     * @static
+     * @method loadViews
+     * @param {Function} onSuccess
+     */
+    "loadViews",
+
+    /**
+     * @static
+     * @method addView
+     * @param {Object} data
+     * @param {String} data.name Name of the view
+     * @param {Object} data.query Query for the view
+     * @param {Function} onSuccess
+     */
+    "addView",
+
+    /**
+     * @static
+     * @method setViews
+     * @param {models.client.TicketCollection}
+     */
+    "setViews",
+
+    /**
+     * Destroy given view
+     *
+     * @static
+     * @method destroyView
+     * @param {models.client.View}
+     */
+    "destroyView",
+]);
+
 
 /**
  * Reflux store for the ticket tabs on the front-page
@@ -17,7 +64,7 @@ var ViewActions = require("app/actions/ViewActions");
  */
 var ViewStore = Reflux.createStore({
 
-    listenables: ViewActions,
+    listenables: Actions,
 
     init: function() {
 
@@ -90,4 +137,5 @@ var ViewStore = Reflux.createStore({
 
 });
 
+ViewStore.Actions = Actions;
 module.exports = ViewStore;

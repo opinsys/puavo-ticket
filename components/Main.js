@@ -10,7 +10,7 @@ var Promise = require("bluebird");
 var Reflux = require("reflux");
 
 var app = require("app");
-var ErrorActions = require("app/actions/ErrorActions");
+var ErrorActions = require("app/stores/ErrorActions");
 var Ticket = require("app/models/client/Ticket");
 var Comment = require("app/models/client/Comment");
 var Modal = require("./Modal");

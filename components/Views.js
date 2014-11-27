@@ -16,8 +16,8 @@ var Ticket = require("app/models/client/Ticket");
 var BackboneMixin = require("./BackboneMixin");
 var TicketList = require("./TicketList");
 var Loading = require("./Loading");
-var ViewActions = require("app/actions/ViewActions");
-var ErrorActions = require("app/actions/ErrorActions");
+var ViewActions = require("app/stores/ViewStore").Actions;
+var ErrorActions = require("app/stores/ErrorActions");
 
 /**
  * @namespace components
