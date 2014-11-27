@@ -89,6 +89,9 @@ it. Ticket will get additional visibilities when:
   - Component specific stylesheets
 - `styles/`
   - Other stylesheets that are too generic for any single component
+- `stores/`
+  - React flux stores
+  - [Reflux](https://github.com/spoike/refluxjs)
 - `models/server/`
   - Server-side [Bookshelf][] models
 - `models/client/`
