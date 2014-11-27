@@ -3,4 +3,5 @@ doc
 debian
 node_modules
 _config.json
+npm-debug.log
 *~
