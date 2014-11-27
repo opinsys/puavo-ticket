@@ -2,7 +2,6 @@
 var Promise = require("bluebird");
 var assert = require("assert");
 var sinon = require("sinon");
-var multiline = require("multiline");
 
 var helpers = require("app/test/helpers");
 var config = require("app/config");
@@ -66,15 +65,15 @@ describe("Ticket model", function() {
                     email.subject
                 );
 
-                assert.equal(multiline.stripIndent(function(){/*
-                    Olli Opettaja avasi uuden tukipynnön:
+                assert.equal(`
+Olli Opettaja avasi uuden tukipynnön:
 
-                    A title
+A title
 
-                    Computer does not work :(
+Computer does not work :(
 
-                    https://support.opinsys.fi/tickets/1
-                 */}).trim(), email.text.trim());
+https://support.opinsys.fi/tickets/1
+                 `.trim(), email.text.trim());
 
 
             })

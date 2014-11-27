@@ -307,6 +307,7 @@ Only
   - [classes](http://6to5.github.io/features.html#classes-1)
   - [destructuring](http://6to5.github.io/features.html#destructuring)
   - [rest](http://6to5.github.io/features.html#rest-parameters) and [spread](http://6to5.github.io/features.html#rest-parameters) operators
+  - [template literals](http://6to5.github.io/features.html#template-literals)
 
 Mainly fat arrows and classes for now.
 

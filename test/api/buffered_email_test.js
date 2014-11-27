@@ -4,7 +4,6 @@ var assert = require("assert");
 var Promise = require("bluebird");
 var sinon = require("sinon");
 var request = require("supertest");
-var multiline = require("multiline");
 var _ = require("lodash");
 
 var helpers = require("app/test/helpers");
@@ -133,19 +132,19 @@ describe("buffered email sending", function() {
                 mailOb.replyTo
             );
 
-            assert.equal(multiline.stripIndent(function(){/*
-                Tukipyyntösi on päivittynyt seuraavin kommentein
+            assert.equal(`
+Tukipyyntösi on päivittynyt seuraavin kommentein
 
-                Matti Meikäläinen, 1. loka 12:11
-                A comment by another teacher
-                ----------------------------------------------
-                Matti Meikäläinen, 1. loka 12:11
-                A second comment by another teacher
+Matti Meikäläinen, 1. loka 12:11
+A comment by another teacher
+----------------------------------------------
+Matti Meikäläinen, 1. loka 12:11
+A second comment by another teacher
 
-                ----------------------------------------------
-                Pääset tarkastelemaan tukipyyntöä kokonaisuudessaan osoitteessa https://support.opinsys.fi/tickets/1
-                Tämä viesti on lähetetty Opinsysin tukipalvelusta
-             */}).trim(), mailOb.text.trim());
+----------------------------------------------
+Pääset tarkastelemaan tukipyyntöä kokonaisuudessaan osoitteessa https://support.opinsys.fi/tickets/1
+Tämä viesti on lähetetty Opinsysin tukipalvelusta
+             `.trim(), mailOb.text.trim());
 
         });
     });
@@ -206,16 +205,16 @@ describe("buffered email sending", function() {
                 return args[0].subject === "Tukipyyntö \"Ticket created for a teacher\" (4) on päivittynyt";
             })[0];
 
-            assert.equal(multiline.stripIndent(function(){/*
-                Tukipyyntösi on päivittynyt seuraavin kommentein
+            assert.equal(`
+Tukipyyntösi on päivittynyt seuraavin kommentein
 
-                Pointy-haired Boss, 1. loka 12:36
-                by manager
+Pointy-haired Boss, 1. loka 12:36
+by manager
 
-                ----------------------------------------------
-                Pääset tarkastelemaan tukipyyntöä kokonaisuudessaan osoitteessa https://support.opinsys.fi/tickets/4
-                Tämä viesti on lähetetty Opinsysin tukipalvelusta
-            */}), mailOb.text.trim());
+----------------------------------------------
+Pääset tarkastelemaan tukipyyntöä kokonaisuudessaan osoitteessa https://support.opinsys.fi/tickets/4
+Tämä viesti on lähetetty Opinsysin tukipalvelusta
+            `, mailOb.text.trim());
 
         });
     });
