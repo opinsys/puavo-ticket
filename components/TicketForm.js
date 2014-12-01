@@ -86,7 +86,7 @@ var TicketForm = React.createClass({
                         <h3>Uusi tukipyyntö</h3>
                     </div>
                     <BackupInput
-                        input={React.DOM.input}
+                        input="input"
                         backupKey="newtickettitle"
                         ref="title"
 
