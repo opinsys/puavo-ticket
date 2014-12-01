@@ -24,7 +24,7 @@ var Loading = React.createClass({
 
     getStyles: function() {
         var val = this.props.visible ? "visible" : "hidden";
-        return { visibility: val };
+        return Object.assign({}, this.props.style, { visibility: val });
     },
 
     render: function() {
