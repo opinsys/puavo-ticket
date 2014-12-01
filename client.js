@@ -125,3 +125,4 @@ if (process.env.NODE_ENV === "production") {
     });
 }
 
+document.getElementsByClassName("initial-spinner")[0].innerHTML = "";

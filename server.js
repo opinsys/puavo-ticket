@@ -29,6 +29,7 @@ var Server = require("http").Server;
 var prettyMs = require("pretty-ms");
 var exec = require("child_process").exec;
 var crypto = require("crypto");
+var React = require("react/addons");
 
 var debug = require("debug")("app:live");
 var debugMem = require("debug")("memory");
@@ -250,6 +251,9 @@ app.use(require("./resources/users"));
 app.use("/api/puavo", require("./resources/puavo_api_proxy")(config));
 
 
+var loadingEl = React.createElement(require("./components/Loading"));
+var loadingHTMLString = React.renderToString(loadingEl);
+
 app.get("/*", function(req, res) {
     var csrfToken = req.csrfToken();
 
@@ -265,6 +269,7 @@ app.get("/*", function(req, res) {
 
     res.header("x-csrf-token", csrfToken);
     res.render("index.ejs", {
+        spinner: loadingHTMLString,
         csrfToken: csrfToken,
         jsBundle: jsBundle,
         cssBundle: cssBundle,

@@ -14,7 +14,6 @@ here but components/Main.scss might be better still.
 Please read https://github.com/opinsys/puavo-ticket#styles
 
 */
-@import "./spinner";
 @import "./colors";
 @import "./node_modules/bourbon/dist/bourbon";
 @import "./vendor/animate.scss";
@@ -243,6 +242,8 @@ table td {
 
 
 // Change spinner color once the application css is loaded
-.initial-spinner > * {
-    background-color: $highlight-color !important;
+.initial-spinner {
+    .spinner-container > * {
+        background-color: $highlight-color !important;
+    }
 }
