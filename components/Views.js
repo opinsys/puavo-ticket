@@ -34,7 +34,7 @@ var Views = React.createClass({
 
     mixins: [BackboneMixin, Navigation],
 
-    getInitialState: function(foo) {
+    getInitialState: function() {
         return {
             fetching: false,
             tickets: Ticket.collection(),
