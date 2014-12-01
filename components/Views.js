@@ -120,7 +120,7 @@ var Views = React.createClass({
 
         return (
             <div className="Views">
-                <Loading visible={fetching} />
+                <Loading style={{position: "absolute", top: "5px", right: "5px"}} visible={fetching} />
 
                 <TicketList tickets={tickets.toArray()} />
                 <div className="clearfix"></div>
