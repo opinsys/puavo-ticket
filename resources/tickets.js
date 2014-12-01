@@ -32,6 +32,10 @@ app.get("/api/tickets", function(req, res, next) {
         tickets.withFollower(req.query.follower);
     }
 
+    if (req.query.text) {
+        tickets.titleContains(req.query.text);
+    }
+
     tickets.fetch({
         withRelated: [
             "createdBy",

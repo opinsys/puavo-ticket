@@ -63,6 +63,21 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
     },
 
     /**
+     * @method titleContains
+     * @param {Array} text Array of text fragments that must be present in the title
+     */
+    titleContains: function(texts) {
+        return this.query((q) => {
+            var ref = this._genJoinRef("title_search");
+            q.join("titles as " + ref, "tickets.id", "=", ref + ".ticketId");
+            [].concat(texts).forEach((text) => {
+                q.where(ref + ".title", "ilike", `%${text}%`);
+            });
+            q.whereNull(ref + ".deletedAt");
+        });
+    },
+
+    /**
      *
      * @method withFollower
      * @param {models.server.User|Number} user
