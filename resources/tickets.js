@@ -33,7 +33,7 @@ app.get("/api/tickets", function(req, res, next) {
     }
 
     if (req.query.text) {
-        tickets.titleContains(req.query.text);
+        tickets.withText(req.query.text);
     }
 
     tickets.fetch({

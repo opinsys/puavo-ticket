@@ -63,17 +63,34 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
     },
 
     /**
-     * @method titleContains
-     * @param {Array} text Array of text fragments that must be present in the title
+     * @method withText
+     * @param {Array} text Array of text fragments that must be present in the title or comments
      */
-    titleContains: function(texts) {
+    withText: function(texts) {
         return this.query((q) => {
-            var ref = this._genJoinRef("title_search");
-            q.join("titles as " + ref, "tickets.id", "=", ref + ".ticketId");
-            [].concat(texts).forEach((text) => {
-                q.where(ref + ".title", "ilike", `%${text}%`);
+            var titleRef = this._genJoinRef("title_search");
+            var commentRef = this._genJoinRef("comment_search");
+            q.join("titles as " + titleRef, "tickets.id", "=", titleRef + ".ticketId");
+            q.join("comments as " + commentRef, "tickets.id", "=", commentRef + ".ticketId");
+
+            q.where(function() {
+                this.orWhere(function(){
+                    [].concat(texts).forEach((text) => {
+                        this.where(titleRef + ".title", "ilike", `%${text}%`);
+                    });
+                });
+
+                this.orWhere(function(){
+                    [].concat(texts).forEach((text) => {
+                        this.where(commentRef + ".comment", "ilike", `%${text}%`);
+                    });
+                });
             });
-            q.whereNull(ref + ".deletedAt");
+
+            q.whereNull(titleRef + ".deletedAt");
+            q.whereNull(commentRef + ".deletedAt");
+
+            console.log("sql", q.toString());
         });
     },
 

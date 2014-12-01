@@ -15,8 +15,8 @@ describe("/api/tickets", function() {
         .then(teacher => this.teacher = teacher)
         .then(() => Promise.join(
             Ticket.create("Footitle ticket", "Foodesc", this.teacher),
-            Ticket.create("Bartitle ticket", "Bardesc", this.teacher),
-            Ticket.create("Baztitle ticket", "Bazdesc", this.teacher)
+            Ticket.create("Bartitle ticket weirdlaptop", "Bardesc", this.teacher),
+            Ticket.create("Baztitle ticket", "Bazdesc weirdlaptop", this.teacher)
         ))
         .then(() => helpers.loginAsUser(helpers.user.teacher))
         .then(agent => this.agent = agent);
@@ -29,6 +29,7 @@ describe("/api/tickets", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(1, res.body.length);
+                assert.equal("Footitle ticket", res.body[0].titles[0].title);
             });
     });
 
@@ -39,6 +40,17 @@ describe("/api/tickets", function() {
             .then(function(res) {
                 assert.equal(res.status, 200);
                 assert.equal(1, res.body.length);
+                assert.equal("Footitle ticket", res.body[0].titles[0].title);
+            });
+    });
+
+    it("can search from comments too", function() {
+        return this.agent
+            .get("/api/tickets?text=weird&text=laptop")
+            .promise()
+            .then(function(res) {
+                assert.equal(res.status, 200);
+                assert.equal(2, res.body.length);
             });
     });
 
