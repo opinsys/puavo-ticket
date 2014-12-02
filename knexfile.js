@@ -1,3 +1,4 @@
+require("6to5/register");
 var config = require("./config");
 
 // knexfile file was introduced in knex 0.6.0. We already have an environment
