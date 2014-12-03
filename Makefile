@@ -142,14 +142,14 @@ clean: clean-build
 	rm -rf doc node_modules public/build/*.js public/build/*.json
 
 install-dirs:
-	mkdir -p mkdir -p $(DESTDIR)$(prefix)/lib/node_modules/puavo-ticket
-	mkdir -p $(DESTDIR)$(prefix)/lib/node_modules/puavo-ticket
+	mkdir -p mkdir -p $(DESTDIR)$(prefix)/lib/puavo-ticket
+	mkdir -p $(DESTDIR)$(prefix)/lib/puavo-ticket
 	mkdir -p $(DESTDIR)/etc
 
 install: install-dirs
 	npm prune --production
-	cp -r *.js *.json Makefile migrations node_modules components resources utils models views styles public $(DESTDIR)$(prefix)/lib/node_modules/puavo-ticket
-	ln -fs /etc/puavo-ticket/config.json $(DESTDIR)$(prefix)/lib/node_modules/puavo-ticket/_config.json
+	cp -r *.js *.json Makefile migrations node_modules components resources utils models views styles public $(DESTDIR)$(prefix)/lib/puavo-ticket
+	ln -fs /etc/puavo-ticket/config.json $(DESTDIR)$(prefix)/lib/puavo-ticket/_config.json
 
 install-git-hooks:
 	cp extra/pre-commit.hook .git/hooks/pre-commit
