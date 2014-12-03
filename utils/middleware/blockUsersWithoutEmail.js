@@ -20,7 +20,7 @@ function blockUsersWithoutEmail(req, res, next) {
             sähköpostiosoitetta eikä sellaista ole liitetty sinun käyttäjä
             tunnukseesi <b>${username}</b>.
 
-            Aseta itsellesi sähköpostiosoite <a href="https://${domain}/users/profile/edit">tästä linkistä</a>
+            Aseta itsellesi sähköpostiosoite <a target="_blank" href="https://${domain}/users/profile/edit">tästä linkistä</a>
             ja <a href="">yritä uudelleen</a>.
         </p>
 
