@@ -216,6 +216,8 @@ app.use(function ensureAuthentication(req, res, next) {
     .catch(next);
 });
 
+app.use(require("./utils/middleware/blockUsersWithoutEmail"));
+
 app.use(function setDebugMode(req, res, next) {
     req.debugMode = !PRODUCTION;
     if (req.session.forceDebugMode) {
