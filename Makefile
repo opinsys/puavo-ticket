@@ -158,6 +158,9 @@ install-git-hooks:
 	@echo Installed a git pre-commit hook to .git/hooks/pre-commit
 	@echo
 
+send-emails:
+	node extra/sendEmails.js
+
 install-build-dep:
 	mk-build-deps --install debian.default/control \
 		--tool "apt-get --yes --force-yes" --remove
