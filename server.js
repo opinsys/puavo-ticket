@@ -198,8 +198,11 @@ app.use(function ensureAuthentication(req, res, next) {
         return res.requestJwt();
     }
 
-    User.byExternalId(req.session.jwt.id).fetch()
-    .then(function(user) {
+    // Refresh user object from live puavo-rest on each page refresh
+    User.ensureUserByUsername(
+        req.session.jwt.username,
+        req.session.jwt.organisation_domain
+    ).then(function(user) {
         if (!user) {
             // The database was probably destroyed during development and the
             // user in the session has disappeared. Just destroy the session
