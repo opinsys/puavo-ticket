@@ -26,7 +26,7 @@ var queryHelp = <div>
     <ul>
         <li>
             <b>tags</b> Rajoita hakua tagilla. Tai-ehto voidaan toteuttaa
-            tolpalla: <i>tags=foo|bar</i>. Parametri voidaan asettaa useasti: <i>tags=foo|bartags=baz</i>
+            tolpalla: <i>tags=foo|bar</i>. Parametri voidaan asettaa useasti: <i>tags=foo|bar&tags=baz</i>
         </li>
 
         <li>
