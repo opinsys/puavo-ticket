@@ -19,10 +19,7 @@ var app = express.Router();
  */
 app.get("/api/tickets", function(req, res, next) {
     var tickets = Ticket.collection()
-    .byUserVisibilities(req.user)
-    .query(function(q) {
-        q.orderBy("updatedAt", "desc");
-    });
+    .byUserVisibilities(req.user);
 
     if (req.query.tags) {
         tickets.withTags([].concat(req.query.tags).map(tag => tag.split("|")));
@@ -35,6 +32,22 @@ app.get("/api/tickets", function(req, res, next) {
     if (req.query.text) {
         tickets.withText(req.query.text);
     }
+
+    if (req.query.return === "count") {
+        return tickets.query()
+        .groupBy("tickets.id")
+        .count("*")
+        .then(function(coll) {
+            res.json({
+                count: coll.length
+            });
+        })
+        .catch(next);
+    }
+
+    tickets.query(function(q) {
+        q.orderBy("tickets.updatedAt", "desc");
+    });
 
     tickets.fetch({
         withRelated: [
