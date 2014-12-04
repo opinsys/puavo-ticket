@@ -35,7 +35,7 @@ describe("/api/tickets", function() {
 
     it("can search tickets by multiple text queries", function() {
         return this.agent
-            .get("/api/tickets?text=foo&text=title")
+            .get("/api/tickets?text=foo+title")
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);
@@ -46,7 +46,7 @@ describe("/api/tickets", function() {
 
     it("can search from comments too", function() {
         return this.agent
-            .get("/api/tickets?text=weird&text=laptop")
+            .get("/api/tickets?text=weird+laptop")
             .promise()
             .then(function(res) {
                 assert.equal(res.status, 200);

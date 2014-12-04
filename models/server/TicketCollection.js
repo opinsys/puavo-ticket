@@ -63,10 +63,20 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
     },
 
     /**
+     * Limit to tickets that have tokens present in the text string.
+     *
+     * The string is tokenined by space and +
+     *
      * @method withText
-     * @param {Array} text Array of text fragments that must be present in the title or comments
+     * @param {String|Array} text
      */
-    withText: function(texts) {
+    withText: function(text) {
+        if (Array.isArray(text)) {
+            text = text.join(" ");
+        }
+
+        var tokens = text.split(/\s|\+/);
+
         return this.query((q) => {
             var titleRef = this._genJoinRef("title_search");
             var commentRef = this._genJoinRef("comment_search");
@@ -75,13 +85,13 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
 
             q.where(function() {
                 this.orWhere(function(){
-                    [].concat(texts).forEach((text) => {
+                    [].concat(tokens).forEach((text) => {
                         this.where(titleRef + ".title", "ilike", `%${text}%`);
                     });
                 });
 
                 this.orWhere(function(){
-                    [].concat(texts).forEach((text) => {
+                    [].concat(tokens).forEach((text) => {
                         this.where(commentRef + ".comment", "ilike", `%${text}%`);
                     });
                 });
@@ -90,7 +100,6 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
             q.whereNull(titleRef + ".deletedAt");
             q.whereNull(commentRef + ".deletedAt");
 
-            console.log("sql", q.toString());
         });
     },
 
