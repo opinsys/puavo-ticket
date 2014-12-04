@@ -16,6 +16,35 @@ var TicketList = require("./TicketList");
 var Ticket = require("app/models/client/Ticket");
 var BackboneMixin = require("app/components/BackboneMixin");
 
+
+var queryHelp = <div>
+    <p>
+    Parempaa käyttöliittymää odotellessa kysely tulee kirjoittaa
+    querystring-muodossa käsin. Mahdollisia parametrejä ovat:
+    </p>
+
+    <ul>
+        <li>
+            <b>tags</b> Rajoita hakua tagilla. Tai-ehto voidaan toteuttaa
+            tolpalla: <i>tags=foo|bar</i>. Parametri voidaan asettaa useasti: <i>tags=foo|bartags=baz</i>
+        </li>
+
+        <li>
+            <b>text</b> Vapaamuotoinen teksti. Jokainen sana tulee löytyä
+            tukipyynnön otsikosta tai jostain kommentista. Sanat eroitellaan +
+            merkillä tai välilyönnillä: <i>text=foo+bar</i>
+        </li>
+
+        <li>
+            <b>follower</b> Rajoita seuraajien mukaan (puavo-ticket userId)
+        </li>
+
+    </ul>
+
+
+</div>;
+
+
 /**
  *
  * @namespace components
@@ -133,8 +162,9 @@ var ViewEditor = React.createClass({
 
                         <Input
                             type="text"
-                            label="Query"
+                            label="Kysely"
                             className="ViewEditor-query-input"
+                            help={queryHelp}
                             value={self.state.queryString}
                             onChange={function(e) {
                                 self.setQuery(e.target.value);
