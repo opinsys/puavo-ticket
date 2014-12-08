@@ -250,9 +250,9 @@ var Discuss = React.createClass({
         var status = this.props.ticket.getCurrentStatus();
         switch (status) {
             case "pending":
-                return <Badge className="badge Discuss-status Discuss-status-pending">Odottava {id}</Badge>;
+                return <Badge className="badge Discuss-status Discuss-status-pending">Uusi {id}</Badge>;
             case "open":
-                return <Badge className="badge Discuss-status Discuss-status-open">Avoin {id}</Badge>;
+                return <Badge className="badge Discuss-status Discuss-status-open">Käsittelyssä {id}</Badge>;
             case "closed":
                 return <Badge className="badge Discuss-status Discuss-status-closed">Ratkaistu {id}</Badge>;
             default:
