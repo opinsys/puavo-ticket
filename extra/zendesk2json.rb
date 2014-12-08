@@ -69,9 +69,12 @@ ticket_xml_doc = Nokogiri.XML(ticket_xml_data)
 
 tickets = []
 ticket_xml_doc.xpath("tickets/ticket").each do |ticket_xml|
-  next if ticket_xml.at_xpath("organization-id").text != "28400173"
+  organisation = organisations_by_zendesk_id[ticket_xml.at_xpath("organization-id").text]
+
+  next if organisation.to_s.empty?
 
   ticket = {}
+  ticket["organisation"] = organisation
   ticket["title"] = ticket_xml.at_xpath("subject").text
   ticket["description"] = ticket_xml.at_xpath("description").text
   ticket["created_at"] = ticket_xml.at_xpath("created-at").text
