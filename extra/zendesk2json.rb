@@ -27,7 +27,7 @@ end
 
 zendesk_data_path = ARGV[0]
 
-organisations_by_zendesk_id = YAML.load_file("organisation_by_id.yml").inspect
+organisations_by_zendesk_id = YAML.load_file("organisation_by_id.yml")
 
 status_by_zendesk_id = {
   "1" => "open",
