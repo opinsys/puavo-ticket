@@ -147,6 +147,9 @@ function addTicket(rawTicket) {
                 ticket.set({ updatedAt: comment.get("createdAt") });
                 return ticket.save();
             }).return(ticket);
+        })
+        .then(function(ticket) {
+            return ticket.markAsRead(creator).return(ticket);
         });
     });
 
