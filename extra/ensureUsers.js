@@ -26,4 +26,8 @@ Promise.map(argv._, function(organisationDomain) {
 .then(function() {
     console.log("Ensured", count, "users");
     process.exit();
+})
+.catch(function(err) {
+    console.log(err.stack);
+    process.exit(1);
 });
