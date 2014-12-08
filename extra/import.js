@@ -6,12 +6,20 @@ process.env.BLUEBIRD_DEBUG = "true";
 var _ = require("lodash");
 var Promise = require("bluebird");
 var crypto = require('crypto');
+var exec = require("child_process").exec;
 
 var Ticket = require("app/models/server/Ticket");
 var User = require("app/models/server/User");
 var Comment = require("app/models/server/Comment");
 var Title = require("app/models/server/Title");
 var Tag = require("app/models/server/Tag");
+
+
+if (!process.argv[2]) {
+    console.error("xml dir arg missing");
+    process.exit(1);
+}
+
 
 function generateIdForComment(rawComment) {
     var shasum = crypto.createHash('sha1');
@@ -170,14 +178,27 @@ function processTickets(tickets) {
     });
 }
 
-processTickets(require("../data"))
-.then(function() {
-        console.log("Added", count, "tickets");
-        process.exit();
-})
-.catch(function(err) {
-    console.log(err);
-    console.log(err.stack);
-    process.exit(1);
+exec("extra/zendesk2json.rb " + process.argv[2], {maxBuffer: 1024 * 500}, function(err, stdout, stderr) {
+    console.error(stderr);
+    if (err) {
+        console.error("Failed to execute extra/zendesk2json.rb");
+        console.error(err);
+        process.exit(1);
+    }
+
+    console.log("zendesk2json.rb OK");
+    processTickets(JSON.parse(stdout.toString()))
+    .then(function() {
+            console.log("Added", count, "tickets");
+            process.exit();
+    })
+    .catch(function(err) {
+        console.log(err);
+        console.log(err.stack);
+        process.exit(1);
+    });
+
+
 });
+
 
