@@ -25,8 +25,7 @@ function addTicket(rawTicket) {
         console.log("Ticket has no title".red, rawTicket.zendesk_id);
         return Promise.resolve();
     }
-    return User.byExternalId(rawTicket.submitter.external_id)
-    .fetch({ require: true })
+    return User.ensureUserByEmail(rawTicket.submitter.email)
     .catch(function(err) {
         throw new Error("Cannot find user for " + JSON.stringify(rawTicket.submitter));
     })
@@ -70,27 +69,26 @@ function addTicket(rawTicket) {
         })
         .then(function addHandlers(ticket) {
 
-            function getExternalId(user) {
-                if (!user.external_id) {
-                    throw new Error("User has no external_id: " + JSON.stringify(user));
+            function getEmail(user) {
+                if (!user.email) {
+                    throw new Error("User has no email: " + JSON.stringify(user));
                 }
-                return user.external_id;
+                return user.email;
 
             }
 
-            var handlers = [getExternalId(rawTicket.submitter)];
+            var handlers = [getEmail(rawTicket.submitter)];
 
             if (rawTicket.requester) {
-                handlers.push(getExternalId(rawTicket.requester));
+                handlers.push(getEmail(rawTicket.requester));
             }
 
             if (rawTicket.assignee) {
-                handlers.push(getExternalId(rawTicket.assignee));
+                handlers.push(getEmail(rawTicket.assignee));
             }
 
-            return Promise.map(_.uniq(handlers), function(external_id) {
-                return User.byExternalId(external_id)
-                .fetch({ require: true })
+            return Promise.map(_.uniq(handlers), function(email) {
+                return User.ensureUserByEmail(email)
                 .then(function(user) {
                     return ticket.addHandler(user, creator);
                 });
