@@ -28,19 +28,37 @@ function generateIdForComment(rawComment) {
     return shasum.digest('hex');
 }
 
+
+function ensureUser(data) {
+    var userOp;
+    if (data.external_id) {
+        userOp = User.byExternalId(data.external_id).fetch()
+        .then(function(user) {
+            if (user) return user;
+            return User.forge({
+                externalData: {
+                    email: data.email,
+                    first_name: data.name,
+                    last_name: ""
+                }
+            }).save();
+        });
+    } else {
+        userOp = User.ensureUserByEmail(data.email, data.name, "");
+    }
+
+    return userOp;
+}
+
+
 function addTicket(rawTicket) {
     if (!rawTicket.title) {
         console.log("Ticket has no title".red, rawTicket.zendesk_id);
         return Promise.resolve();
     }
-    return User.ensureUserByEmail(rawTicket.submitter.email)
-    .catch(function(err) {
-        throw new Error("Cannot find user for " + JSON.stringify(rawTicket.submitter));
-    })
+    return ensureUser(rawTicket.submitter)
     .then(function(creator) {
         return Ticket.fetchOrCreate({
-            createdById: creator.get("id"),
-            createdAt: rawTicket.created_at,
             zendeskTicketId: rawTicket.zendesk_id
         })
         .then(function(ticket) {
@@ -51,52 +69,59 @@ function addTicket(rawTicket) {
                 console.log("Updating existing ticket".green, ticket.get("id"), ticket.get("zendeskTicketId"));
             }
 
+            ticket.set({
+                createdById: creator.get("id"),
+                createdAt: rawTicket.created_at,
+            });
+
             return ticket.save();
+        })
+        .then(function addOrganisationTag(ticket) {
+            console.log("Adding tag", "organisation:" + rawTicket.organisation);
+            return ticket.addTag("organisation:" + rawTicket.organisation, creator).return(ticket);
         })
         .then(function setStatus(ticket) {
             var status = rawTicket.status;
             if (!status) {
-                console.error("Invalid status in".red, rawTicket.zendesk_id);
+                console.error("Invalid status in".red, rawTicket.zendesk_id, rawTicket.title);
                 status = "open";
             }
 
             return Tag.fetchOrCreate({
                 tag: "status:" + rawTicket.status,
-                createdById: creator.get("id"),
                 ticketId: ticket.get("id"),
-            })
+            }, { noSoftDeleted: true })
             .then(function(tag) {
                 if (tag.isNew()) {
                     tag.set({
                         createdAt: new Date(),
                     });
                 }
+                tag.set({
+                    createdById: creator.get("id"),
+                });
                 return tag.save();
             })
             .return(ticket);
         })
         .then(function addHandlers(ticket) {
 
-            function getEmail(user) {
-                if (!user.email) {
-                    throw new Error("User has no email: " + JSON.stringify(user));
-                }
-                return user.email;
-
-            }
-
-            var handlers = [getEmail(rawTicket.submitter)];
+            var handlers = [rawTicket.submitter];
 
             if (rawTicket.requester) {
-                handlers.push(getEmail(rawTicket.requester));
+                handlers.push(rawTicket.requester);
             }
 
             if (rawTicket.assignee) {
-                handlers.push(getEmail(rawTicket.assignee));
+                handlers.push(rawTicket.assignee);
             }
 
-            return Promise.map(_.uniq(handlers), function(email) {
-                return User.ensureUserByEmail(email)
+            handlers = _.uniq(handlers, function(data) {
+                return data.email;
+            });
+
+            return Promise.each(handlers, function(data) {
+                return ensureUser(data)
                 .then(function(user) {
                     return ticket.addHandler(user, creator);
                 });
@@ -127,7 +152,7 @@ function addTicket(rawTicket) {
                     return;
                 }
 
-                return User.byExternalId(rawComment.commenter.external_id).fetch({ require: true })
+                return ensureUser(rawComment.commenter)
                 .then(function addComment(commenter) {
                     return Comment.fetchOrCreate({
                         ticketId: ticket.get("id"),
