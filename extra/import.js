@@ -156,15 +156,17 @@ function addTicket(rawTicket) {
                 .then(function addComment(commenter) {
                     return Comment.fetchOrCreate({
                         ticketId: ticket.get("id"),
-                        createdById: commenter.get("id"),
-                        createdAt: rawComment.created_at,
-                        comment: rawComment.comment,
                         zendeskCommentId: ticket.get("id") + ":" + generateIdForComment(rawComment)
                     })
                     .then(function(comment) {
                         if (comment.isNew()) {
                             console.log("Adding new comment for".yellow, ticket.get("id"), "by", commenter.get("id"));
                         }
+                        comment.set({
+                            createdById: commenter.get("id"),
+                            createdAt: rawComment.created_at,
+                            comment: rawComment.comment,
+                        });
                         return comment.save();
                     });
                 });
