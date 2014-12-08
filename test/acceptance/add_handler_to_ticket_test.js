@@ -67,7 +67,7 @@ describe("ticket handlers", function() {
         return browser
         .elementByCss(".Discuss-status").text()
         .then(function(val) {
-            assert.equal("Odottava #1", val);
+            assert.equal("Uusi #1", val);
         });
     });
 
@@ -99,7 +99,7 @@ describe("ticket handlers", function() {
         .elementByCss(".TicketView-tab-discuss").click()
         .elementByCss(".Discuss-status").text()
         .then(function(val) {
-            assert.equal("Avoin #1", val);
+            assert.equal("Käsittelyssä #1", val);
         });
     });
 
