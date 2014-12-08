@@ -48,6 +48,16 @@ Puavo.prototype.request = function(pathname) {
             strictSSL: false
         })
         .spread(function(res, body) {
+            if (res.statusCode !== 200) {
+                var err = new Error("Bad response from puavo-rest: " + res.statusCode + " for " + pathname);
+                err.res = res;
+                try {
+                    err.body = JSON.parse(body);
+                } catch(_e) {
+                    err.body = body;
+                }
+                throw err;
+            }
             return JSON.parse(body);
         });
 
