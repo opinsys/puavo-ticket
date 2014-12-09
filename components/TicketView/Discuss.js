@@ -1,4 +1,3 @@
-
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
@@ -8,11 +7,11 @@ var debug = require("debug")("app:read");
 var Navigation = require("react-router").Navigation;
 var RouteHandler = require("react-router").RouteHandler;
 
-var Badge = require("react-bootstrap/Badge");
 var Alert = require("react-bootstrap/Alert");
 
 var app = require("app");
 var Loading = require("../Loading");
+var StatusBadge = require("app/components/StatusBadge");
 var CommentForm = require("./CommentForm");
 var AttachmentsForm = require("../AttachmentsForm");
 var captureError = require("../../utils/captureError");
@@ -243,22 +242,6 @@ var Discuss = React.createClass({
 
 
 
-    renderBadge: function() {
-
-        var id = "#" + this.props.ticket.get("id");
-
-        var status = this.props.ticket.getCurrentStatus();
-        switch (status) {
-            case "pending":
-                return <Badge className="badge Discuss-status Discuss-status-pending">Uusi {id}</Badge>;
-            case "open":
-                return <Badge className="badge Discuss-status Discuss-status-open">Käsittelyssä {id}</Badge>;
-            case "closed":
-                return <Badge className="badge Discuss-status Discuss-status-closed">Ratkaistu {id}</Badge>;
-            default:
-                return <Badge className="badge Discuss-status"><Redacted>Unknown</Redacted></Badge>;
-        }
-    },
 
     renderDate: function() {
         var datestring = this.props.ticket.get("createdAt"),
@@ -344,6 +327,7 @@ var Discuss = React.createClass({
         var user = app.currentUser;
         var title = ticket.getCurrentTitle();
         var updates = this.getUpdatesWithMergedComments();
+        var status = ticket.getCurrentStatus();
 
         if (user.acl.canSeeZendeskLink() && ticket.get("zendeskTicketId")) {
             updates.unshift(ticket.createRobotComment(
@@ -374,13 +358,20 @@ var Discuss = React.createClass({
                         </div>
                     </div>
 
+                    <div className="row status-row">
+                        <div className="col-md-12">
+                            <StatusBadge status={status} />
+                        </div>
+                    </div>
+
                     <div className="row title-row">
                         <div className="col-md-12">
+
+
                             <EditableText onSubmit={this.changeTitle} text={title} disabled={!user.acl.canEditTitle(ticket)}>
                                 <h3>
-                                    {this.renderBadge()}
-
                                     <span className="Discuss-title">
+                                        <span className="Discuss-title-id">#{ticket.get("id")} </span>
                                         {title || <Redacted>Ladataan otsikkoa</Redacted>}
                                     </span>
                                     {this.state.changingTitle && <Loading.Spinner />}

@@ -40,26 +40,18 @@
 
 
     .Discuss-title {
-        padding: 10px;
         font-size: 24px;
     }
 
-    .title-row {
-        margin-bottom: 10px;
+
+    .ticket-actions-row, .title-row, .status-row {
+        margin-bottom: 1em;
     }
 
-
-
-    .ticket-header {
-        float: left;
+    .ticket-actions-row .btn {
+        margin-right: 10px;
     }
 
-    .ticket-actions-row {
-        margin-bottom: 10px;
-        .btn {
-            margin: 0 0.3rem 0 0;
-        }
-    }
 
     @include only-on(phones-and-smaller) {
         .ticket-actions-row .btn {
@@ -72,24 +64,7 @@
     }
 }
 
-.Discuss-status {
-    padding: 10px;
-    vertical-align: middle;
-    font-size: 20px;
-    margin-bottom: 8px;
-}
 
-.Discuss-status-closed {
-    background-color:  $closed-ticket-color;
-    p {
-        margin: 0 0 1em 0 ;
-    }
-}
-
-.Discuss-status-open {
-    background-color: $open-ticket-color;
-}
-
-.Discuss-status-pending {
-    background-color: $pending-ticket-color;
+.Discuss-title-id {
+    color: gray;
 }
