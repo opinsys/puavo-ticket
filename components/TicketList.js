@@ -3,6 +3,7 @@
 var React = require("react/addons");
 var Link = require("react-router").Link;
 
+var StatusBadge = require("app/components/StatusBadge");
 var Profile = require("./Profile");
 var TimeAgo = require("./TimeAgo");
 
@@ -26,10 +27,14 @@ var TicketList = React.createClass({
         var creator = ticket.createdBy();
         var handlers = ticket.rel("handlers").toArray();
         var ticketId = ticket.get("id");
+        var status = ticket.getCurrentStatus();
 
         return (
             <tr key={ticketId} >
-                <td>#{ticketId}</td>
+                <td>
+                    <span className="TicketList-ticket-id">#{ticketId}</span>
+                    <StatusBadge status={status} />
+                </td>
                 <td>
                     <Link to="ticket" className="TicketList-ticket-title" params={{id: ticketId}}>
                         {ticket.getCurrentTitle()}
