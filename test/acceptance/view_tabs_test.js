@@ -97,7 +97,8 @@ describe("View tabs", function() {
     it("edit preview shows results", function() {
         return browser.waitForElementByCss(
             ".ViewEditor-preview .TicketList-ticket-title",
-            aHelpers.safeTextInclude("Ticket has custom tag")
+            aHelpers.safeTextInclude("Ticket has custom tag"),
+            1000*5
         )
         .elementsByCss(".ViewEditor-preview .TicketList-ticket-title")
         .then(function(elements) {
