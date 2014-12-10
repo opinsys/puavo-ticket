@@ -76,6 +76,7 @@
     "through2": "^0.6.2",
     "uglify-js": "~2.4.15",
     "underscore": "~1.6.0",
+    "underscore.string": "^2.4.0",
     "uuid": "^2.0.1",
     "watchify": "^1.0.5",
     "wd": "^0.3.10",

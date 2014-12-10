@@ -4,6 +4,7 @@
  */
 
 var express = require("express");
+var db = require("app/db");
 
 var Ticket = require("../models/server/Ticket");
 
@@ -56,9 +57,23 @@ app.get("/api/tickets", function(req, res, next) {
                 q.where({ deleted: 0 });
             }},
             "handlers.handler",
+            {comments: function(q) {
+
+                var sub = db.knex
+                .column(["ticketId"])
+                .max("createdAt as latest")
+                .from("comments")
+                .groupBy("ticketId");
+
+                q.join(sub.as("maxtable"), function() {
+                    this.on("comments.ticketId", "=", "maxtable.ticketId");
+                    this.on("comments.createdAt", "=", "maxtable.latest");
+                });
+            }},
+            "comments.createdBy",
             "tags",
             "titles",
-            { notifications: function(qb) {
+            {notifications: function(qb) {
                 qb.where({ targetId: req.user.get("id") });
             }}
         ]

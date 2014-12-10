@@ -2,6 +2,7 @@
 "use strict";
 var React = require("react/addons");
 var Link = require("react-router").Link;
+var s = require("underscore.string");
 
 var StatusBadge = require("app/components/StatusBadge");
 var Profile = require("./Profile");
@@ -24,69 +25,68 @@ var TicketList = React.createClass({
     },
 
     renderTicketMetaInfo: function(ticket) {
-        var creator = ticket.createdBy();
-        var handlers = ticket.rel("handlers").toArray();
-        var ticketId = ticket.get("id");
         var status = ticket.getCurrentStatus();
+        var ticketId = ticket.get("id");
+        var title = ticket.getCurrentTitle();
+        var handlers = ticket.rel("handlers").map(h => h.getUser());
+
+        var comment = ticket.rel("comments").last();
+
 
         return (
-            <tr key={ticketId} >
-                <td>
-                    <span className="TicketList-ticket-id">#{ticketId}</span>
+            <div className="TicketList-item" >
+                <div className="TicketList-header">
                     <StatusBadge status={status} />
-                </td>
-                <td>
-                    <Link to="ticket" className="TicketList-ticket-title" params={{id: ticketId}}>
-                        {ticket.getCurrentTitle()}
+                    <span className="TicketList-created-at">
+                        Lähettänyt <Profile.Overlay user={ticket.createdBy()} clickForDetails>{ticket.createdBy().getFullName()}</Profile.Overlay> <TimeAgo date={ticket.createdAt()} />
+                    </span>
+                </div>
+                <h2>
+                    <Link to="ticket" className="TicketList-link" params={{id: ticketId}}>
+                        <span className="TicketList-ticket-id">#{ticketId} </span>
+                        <span className="TicketList-ticket-title">{title}</span>
                     </Link>
-                </td>
-                <td className="ticket-creator">
-                    {creator.getFullName()}
-                </td>
-                <td className="ticket-updated">
-                    <TimeAgo date={ticket.updatedAt()} />
-                </td>
-                <td className="ticket-handlers">
-                    {handlers.map(function(handler) {
-                        var user = handler.getUser();
-                        return (
-                            <Profile.Overlay clickForDetails tipPlacement="left" key={handler.get("id")} user={user}>
-                                <Profile.Badge size={40} user={user} />
+                </h2>
+                <div className="TicketList-footer">
+                    {comment &&
+                    <div className="TicketList-comment">
+                        Viimeisin kommentti: <span className="TicketList-comment-content">
+                            {s.prune(comment.get("comment"), 100)}
+                        </span>
+                        <span className="TicketList-commenter"> -
+                            <Profile.Overlay clickForDetails user={comment.createdBy()} tipPlacement="left" >
+                                {comment.createdBy().getFullName()}
                             </Profile.Overlay>
-                        );
-                    })}
-                </td>
-            </tr>
+                        </span> <TimeAgo className="TicketList-comment-time" date={comment.createdAt()} />
+                    </div>}
+
+                    <div className="TicketList-handlers">
+                        <span className="TicketList-handlers-title">
+                            Käsittelijät:
+                        </span> {handlers.map((handler, i) => {
+                                var comma = handlers.length-1 === i || ", ";
+                                return <Profile.Overlay clickForDetails user={handler}>
+                                    {handler.getFullName()}{comma}
+                                </Profile.Overlay>;
+                        })}
+                    </div>
+
+
+                </div>
+            </div>
         );
     },
 
 
     render: function() {
-        var self = this;
         var tickets = this.props.tickets;
 
         return (
-            <div className="TicketList ticket-division col-md-12">
-
-                <div className="ticketlist">
-                    <table ref="list" className="table table-striped table-responsive">
-                        <tbody>
-                            <tr key="title">
-                                <th data-column-id="id">ID</th>
-                                <th data-column-id="subject">Aihe</th>
-                                <th data-column-id="creator">Lähettäjä</th>
-                                <th data-column-id="updated">Viimeisin päivitys</th>
-                                <th data-column-id="handlers">Käsittelijä(t)</th>
-                            </tr>
-
-                            {tickets.map(function(ticket) {
-                                return self.renderTicketMetaInfo(ticket);
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
+            <ul className="TicketList">
+                {tickets.map((ticket) => {
+                    return <li key={ticket.get("id")}>{this.renderTicketMetaInfo(ticket)}</li>;
+                })}
+            </ul>
         );
     }
 });

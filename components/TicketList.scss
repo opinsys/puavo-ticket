@@ -1,56 +1,76 @@
 .TicketList {
-    padding: 0;
-   .ProfileBadge {
-       margin: 3px;
-   }
-    .unread {
-        .unread-comments {
-            background-color: $green-active-color;
-            display: inline-block;
-        }
+    padding-left: 0;
+
+    li {
+        list-style-type: none;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    h2 {
+        font-size: 14pt;
+        margin: 0;
     }
 
-    .read {
-        .unread-comments {
-            display:none;
-        }
+    .StatusBadge {
+        font-size: 8pt;
     }
+}
 
-    .read, .unread {
-        span {
-            margin: 0;
-        }
-        .unread-comments{
-            float: right;
-            margin: 0 0 0 0.5rem;
-        }
-        a{
-            display: block;
-        }
+.TicketList-item {
+    padding: 10px;
+    background-color: white;
+    border: 2px solid $bubble-border-color;
+    border-radius: 5px;
+}
+
+.TicketList-link {
+    color: black;
+    &:hover {
+    color: black;
     }
+}
 
-    .ticket-division {
-        border-bottom: 2px solid rgba(90, 90, 90, 0.25);
-        padding-bottom: 1rem;
-        &:last-of-type {
-            border: none;
-        }
-        .ticket-handlers span {
-            margin: 0 0.5rem 0 0;
-            &:after{
-                content: ', ';
-            }
-            &:last-of-type:after{
-                content: '';
-            }
-        }
-     }
+.TicketList-header {
+    margin-bottom: 5px;
+}
 
-     .StatusBadge {
-         margin-left: 10px;
-     }
+.TicketList-footer {
+    margin-top: 5px;
 }
 
 .TicketList-ticket-id {
     color: gray;
+    min-width: 100px;
 }
+
+.TicketList-created-at {
+    color: gray;
+    font-size: 8pt;
+    margin-left: 5px;
+}
+
+.TicketList-tags {
+    font-size: 8pt;
+}
+
+.TicketList-comment {
+    font-size: 8pt;
+}
+
+.TicketList-comment-content {
+    color: gray;
+}
+.TicketList-comment-time {
+    color: gray;
+}
+
+.TicketList-handlers {
+    color: gray;
+    font-size: 8pt;
+}
+
+.TicketList-handlers-title {
+    color: black;
+}
+
+
