@@ -326,7 +326,7 @@ if (require.main === module) {
         console.log('Listening on  http://%s:%d', addr.address, addr.port);
     });
 
-    if (!PRODUCTION && !process.env.START_TEST_SERVER) {
+    if (!PRODUCTION && !process.env.START_TEST_SERVER && !process.env.NO_WATCH) {
         require("./devmode")(sio);
     }
 
