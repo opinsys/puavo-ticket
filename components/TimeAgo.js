@@ -5,6 +5,7 @@ var React = require("react/addons");
 var moment = require("moment");
 var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
 var Tooltip = require("react-bootstrap/Tooltip");
+var classMerge = require("class-merge");
 
 
 // The app will have bunch of these mounted at once. To avoid each one randomly
@@ -72,7 +73,7 @@ var TimeAgo = React.createClass({
 
         return (
             <OverlayTrigger placement="top" overlay={<Tooltip>{formatted}</Tooltip>}>
-                {<span {...this.props} className="TimeAgo" title={formatted}>{fromNow}</span>}
+                {<span {...this.props} className={classMerge("TimeAgo", this.props.className)} title={formatted}>{fromNow}</span>}
             </OverlayTrigger>
         );
     }
