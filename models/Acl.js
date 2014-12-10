@@ -40,6 +40,14 @@ Acl.prototype = {
     },
 
     /**
+     * @method canSeeTicketDetails
+     * @return {Boolean}
+     */
+    canSeeTicketDetails: function(){
+        return this.user.isManager();
+    },
+
+    /**
      * @method canChangeStatus
      * @param {models.client.Ticket|models.server.Ticket} ticket
      * @return {Boolean}

@@ -3,9 +3,14 @@
 
     li {
         list-style-type: none;
-        margin-top: 10px;
-        margin-bottom: 10px;
+        padding: 2em;
+        border-bottom: 1px solid gray;
+        &:last-child {
+            border-bottom: 0;
+        }
     }
+
+
     h2 {
         font-size: 14pt;
         margin: 0;
@@ -17,10 +22,7 @@
 }
 
 .TicketList-item {
-    padding: 10px;
-    background-color: white;
-    border: 2px solid $bubble-border-color;
-    border-radius: 5px;
+    position: relative;
 }
 
 .TicketList-link {
@@ -31,11 +33,11 @@
 }
 
 .TicketList-header {
-    margin-bottom: 5px;
+    margin-bottom: 15px;
 }
 
 .TicketList-footer {
-    margin-top: 5px;
+    margin-top: 15px;
 }
 
 .TicketList-ticket-id {
@@ -65,9 +67,14 @@
 }
 
 .TicketList-handlers {
+    position: absolute;
+    top: 0;
+    right: 2px;
     color: gray;
     font-size: 8pt;
+    .ProfileBadge {
+        margin: 1px;
+    }
 }
-
 
 

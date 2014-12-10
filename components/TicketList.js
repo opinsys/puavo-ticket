@@ -4,6 +4,7 @@ var React = require("react/addons");
 var Link = require("react-router").Link;
 var s = require("underscore.string");
 
+var app = require("app");
 var StatusBadge = require("app/components/StatusBadge");
 var Profile = require("./Profile");
 var TimeAgo = require("./TimeAgo");
@@ -29,12 +30,20 @@ var TicketList = React.createClass({
         var ticketId = ticket.get("id");
         var title = ticket.getCurrentTitle();
         var handlers = ticket.rel("handlers").map(h => h.getUser());
+        var user = app.currentUser;
 
         var comment = ticket.rel("comments").last();
 
 
         return (
             <div className="TicketList-item" >
+                <div className="TicketList-handlers" >
+                    {handlers.map((handler) => {
+                        return <Profile.Overlay clickForDetails user={handler} tipPlacement="left">
+                            <Profile.Badge user={handler} size={22} />
+                        </Profile.Overlay>;
+                    })}
+                </div>
                 <div className="TicketList-header">
                     <StatusBadge status={status} />
                     <span className="TicketList-created-at">
@@ -43,7 +52,8 @@ var TicketList = React.createClass({
                 </div>
                 <h2>
                     <Link to="ticket" className="TicketList-link" params={{id: ticketId}}>
-                        <span className="TicketList-ticket-id">#{ticketId} </span>
+                        {user.acl.canSeeTicketDetails() &&
+                        <span className="TicketList-ticket-id">#{ticketId} </span>}
                         <span className="TicketList-ticket-title">{title}</span>
                     </Link>
                 </h2>
@@ -59,12 +69,6 @@ var TicketList = React.createClass({
                             </Profile.Overlay>
                         </span> <TimeAgo className="TicketList-comment-time" date={comment.createdAt()} />
                     </div>}
-
-                    <div className="TicketList-handlers">
-                         {handlers.map((handler) => <Profile.Badge user={handler} size={20} />)}
-                    </div>
-
-
                 </div>
             </div>
         );

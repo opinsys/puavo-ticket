@@ -371,7 +371,8 @@ var Discuss = React.createClass({
                             <EditableText onSubmit={this.changeTitle} text={title} disabled={!user.acl.canEditTitle(ticket)}>
                                 <h3>
                                     <span className="Discuss-title">
-                                        <span className="Discuss-title-id">#{ticket.get("id")} </span>
+                                        {user.acl.canSeeTicketDetails() &&
+                                        <span className="Discuss-title-id">#{ticket.get("id")} </span>}
                                         {title || <Redacted>Ladataan otsikkoa</Redacted>}
                                     </span>
                                     {this.state.changingTitle && <Loading.Spinner />}
