@@ -49,7 +49,7 @@ Puavo.prototype.request = function(pathname) {
         })
         .spread(function(res, body) {
             if (res.statusCode !== 200) {
-                var err = new Error("Bad response from puavo-rest: " + res.statusCode + " for " + pathname);
+                var err = new Error("Bad response from puavo-rest: " + res.statusCode + " for " + pathname + " msg:" + String(body));
                 err.res = res;
                 try {
                     err.body = JSON.parse(body);
