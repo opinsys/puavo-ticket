@@ -36,7 +36,7 @@ var StatusBadge = React.createClass({
                 break;
         }
 
-        return <div className="StatusBadge">{inner}</div>;
+        return <div className="StatusBadge" style={this.props.style}>{inner}</div>;
     }
 });
 

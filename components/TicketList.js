@@ -61,14 +61,7 @@ var TicketList = React.createClass({
                     </div>}
 
                     <div className="TicketList-handlers">
-                        <span className="TicketList-handlers-title">
-                            Käsittelijät:
-                        </span> {handlers.map((handler, i) => {
-                                var comma = handlers.length-1 === i || ", ";
-                                return <Profile.Overlay clickForDetails user={handler}>
-                                    {handler.getFullName()}{comma}
-                                </Profile.Overlay>;
-                        })}
+                         {handlers.map((handler) => <Profile.Badge user={handler} size={20} />)}
                     </div>
 
 
