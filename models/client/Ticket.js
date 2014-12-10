@@ -160,13 +160,18 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
             "Olemme vastaanottaneet tukipyyntösi. Voit vielä halutessasi täydentää sitä kommentoimalla tähän.",
             "welcome"
         );
+        var comments = this.rel("comments").toArray();
+
         var updates = [welcome]
         .concat(this.rel("tags").slice(1))
         .concat(this.rel("handlers").slice(1))
         .concat(this.rel("titles").toArray())
-        .concat(this.rel("comments").toArray())
+        .concat(comments.slice(1))
         ;
-        return updates.sort(byCreation);
+        updates =  updates.sort(byCreation);
+        updates = [comments[0]].concat(updates);
+        return updates;
+
     },
 
     /**
