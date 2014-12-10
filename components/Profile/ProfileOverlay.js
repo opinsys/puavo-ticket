@@ -15,6 +15,7 @@ var ProfileDetails = require("./ProfileDetails");
  * @constructor
  * @param {Object} props
  * @param {models.client.User} props.user
+ * @param {Boolean} props.clickForDetails Show user details modal on click
  * @param {String} [props.tipPlacement=right]
  */
 var ProfileOverlay = React.createClass({
@@ -22,7 +23,12 @@ var ProfileOverlay = React.createClass({
     propTypes: {
         clickForDetails: React.PropTypes.bool,
         user: React.PropTypes.instanceOf(User).isRequired,
+        display: React.PropTypes.oneOf(["block", "inline"]),
         tipPlacement: React.PropTypes.string
+    },
+
+    getDefaultProps: function() {
+        return { display: "inline" };
     },
 
     renderTooltip: function() {
@@ -60,11 +66,7 @@ var ProfileOverlay = React.createClass({
         var user = this.props.user;
         var children = this.props.children;
 
-        if (typeof children === "string") {
-            children = <span>{children}</span>;
-        } else if (children.length > 1) {
-            children = <div>{children}</div>;
-        }
+        children = <div style={{display: this.props.display}}>{children}</div>;
 
         if (user.robot) return children;
 
