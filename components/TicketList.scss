@@ -69,9 +69,7 @@
 }
 
 .TicketList-handlers {
-    position: absolute;
-    top: 0;
-    right: 2px;
+    float: right;
     color: gray;
     font-size: 8pt;
     .ProfileBadge {
