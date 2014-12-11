@@ -40,7 +40,7 @@ var TicketList = React.createClass({
                 <div className="TicketList-handlers" >
                     {handlers.map((handler) => {
                         return <Profile.Overlay clickForDetails user={handler} tipPlacement="left">
-                            <Profile.Badge user={handler} size={22} />
+                            <Profile.Badge user={handler} size={30} />
                         </Profile.Overlay>;
                     })}
                 </div>

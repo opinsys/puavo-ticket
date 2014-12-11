@@ -4,6 +4,8 @@
     li {
         list-style-type: none;
         padding: 2em;
+        padding-bottom: 1em;
+        padding-top: 1em;
         border-bottom: 1px solid gray;
         &:last-child {
             border-bottom: 0;
@@ -56,7 +58,7 @@
 }
 
 .TicketList-comment {
-    font-size: 8pt;
+    font-size: 9pt;
 }
 
 .TicketList-comment-content {
