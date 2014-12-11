@@ -22,6 +22,19 @@ if (!process.argv[2]) {
     process.exit(1);
 }
 
+function addAttachments(rawComment, comment) {
+    return Promise.map(rawComment.attachments, function(attachment) {
+        console.log("Fetching attachment", attachment.url);
+        return new Promise(function(resolve, reject){
+            var req = new Readable().wrap(request(attachment.url)).on("error", reject);
+            resolve(comment.addAttachment(
+                attachment.filename,
+                attachment.dataType,
+                req
+            ));
+        });
+    });
+}
 
 function generateIdForComment(rawComment) {
     var shasum = crypto.createHash('sha1');
@@ -161,28 +174,18 @@ function addTicket(rawTicket) {
                         zendeskCommentId: ticket.get("id") + ":" + generateIdForComment(rawComment)
                     })
                     .then(function(comment) {
-                        if (comment.isNew()) {
-                            console.log("Adding new comment for".yellow, ticket.get("id"), "by", commenter.get("id"));
-                        }
                         comment.set({
                             createdById: commenter.get("id"),
                             createdAt: rawComment.created_at,
                             comment: rawComment.comment,
                         });
-                        return comment.save();
-                    })
-                    .then(function addAttachments(comment) {
-                        return Promise.map(rawComment.attachments, function(attachment) {
-                            console.log("Fetching attachment", attachment.url);
-                            return new Promise(function(resolve, reject){
-                                var req = new Readable().wrap(request(attachment.url)).on("error", reject);
-                                resolve(comment.addAttachment(
-                                    attachment.filename,
-                                    attachment.dataType,
-                                    req
-                                ));
-                            });
-                        });
+
+                        if (comment.isNew()) {
+                            console.log("Adding new comment for".yellow, ticket.get("id"), "by", commenter.get("id"));
+                            return comment.save().then(addAttachments.bind(null, rawComment, comment));
+                        } else {
+                            return comment.save();
+                        }
                     });
                 });
             }).return(ticket);
