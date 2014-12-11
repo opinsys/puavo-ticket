@@ -44,7 +44,7 @@ Acl.prototype = {
      * @return {Boolean}
      */
     canSeeTicketDetails: function(){
-        return this.user.isManager();
+        return true;
     },
 
     /**
