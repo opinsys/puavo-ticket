@@ -7,6 +7,8 @@ var _ = require("lodash");
 var Promise = require("bluebird");
 var crypto = require('crypto');
 var exec = require("child_process").exec;
+var request = require("request");
+var Readable = require('stream').Readable;
 
 var Ticket = require("app/models/server/Ticket");
 var User = require("app/models/server/User");
@@ -168,6 +170,19 @@ function addTicket(rawTicket) {
                             comment: rawComment.comment,
                         });
                         return comment.save();
+                    })
+                    .then(function addAttachments(comment) {
+                        return Promise.map(rawComment.attachments, function(attachment) {
+                            console.log("Fetching attachment", attachment.url);
+                            return new Promise(function(resolve, reject){
+                                var req = new Readable().wrap(request(attachment.url)).on("error", reject);
+                                resolve(comment.addAttachment(
+                                    attachment.filename,
+                                    attachment.dataType,
+                                    req
+                                ));
+                            });
+                        });
                     });
                 });
             }).return(ticket);

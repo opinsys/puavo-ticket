@@ -98,6 +98,13 @@ ticket_xml_doc.xpath("tickets/ticket").each do |ticket_xml|
     comment["type"] = comment_xml.at_xpath("type").text
     comment["commenter"] = commenter
     comment["created_at"] = comment_xml.at_xpath("created-at").text
+    comment["attachments"] = comment_xml.xpath("attachments/attachment").map do |a|
+      {
+        "dataType" => a.xpath("content-type").text,
+        "url" => a.xpath("url").text,
+        "filename" => a.xpath("filename").text
+      }
+    end
 
     ticket["comments"].push comment
   end
