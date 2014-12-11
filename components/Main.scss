@@ -55,8 +55,11 @@
     @include only-on(phones-and-smaller) {
         .top-buttons {
             width: 100%;
-            .top-button, .btn-group {
+            .btn {
                 margin-top: 0.5rem;
+                border-radius: 3px !important;
+            }
+            .top-button, .btn-group, .btn {
                 width: 100%;
             }
         }
