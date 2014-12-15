@@ -313,6 +313,26 @@ var Discuss = React.createClass({
         }, []);
     },
 
+    shouldComponentUpdate: function(nextProps, nextState) {
+        // Always render if the component state changes
+        if (!_.isEqual(this.state, nextState)) {
+            return true;
+        }
+
+        // Render if the ticket changes
+        if (this.props.ticket.get("id") !== nextProps.ticket.get("id")) {
+            return true;
+        }
+
+        // If the ticket timestamp does not change – no need to re-render
+        if (this.props.ticket.get("updatedAt") === nextProps.ticket.get("updatedAt")) {
+            return false;
+        }
+
+        // Render in all other cases
+        return true;
+    },
+
     render: function() {
         if (this.state.notFound) {
             return <Alert bsStyle="danger">
