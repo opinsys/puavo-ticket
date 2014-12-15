@@ -45,6 +45,11 @@ var CommentUpdate = React.createClass({
         if (this.isMounted()) this.forceUpdate();
     },
 
+    shouldComponentUpdate: function(nextProps) {
+        // If comment id does not change no need to render
+        return this.props.update.getMergedId() !== nextProps.update.getMergedId();
+    },
+
     render: function() {
 
         var comment = this.props.update;

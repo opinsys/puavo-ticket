@@ -69,6 +69,17 @@ var Comment = Base.extend({
     },
 
     /**
+     * Get one id string for all comments merged in this one
+     *
+     * @method getMergedId
+     * @return String
+     */
+    getMergedId: function(){
+        var ids = [this.get("id")];
+        return ids.concat(this.get("merged").map(c => c.id)).join("-");
+    },
+
+    /**
      * @method ticket
      * @return {models.client.Ticket}
      */
