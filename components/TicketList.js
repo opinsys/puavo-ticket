@@ -78,6 +78,12 @@ var TicketList = React.createClass({
     render: function() {
         var tickets = this.props.tickets;
 
+        if (tickets.length === 0) {
+            return <div className="TicketList TicketList-empty">
+                Ei tukipyyntöjä
+            </div>;
+        }
+
         return (
             <ul className="TicketList">
                 {tickets.map((ticket) => {
