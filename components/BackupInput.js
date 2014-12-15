@@ -21,7 +21,10 @@ var _ = require("lodash");
 var BackupInput = React.createClass({
 
     propTypes: {
-        input: React.PropTypes.func.isRequired,
+        input: React.PropTypes.oneOfType([
+            React.PropTypes.string,
+            React.PropTypes.func,
+        ]).isRequired,
         backupKey: React.PropTypes.string.isRequired,
         onRestore: React.PropTypes.func,
     },
