@@ -114,7 +114,7 @@ describe("ticket handlers", function() {
     it("can close the ticket", function() {
         return browser
         .elementByCss(".ToggleStatusButton").click()
-        .waitForElementsByCss(".Discuss .StatusBadge", asserters.textInclude("Ratkaistu"))
+        .waitForElementsByCss(".Discuss .StatusBadge", asserters.textInclude("Ratkaistu"), 1000*5)
         .elementByCss(".ToggleStatusButton").text()
         .then(function(val) {
             assert.equal("Avaa uudelleen", val);
