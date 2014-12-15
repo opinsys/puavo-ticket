@@ -32,7 +32,6 @@ var EditableList = React.createClass({
 var Item = React.createClass({
 
     propTypes: {
-        key: React.PropTypes.string.isRequired,
         className: React.PropTypes.string,
         onRemove: React.PropTypes.func,
         permanent: React.PropTypes.bool,
@@ -52,7 +51,7 @@ var Item = React.createClass({
         var disabled = !!this.props.disabled;
         var pending = this.state.removePending;
         return (
-            <li className={className} key={this.props.key}>
+            <li className={className}>
                 {!this.props.permanent && <Button className="remove-button"
                         bsStyle="danger"
                         bsSize="xsmall"
