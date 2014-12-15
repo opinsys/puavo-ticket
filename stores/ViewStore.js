@@ -95,7 +95,6 @@ var ViewStore = Reflux.createStore({
     },
 
     getInitialState: function() {
-        console.log("get initial state");
         return this.getState();
     },
 
