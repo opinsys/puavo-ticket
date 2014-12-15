@@ -309,6 +309,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      */
     addTag: function(tagName, user, opts) {
         if (Base.isModel(tagName))  tagName = tagName.get("tag");
+        var self = this;
 
         return Tag.fetchOrCreate({
             tag: tagName,
@@ -324,7 +325,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
         })
         .then(function(tag) {
             if (opts && opts.silent === false) return tag;
-            return this.triggerUpdate(tag);
+            return self.triggerUpdate(tag);
         });
 
     },
