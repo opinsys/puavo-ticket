@@ -304,9 +304,10 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @method addTag
      * @param {String|models.server.Tag} tag
      * @param {models.server.User} user Creator of the tag
+     * @param {Object} [options]
      * @return {Bluebird.Promise} with models.server.Tag
      */
-    addTag: function(tagName, user) {
+    addTag: function(tagName, user, opts) {
         if (Base.isModel(tagName))  tagName = tagName.get("tag");
 
         return Tag.fetchOrCreate({
@@ -320,6 +321,10 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
                 return tag.save();
             }
             return tag;
+        })
+        .then(function(tag) {
+            if (opts && opts.silent === false) return tag;
+            return this.triggerUpdate(tag);
         });
 
     },
