@@ -37,6 +37,31 @@ function addAttachments(rawComment, comment) {
     });
 }
 
+function setStatus(ticket, creator, rawTicket) {
+            var status = rawTicket.status;
+            if (!status) {
+                console.error("Invalid status in".red, rawTicket.zendesk_id, rawTicket.title);
+                status = "open";
+            }
+
+            return Tag.fetchOrCreate({
+                tag: "status:" + rawTicket.status,
+                ticketId: ticket.get("id"),
+            }, { noSoftDeleted: true })
+            .then(function(tag) {
+                if (tag.isNew()) {
+                    tag.set({
+                        createdAt: new Date(),
+                    });
+                }
+                tag.set({
+                    createdById: creator.get("id"),
+                });
+                return tag.save();
+            })
+            .return(ticket);
+        }
+
 function generateIdForComment(rawComment) {
     var shasum = crypto.createHash('sha1');
     shasum.update(rawComment.created_at);
@@ -95,30 +120,6 @@ function addTicket(rawTicket) {
         .then(function addOrganisationTag(ticket) {
             console.log("Adding tag", "organisation:" + rawTicket.organisation);
             return ticket.addTag("organisation:" + rawTicket.organisation, creator).return(ticket);
-        })
-        .then(function setStatus(ticket) {
-            var status = rawTicket.status;
-            if (!status) {
-                console.error("Invalid status in".red, rawTicket.zendesk_id, rawTicket.title);
-                status = "open";
-            }
-
-            return Tag.fetchOrCreate({
-                tag: "status:" + rawTicket.status,
-                ticketId: ticket.get("id"),
-            }, { noSoftDeleted: true })
-            .then(function(tag) {
-                if (tag.isNew()) {
-                    tag.set({
-                        createdAt: new Date(),
-                    });
-                }
-                tag.set({
-                    createdById: creator.get("id"),
-                });
-                return tag.save();
-            })
-            .return(ticket);
         })
         .then(function addHandlers(ticket) {
 
@@ -204,6 +205,9 @@ function addTicket(rawTicket) {
         })
         .then(function(ticket) {
             return ticket.markAsRead(creator).return(ticket);
+        })
+        .then(function(ticket) {
+            return setStatus(ticket, creator, rawTicket);
         });
     });
 
