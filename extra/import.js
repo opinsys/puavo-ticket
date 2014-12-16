@@ -9,6 +9,7 @@ var crypto = require('crypto');
 var exec = require("child_process").exec;
 var request = require("request");
 var Readable = require('stream').Readable;
+var prettyMs = require("pretty-ms");
 
 var Ticket = require("app/models/server/Ticket");
 var User = require("app/models/server/User");
@@ -213,17 +214,25 @@ var count = 0;
 
 function processTickets(tickets) {
     if (tickets.length === 0) return;
+    var started = Date.now();
     return addTicket(tickets[0])
     .then(function(ticket) {
         count++;
+        var diff = Date.now() - started;
         if (ticket) {
-            console.log("Sync ok for", "ticket", ticket.get("id"), ticket.get("zendeskTicketId"));
+            console.log(
+                count + ". Sync ok for",
+                "pt:", ticket.get("id"),
+                "zendesk:",
+                ticket.get("zendeskTicketId"),
+                "Took:", prettyMs(diff)
+            );
         }
         return processTickets(tickets.slice(1));
     });
 }
 
-exec("extra/zendesk2json.rb " + process.argv[2], {maxBuffer: 1024 * 500}, function(err, stdout, stderr) {
+exec("extra/zendesk2json.rb " + process.argv[2], {maxBuffer: 1024 * 5000}, function(err, stdout, stderr) {
     console.error(stderr);
     if (err) {
         console.error("Failed to execute extra/zendesk2json.rb");
