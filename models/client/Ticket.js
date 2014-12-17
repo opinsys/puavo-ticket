@@ -161,6 +161,8 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
             "welcome"
         );
         var comments = this.rel("comments").toArray();
+        comments = comments.sort(byCreation);
+
 
         var updates = [welcome]
         .concat(this.rel("tags").slice(1))
