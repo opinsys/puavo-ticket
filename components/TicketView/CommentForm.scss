@@ -31,34 +31,3 @@
     }
 }
 
-
-.CommentForm-tools-row {
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    right: 0;
-    font-size: 10pt;
-}
-
-.CommentForm-tools-row > * {
-    display: inline-block;
-    vertical-align: top;
-}
-
-.CommentForm-hidden-toggle {
-    border: none;
-    padding: 0;
-    margin: 0;
-    margin-right: 3px;
-    font-size: 12pt;
-    background-color: transparent;
-    color: lightgray;
-    display: inline-flex;
-    .fa {
-        vertical-align: top;
-    }
-}
-
-.CommentForm-hidden-toggle.active {
-    color: $input-color;
-}

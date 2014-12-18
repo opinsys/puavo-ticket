@@ -1,0 +1,18 @@
+
+.ToggleHiddenButton {
+    border: none;
+    padding: 0;
+    margin: 0;
+    margin-right: 3px;
+    font-size: 12pt;
+    background-color: transparent;
+    color: lightgray;
+    display: inline-flex;
+    .fa {
+        vertical-align: top;
+    }
+}
+
+.ToggleHiddenButton.active {
+    color: $input-color;
+}

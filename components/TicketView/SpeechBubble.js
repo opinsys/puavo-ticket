@@ -21,7 +21,8 @@ var SpeechBubble = React.createClass({
     getDefaultProps: function() {
         return {
             className: "",
-            title: ""
+            title: "",
+            toolbar: ""
         };
     },
 
@@ -38,6 +39,7 @@ var SpeechBubble = React.createClass({
                         <span className="SpeechBubble-name">{user.getFullName()}</span>
                         <span className="subtitle">{title}</span>
                     </div>
+                    <div className="SpeechBubble-toolbar">{this.props.toolbar}</div>
                     <div className="content">
                         {this.props.children}
                     </div>

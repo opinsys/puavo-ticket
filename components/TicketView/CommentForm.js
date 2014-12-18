@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 "use strict";
 
 var React = require("react/addons");
@@ -11,11 +10,11 @@ var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
 var Tooltip = require("react-bootstrap/Tooltip");
 var Label = require("react-bootstrap/Label");
 
-var Fa = require("app/components/Fa");
 var User = require("app/models/client/User");
 var ElasticTextarea = require("app/components/ElasticTextarea");
 var BackupInput = require("app/components/BackupInput");
 var SpeechBubble = require("./SpeechBubble");
+var ToggleHiddenButton = require("./ToggleHiddenButton");
 
 
 function scrollElBottom(el, padding) {
@@ -210,30 +209,20 @@ var CommentForm = React.createClass({
             selected: this.state.focus
         });
 
-        var hiddenToggleClasses = classSet({
-            "CommentForm-hidden-toggle": true,
-            active: this.state.hidden
-        });
 
+        var toolbar = null;
+        if (user.acl.canAddHiddenComments()) {
+            toolbar = <span>
+                <ToggleHiddenButton value={this.state.hidden} onChange={this.toggleHidden} />
+
+                <OverlayTrigger placement="left" overlay={<Tooltip>{tip.desc}</Tooltip>}>
+                    <Label bsStyle={tip.bsStyle} className="linemode-tooltip">{tip.title}</Label>
+                </OverlayTrigger>
+            </span>;
+        }
 
         return (
-            <SpeechBubble className={className} user={user} title={warning} >
-
-                <span className="CommentForm-tools-row">
-
-                    {user.acl.canAddHiddenComments() &&
-                        <OverlayTrigger placement="left"
-                            overlay={<Tooltip>Tee kommentista piilotettu kommentti jonka vain toiset ylläpitäjät näkevät</Tooltip>}>
-                            <button className={hiddenToggleClasses} onClick={self.toggleHidden}>
-                                <Fa icon="eye-slash" />
-                            </button>
-                        </OverlayTrigger>}
-
-                    <OverlayTrigger placement="left" overlay={<Tooltip>{tip.desc}</Tooltip>}>
-                        <Label bsStyle={tip.bsStyle} className="linemode-tooltip">{tip.title}</Label>
-                    </OverlayTrigger>
-                </span>
-
+            <SpeechBubble className={className} user={user} title={warning} toolbar={toolbar} >
                 <BackupInput
                     input={ElasticTextarea}
                     backupKey="ticketcomment"

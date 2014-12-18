@@ -5,6 +5,7 @@ var classSet = React.addons.classSet;
 var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
 var Tooltip = require("react-bootstrap/Tooltip");
 
+var app = require("app");
 var Fa = require("app/components/Fa");
 var SpeechBubble = require("./SpeechBubble");
 var OnViewportMixin = require("../OnViewportMixin");
@@ -12,6 +13,7 @@ var UpdateMixin = require("./UpdateMixin");
 var TimeAgo = require("../TimeAgo");
 var FileItem = require("app/components/FileItem");
 var ForcedLinebreaks = require("app/components/ForcedLinebreaks");
+var ToggleHiddenButton = require("./ToggleHiddenButton");
 
 
 /**
@@ -53,6 +55,7 @@ var CommentUpdate = React.createClass({
     render: function() {
 
         var comment = this.props.update;
+        var user = app.currentUser;
 
         var createdBy = comment.createdBy();
         var createdAt = comment.createdAt();
@@ -78,10 +81,16 @@ var CommentUpdate = React.createClass({
             selected: isSelectedByAddress
         });
 
+        var toolbar = null;
+        if (user.acl.canAddHiddenComments()) {
+            toolbar = <ToggleHiddenButton value={comment.get("hidden")} onChange={alert.bind(null, "todo")} />;
+        }
+
         return (
             <SpeechBubble user={createdBy}
                 className={classes}
                 id={hashId}
+                toolbar={toolbar}
                 title={<span>
                     <a className="since" href={"#" + hashId } onClick={this.onHashChange}>
                         <TimeAgo date={createdAt} />
@@ -93,13 +102,6 @@ var CommentUpdate = React.createClass({
                         </OverlayTrigger>}
 
                 </span>}>
-
-                {comment.get("hidden") &&
-                    <OverlayTrigger placement="left" overlay={<Tooltip>Tämä on piilotettu kommentti jonka vain ylläpitäjät näkevät</Tooltip>}>
-                        <span className="CommentUpdate-hidden-icon-wrap">
-                            <Fa icon="eye-slash" />
-                        </span>
-                    </OverlayTrigger>}
 
                 <ForcedLinebreaks className="comment" key={hashId} id={hashId} >
                     {commentString}
