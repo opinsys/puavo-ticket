@@ -78,6 +78,7 @@ function ensureUser(data) {
             if (user) return user;
             return User.forge({
                 externalData: {
+                    id: data.external_id, // XXX test this!!
                     email: data.email,
                     first_name: data.name,
                     last_name: ""
