@@ -240,6 +240,28 @@ User.collection()
         });
     })
 
+    // Ensure following
+    .then(function() {
+        return Comment.collection()
+        .query(function(q) {
+            q.where("createdById", id);
+        })
+        .fetch({ withRelated: "ticket" })
+        .then(function(coll) {
+            var tickets = coll.map(function(c) {
+                return c.rel("ticket");
+            });
+
+            tickets = _.uniq(tickets, function(t) {
+                return t.get("id");
+            });
+
+            return tickets;
+        })
+        .each(function(ticket) {
+            return ticket.addFollower(user, user);
+        });
+    })
 
 
     // Delete duplicate users
