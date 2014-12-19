@@ -59,16 +59,21 @@ app.get("/api/tickets", function(req, res, next) {
             "handlers.handler",
             {comments: function(q) {
 
-                var sub = db.knex
+                // Create sub query for latests comment for each ticket.
+                // XXX depending on how PostgreSQL optimizes this it can
+                // get bit heavy at some point.
+                var subQuery = db.knex
                 .column(["ticketId"])
                 .max("createdAt as latest")
                 .from("comments")
+                .where("hidden", false)
                 .groupBy("ticketId");
 
-                q.join(sub.as("maxtable"), function() {
+                q.join(subQuery.as("maxtable"), function() {
                     this.on("comments.ticketId", "=", "maxtable.ticketId");
                     this.on("comments.createdAt", "=", "maxtable.latest");
                 });
+
             }},
             "comments.createdBy",
             "tags",
