@@ -48,7 +48,7 @@ describe("Hidden comments", function() {
             return browser
             .waitForElementByCss(".CommentForm-input")
             .elementByCss(".CommentForm-input").type("that dude is lame")
-            .elementByCss(".CommentForm-hidden-toggle").click()
+            .elementByCss(".CommentForm .ToggleHiddenButton").click()
             .elementByCss(".CommentForm-save-comment").click();
         });
     });
