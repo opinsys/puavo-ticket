@@ -2,6 +2,7 @@
 
 
 var _ = require("lodash");
+var Promise = require("bluebird");
 
 var User = require("app/models/server/User");
 var Comment = require("app/models/server/Comment");
@@ -74,6 +75,16 @@ function ConstraintError(err) {
     return err && /duplicate key value violates unique constraint/.test(err.message);
 }
 
+
+function setLatest(notifications) {
+    var latest = _.max(notifications, function(n) {
+        return new Date(n.get("readAt")).getTime();
+    });
+
+    return Promise.each(notifications, function(n) {
+        return n.set({ readAt: latest.get("readAt") }).save();
+    });
+}
 
 User.collection()
 .query(function(q) {
@@ -212,7 +223,12 @@ User.collection()
         })
         .fetch();
     })
-    .then(function(coll) { return coll.models; })
+    .then(function(coll) {
+        var byTickets = _.values(_.groupBy(coll.models, function(m) {
+            return m.get("ticketId");
+        }));
+        return Promise.each(byTickets, setLatest).return(coll.models);
+    })
     .each(function(notification) {
         return notification.set({ targetId: id }).save()
         .then(function() {
