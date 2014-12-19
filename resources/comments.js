@@ -7,6 +7,7 @@ var Promise = require("bluebird");
 var express = require("express");
 
 var Ticket = require("../models/server/Ticket");
+var Comment = require("../models/server/Comment");
 var Acl = require("../models/Acl");
 
 var app = express.Router();
@@ -53,5 +54,25 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
     .catch(next);
 });
 
+
+app.post("/api/tickets/:ticketId/comments/:commentId/visibility", function(req, res, next) {
+    var hidden = !!req.body.hidden;
+    if (!req.user.acl.canAddHiddenComments()) {
+        return next(new Acl.PermissionDeniedError());
+    }
+
+    Comment.forge({
+        ticketId: req.params.ticketId,
+        id: req.params.commentId,
+    })
+    .fetch({ require: true })
+    .then(function(comment) {
+        return comment.set({ hidden: hidden }).save();
+    })
+    .then(function(comment) {
+        return res.json(comment);
+    })
+    .catch(next);
+});
 
 module.exports = app;

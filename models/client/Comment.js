@@ -37,7 +37,11 @@ var Comment = Base.extend({
     },
 
     url: function() {
-        return this.parent.url() + "/comments";
+        if (this.isNew()) {
+            return this.parent.url() + "/comments";
+        } else {
+            return this.parent.url() + "/comments/" + this.get("id");
+        }
     },
 
     /**
@@ -103,6 +107,21 @@ var Comment = Base.extend({
      */
     attachments: function() {
         throw new Error("bloo");
+    },
+
+    /**
+     * Change visibility of the comment
+     *
+     * @method setHidden
+     * @method {Boolean} hidden
+     * @return {Bluebird.Promise} with new comment
+     */
+    setHidden: function(hidden){
+        var url = this.url();
+        return fetch.post(url + "/visibility", {
+            hidden: hidden
+        })
+        .then((res) => this.optionsClone(res.data));
     },
 
 
