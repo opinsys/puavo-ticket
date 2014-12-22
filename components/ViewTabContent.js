@@ -21,12 +21,12 @@ var ErrorActions = require("app/stores/ErrorActions");
 
 /**
  * @namespace components
- * @class Views
+ * @class ViewTabContent
  * @constructor
  * @param {Object} props
  * @param {models.client.View} props.view
  */
-var Views = React.createClass({
+var ViewTabContent = React.createClass({
 
     propTypes: {
         view: React.PropTypes.instanceOf(View).isRequired,
@@ -119,7 +119,7 @@ var Views = React.createClass({
         var view = this.props.view;
 
         return (
-            <div className="Views">
+            <div className="ViewTabContent">
                 <Loading style={{position: "absolute", top: "5px", right: "5px"}} visible={fetching} />
 
                 <TicketList tickets={tickets.toArray()} />
@@ -148,4 +148,4 @@ var Views = React.createClass({
 
 });
 
-module.exports = Views;
+module.exports = ViewTabContent;

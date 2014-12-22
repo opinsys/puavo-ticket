@@ -9,7 +9,7 @@ var Redirect = Router.Redirect;
 var Main = require("./components/Main");
 var TicketForm = require("./components/TicketForm");
 var TicketView = require("./components/TicketView");
-var Views = require("./components/Views");
+var ViewTabContent = require("./components/ViewTabContent");
 var ViewTabs = require("./components/ViewTabs");
 var Solved = require("./components/Solved");
 var ViewEditor = require("./components/ViewEditor");
@@ -25,7 +25,7 @@ var routes = (
             <Route handler={ViewEditor} />
         </Route>
         <Route name="view" path="/views/:id" handler={ViewTabs} >
-            <Route handler={Views} />
+            <Route handler={ViewTabContent} />
         </Route>
         <Route name="solved-tickets" path="/solved" handler={Solved} />
         <Redirect from="/tickets/:id" to="discuss" />
