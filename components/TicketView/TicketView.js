@@ -2,14 +2,15 @@
 "use strict";
 var React = require("react/addons");
 var Router = require("react-router");
+var Reflux = require("reflux");
 var Link = Router.Link;
 var RouteHandler = Router.RouteHandler;
 
 var app = require("app");
-var Ticket = require("app/models/client/Ticket");
+var TicketStore = require("app/stores/TicketStore");
 var Tabs = require("app/components/Tabs");
 var BackboneMixin = require("app/components/BackboneMixin");
-var captureError = require("../../utils/captureError");
+var Loading = require("app/components/Loading");
 
 /**
  * TicketView
@@ -21,37 +22,24 @@ var captureError = require("../../utils/captureError");
  */
 var TicketView = React.createClass({
 
-    mixins: [BackboneMixin],
-
-    createInitialState: function(props) {
-        return {
-            ticket: new Ticket({ id: props.params.id }),
-        };
-    },
-
-    getInitialState: function() {
-        return this.createInitialState(this.props);
-    },
+    mixins: [BackboneMixin, Reflux.connect(TicketStore)],
 
     componentWillReceiveProps: function(nextProps) {
-        if (this.props.params.id !== nextProps.params.id) {
-            this.setBackbone(this.createInitialState(nextProps), this.fetchTicket);
-            return;
-        }
+        console.log("TicketStore.Actions.changeTicket", nextProps.params.id);
+        TicketStore.Actions.changeTicket(nextProps.params.id);
     },
 
     componentDidMount: function() {
-        window.addEventListener("focus", this.fetchTicket);
-        this.fetchTicket();
+        window.addEventListener("focus", this.refresh);
+        TicketStore.Actions.changeTicket(this.props.params.id);
     },
 
     componentWillUnmount: function() {
-        window.removeEventListener("focus", this.fetchTicket);
+        window.removeEventListener("focus", this.refresh);
     },
 
-    fetchTicket: function() {
-        this.state.ticket.fetch()
-        .catch(captureError("tukipyynnön tilan päivitys epännistui"));
+    refresh: function() {
+        TicketStore.Actions.refreshTicket();
     },
 
 
@@ -86,6 +74,10 @@ var TicketView = React.createClass({
                     </li>}
 
                 </Tabs>}
+
+                {this.state.loading &&
+                <Loading />}
+
 
                 {ticket.hasData() &&
                     <RouteHandler ticket={ticket} params={self.props.params} query={self.props.query} />}

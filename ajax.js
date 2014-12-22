@@ -3,6 +3,7 @@
 var View = require("app/models/client/View");
 var ErrorActions = require("app/stores/ErrorActions");
 var ViewStore = require("app/stores/ViewStore");
+var TicketStore = require("app/stores/TicketStore");
 
 ViewStore.Actions.loadViews.listen(function(onSuccess) {
     View.collection().fetch()
@@ -36,4 +37,16 @@ ViewStore.Actions.destroyView.listen(function(view) {
     .then(function() {
         ViewStore.Actions.loadViews();
     });
+});
+
+
+
+
+TicketStore.Actions.refreshTicket.shouldEmit = function() {
+    return !!TicketStore.state.ticket.get("id");
+};
+TicketStore.Actions.refreshTicket.listen(function() {
+    TicketStore.state.ticket.fetch()
+    .catch(ErrorActions.haltChain("Tukipyynnön lataus epännistui"))
+    .then(TicketStore.Actions.setTicket);
 });
