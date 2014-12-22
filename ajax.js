@@ -46,6 +46,7 @@ TicketStore.Actions.refreshTicket.shouldEmit = function() {
     return !!TicketStore.state.ticket.get("id");
 };
 TicketStore.Actions.refreshTicket.listen(function() {
+    console.log("Refreshing ticket");
     TicketStore.state.ticket.fetch()
     .catch(ErrorActions.haltChain("Tukipyynnön lataus epännistui"))
     .then(TicketStore.Actions.setTicket);

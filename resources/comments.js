@@ -65,9 +65,12 @@ app.post("/api/tickets/:ticketId/comments/:commentId/visibility", function(req, 
         ticketId: req.params.ticketId,
         id: req.params.commentId,
     })
-    .fetch({ require: true })
+    .fetch({ require: true, withRelated: "ticket" })
     .then(function(comment) {
         return comment.set({ hidden: hidden }).save();
+    })
+    .then(function(comment) {
+        return comment.rel("ticket").updateTimestamp().return(comment);
     })
     .then(function(comment) {
         return res.json(comment);

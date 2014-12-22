@@ -14,7 +14,8 @@ var TimeAgo = require("../TimeAgo");
 var FileItem = require("app/components/FileItem");
 var ForcedLinebreaks = require("app/components/ForcedLinebreaks");
 var ToggleHiddenButton = require("./ToggleHiddenButton");
-
+var TicketStore = require("app/stores/TicketStore");
+var ErrorActions = require("app/stores/ErrorActions");
 
 /**
  * Renders ticket comment
@@ -48,8 +49,19 @@ var CommentUpdate = React.createClass({
     },
 
     shouldComponentUpdate: function(nextProps) {
+        if (this.props.update.get("hidden") !== nextProps.update.get("hidden")) {
+            return true;
+        }
+
         // If comment id does not change no need to render
         return this.props.update.getMergedId() !== nextProps.update.getMergedId();
+    },
+
+    onToggleHidden: function(e) {
+        var comment = this.props.update;
+        comment.setHidden(e.target.value)
+        .catch(ErrorActions.haltChain("Kommentin näkyvyyden muuttaminen epäonnistui"))
+        .then(TicketStore.Actions.refreshTicket);
     },
 
     render: function() {
@@ -83,7 +95,7 @@ var CommentUpdate = React.createClass({
 
         var toolbar = null;
         if (user.acl.canAddHiddenComments()) {
-            toolbar = <ToggleHiddenButton value={comment.get("hidden")} onChange={alert.bind(null, "todo")} />;
+            toolbar = <ToggleHiddenButton value={comment.get("hidden")} onChange={this.onToggleHidden} />;
         }
 
         return (
