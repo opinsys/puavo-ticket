@@ -1,4 +1,9 @@
 
+// Browser only polyfills
+if (process.browser) {
+    require("setimmediate");
+}
+
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 if (!Object.assign) {
   Object.defineProperty(Object, "assign", {
