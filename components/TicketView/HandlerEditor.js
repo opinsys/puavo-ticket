@@ -6,6 +6,7 @@ var React = require("react/addons");
 var _ = require("lodash");
 var Promise = require("bluebird");
 var Navigation = require("react-router").Navigation;
+var Reflux = require("reflux");
 
 var app = require("app");
 var Fa = require("../Fa");
@@ -13,7 +14,8 @@ var Ticket = require("app/models/client/Ticket");
 var SelectUsers = require("../SelectUsers");
 var EditableList = require("app/components/EditableList");
 var Profile = require("app/components/Profile");
-var captureError = require("app/utils/captureError");
+var TicketStore = require("app/stores/TicketStore");
+var ErrorActions = require("app/stores/ErrorActions");
 
 /**
  *
@@ -25,30 +27,28 @@ var captureError = require("app/utils/captureError");
  */
 var HandlerEditor = React.createClass({
 
-    mixins: [Navigation],
+    mixins: [
+        Navigation,
+        Reflux.listenTo(TicketStore, "onTicketUpdate")
+    ],
 
     propTypes: {
         ticket: React.PropTypes.instanceOf(Ticket).isRequired,
     },
 
     getInitialState: function() {
-        return {
-            saving: false
-        };
+        return { saving: false };
+    },
+
+    onTicketUpdate: function() {
+        this.setState({ saving: false });
     },
 
     removeHandler: function(handlerRelation) {
-        var self = this;
-        var ticket = this.props.ticket;
-        self.setState({ saving: true });
+        this.setState({ saving: true });
         Promise.resolve(handlerRelation.destroy())
-        .then(function() {
-            if (self.isMounted()) {
-                self.setState({ saving: false });
-                return ticket.fetch();
-            }
-        })
-        .catch(captureError("Käsittelijän poistaminen epäonnistui"));
+        .catch(ErrorActions.haltChain("Käsittelijän poistaminen epäonnistui"))
+        .then(TicketStore.Actions.refreshTicket);
     },
 
     /**
@@ -59,17 +59,10 @@ var HandlerEditor = React.createClass({
      * @return {Bluebird.Promise}
      */
     addHandler: function(user) {
-        var self = this;
-        var ticket = this.props.ticket;
-        self.setState({ saving: true });
-        ticket.addHandler(user)
-        .then(function() {
-            if (self.isMounted()) {
-                self.setState({ saving: false });
-                return ticket.fetch();
-            }
-        })
-        .catch(captureError("Käsittelijän lisääminen epäonnistui"));
+        this.setState({ saving: true });
+        this.props.ticket.addHandler(user)
+        .catch(ErrorActions.haltChain("Käsittelijän lisääminen epäonnistui"))
+        .then(TicketStore.Actions.refreshTicket);
     },
 
     render: function() {

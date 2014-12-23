@@ -5,11 +5,13 @@ var React = require("react/addons");
 var Badge = require("react-bootstrap/Badge");
 var Input = require("react-bootstrap/Input");
 var Button = require("react-bootstrap/Button");
+var Reflux = require("reflux");
 
 var Ticket = require("app/models/client/Ticket");
 var EditableList = require("app/components/EditableList");
 var Fa = require("app/components/Fa");
-var captureError = require("app/utils/captureError");
+var TicketStore = require("app/stores/TicketStore");
+var ErrorActions = require("app/stores/ErrorActions");
 
 /**
  * @namespace components
@@ -19,8 +21,20 @@ var captureError = require("app/utils/captureError");
  */
 var TagEditor = React.createClass({
 
+    mixins: [
+        Reflux.listenTo(TicketStore, "onTicketUpdate")
+    ],
+
     propTypes: {
         ticket: React.PropTypes.instanceOf(Ticket).isRequired,
+    },
+
+    onTicketUpdate: function() {
+        if (!this.state.saving) return;
+        this.setState({
+            tag: "",
+            saving: false,
+        });
     },
 
     getInitialState: function() {
@@ -31,14 +45,9 @@ var TagEditor = React.createClass({
     },
 
     removeTag: function(tag) {
-        var ticket = this.props.ticket;
-
         tag.destroy()
-        .catch(captureError("Tagin poisto epäonnistui"))
-        .then(function() {
-            return ticket.fetch();
-        })
-        .catch(captureError("Tukipyynnön päivitys epäonnistui"));
+        .catch(ErrorActions.haltChain("Tagin poisto epäonnistui"))
+        .then(TicketStore.Actions.refreshTicket);
     },
 
     validateBsStyle: function() {
@@ -66,18 +75,8 @@ var TagEditor = React.createClass({
 
         self.setState({ saving: true });
         ticket.addTag(this.getTag())
-        .catch(captureError("Tagin lisäys epäonnistui"))
-        .then(function() {
-            return ticket.fetch();
-        })
-        .catch(captureError("Tukipyynnön päivitys epäonnistui"))
-        .done(function() {
-            if (!self.isMounted()) return;
-            self.setState({
-                tag: "",
-                saving: false
-            });
-        });
+        .catch(ErrorActions.haltChain("Tagin lisäys epäonnistui"))
+        .then(TicketStore.Actions.refreshTicket);
     },
 
     render: function() {
