@@ -11,7 +11,6 @@ var Alert = require("react-bootstrap/Alert");
 
 var app = require("app");
 var Loading = require("../Loading");
-var StatusBadge = require("app/components/StatusBadge");
 var CommentForm = require("./CommentForm");
 var AttachmentsForm = require("../AttachmentsForm");
 var captureError = require("../../utils/captureError");
@@ -20,6 +19,7 @@ var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
 var EditableText = require("../EditableText");
 var UploadProgress = require("app/components/UploadProgress");
+var TicketStore = require("app/stores/TicketStore");
 
 var ToggleStatusButton = require("./ToggleStatusButton");
 var ToggleFollowButton = require("./ToggleFollowButton");
@@ -111,6 +111,7 @@ var Discuss = React.createClass({
          * @method lazyMarkAsRead
          */
         this.lazyMarkAsRead = _.throttle(this.markAsRead, 5*1000);
+        this.scrollToAnchoredElement();
     },
 
     componentWillUnmount: function() {
@@ -123,8 +124,17 @@ var Discuss = React.createClass({
         app.title.activateOnNextTick();
     },
 
-    componentDidUpdate: function() {
-        this.scrollToAnchoredElement();
+    componentWillReceiveProps: function() {
+    
+    },
+
+    componentDidUpdate: function(prevProps) {
+        if (this.state.saving && this.props.ticket.get("updatedAt") !== prevProps.ticket.get("updatedAt")) {
+            this.refs.form.scrollToCommentButton();
+            this.setState({ saving: false });
+        } else {
+            this.scrollToAnchoredElement();
+        }
     },
 
 
@@ -151,6 +161,8 @@ var Discuss = React.createClass({
         this.setState({ scrolled: true });
     },
 
+
+
     /**
      * Save comment handler. Reports any unhandled errors to the global error
      * handler
@@ -171,17 +183,12 @@ var Discuss = React.createClass({
                 }});
             }
         })
+        .catch(captureError("Kommentin tallennus epäonnistui"))
         .then(function() {
             e.clear();
             self.setState({ uploadProgress: null });
-            return self.fetchTicket();
         })
-        .then(function() {
-            if (!self.isMounted()) return;
-            self.setState({ saving: false });
-            process.nextTick(e.scrollToCommentButton);
-        })
-        .catch(captureError("Kommentin tallennus epäonnistui"));
+        .then(TicketStore.Actions.refreshTicket);
 
     },
 
@@ -313,6 +320,7 @@ var Discuss = React.createClass({
         }, []);
     },
 
+
     shouldComponentUpdate: function(nextProps, nextState) {
         // Always render if the component state changes
         if (!_.isEqual(this.state, nextState)) {
@@ -347,7 +355,6 @@ var Discuss = React.createClass({
         var user = app.currentUser;
         var title = ticket.getCurrentTitle();
         var updates = this.getUpdatesWithMergedComments();
-        var status = ticket.getCurrentStatus();
 
         if (user.acl.canSeeZendeskLink() && ticket.get("zendeskTicketId")) {
             updates.unshift(ticket.createRobotComment(
@@ -369,7 +376,7 @@ var Discuss = React.createClass({
                     <div className="row ticket-actions-row">
                         <div className="col-md-12">
                             {user.acl.canChangeStatus(ticket) &&
-                                <ToggleStatusButton ticket={ticket} user={user} />}
+                                <ToggleStatusButton ticket={ticket} onChange={TicketStore.Actions.refreshTicket} />}
 
                                 <RouteHandler params={self.props.params} query={self.props.query} />
 
@@ -378,11 +385,6 @@ var Discuss = React.createClass({
                         </div>
                     </div>
 
-                    <div className="row status-row">
-                        <div className="col-md-12">
-                            <StatusBadge status={status} />
-                        </div>
-                    </div>
 
                     <div className="row title-row">
                         <div className="col-md-12">
@@ -432,7 +434,7 @@ var Discuss = React.createClass({
                         })}
                     </div>
 
-                    <CommentForm onSubmit={this.saveComment} user={app.currentUser} >
+                    <CommentForm onSubmit={this.saveComment} user={app.currentUser} ref="form" >
                         Lähetä {this.state.saving && <Loading.Spinner />}
                     </CommentForm>
                     <UploadProgress progress={this.state.uploadProgress} />

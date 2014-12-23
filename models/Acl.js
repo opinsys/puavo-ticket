@@ -57,6 +57,15 @@ Acl.prototype = {
         return ticket.isHandler(this.user);
     },
 
+    /**
+     *
+     * @method catSetStatusToPending
+     * @param {models.client.Ticket|models.server.Ticket} ticket
+     * @return {Boolean}
+     */
+    catSetStatusToPending: function(ticket){
+        return this.user.isManager();
+    },
 
 
     /**

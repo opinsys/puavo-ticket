@@ -65,7 +65,7 @@ describe("ticket handlers", function() {
 
     it("sees pending ticket status", function() {
         return browser
-        .elementByCss(".Discuss .StatusBadge").text()
+        .elementByCss(".Discuss .ToggleStatusButton").text()
         .then(function(val) {
             assert.equal("Uusi", val);
         });
@@ -97,7 +97,7 @@ describe("ticket handlers", function() {
     it("ticket status is set to open after adding a manager handler", function() {
         return browser
         .elementByCss(".TicketView-tab-discuss").click()
-        .elementByCss(".Discuss .StatusBadge").text()
+        .elementByCss(".Discuss .ToggleStatusButton").text()
         .then(function(val) {
             assert.equal("Käsittelyssä", val);
         });
@@ -114,11 +114,8 @@ describe("ticket handlers", function() {
     it("can close the ticket", function() {
         return browser
         .elementByCss(".ToggleStatusButton").click()
-        .waitForElementsByCss(".Discuss .StatusBadge", asserters.textInclude("Ratkaistu"), 1000*10)
-        .elementByCss(".ToggleStatusButton").text()
-        .then(function(val) {
-            assert.equal("Avaa uudelleen", val);
-        })
+        .elementByCss(".ToggleStatusButton-closed a").click()
+        .waitForElementsByCss(".Discuss .ToggleStatusButton", asserters.textInclude("Ratkaistu"), 1000*5)
         ;
     });
 
