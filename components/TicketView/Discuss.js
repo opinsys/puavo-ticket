@@ -10,6 +10,7 @@ var RouteHandler = require("react-router").RouteHandler;
 var Alert = require("react-bootstrap/Alert");
 
 var app = require("app");
+var ErrorActions = require("app/stores/ErrorActions");
 var Loading = require("../Loading");
 var CommentForm = require("./CommentForm");
 var AttachmentsForm = require("../AttachmentsForm");
@@ -124,12 +125,16 @@ var Discuss = React.createClass({
         app.title.activateOnNextTick();
     },
 
-    componentWillReceiveProps: function() {
-    
+    componentWillReceiveProps: function(nextProps) {
+        var ticketWillUpdate = this.props.ticket.get("updatedAt") !== nextProps.ticket.get("updatedAt");
+        if (this.state.changingTitle && ticketWillUpdate) {
+            this.setState({ changingTitle: false });
+        }
     },
 
     componentDidUpdate: function(prevProps) {
-        if (this.state.saving && this.props.ticket.get("updatedAt") !== prevProps.ticket.get("updatedAt")) {
+        var ticketDidUpdate = this.props.ticket.get("updatedAt") !== prevProps.ticket.get("updatedAt");
+        if (this.state.saving && ticketDidUpdate) {
             this.refs.form.scrollToCommentButton();
             this.setState({ saving: false });
         } else {
@@ -263,17 +268,8 @@ var Discuss = React.createClass({
     changeTitle: function(e) {
         this.setState({ changingTitle: true });
         this.props.ticket.addTitle(e.value)
-        .delay(2000)
-        .bind(this)
-        .then(function() {
-            if (!this.isMounted()) return;
-            return this.fetchTicket();
-        })
-        .then(function() {
-            if (!this.isMounted()) return;
-            this.setState({ changingTitle: false });
-        })
-        .catch(captureError("Otsikon päivitys epäonnistui"));
+        .catch(ErrorActions.haltChain("Otsikon päivitys epäonnistui"))
+        .then(TicketStore.Actions.refreshTicket);
     },
 
 
