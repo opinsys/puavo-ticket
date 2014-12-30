@@ -188,6 +188,17 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
     },
 
     /**
+     * @method hasUnreadComments
+     * @param {models.client.User} user
+     * @return {Boolean}
+     */
+    hasUnreadComments: function(user){
+        return this.rel("comments").some(function(comment) {
+            return comment.isUnreadBy(user);
+        });
+    },
+
+    /**
      * @method tags
      * @return {Array} Array of Tag models
      */

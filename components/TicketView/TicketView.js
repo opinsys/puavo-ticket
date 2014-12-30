@@ -25,7 +25,6 @@ var TicketView = React.createClass({
     mixins: [BackboneMixin, Reflux.connect(TicketStore)],
 
     componentWillReceiveProps: function(nextProps) {
-        console.log("TicketStore.Actions.changeTicket", nextProps.params.id);
         TicketStore.Actions.changeTicket(nextProps.params.id);
     },
 
