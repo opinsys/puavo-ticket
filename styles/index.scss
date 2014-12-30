@@ -91,15 +91,6 @@ table td {
     text-overflow: none;
 }
 
-.table{
-    tbody{
-        tr.unread{
-            td{
-                background-color: $unread-color;
-            }
-        }
-    }
-}
 .wrapper {
     margin: 0 auto;
     position: relative;

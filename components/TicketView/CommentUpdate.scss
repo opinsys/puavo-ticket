@@ -37,6 +37,12 @@
 
 .unread .CommentUpdate .bubble {
     background-color: $unread-color;
+    border: 1px solid red;
+}
+
+.marking-as-read.unread .CommentUpdate .bubble {
+    transition: background-color 5s ease;
+    background-color: white;
 }
 
 .CommentUpdate-email-icon {

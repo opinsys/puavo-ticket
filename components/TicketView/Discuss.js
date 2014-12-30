@@ -3,7 +3,6 @@
 var React = require("react/addons");
 var classSet = React.addons.classSet;
 var _ = require("lodash");
-var debug = require("debug")("app:read");
 var Navigation = require("react-router").Navigation;
 var RouteHandler = require("react-router").RouteHandler;
 
@@ -58,6 +57,7 @@ var Discuss = React.createClass({
             saving: false,
             showTags: true,
             scrolled: false,
+            markingAsRead: false,
             uploadProgress: null
         };
     },
@@ -105,13 +105,6 @@ var Discuss = React.createClass({
 
         app.io.on("connect", this._handleSocketConnect);
 
-        /**
-         * Lazy version of the `markAsRead()` method. It will mark the ticket
-         * as read at max once in 10 seconds
-         *
-         * @method lazyMarkAsRead
-         */
-        this.lazyMarkAsRead = _.throttle(this.markAsRead, 5*1000);
         this.scrollToAnchoredElement();
     },
 
@@ -126,19 +119,29 @@ var Discuss = React.createClass({
     },
 
     componentWillReceiveProps: function(nextProps) {
-        var ticketWillUpdate = this.props.ticket.get("updatedAt") !== nextProps.ticket.get("updatedAt");
-        if (this.state.changingTitle && ticketWillUpdate) {
+        var changed = this.props.ticket.get("updatedAt") !== nextProps.ticket.get("updatedAt");
+
+        if (this.state.changingTitle && changed) {
             this.setState({ changingTitle: false });
         }
+
+
     },
 
     componentDidUpdate: function(prevProps) {
-        var ticketDidUpdate = this.props.ticket.get("updatedAt") !== prevProps.ticket.get("updatedAt");
-        if (this.state.saving && ticketDidUpdate) {
+        var changed = this.props.ticket.get("updatedAt") !== prevProps.ticket.get("updatedAt");
+
+        if (this.state.saving && changed) {
             this.refs.form.scrollToCommentButton();
             this.setState({ saving: false });
         } else {
             this.scrollToAnchoredElement();
+        }
+
+        // Must start the animation after updating in order to make the
+        // css transition apply
+        if (changed && this.props.ticket.hasUnreadComments(app.currentUser)) {
+            this.animateMarkAsRead({ reset: true });
         }
     },
 
@@ -209,24 +212,6 @@ var Discuss = React.createClass({
         });
     },
 
-    /**
-     * Mark the ticket as read by the current user and refetch the ticket data
-     *
-     * @method markAsRead
-     * @return {Bluebird.Promise}
-     */
-    markAsRead: function() {
-        if (!this.isMounted()) return;
-
-        this.setState({ fetching: true });
-        debug("Actually marking as read");
-        return this.props.ticket.markAsRead()
-            .bind(this)
-            .then(function() {
-                return this.fetchTicket();
-            })
-            .catch(captureError("Tukipyynnön merkkaaminen luetuksi epäonnistui"));
-    },
 
 
     /**
@@ -317,24 +302,34 @@ var Discuss = React.createClass({
     },
 
 
-    shouldComponentUpdate: function(nextProps, nextState) {
-        // Always render if the component state changes
-        if (!_.isEqual(this.state, nextState)) {
-            return true;
+    animateMarkAsRead: function(options) {
+        if (options && options.reset) {
+            this.stopAnimateMarkAsRead();
         }
 
-        // Render if the ticket changes
-        if (this.props.ticket.get("id") !== nextProps.ticket.get("id")) {
-            return true;
+        if (this._markAsReadTimer) return;
+        this.setState({ markingAsRead: true });
+
+        console.log("Starting timer");
+        this._markAsReadTimer = setTimeout(() => {
+            console.log("Marking as read!");
+            setImmediate(this.stopAnimateMarkAsRead);
+            this.props.ticket.markAsRead()
+            .catch(ErrorActions.haltChain("Tukipyynnön merkkaaminen luetuksi epäonnistui"))
+            .then(TicketStore.Actions.refreshTicket);
+        }, 5000);
+    },
+
+    stopAnimateMarkAsRead: function() {
+        if (this._markAsReadTimer) {
+            console.log("Stopping timer");
+            clearTimeout(this._markAsReadTimer);
+            this._markAsReadTimer = null;
         }
 
-        // If the ticket timestamp does not change – no need to re-render
-        if (this.props.ticket.get("updatedAt") === nextProps.ticket.get("updatedAt")) {
-            return false;
+        if (this.isMounted()) {
+            this.setState({ markingAsRead: false });
         }
-
-        // Render in all other cases
-        return true;
     },
 
     render: function() {
@@ -410,21 +405,24 @@ var Discuss = React.createClass({
 
                             var className = classSet({
                                 unread: update.isUnreadBy(app.currentUser),
+                                "marking-as-read": self.state.markingAsRead,
                                 "Discuss-update-item": true
                             });
 
                             return (
                                 <div key={update.getUniqueId()} className={className}>
-                                    <UpdateComponent update={update} onViewport={function(props) {
-                                        if (_.last(updates) !== props.update) return;
-                                        // Mark the ticket as read 5 seconds
-                                        // after the last update has been shown
-                                        // to the user
-                                        debug("Last comment is visible. Going to mark it read soon!");
-                                        setTimeout(function() {
-                                            self.lazyMarkAsRead();
-                                        }, 5*1000);
-                                    }} />
+                                    <UpdateComponent
+                                        update={update}
+                                        onViewport={function(props) {
+                                            if (_.last(updates) !== props.update) return;
+                                            self.animateMarkAsRead();
+                                        }}
+
+                                        onOffViewport={function(props) {
+                                            if (_.last(updates) !== props.update) return;
+                                            self.stopAnimateMarkAsRead();
+                                        }}
+                                />
                                 </div>
                             );
                         })}
