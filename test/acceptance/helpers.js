@@ -8,8 +8,10 @@ var asserters = wd.asserters;
 require("app/test/helpers");
 var config = require("app/config");
 var app = require("app/server");
+var writeFile = Promise.promisify(require("fs").writeFile);
 
 var browser = wd.promiseChainRemote();
+var takeScreenshot = Promise.promisify(browser.takeScreenshot, browser);
 
 var url = "http://" + config.domain + ":" + config.port;
 
@@ -34,6 +36,15 @@ before(function() {
             if (err) return reject(err);
             resolve();
         });
+    });
+});
+
+// Capture screenshot of the browser on failures
+afterEach(function() {
+    if (this.currentTest.state !== "failed") return;
+    return takeScreenshot()
+    .then(function(screenshot) {
+        return writeFile("failure.png", new Buffer(screenshot, "base64"));
     });
 });
 
