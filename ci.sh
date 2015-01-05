@@ -7,7 +7,7 @@ export DISPLAY=:99
 export NODE_ENV=test
 
 sudo apt-get update
-sudo apt-get install -y wget make devscripts
+sudo apt-get install -y wget make devscripts git
 
 # Apply puavo-standalone Ansible rules
 wget -qO - https://github.com/opinsys/puavo-standalone/raw/master/setup.sh | sudo sh
