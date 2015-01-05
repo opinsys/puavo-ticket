@@ -46,7 +46,7 @@ describe("Ticket title", function() {
         })
         .then(function() {
             return browser
-            .waitForElementByCss(".EditableText-start-button")
+            .waitForElementByCss(".EditableText-start-button", 1000*10)
             .click()
             .elementByCss(".EditableText-input").type(" EDIT")
             .elementByCss(".EditableText-save-button").click()
