@@ -2,7 +2,6 @@
 
 set -eux
 
-export HOME=/home/ci ## fix home for now
 export DISPLAY=:99
 export NODE_ENV=test
 
