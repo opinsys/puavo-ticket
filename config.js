@@ -31,7 +31,7 @@ try {
     productionConfig = require("/etc/puavo-ticket/config");
 }
 
-if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "acceptance") {
+if (process.env.NODE_ENV === "test" || process.env.ACCEPTANCE) {
     config.database.connection = {
         host: "127.0.0.1",
         user: "puavo-ticket",
@@ -50,7 +50,7 @@ if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "acceptance") {
     config.mailGunSecret = "secret";
     config.forwardTicketsEmail = "new-tickets@opinsys.example";
 
-    if (process.env.NODE_ENV === "acceptance") {
+    if (process.env.ACCEPTANCE) {
          config.port = productionConfig.port;
          config.domain = productionConfig.domain;
          config.restServerAddress = productionConfig.restServerAddress;

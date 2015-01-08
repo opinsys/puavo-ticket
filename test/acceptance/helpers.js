@@ -1,5 +1,5 @@
 "use strict";
-process.env.NODE_ENV = "acceptance";
+process.env.ACCEPTANCE = 1;
 
 var wd = require("wd");
 var Promise = require("bluebird");
