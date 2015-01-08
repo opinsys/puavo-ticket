@@ -117,7 +117,7 @@ test-server: jshint
 	mocha test/models/server/*_test.js test/api/*_test.js test/utils/*_test.js
 
 test-acceptance:
-	NODE_ENV=production START_TEST_SERVER=1 PORT=2000 mocha --timeout 300000 -b test/acceptance/edit_title_test.js
+	NODE_ENV=production START_TEST_SERVER=1 PORT=2000 mocha --timeout 300000 -b test/acceptance/*_test.js
 
 .PHONY: test
 test:
