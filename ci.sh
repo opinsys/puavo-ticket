@@ -22,5 +22,4 @@ sudo npm set registry http://registry.npmjs.org/
 # Build debian package
 make deb
 
-# Upload it to archive.opinsys.fi
-# aptirepo-upload -r $APTIREPO_REMOTE -b "git-$(echo "$GIT_BRANCH" | cut -d / -f 2)" ../puavo-ticket*.changes
+cp ../puavo-ticket_* $HOME/results
