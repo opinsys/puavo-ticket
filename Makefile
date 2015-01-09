@@ -168,5 +168,4 @@ install-build-dep:
 deb:
 	rm -rf debian
 	cp -a debian.default debian
-	puavo-dch 0.1.0
 	dpkg-buildpackage -us -uc
