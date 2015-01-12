@@ -2,15 +2,15 @@
 "use strict";
 
 var React = require("react/addons");
-var Tabs = require("app/components/Tabs");
+var Tabs = require("./Tabs");
 var Link = require("react-router").Link;
 var State = require("react-router").State;
 var RouteHandler = require("react-router").RouteHandler;
 var Reflux = require("reflux");
 
-var app = require("app");
+var app = require("../index");
 var Loading = require("./Loading");
-var ViewStore = require("app/stores/ViewStore");
+var ViewStore = require("../stores/ViewStore");
 var ViewActions = ViewStore.Actions;
 
 /**

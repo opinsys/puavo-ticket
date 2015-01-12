@@ -6,8 +6,8 @@ var React = require("react/addons");
 var classSet = React.addons.classSet;
 var filesize = require("filesize");
 
-var FileItem = require("app/components/FileItem");
-var EditableList = require("app/components/EditableList");
+var FileItem = require("./FileItem");
+var EditableList = require("./EditableList");
 
 /**
  * AttachmentsForm

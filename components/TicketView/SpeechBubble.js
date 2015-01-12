@@ -2,7 +2,7 @@
 "use strict";
 var React = require("react/addons");
 
-var User = require("app/models/client/User");
+var User = require("../../models/client/User");
 var Profile = require("../Profile");
 
 /**

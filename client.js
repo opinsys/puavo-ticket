@@ -10,8 +10,8 @@ Backbone.$ = $;
 var io = require("socket.io-client")();
 window.io = io;
 
-var User = require("app/models/client/User");
-var app = require("app");
+var User = require("./models/client/User");
+var app = require("./index");
 app.currentUser = new User(window.USER);
 
 io.on("connect", function(s) {

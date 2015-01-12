@@ -7,11 +7,11 @@ var Input = require("react-bootstrap/Input");
 var Button = require("react-bootstrap/Button");
 var Reflux = require("reflux");
 
-var Ticket = require("app/models/client/Ticket");
-var EditableList = require("app/components/EditableList");
-var Fa = require("app/components/Fa");
-var TicketStore = require("app/stores/TicketStore");
-var ErrorActions = require("app/stores/ErrorActions");
+var Ticket = require("../../models/client/Ticket");
+var EditableList = require("../EditableList");
+var Fa = require("../Fa");
+var TicketStore = require("../../stores/TicketStore");
+var ErrorActions = require("../../stores/ErrorActions");
 
 /**
  * @namespace components

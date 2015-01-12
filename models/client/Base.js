@@ -7,7 +7,7 @@ var _ = require("lodash");
 var Cocktail = require("backbone.cocktail");
 var url = require("url");
 
-var fetch = require("app/utils/fetch");
+var fetch = require("../../utils/fetch");
 var BaseMixin = require("../BaseMixin");
 
 

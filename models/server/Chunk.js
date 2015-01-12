@@ -1,7 +1,7 @@
 
 "use strict";
 
-require("app/db");
+require("../../db");
 var Base = require("./Base");
 
 /**

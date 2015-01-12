@@ -2,7 +2,7 @@
 var Promise = require("bluebird");
 var _ = require("lodash");
 var marked = require("marked");
-var fetch = require("app/utils/fetch");
+var fetch = require("../../utils/fetch");
 
 var Base = require("./Base");
 var UpdateMixin = require("./UpdateMixin");

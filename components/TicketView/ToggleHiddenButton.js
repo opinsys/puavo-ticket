@@ -5,7 +5,7 @@ var classSet = React.addons.classSet;
 var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
 var Tooltip = require("react-bootstrap/Tooltip");
 
-var Fa = require("app/components/Fa");
+var Fa = require("../Fa");
 
 
 

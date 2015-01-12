@@ -10,9 +10,9 @@ var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
 var Tooltip = require("react-bootstrap/Tooltip");
 var Label = require("react-bootstrap/Label");
 
-var User = require("app/models/client/User");
-var ElasticTextarea = require("app/components/ElasticTextarea");
-var BackupInput = require("app/components/BackupInput");
+var User = require("../../models/client/User");
+var ElasticTextarea = require("../ElasticTextarea");
+var BackupInput = require("../BackupInput");
 var SpeechBubble = require("./SpeechBubble");
 var ToggleHiddenButton = require("./ToggleHiddenButton");
 

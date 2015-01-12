@@ -6,11 +6,11 @@ var Reflux = require("reflux");
 var Link = Router.Link;
 var RouteHandler = Router.RouteHandler;
 
-var app = require("app");
-var TicketStore = require("app/stores/TicketStore");
-var Tabs = require("app/components/Tabs");
-var BackboneMixin = require("app/components/BackboneMixin");
-var Loading = require("app/components/Loading");
+var app = require("../../index");
+var TicketStore = require("../../stores/TicketStore");
+var Tabs = require("../Tabs");
+var BackboneMixin = require("../BackboneMixin");
+var Loading = require("../Loading");
 
 /**
  * TicketView

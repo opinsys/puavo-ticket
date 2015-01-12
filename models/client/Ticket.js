@@ -3,7 +3,7 @@ var debug = require("debug")("puavo-ticket:models/client/Ticket");
 var Promise = require("bluebird");
 var _ = require("lodash");
 
-var app = require("app");
+var app = require("../../index");
 var Base = require("./Base");
 var Tag = require("./Tag");
 var Handler = require("./Handler");

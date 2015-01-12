@@ -8,8 +8,8 @@ var RouteHandler = require("react-router").RouteHandler;
 
 var Alert = require("react-bootstrap/Alert");
 
-var app = require("app");
-var ErrorActions = require("app/stores/ErrorActions");
+var app = require("../../index");
+var ErrorActions = require("../../stores/ErrorActions");
 var Loading = require("../Loading");
 var CommentForm = require("./CommentForm");
 var AttachmentsForm = require("../AttachmentsForm");
@@ -18,8 +18,8 @@ var Ticket = require("../../models/client/Ticket");
 var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
 var EditableText = require("../EditableText");
-var UploadProgress = require("app/components/UploadProgress");
-var TicketStore = require("app/stores/TicketStore");
+var UploadProgress = require("../UploadProgress");
+var TicketStore = require("../../stores/TicketStore");
 
 var ToggleStatusButton = require("./ToggleStatusButton");
 var ToggleFollowButton = require("./ToggleFollowButton");

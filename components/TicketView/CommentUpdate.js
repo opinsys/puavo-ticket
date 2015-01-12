@@ -5,17 +5,17 @@ var classSet = React.addons.classSet;
 var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
 var Tooltip = require("react-bootstrap/Tooltip");
 
-var app = require("app");
-var Fa = require("app/components/Fa");
+var app = require("../../index");
+var Fa = require("../Fa");
 var SpeechBubble = require("./SpeechBubble");
 var OnViewportMixin = require("../OnViewportMixin");
 var UpdateMixin = require("./UpdateMixin");
 var TimeAgo = require("../TimeAgo");
-var FileItem = require("app/components/FileItem");
-var ForcedLinebreaks = require("app/components/ForcedLinebreaks");
+var FileItem = require("../FileItem");
+var ForcedLinebreaks = require("../ForcedLinebreaks");
 var ToggleHiddenButton = require("./ToggleHiddenButton");
-var TicketStore = require("app/stores/TicketStore");
-var ErrorActions = require("app/stores/ErrorActions");
+var TicketStore = require("../../stores/TicketStore");
+var ErrorActions = require("../../stores/ErrorActions");
 
 /**
  * Renders ticket comment

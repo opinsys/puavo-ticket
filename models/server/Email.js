@@ -3,10 +3,10 @@
 var parseOneAddress = require("email-addresses").parseOneAddress;
 var Promise = require("bluebird");
 
-require("app/db");
+require("../../db");
 var Base = require("./Base");
-var User = require("app/models/server/User");
-var parseReplyEmailAddress = require("app/utils/parseReplyEmailAddress");
+var User = require("./User");
+var parseReplyEmailAddress = require("../../utils/parseReplyEmailAddress");
 
 var STATES = {
     pending: 1,
@@ -192,7 +192,7 @@ var Email = Base.extend({
     submitAsNewTicket: function(){
         var self = this;
         return this.fetchUser().then(function(user) {
-            var Ticket = require("app/models/server/Ticket");
+            var Ticket = require("../../models/server/Ticket");
             return Ticket.create(
                 self.getSubject(),
                 self.getBody(),

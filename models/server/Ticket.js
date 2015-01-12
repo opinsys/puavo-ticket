@@ -4,7 +4,7 @@ var _ = require("lodash");
 var Promise = require("bluebird");
 var crypto = require("crypto");
 
-var config = require("app/config");
+var config = require("../../config");
 var Base = require("./Base");
 var Comment = require("./Comment");
 var Tag = require("./Tag");

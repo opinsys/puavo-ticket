@@ -4,8 +4,8 @@ var React = require("react/addons");
 var Link = require("react-router").Link;
 var s = require("underscore.string");
 
-var app = require("app");
-var StatusBadge = require("app/components/StatusBadge");
+var app = require("../index");
+var StatusBadge = require("../components/StatusBadge");
 var Profile = require("./Profile");
 var TimeAgo = require("./TimeAgo");
 

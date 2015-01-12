@@ -5,11 +5,11 @@ var React = require("react/addons");
 var Table = require("react-bootstrap/Table");
 var Link = require("react-router").Link;
 
-var app = require("app");
-var BackboneMixin = require("app/components/BackboneMixin");
-var Fa = require("app/components/Fa");
-var captureError = require("app/utils/captureError");
-var User = require("app/models/client/User");
+var app = require("../../index");
+var BackboneMixin = require("../BackboneMixin");
+var Fa = require("../Fa");
+var captureError = require("../../utils/captureError");
+var User = require("../../models/client/User");
 var ProfileBadge = require("./ProfileBadge");
 
 /**

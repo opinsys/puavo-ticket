@@ -5,8 +5,8 @@ var React = require("react/addons");
 var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
 var Tooltip = require("react-bootstrap/Tooltip");
 
-var app = require("app");
-var User = require("app/models/client/User");
+var app = require("../../index");
+var User = require("../../models/client/User");
 var ProfileDetails = require("./ProfileDetails");
 
 /**

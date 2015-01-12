@@ -9,10 +9,10 @@ var ButtonGroup = require("react-bootstrap/ButtonGroup");
 var Promise = require("bluebird");
 var Reflux = require("reflux");
 
-var app = require("app");
-var ErrorActions = require("app/stores/ErrorActions");
-var Ticket = require("app/models/client/Ticket");
-var Comment = require("app/models/client/Comment");
+var app = require("../index");
+var ErrorActions = require("../stores/ErrorActions");
+var Ticket = require("../models/client/Ticket");
+var Comment = require("../models/client/Comment");
 var Modal = require("./Modal");
 var BackboneMixin = require("./BackboneMixin");
 var ErrorMessage = require("./ErrorMessage");

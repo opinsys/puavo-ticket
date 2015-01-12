@@ -3,11 +3,11 @@
 var React = require("react/addons");
 var Link = require("react-router").Link;
 
-var captureError = require("app/utils/captureError");
+var captureError = require("../utils/captureError");
 var BackboneMixin = require("./BackboneMixin");
 var TicketList = require("./TicketList");
-var User = require("app/models/client/User");
-var Ticket = require("app/models/client/Ticket");
+var User = require("../models/client/User");
+var Ticket = require("../models/client/Ticket");
 
 /**
  *

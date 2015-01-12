@@ -3,7 +3,7 @@
 
 var React = require("react/addons");
 
-var User = require("app/models/client/User");
+var User = require("../../models/client/User");
 
 /**
  * Display profile image in badge which is constrained by maxWidth and

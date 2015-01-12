@@ -107,7 +107,7 @@ BrowserTitle.prototype = {
      * @param {String} s
      */
     showInFavicon: function(s) {
-        var Tinycon = require("app/vendor/tinycon.shim");
+        var Tinycon = require("../vendor/tinycon.shim");
         Tinycon.setBubble(s);
     },
 

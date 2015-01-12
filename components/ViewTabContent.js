@@ -10,14 +10,14 @@ var url = require("url");
 var Input = require("react-bootstrap/Input");
 var _ = require("lodash");
 
-var app = require("app");
-var View = require("app/models/client/View");
-var Ticket = require("app/models/client/Ticket");
+var app = require("../index");
+var View = require("../models/client/View");
+var Ticket = require("../models/client/Ticket");
 var BackboneMixin = require("./BackboneMixin");
 var TicketList = require("./TicketList");
 var Loading = require("./Loading");
-var ViewActions = require("app/stores/ViewStore").Actions;
-var ErrorActions = require("app/stores/ErrorActions");
+var ViewActions = require("../stores/ViewStore").Actions;
+var ErrorActions = require("../stores/ErrorActions");
 
 /**
  * @namespace components

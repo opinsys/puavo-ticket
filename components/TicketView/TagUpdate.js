@@ -4,7 +4,7 @@ var React = require("react/addons");
 
 var OnViewportMixin = require("../OnViewportMixin");
 var UpdateMixin = require("./UpdateMixin");
-var Profile = require("app/components/Profile");
+var Profile = require("../Profile");
 
 /**
  * Render ticket tag change

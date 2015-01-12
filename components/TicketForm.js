@@ -9,10 +9,10 @@ var SideInfo = require("./SideInfo");
 var Loading = require("./Loading");
 var ElasticTextarea = require("./ElasticTextarea");
 var AttachmentsForm = require("./AttachmentsForm");
-var UploadProgress = require("app/components/UploadProgress");
-var BackupInput = require("app/components/BackupInput");
+var UploadProgress = require("./UploadProgress");
+var BackupInput = require("./BackupInput");
 
-var BackboneMixin = require("../components/BackboneMixin");
+var BackboneMixin = require("./BackboneMixin");
 var Ticket = require("../models/client/Ticket");
 
 /**

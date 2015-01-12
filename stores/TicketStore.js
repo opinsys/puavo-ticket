@@ -2,7 +2,7 @@
 
 var Reflux = require("reflux");
 
-var Ticket = require("app/models/client/Ticket");
+var Ticket = require("../models/client/Ticket");
 
 
 

@@ -4,7 +4,7 @@ var Cocktail = require("backbone.cocktail");
 var url = require("url");
 
 var Acl = require("../Acl");
-var fetch = require("app/utils/fetch");
+var fetch = require("../../utils/fetch");
 var Base = require("./Base");
 var UserMixin = require("../UserMixin");
 

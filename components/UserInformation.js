@@ -7,7 +7,7 @@ var DropdownButton = require("react-bootstrap/DropdownButton");
 var MenuItem = require("react-bootstrap/MenuItem");
 
 var Profile = require("./Profile");
-var User = require("app/models/client/User");
+var User = require("../models/client/User");
 
 /**
  * User information and logout

@@ -9,12 +9,12 @@ var Button = require("react-bootstrap/Button");
 var Router = require("react-router");
 
 
-var ViewActions = require("app/stores/ViewStore").Actions;
-var app = require("app");
-var Fa = require("app/components/Fa");
+var ViewActions = require("../stores/ViewStore").Actions;
+var app = require("../index");
+var Fa = require("./Fa");
 var TicketList = require("./TicketList");
-var Ticket = require("app/models/client/Ticket");
-var BackboneMixin = require("app/components/BackboneMixin");
+var Ticket = require("../models/client/Ticket");
+var BackboneMixin = require("./BackboneMixin");
 
 
 var queryHelp = <div>

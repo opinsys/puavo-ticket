@@ -1,9 +1,9 @@
 "use strict";
 
-var View = require("app/models/client/View");
-var ErrorActions = require("app/stores/ErrorActions");
-var ViewStore = require("app/stores/ViewStore");
-var TicketStore = require("app/stores/TicketStore");
+var View = require("./models/client/View");
+var ErrorActions = require("./stores/ErrorActions");
+var ViewStore = require("./stores/ViewStore");
+var TicketStore = require("./stores/TicketStore");
 
 ViewStore.Actions.loadViews.listen(function(onSuccess) {
     View.collection().fetch()

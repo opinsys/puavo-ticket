@@ -8,14 +8,14 @@ var Promise = require("bluebird");
 var Navigation = require("react-router").Navigation;
 var Reflux = require("reflux");
 
-var app = require("app");
+var app = require("../../index");
 var Fa = require("../Fa");
-var Ticket = require("app/models/client/Ticket");
+var Ticket = require("../../models/client/Ticket");
 var SelectUsers = require("../SelectUsers");
-var EditableList = require("app/components/EditableList");
-var Profile = require("app/components/Profile");
-var TicketStore = require("app/stores/TicketStore");
-var ErrorActions = require("app/stores/ErrorActions");
+var EditableList = require("../EditableList");
+var Profile = require("../Profile");
+var TicketStore = require("../../stores/TicketStore");
+var ErrorActions = require("../../stores/ErrorActions");
 
 /**
  *

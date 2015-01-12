@@ -5,8 +5,8 @@ var DropdownButton = require("react-bootstrap/DropdownButton");
 var MenuItem = require("react-bootstrap/MenuItem");
 var Link = require("react-router").Link;
 
-var app = require("app");
-var Ticket = require("app/models/client/Ticket");
+var app = require("../index");
+var Ticket = require("../models/client/Ticket");
 
 /**
  * NotificationsHub

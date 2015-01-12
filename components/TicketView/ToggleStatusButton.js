@@ -5,10 +5,10 @@ var React = require("react/addons");
 var DropdownButton = require("react-bootstrap/DropdownButton");
 var MenuItem = require("react-bootstrap/MenuItem");
 
-var app = require("app");
-var Ticket = require("app/models/client/Ticket");
-var Loading = require("app/components/Loading").Spinner;
-var ErrorActions = require("app/stores/ErrorActions");
+var app = require("../../index");
+var Ticket = require("../../models/client/Ticket");
+var Loading = require("../../components/Loading").Spinner;
+var ErrorActions = require("../../stores/ErrorActions");
 
 /**
  * ToggleStatusButton

@@ -2,8 +2,8 @@
 
 var Reflux = require("reflux");
 
-var app = require("app");
-var View = require("app/models/client/View");
+var app = require("../index");
+var View = require("../models/client/View");
 
 
 

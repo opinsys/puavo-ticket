@@ -1,6 +1,6 @@
 "use strict";
 
-var db = require("app/db");
+var db = require("../../db");
 
 var Base = require("./Base");
 var Chunk = require("./Chunk");

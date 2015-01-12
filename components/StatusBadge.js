@@ -2,7 +2,7 @@
 "use strict";
 var React = require("react/addons");
 
-var Redacted = require("app/components/Redacted");
+var Redacted = require("./Redacted");
 
 /**
  * @namespace components
