@@ -12,9 +12,11 @@ var Router = require("react-router");
 var ViewActions = require("../stores/ViewStore").Actions;
 var app = require("../index");
 var Fa = require("./Fa");
+
 var TicketList = require("./TicketList");
 var Ticket = require("../models/client/Ticket");
 var BackboneMixin = require("./BackboneMixin");
+var ErrorActions = require("../stores/ErrorActions");
 
 
 var queryHelp = <div>
@@ -59,6 +61,7 @@ var ViewEditor = React.createClass({
     getInitialState: function() {
         return {
             saving: false,
+            searching: true,
             name: this.props.params.name,
             queryString: this.parseQueryString(),
         };
@@ -78,7 +81,11 @@ var ViewEditor = React.createClass({
             query: this.props.query
         });
         this.setBackbone({ tickets: tickets });
-        tickets.fetch();
+        this.setState({ searching: true });
+        tickets.fetch()
+        .catch(ErrorActions.haltChain("Tukipyyntöjen haku epäonnistui"))
+        .then(() => this.isMounted() && this.setState({ searching: false }));
+
     },
 
     componentDidMount: function() {
@@ -162,7 +169,8 @@ var ViewEditor = React.createClass({
 
                         <Input
                             type="text"
-                            label="Kysely"
+                            label={<span>Kysely{this.state.searching &&
+                                <Fa className="ViewEditor-save-spinner" icon="spinner" spin />}</span>}
                             className="ViewEditor-query-input"
                             help={queryHelp}
                             value={self.state.queryString}
