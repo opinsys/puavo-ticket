@@ -2,6 +2,9 @@
 var Promise = require("bluebird");
 var _ = require("lodash");
 var marked = require("marked");
+var emailreplyparser = require("emailreplyparser");
+emailreplyparser = emailreplyparser.EmailReplyParser.parse_reply.bind(emailreplyparser.EmailReplyParser);
+
 var fetch = require("../../utils/fetch");
 
 var Base = require("./Base");
@@ -100,6 +103,20 @@ var Comment = Base.extend({
         return a && a.length > 0;
     },
 
+    /**
+     * If the the comment was sent using email pass it through emailreplyparser
+     *
+     * @method getStrippedComment
+     * @return {String}
+     */
+    getStrippedComment: function(){
+        var c = this.get("comment");
+        if (this.get("textType") === "email") {
+            return emailreplyparser(c);
+        } else {
+            return c;
+        }
+    },
 
     /**
      * @method attachments

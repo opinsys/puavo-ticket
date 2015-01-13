@@ -36,6 +36,7 @@
     "diff": "^1.0.8",
     "ejs": "~1.0.0",
     "email-addresses": "^1.1.2",
+    "emailreplyparser": "0.0.5",
     "envify": "^3.0.0",
     "exorcist": "^0.1.6",
     "express": "~4.9.0",

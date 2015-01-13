@@ -71,7 +71,7 @@ var CommentUpdate = React.createClass({
 
         var createdBy = comment.createdBy();
         var createdAt = comment.createdAt();
-        var commentString = comment.get("comment");
+        var commentString = comment.getStrippedComment();
         var hashId = comment.getUniqueId();
         var mergedComments = comment.getMergedComments();
         var attachments = comment.rel("attachments").toArray().concat(mergedComments.reduce(function(a, comment) {
@@ -122,7 +122,7 @@ var CommentUpdate = React.createClass({
                     var hashId = c.getUniqueId();
                     return (
                         <ForcedLinebreaks className="comment" key={hashId} id={hashId} >
-                            {c.get("comment")}
+                            {c.getStrippedComment()}
                         </ForcedLinebreaks>
                     );
                 })}
