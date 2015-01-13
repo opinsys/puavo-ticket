@@ -14,11 +14,6 @@ wget -qO - https://github.com/opinsys/puavo-standalone/raw/master/setup.sh | sud
 # Install build dependencies
 sudo make install-build-dep
 
-# XXX: For some random reason ci user has no permissions to write
-# /home/ci/.npmrc
-# Workaround by using sudo.
-sudo npm set registry http://registry.npmjs.org/
-
 # Build debian package
 make deb
 
