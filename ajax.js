@@ -1,5 +1,6 @@
 "use strict";
 
+var _ = require("lodash");
 var View = require("./models/client/View");
 var ErrorActions = require("./stores/ErrorActions");
 var ViewStore = require("./stores/ViewStore");
@@ -45,8 +46,14 @@ ViewStore.Actions.destroyView.listen(function(view) {
 TicketStore.Actions.refreshTicket.shouldEmit = function() {
     return !!TicketStore.state.ticket.get("id");
 };
-TicketStore.Actions.refreshTicket.listen(function() {
+
+function refreshTicket() {
     TicketStore.state.ticket.fetch()
     .catch(ErrorActions.haltChain("Tukipyynnön lataus epännistui"))
     .then(TicketStore.Actions.setTicket);
-});
+}
+
+TicketStore.Actions.refreshTicket.listen(
+    _.throttle(refreshTicket, 1000, {trailing: false})
+);
+
