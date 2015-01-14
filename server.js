@@ -311,7 +311,7 @@ app.use(function(err, req, res, next) {
         return res.status(403).json({ error: "invalid csrf token" });
     }
 
-    if (process.env.NODE_ENV !== "test") next(err);
+    if (process.env.NODE_ENV !== "test") return next(err);
     res.status(500).send(err.message + "\n" + err.stack);
 });
 
