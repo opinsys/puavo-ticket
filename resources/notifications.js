@@ -7,6 +7,7 @@ var debug = require("debug")("app:resources/read_tickets");
 var express = require("express");
 
 var Ticket = require("../models/server/Ticket");
+var db = require("../db");
 var app = express.Router();
 
 
@@ -29,6 +30,19 @@ app.post("/api/tickets/:id/read", function(req, res, next) {
     })
     .then(function(notification) {
         res.json(notification);
+    })
+    .catch(next);
+});
+
+app.post("/api/mark_all_notifications_as_read", function(req, res, next) {
+    db.knex("notifications")
+    .where({ targetId: req.user.get("id") })
+    .update({
+        readAt: new Date(),
+        emailSentAt: new Date()
+    })
+    .then(function(count) {
+        res.json({ count: count });
     })
     .catch(next);
 });
