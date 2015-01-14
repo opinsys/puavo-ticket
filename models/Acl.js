@@ -58,6 +58,16 @@ Acl.prototype = {
     },
 
     /**
+     * TODO
+     *
+     * @method canSeeRawEmail
+     * @return {Boolean}
+     */
+    canSeeRawEmail: function(){
+        return this.user.isManager();
+    },
+
+    /**
      *
      * @method catSetStatusToPending
      * @param {models.client.Ticket|models.server.Ticket} ticket

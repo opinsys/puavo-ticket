@@ -98,6 +98,8 @@ var CommentUpdate = React.createClass({
             toolbar = <ToggleHiddenButton value={comment.get("hidden")} onChange={this.onToggleHidden} />;
         }
 
+        var emailIcon = <Fa icon="envelope" className="CommentUpdate-email-icon" />;
+
         return (
             <SpeechBubble user={createdBy}
                 className={classes}
@@ -110,7 +112,7 @@ var CommentUpdate = React.createClass({
 
                     {comment.get("textType") === "email" &&
                         <OverlayTrigger placement="top" overlay={<Tooltip>Tämä lähetettiin sähköpostilla</Tooltip>}>
-                            <Fa icon="envelope" className="CommentUpdate-email-icon" />
+                            {user.acl.canSeeRawEmail() ? <a href={comment.getRawEmailURL()} >{emailIcon}</a> : emailIcon}
                         </OverlayTrigger>}
 
                 </span>}>

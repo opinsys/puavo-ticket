@@ -141,6 +141,21 @@ var Comment = Base.extend({
         .then((res) => this.optionsClone(res.data));
     },
 
+    /**
+     * @method getRawEmailURL
+     * @return {String}
+     */
+    getRawEmailURL: function(human){
+        human = human ? "" : "?human=1";
+        return [
+            "/api/tickets/",
+            this.get("ticketId"),
+            "/comments/",
+            this.get("id"),
+            "/email" + human
+        ].join("");
+    },
+
 
     /**
      * @method addAttachments

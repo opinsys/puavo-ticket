@@ -54,6 +54,33 @@ app.post("/api/tickets/:id/comments", function(req, res, next) {
     .catch(next);
 });
 
+app.get("/api/tickets/:ticketId/comments/:commentId/email", function(req, res, next) {
+    if (!req.user.acl.canSeeRawEmail()) {
+        return next(new Acl.PermissionDeniedError());
+    }
+
+    // Fetch ticket to raise visibility error if user has not access to the
+    // ticket
+    Ticket.fetchByIdConstrained(req.user, req.params.ticketId, {
+        withRelated: [
+            {comments: function(q) {
+                q.where({ id: req.params.commentId });
+            }},
+            {"comments.email": function(q) {
+                q.where({ commentId: req.params.commentId });
+            }}
+        ]
+    })
+    .then(function(ticket) {
+        var comment = ticket.rel("comments").first();
+        if (!comment.get("id")) throw new Ticket.NotFoundError("bad comment");
+        var email = comment.rel("email");
+        if (!email.get("id")) throw new Ticket.NotFoundError("not email");
+        res.json(email);
+    })
+    .catch(next);
+
+});
 
 app.post("/api/tickets/:ticketId/comments/:commentId/visibility", function(req, res, next) {
     var hidden = !!req.body.hidden;

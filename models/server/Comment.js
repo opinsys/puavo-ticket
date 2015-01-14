@@ -37,6 +37,11 @@ var Comment = Base.extend({
         return this.belongsTo(Ticket, "ticketId");
     },
 
+    email: function() {
+        var Email = require("./Email");
+        return this.hasOne(Email, "commentId");
+    },
+
     /**
      * Text for email notification when this model has changed
      *
