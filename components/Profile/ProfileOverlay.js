@@ -66,7 +66,12 @@ var ProfileOverlay = React.createClass({
         var user = this.props.user;
         var children = this.props.children;
 
-        children = <div style={{display: this.props.display}}>{children}</div>;
+        if (this.props.display === "inline") {
+            children = <span>{children}</span>;
+        } else  {
+            children = <div className="ProfileOverlay-children-wrap" >{children}</div>;
+        }
+
 
         if (user.robot) return children;
 

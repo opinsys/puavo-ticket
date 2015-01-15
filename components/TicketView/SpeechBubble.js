@@ -31,7 +31,7 @@ var SpeechBubble = React.createClass({
         var title = this.props.title;
         return (
             <div className={"SpeechBubble " + this.props.className} id={this.props.id} key={this.props.key}>
-                <Profile.Overlay clickForDetails user={user} >
+                <Profile.Overlay clickForDetails user={user} display="block" >
                     <Profile.Badge user={user} />
                 </Profile.Overlay>
                 <div className="bubble">
