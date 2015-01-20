@@ -20,7 +20,7 @@
     "axios": "^0.4.1",
     "backbone": "~1.1.2",
     "backbone.cocktail": "~0.5.8",
-    "bluebird": "~2.2.2",
+    "bluebird": "^2.0.0",
     "body-parser": "~1.4.3",
     "bookshelf": "^0.7.9",
     "bootstrap": "^3.2.0",
