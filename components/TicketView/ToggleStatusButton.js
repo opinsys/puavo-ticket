@@ -6,9 +6,9 @@ var DropdownButton = require("react-bootstrap/DropdownButton");
 var MenuItem = require("react-bootstrap/MenuItem");
 
 var app = require("../../index");
+var Actions = require("../../Actions");
 var Ticket = require("../../models/client/Ticket");
 var Loading = require("../../components/Loading").Spinner;
-var ErrorActions = require("../../stores/ErrorActions");
 
 /**
  * ToggleStatusButton
@@ -31,7 +31,7 @@ var ToggleStatusButton = React.createClass({
     handleChangeStatus: function(status) {
         this.setState({ saving: true });
         this.props.ticket.addTag("status:" + status)
-        .catch(ErrorActions.haltChain("Tukipyynnön tilan muuttaminen epäonnistui"))
+        .catch(Actions.error.haltChain("Tukipyynnön tilan muuttaminen epäonnistui"))
         .then(() => {
             if (!this.props.onChange) return;
             setImmediate(() => this.props.onChange({ target: { value: status } }));

@@ -6,9 +6,9 @@ var Table = require("react-bootstrap/Table");
 var Link = require("react-router").Link;
 
 var app = require("../../index");
+var Actions = require("../../Actions");
 var BackboneMixin = require("../BackboneMixin");
 var Fa = require("../Fa");
-var captureError = require("../../utils/captureError");
 var User = require("../../models/client/User");
 var ProfileBadge = require("./ProfileBadge");
 
@@ -43,7 +43,7 @@ var ProfileDetails = React.createClass({
             if (!self.isMounted()) return;
             self.setState({ syncing: false });
         })
-        .catch(captureError("Käyttäjän haku puavosta epäonnistui"));
+        .catch(Actions.error.haltChain("Käyttäjän haku puavosta epäonnistui"));
     },
 
     renderTicketLinks: function() {

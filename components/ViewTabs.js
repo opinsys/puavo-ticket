@@ -9,9 +9,9 @@ var RouteHandler = require("react-router").RouteHandler;
 var Reflux = require("reflux");
 
 var app = require("../index");
+var Actions = require("../Actions");
 var Loading = require("./Loading");
 var ViewStore = require("../stores/ViewStore");
-var ViewActions = ViewStore.Actions;
 
 /**
  * @namespace components
@@ -24,7 +24,7 @@ var ViewTabs = React.createClass({
     mixins: [Reflux.connect(ViewStore), State],
 
     componentDidMount: function() {
-        ViewActions.loadViews();
+        Actions.views.fetch();
     },
 
     render: function() {

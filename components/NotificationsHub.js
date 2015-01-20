@@ -4,9 +4,9 @@ var React = require("react/addons");
 var DropdownButton = require("react-bootstrap/DropdownButton");
 var MenuItem = require("react-bootstrap/MenuItem");
 var Link = require("react-router").Link;
+var Reflux = require("reflux");
 
-var app = require("../index");
-var Ticket = require("../models/client/Ticket");
+var NotificationsStore = require("../stores/NotificationsStore");
 
 /**
  * NotificationsHub
@@ -18,50 +18,33 @@ var Ticket = require("../models/client/Ticket");
  */
 var NotificationsHub = React.createClass({
 
+    mixins: [Reflux.connect(NotificationsStore)],
+
 
     render: function() {
-        var count = 0;
-        var items = [];
-
-        [].concat(this.props.children).forEach(function(child) {
-            if (!child) return;
-            var key = child.props.title;
-
-            items.push(<MenuItem key={key} header>{child.props.title}</MenuItem>);
-            child.props.tickets.forEach(function(ticket) {
-                count += 1;
-                var itemKey = key + ticket.get("id");
-                items.push(<NotificationItem key={itemKey} ticket={ticket} />);
-            });
+        var items = this.state.notifications.map(function(n) {
+            return <NotificationItem title={n.title} href={n.url} />;
         });
+        var count = items.length;
 
-        app.title.setNotificationCount(count);
-        app.title.activateOnNextTick();
         return (
-            <DropdownButton {...this.props} className="NotificationsHub NotificationsHub-label" title={"Ilmoitukset " + count}>
+            <DropdownButton {...this.props}
+                className="NotificationsHub NotificationsHub-label"
+                title={"Ilmoitukset " + count}>
+
+                {count > 0 &&
+                <a className="NotificationsHub-mark-all-as-read" href="#">Merkitse kaikki luetuiksi</a>}
+
+                {count === 0 &&
+                <MenuItem header>
+                    Ei lukemattomia ilmoituksia
+                </MenuItem>}
+
                 {items}
             </DropdownButton>
         );
     }
 });
-
-/**
- * @namespace components
- * @class NotificationsHub.TicketGroup
- * @constructor
- * @param {Object} props
- */
-var TicketGroup = React.createClass({
-    propTypes: {
-        title: React.PropTypes.string.isRequired,
-        tickets: React.PropTypes.instanceOf(Ticket.Collection).isRequired
-    },
-
-    render: function() {
-        throw new Error("Meta component. Do not actually render me.");
-    }
-});
-
 
 /**
  * NotificationItem
@@ -70,25 +53,21 @@ var TicketGroup = React.createClass({
  * @class NotificationsHub.NotificationItem
  * @constructor
  * @param {Object} props
- * @param {models.client.Ticket} props.ticket
  */
 var NotificationItem = React.createClass({
 
     propTypes: {
-        ticket: React.PropTypes.instanceOf(Ticket).isRequired,
+        href: React.PropTypes.string.isRequired,
+        title: React.PropTypes.string.isRequired
     },
 
     render: function() {
-        var ticket = this.props.ticket;
-        var title = ticket.getCurrentTitle();
         return (
             <MenuItem header className="NotificationsHub-item">
-                <Link to="ticket"
-                      params={{id: ticket.get("id")}}>{title}</Link>
+                <Link to={this.props.href}>{this.props.title}</Link>
             </MenuItem>
         );
     }
 });
 
-NotificationsHub.TicketGroup = TicketGroup;
 module.exports = NotificationsHub;

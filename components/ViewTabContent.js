@@ -11,13 +11,12 @@ var Input = require("react-bootstrap/Input");
 var _ = require("lodash");
 
 var app = require("../index");
+var Actions = require("../Actions");
 var View = require("../models/client/View");
 var Ticket = require("../models/client/Ticket");
 var BackboneMixin = require("./BackboneMixin");
 var TicketList = require("./TicketList");
 var Loading = require("./Loading");
-var ViewActions = require("../stores/ViewStore").Actions;
-var ErrorActions = require("../stores/ErrorActions");
 
 /**
  * @namespace components
@@ -82,11 +81,11 @@ var ViewTabContent = React.createClass({
         .catch(Promise.CancellationError, function(err) {
             // pass
         })
-        .catch(ErrorActions.haltChain("Tukipyyntöjen haku epäonnistui"));
+        .catch(Actions.error.haltChain("Tukipyyntöjen haku epäonnistui"));
     },
 
     destroyView: function() {
-        ViewActions.destroyView(this.props.view);
+        Actions.views.destroy(this.props.view);
         app.router.transitionTo("view", {id: "open"});
     },
 

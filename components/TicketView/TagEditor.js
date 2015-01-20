@@ -7,11 +7,11 @@ var Input = require("react-bootstrap/Input");
 var Button = require("react-bootstrap/Button");
 var Reflux = require("reflux");
 
+var Actions = require("../../Actions");
 var Ticket = require("../../models/client/Ticket");
 var EditableList = require("../EditableList");
 var Fa = require("../Fa");
 var TicketStore = require("../../stores/TicketStore");
-var ErrorActions = require("../../stores/ErrorActions");
 
 /**
  * @namespace components
@@ -46,8 +46,8 @@ var TagEditor = React.createClass({
 
     removeTag: function(tag) {
         tag.destroy()
-        .catch(ErrorActions.haltChain("Tagin poisto epäonnistui"))
-        .then(TicketStore.Actions.refreshTicket);
+        .catch(Actions.error.haltChain("Tagin poisto epäonnistui"))
+        .then(Actions.refresh);
     },
 
     validateBsStyle: function() {
@@ -75,8 +75,8 @@ var TagEditor = React.createClass({
 
         self.setState({ saving: true });
         ticket.addTag(this.getTag())
-        .catch(ErrorActions.haltChain("Tagin lisäys epäonnistui"))
-        .then(TicketStore.Actions.refreshTicket);
+        .catch(Actions.error.haltChain("Tagin lisäys epäonnistui"))
+        .then(Actions.refresh);
     },
 
     render: function() {

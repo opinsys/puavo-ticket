@@ -11,6 +11,7 @@ var TicketStore = require("../../stores/TicketStore");
 var Tabs = require("../Tabs");
 var BackboneMixin = require("../BackboneMixin");
 var Loading = require("../Loading");
+var Actions = require("../../Actions");
 
 /**
  * TicketView
@@ -25,12 +26,12 @@ var TicketView = React.createClass({
     mixins: [BackboneMixin, Reflux.connect(TicketStore)],
 
     componentWillReceiveProps: function(nextProps) {
-        TicketStore.Actions.changeTicket(nextProps.params.id);
+        Actions.ticket.change(nextProps.params.id);
     },
 
     componentDidMount: function() {
         window.addEventListener("focus", this.refresh);
-        TicketStore.Actions.changeTicket(this.props.params.id);
+        Actions.ticket.change(this.props.params.id);
     },
 
     componentWillUnmount: function() {
@@ -38,7 +39,7 @@ var TicketView = React.createClass({
     },
 
     refresh: function() {
-        TicketStore.Actions.refreshTicket();
+        Actions.refresh();
     },
 
 

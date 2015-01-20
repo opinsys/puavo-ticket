@@ -1,15 +1,15 @@
 "use strict";
 
-var _ = require("lodash");
 var View = require("./models/client/View");
-var ErrorActions = require("./stores/ErrorActions");
-var ViewStore = require("./stores/ViewStore");
 var TicketStore = require("./stores/TicketStore");
+var fetch = require("./utils/fetch");
 
-ViewStore.Actions.loadViews.listen(function(onSuccess) {
+var Actions = require("./Actions");
+
+Actions.views.fetch.listen(function(onSuccess) {
     View.collection().fetch()
-    .catch(ErrorActions.haltChain("Näkymien lataaminen epäonnistui"))
-    .then(ViewStore.Actions.setViews)
+    .catch(Actions.error.haltChain("Näkymien lataaminen epäonnistui"))
+    .then(Actions.views.set)
     .then(function() {
         if (typeof onSuccess === "function") {
             process.nextTick(onSuccess);
@@ -17,43 +17,48 @@ ViewStore.Actions.loadViews.listen(function(onSuccess) {
     });
 });
 
-ViewStore.Actions.addView.listen(function(viewData, onSuccess) {
+Actions.views.add.listen(function(viewData, onSuccess) {
     var view = new View({
         name: viewData.name,
         query: viewData.query
     });
 
     view.save()
-    .catch(ErrorActions.haltChain("Näkymän tallennus epäonnistui"))
+    .catch(Actions.error.haltChain("Näkymän tallennus epäonnistui"))
     .then(function(view) {
-        ViewStore.Actions.loadViews(onSuccess.bind(null, view));
+        Actions.views.fetch(onSuccess.bind(null, view));
     });
 
 });
 
 
-ViewStore.Actions.destroyView.listen(function(view) {
+Actions.views.destroy.listen(function(view) {
     view.destroy()
-    .catch(ErrorActions.haltChain("Näkymän poisto epäonnistui"))
-    .then(function() {
-        ViewStore.Actions.loadViews();
-    });
+    .catch(Actions.error.haltChain("Näkymän poisto epäonnistui"))
+    .then( Actions.views.fetch);
 });
 
 
-
-
-TicketStore.Actions.refreshTicket.shouldEmit = function() {
+Actions.ticket.fetch.shouldEmit = function() {
     return !!TicketStore.state.ticket.get("id");
 };
 
-function refreshTicket() {
+Actions.ticket.fetch.listen(function refreshTicket() {
     TicketStore.state.ticket.fetch()
-    .catch(ErrorActions.haltChain("Tukipyynnön lataus epännistui"))
-    .then(TicketStore.Actions.setTicket);
-}
+    .catch(Actions.error.haltChain("Tukipyynnön lataus epännistui"))
+    .then(Actions.ticket.set);
+});
 
-TicketStore.Actions.refreshTicket.listen(
-    _.throttle(refreshTicket, 1000, {trailing: false})
-);
 
+Actions.notifications.fetch.listen(function fetchNotifcations() {
+    console.log("Fetching notifications");
+    return fetch({
+        url: "/api/notifications2"
+    })
+    .catch(Actions.error.haltChain("Päivitysten lataus epäonnistui"))
+    .then(function(res) {
+        Actions.notifications.set(res.data);
+    });
+});
+
+setImmediate(Actions.notifications.fetch);

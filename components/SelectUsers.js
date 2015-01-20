@@ -6,10 +6,10 @@ var React = require("react/addons");
 var classSet = React.addons.classSet;
 var Promise = require("bluebird");
 
+var Actions = require("../Actions");
 var Fa = require("./Fa");
 var User = require("../models/client/User");
 var Profile = require("./Profile");
-var captureError = require("../utils/captureError");
 
 
 /**
@@ -171,7 +171,7 @@ var SelectUsers = React.createClass({
         .catch(Promise.CancellationError, function() {
             // cancel is ok
         })
-        .catch(captureError("Käyttäjien haku epäonnistui"));
+        .catch(Actions.error.haltChain("Käyttäjien haku epäonnistui"));
 
         self.setState({ searchOp: searchOp });
     },

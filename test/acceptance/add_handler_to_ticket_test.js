@@ -15,6 +15,7 @@ var Ticket = require("app/models/server/Ticket");
 describe("ticket handlers", function() {
 
     before(function() {
+        var self = this;
         return helpers.clearTestDatabase()
          .then(function() {
             return User.ensureUserByUsername(
@@ -29,7 +30,8 @@ describe("ticket handlers", function() {
                 user
             );
         })
-        .then(function() {
+        .then(function(ticket) {
+            self.ticket = ticket;
             return browser.init({ browserName: aHelpers.browserName });
         })
         .then(function() {
@@ -44,19 +46,9 @@ describe("ticket handlers", function() {
         return browser.quit();
     });
 
-
-    it("has notification about new ticket", function() {
-        return browser
-        .elementByCss(".NotificationsHub-label").text()
-        .then(function(val) {
-            assert.equal("Ilmoitukset 1", val);
-        });
-    });
-
-    it("can navigate to the ticket via the notification", function() {
-        return browser
-        .elementByCss(".NotificationsHub-label").click()
-        .elementByCss(".NotificationsHub-item a").click()
+    it("see the ticket title", function() {
+        var self = this;
+        return browser.get(aHelpers.url + "/tickets/" + self.ticket.get("id"))
         .waitForElementByCss(".Discuss-title").text()
         .then(function(val) {
             assert.equal("#1 Capture Joker", val);

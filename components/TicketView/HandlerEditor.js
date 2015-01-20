@@ -9,13 +9,13 @@ var Navigation = require("react-router").Navigation;
 var Reflux = require("reflux");
 
 var app = require("../../index");
+var Actions = require("../../Actions");
 var Fa = require("../Fa");
 var Ticket = require("../../models/client/Ticket");
 var SelectUsers = require("../SelectUsers");
 var EditableList = require("../EditableList");
 var Profile = require("../Profile");
 var TicketStore = require("../../stores/TicketStore");
-var ErrorActions = require("../../stores/ErrorActions");
 
 /**
  *
@@ -47,8 +47,8 @@ var HandlerEditor = React.createClass({
     removeHandler: function(handlerRelation) {
         this.setState({ saving: true });
         Promise.resolve(handlerRelation.destroy())
-        .catch(ErrorActions.haltChain("Käsittelijän poistaminen epäonnistui"))
-        .then(TicketStore.Actions.refreshTicket);
+        .catch(Actions.error.haltChain("Käsittelijän poistaminen epäonnistui"))
+        .then(Actions.refresh);
     },
 
     /**
@@ -61,8 +61,8 @@ var HandlerEditor = React.createClass({
     addHandler: function(user) {
         this.setState({ saving: true });
         this.props.ticket.addHandler(user)
-        .catch(ErrorActions.haltChain("Käsittelijän lisääminen epäonnistui"))
-        .then(TicketStore.Actions.refreshTicket);
+        .catch(Actions.error.haltChain("Käsittelijän lisääminen epäonnistui"))
+        .then(Actions.refresh);
     },
 
     render: function() {

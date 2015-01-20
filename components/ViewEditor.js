@@ -9,14 +9,13 @@ var Button = require("react-bootstrap/Button");
 var Router = require("react-router");
 
 
-var ViewActions = require("../stores/ViewStore").Actions;
+var Actions = require("../Actions");
 var app = require("../index");
 var Fa = require("./Fa");
 
 var TicketList = require("./TicketList");
 var Ticket = require("../models/client/Ticket");
 var BackboneMixin = require("./BackboneMixin");
-var ErrorActions = require("../stores/ErrorActions");
 
 
 var queryHelp = <div>
@@ -83,7 +82,7 @@ var ViewEditor = React.createClass({
         this.setBackbone({ tickets: tickets });
         this.setState({ searching: true });
         tickets.fetch()
-        .catch(ErrorActions.haltChain("Tukipyyntöjen haku epäonnistui"))
+        .catch(Actions.error.haltChain("Tukipyyntöjen haku epäonnistui"))
         .then(() => this.isMounted() && this.setState({ searching: false }));
 
     },
@@ -103,7 +102,7 @@ var ViewEditor = React.createClass({
     saveView: function() {
         if (!this.isViewOk()) return;
         this.setState({ saving: true });
-        ViewActions.addView({
+        Actions.views.add({
             name: this.props.params.name,
             query: this.props.query
         }, function(view) {

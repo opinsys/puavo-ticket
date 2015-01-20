@@ -3,28 +3,12 @@
 var Reflux = require("reflux");
 
 var Ticket = require("../models/client/Ticket");
-
-
-
-/**
- * Refluxjs actions for the curren ticket view
- *
- * https://github.com/spoike/refluxjs
- * @namespace stores
- * @static
- * @class ViewStore.Actions
- */
-var Actions = Reflux.createActions([
-    "refreshTicket",
-    "setTicket",
-    "changeTicket",
-]);
-
+var Actions = require("../Actions");
 
 
 var TicketStore = Reflux.createStore({
 
-    listenables: Actions,
+    listenables: Actions.ticket,
 
     init: function() {
         this.state = {
@@ -41,16 +25,16 @@ var TicketStore = Reflux.createStore({
         this.trigger(this.state);
     },
 
-    onChangeTicket: function(ticketId) {
+    onChange: function(ticketId) {
         if (String(ticketId) !== String(this.state.ticket.get("id"))) {
             this.state.ticket = new Ticket({ id: ticketId });
             this.state.loading = true;
             this.emitState();
         }
-        Actions.refreshTicket();
+        Actions.refresh();
     },
 
-    onSetTicket: function(ticket) {
+    onSet: function(ticket) {
         this.state.ticket = ticket;
         this.state.loading = false;
         this.emitState();
@@ -58,5 +42,4 @@ var TicketStore = Reflux.createStore({
 
 });
 
-TicketStore.Actions = Actions;
 module.exports = TicketStore;

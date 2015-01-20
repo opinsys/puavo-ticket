@@ -9,17 +9,15 @@ var RouteHandler = require("react-router").RouteHandler;
 var Alert = require("react-bootstrap/Alert");
 
 var app = require("../../index");
-var ErrorActions = require("../../stores/ErrorActions");
+var Actions = require("../../Actions");
 var Loading = require("../Loading");
 var CommentForm = require("./CommentForm");
 var AttachmentsForm = require("../AttachmentsForm");
-var captureError = require("../../utils/captureError");
 var Ticket = require("../../models/client/Ticket");
 var SideInfo = require("../SideInfo");
 var Redacted = require("../Redacted");
 var EditableText = require("../EditableText");
 var UploadProgress = require("../UploadProgress");
-var TicketStore = require("../../stores/TicketStore");
 
 var ToggleStatusButton = require("./ToggleStatusButton");
 var ToggleFollowButton = require("./ToggleFollowButton");
@@ -114,8 +112,6 @@ var Discuss = React.createClass({
         });
         app.io.off("watcherUpdate", this._handleWatcherUpdate);
         app.io.off("connect", this._handleSocketConnect);
-        app.title.setTitle("");
-        app.title.activateOnNextTick();
     },
 
     componentWillReceiveProps: function(nextProps) {
@@ -192,12 +188,12 @@ var Discuss = React.createClass({
                 }});
             }
         })
-        .catch(captureError("Kommentin tallennus epäonnistui"))
+        .catch(Actions.error.haltChain("Kommentin tallennus epäonnistui"))
         .then(function() {
             e.clear();
             self.setState({ uploadProgress: null });
         })
-        .then(TicketStore.Actions.refreshTicket);
+        .then(Actions.refresh);
 
     },
 
@@ -235,7 +231,7 @@ var Discuss = React.createClass({
                     notFound: err
                 });
             })
-            .catch(captureError("Tukipyynnön tilan päivitys epäonnistui"));
+            .catch(Actions.error.haltChain("Tukipyynnön tilan päivitys epäonnistui"));
     },
 
 
@@ -254,8 +250,8 @@ var Discuss = React.createClass({
     changeTitle: function(e) {
         this.setState({ changingTitle: true });
         this.props.ticket.addTitle(e.value)
-        .catch(ErrorActions.haltChain("Otsikon päivitys epäonnistui"))
-        .then(TicketStore.Actions.refreshTicket);
+        .catch(Actions.error.haltChain("Otsikon päivitys epäonnistui"))
+        .then(Actions.refresh);
     },
 
 
@@ -315,8 +311,8 @@ var Discuss = React.createClass({
             setImmediate(this.stopAnimateMarkAsRead);
             console.log("actually marking as read");
             this.props.ticket.markAsRead()
-            .catch(ErrorActions.haltChain("Tukipyynnön merkkaaminen luetuksi epäonnistui"))
-            .then(TicketStore.Actions.refreshTicket);
+            .catch(Actions.error.haltChain("Tukipyynnön merkkaaminen luetuksi epäonnistui"))
+            .then(Actions.refresh);
         }, 5000);
     },
 
@@ -352,10 +348,6 @@ var Discuss = React.createClass({
                 "zendesk"));
         }
 
-
-        app.title.setTitle(title);
-        app.title.activateOnNextTick();
-
         return (
             <div className="row Discuss">
 
@@ -366,7 +358,7 @@ var Discuss = React.createClass({
                     <div className="row ticket-actions-row">
                         <div className="col-md-12">
                             {user.acl.canChangeStatus(ticket) &&
-                                <ToggleStatusButton ticket={ticket} onChange={TicketStore.Actions.refreshTicket} />}
+                                <ToggleStatusButton ticket={ticket} onChange={Actions.refresh} />}
 
                                 <RouteHandler params={self.props.params} query={self.props.query} />
 

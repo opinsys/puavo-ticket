@@ -6,6 +6,7 @@ var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
 var Tooltip = require("react-bootstrap/Tooltip");
 
 var app = require("../../index");
+var Actions = require("../../Actions");
 var Fa = require("../Fa");
 var SpeechBubble = require("./SpeechBubble");
 var OnViewportMixin = require("../OnViewportMixin");
@@ -14,8 +15,6 @@ var TimeAgo = require("../TimeAgo");
 var FileItem = require("../FileItem");
 var ForcedLinebreaks = require("../ForcedLinebreaks");
 var ToggleHiddenButton = require("./ToggleHiddenButton");
-var TicketStore = require("../../stores/TicketStore");
-var ErrorActions = require("../../stores/ErrorActions");
 
 /**
  * Renders ticket comment
@@ -60,8 +59,8 @@ var CommentUpdate = React.createClass({
     onToggleHidden: function(e) {
         var comment = this.props.update;
         comment.setHidden(e.target.value)
-        .catch(ErrorActions.haltChain("Kommentin näkyvyyden muuttaminen epäonnistui"))
-        .then(TicketStore.Actions.refreshTicket);
+        .catch(Actions.error.haltChain("Kommentin näkyvyyden muuttaminen epäonnistui"))
+        .then(Actions.refresh);
     },
 
     render: function() {

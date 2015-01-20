@@ -3,54 +3,8 @@
 var Reflux = require("reflux");
 
 var app = require("../index");
+var Actions = require("../Actions");
 var View = require("../models/client/View");
-
-
-
-/**
- * Refluxjs actions for the view tabs
- *
- * https://github.com/spoike/refluxjs
- * @namespace stores
- * @static
- * @class ViewStore.Actions
- */
-var Actions = Reflux.createActions([
-    /**
-     * Refresh views
-     *
-     * @static
-     * @method loadViews
-     * @param {Function} onSuccess
-     */
-    "loadViews",
-
-    /**
-     * @static
-     * @method addView
-     * @param {Object} data
-     * @param {String} data.name Name of the view
-     * @param {Object} data.query Query for the view
-     * @param {Function} onSuccess
-     */
-    "addView",
-
-    /**
-     * @static
-     * @method setViews
-     * @param {models.client.TicketCollection}
-     */
-    "setViews",
-
-    /**
-     * Destroy given view
-     *
-     * @static
-     * @method destroyView
-     * @param {models.client.View}
-     */
-    "destroyView",
-]);
 
 
 /**
@@ -64,7 +18,7 @@ var Actions = Reflux.createActions([
  */
 var ViewStore = Reflux.createStore({
 
-    listenables: Actions,
+    listenables: Actions.views,
 
     init: function() {
 
@@ -118,23 +72,22 @@ var ViewStore = Reflux.createStore({
         return this.views.findWhere({ id: parseInt(id, 10) });
     },
 
-    onSetViews: function(views) {
+    onSet: function(views) {
         this.views = views;
         this.loading = false;
         this.emitState();
     },
 
-    onLoadViews: function() {
+    onFetch: function() {
         this.loading = true;
         this.emitState();
     },
 
-    onAddView: function(viewData, onSuccess) {
+    onAdd: function(viewData, onSuccess) {
         this.loading = true;
         this.emitState();
     },
 
 });
 
-ViewStore.Actions = Actions;
 module.exports = ViewStore;

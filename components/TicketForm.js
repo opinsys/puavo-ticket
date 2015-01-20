@@ -4,7 +4,7 @@ var React = require("react/addons");
 var Button = require("react-bootstrap/Button");
 var Navigation = require("react-router").Navigation;
 
-var captureError = require("../utils/captureError");
+var Actions = require("../Actions");
 var SideInfo = require("./SideInfo");
 var Loading = require("./Loading");
 var ElasticTextarea = require("./ElasticTextarea");
@@ -71,7 +71,7 @@ var TicketForm = React.createClass({
             self.setState({ uploadProgress: null });
             self.transitionTo("ticket", { id: savedTicket.get("id") });
         })
-        .catch(captureError("Tukipyynnön tallennus epäonnistui"));
+        .catch(Actions.error.haltChain("Tukipyynnön tallennus epäonnistui"));
     },
 
     isFormOk: function() {

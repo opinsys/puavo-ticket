@@ -62,12 +62,29 @@ window.React = React;
 var ErrorMessage = require("./components/ErrorMessage");
 var BrowserTitle = require("./utils/BrowserTitle");
 
-app.title = new BrowserTitle({ trailingTitle: window.document.title });
 app.io = io;
 
+var title = new BrowserTitle({ trailingTitle: window.document.title });
+
+var TicketStore = require("./stores/TicketStore");
+TicketStore.listen(function(state) {
+    if (state.ticket.hasData()) {
+        title.setTitle(state.ticket.getCurrentTitle());
+        title.activateOnNextTick();
+    }
+});
+
+var NotificationsStore = require("./stores/NotificationsStore");
+NotificationsStore.listen(function(state) {
+    title.setNotificationCount(state.notifications.length);
+    title.activateOnNextTick();
+});
+
+
+
+
+
 var appContainer = document.getElementById("app");
-
-
 var router = require("./router");
 app.router = router;
 require("./ajax");

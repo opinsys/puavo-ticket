@@ -2,15 +2,13 @@
 "use strict";
 
 var React = require("react/addons");
-var _ = require("lodash");
 var Link = require("react-router").Link;
 var RouteHandler = require("react-router").RouteHandler;
 var ButtonGroup = require("react-bootstrap/ButtonGroup");
-var Promise = require("bluebird");
 var Reflux = require("reflux");
 
 var app = require("../index");
-var ErrorActions = require("../stores/ErrorActions");
+var Actions = require("../Actions");
 var Ticket = require("../models/client/Ticket");
 var Comment = require("../models/client/Comment");
 var Modal = require("./Modal");
@@ -35,7 +33,7 @@ var Main = React.createClass({
 
     mixins: [
         BackboneMixin,
-        Reflux.listenTo(ErrorActions.displayError, "handleUnhandledError")
+        Reflux.listenTo(Actions.error.display, "handleUnhandledError")
     ],
 
     getInitialState: function() {
@@ -63,24 +61,14 @@ var Main = React.createClass({
         }
     },
 
-    fetchUnreadTickets: function() {
-        var ops = [this.state.unreadTickets.fetch()];
-        if (this.state.pendingTickets) {
-            ops.push(this.state.pendingTickets.fetch());
-        }
-        return Promise.all(ops)
-        .catch(ErrorActions.haltChain("Ilmoitusten lataaminen epäonnistui"));
-    },
 
     handleFollowerUpdate: function(update) {
-        this.fetchUnreadTickets();
         var comment = new Comment(update);
         this.setState({ lastUpdate: comment });
+        Actions.refresh();
     },
 
     componentDidMount: function() {
-        process.nextTick(this.fetchUnreadTickets);
-        this.throttledFetchUnreadTickets = _.throttle(this.fetchUnreadTickets, 2000);
         Ticket.on("markedAsRead", this.throttledFetchUnreadTickets);
         window.addEventListener("focus", this.throttledFetchUnreadTickets);
         app.io.on("followerUpdate", this.handleFollowerUpdate);
@@ -185,8 +173,6 @@ var Main = React.createClass({
 
     render: function() {
         var self = this;
-        var unreadTickets = this.state.unreadTickets;
-        var pendingTickets = this.state.pendingTickets;
 
         return (
             <div className="Main">
@@ -210,11 +196,7 @@ var Main = React.createClass({
                             <Link className="btn btn-default top-button" to="tickets">
                                 <i className="fa fa-home"></i>Listaa
                             </Link>
-                            <NotificationsHub title={this.props.title} className="top-button" >
-                                <NotificationsHub.TicketGroup title="Tukipyynnöt joissa on lukemattomia päivityksiä" tickets={unreadTickets}  />
-                                {pendingTickets &&
-                                    <NotificationsHub.TicketGroup title="Tukipyynnöt jotka odottavat käsittelijää" tickets={pendingTickets}  />}
-                            </NotificationsHub>
+                            <NotificationsHub className="top-button" />
                         </ButtonGroup>
                     </div>
 
