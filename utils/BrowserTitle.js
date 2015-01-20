@@ -108,6 +108,9 @@ BrowserTitle.prototype = {
      */
     showInFavicon: function(s) {
         var Tinycon = require("../vendor/tinycon.shim");
+        Tinycon.setOptions({
+            background: "#ed7013"
+        });
         Tinycon.setBubble(s);
     },
 
