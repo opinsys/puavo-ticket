@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="226.53125"
+   height="145.5"
+   id="svg1901">
+  <defs
+     id="defs1903" />
+  <metadata
+     id="metadata1906">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-144.09467,-41.671901)"
+     id="layer1">
+    <g
+       id="g3023">
+      <path
+         d="m 93.3125,-47.6875 c -22.270037,0 -40.885253,15.513352 -45.71875,36.3125 C 21.229624,-10.918325 0,10.558145 0,37.03125 0,63.790235 21.678515,85.5 48.4375,85.5 c 5.086995,0 10.018436,-0.796312 14.625,-2.25 13.120891,6.047215 28.800025,9.5625 45.6875,9.5625 17.4919,0 33.72853,-3.768972 47.125,-10.21875 5.59696,2.320424 11.75138,3.59375 18.1875,3.59375 26.22092,0 47.46875,-21.247834 47.46875,-47.46875 0,-23.446684 -16.99954,-42.9222955 -39.34375,-46.78125 -2.41064,-16.736714 -18.19767,-29.65625 -37.34375,-29.65625 -6.51438,0 -12.65421,1.491468 -18,4.125 -8.52368,-8.684522 -20.40137,-14.09375 -33.53125,-14.09375 z"
+         transform="translate(146.59467,91.859401)"
+         id="path2984"
+         style="fill:#000000;fill-opacity:1;stroke:none" />
+      <path
+         d="m 257.36029,70.671579 -13.0625,13.6875 -13.03125,13.65625 12.75,0 0,13.937501 26.6875,0 0,-13.937501 12.75,0 -13.03125,-13.65625 -13.0625,-13.6875 z"
+         id="rect3826"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:4;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         d="m 244.00092,120.82783 0,13.9375 -12.75,0 13.0625,13.6875 13.03125,13.65625 13.0625,-13.65625 13.0625,-13.6875 -12.75,0 0,-13.9375 -26.71875,0 z"
+         id="rect3826-5"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:4;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+  </g>
+</svg>
