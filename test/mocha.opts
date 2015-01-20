@@ -1,4 +1,5 @@
 --reporter spec
 --no-colors
 --timeout 15000
+--bail
 --require ./6to5-register
