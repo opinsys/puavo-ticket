@@ -115,39 +115,19 @@ describe("/api/tickets/:id/read", function() {
                     assert.equal(1, res.body.length);
                     var data = res.body[0];
 
-                    assert(data.titles, "has titles relation");
-                    assert(data.titles[0], "has at least one title");
-                    assert.equal("The Ticket", data.titles[0].title);
+                    assert.equal("Uusi kommentti tukipyyntöön: The Ticket", data.title);
 
-                    assert(data.comments, "has comments relation");
-                    assert.equal(1, data.comments.length, "has only one comment");
-                    // the comment is the last comment added by the user
-                    assert.equal("Comment by other user", data.comments[0].comment);
-                    assert(data.comments[0].createdBy, "has comment creator object");
+                    assert.equal("Comment by other user", data.body);
+
+                    assert(data.createdBy, "has creator object");
                     // the comment was created by the other user
                     assert.equal(
                         self.otherUser.getUsername(),
-                        data.comments[0].createdBy.externalData.username
+                        data.createdBy.externalData.username
                     );
                 });
         });
 
-        it("list only the latest title for the ticket", function() {
-            var self = this;
-            return self.ticket.addHandler(self.manager, self.manager)
-                .then(function() {
-                    return self.ticket.addTitle("A new title", self.manager);
-                })
-                .then(function() {
-                    return self.agent.get("/api/notifications").promise();
-                })
-                .then(function(res) {
-                    assert.equal(200, res.status, res.text);
-                    var data = res.body[0];
-                    assert.equal(1, data.titles.length);
-                    assert.equal("A new title", data.titles[0].title);
-                });
-        });
 
         it("can list multiple tickets", function() {
             var self = this;
@@ -165,11 +145,16 @@ describe("/api/tickets/:id/read", function() {
                     assert.equal(200, res.status, res.text);
                     assert.equal(2, res.body.length);
 
-                    assert.equal(1, res.body[0].titles.length, "first ticket has one title loaded");
-                    assert.equal(1, res.body[1].titles.length, "second ticket has one title loaded");
+                    assert.equal(
+                        "Uusi kommentti tukipyyntöön: The Ticket",
+                        res.body[0].title
+                    );
+                    assert.equal(
+                        "Uusi kommentti tukipyyntöön: An other ticket",
+                        res.body[1].title
+                    );
 
-                    assert.equal(1, res.body[0].comments.length, "first ticket has one comment loaded");
-                    assert.equal(1, res.body[1].comments.length, "second ticket has one comment loaded");
+
 
                 });
         });

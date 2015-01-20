@@ -47,35 +47,60 @@ app.post("/api/mark_all_notifications_as_read", function(req, res, next) {
     .catch(next);
 });
 
-/**
- * @api {post} /api/notifications List tickets that have unread comment by the
- * current user. The response will only contain the latest ticket title and
- * comment
- * @apiName ListUnreadTickets
- * @apiGroup notifications
- */
 app.get("/api/notifications", function(req, res, next) {
     Ticket.collection()
     .byUserVisibilities(req.user)
     .withUnreadComments(req.user)
-    .fetch().then(function(coll) {
-        return coll.models;
-    })
-    .map(function loadLatestComment(ticket) {
-        // XXX: This is not very efficient as separate query is issued for
-        // each ticket. See extra/latestcomments.sql for better solution
-        return ticket.load([
-            { titles: function(q) {
-                q.orderBy("createdAt", "desc").limit(1);
+    .fetch({
+        withRelated: [
+            {comments: function(q) {
+
+                var subQuery = db.knex
+                .column(["ticketId"])
+                .max("createdAt as latest")
+                .from("comments")
+                .where("hidden", false)
+                .groupBy("ticketId");
+
+                q.join(subQuery.as("maxtable"), function() {
+                    this.on("comments.ticketId", "=", "maxtable.ticketId");
+                    this.on("comments.createdAt", "=", "maxtable.latest");
+                });
+
             }},
-            { comments: function(q) {
-                q.orderBy("createdAt", "desc").limit(1);
+
+            "comments.createdBy",
+
+            {titles: function(q) {
+
+                var subQuery = db.knex
+                .column(["ticketId"])
+                .max("createdAt as latest")
+                .from("titles")
+                .groupBy("ticketId");
+
+                q.join(subQuery.as("maxtable"), function() {
+                    this.on("titles.ticketId", "=", "maxtable.ticketId");
+                    this.on("titles.createdAt", "=", "maxtable.latest");
+                });
+
             }},
-            "comments.createdBy"
-        ]);
+
+        ]
     })
-    .then(function(tickets) {
-        res.json(tickets);
+    .then((tickets) => tickets.models)
+    .map(function(ticket) {
+        var comment = ticket.rel("comments").first();
+        return {
+            title: "Uusi kommentti tukipyyntöön: " + ticket.rel("titles").first().get("title"),
+            body: comment.get("comment"),
+            createdAt: comment.get("createdAt"),
+            createdBy: comment.rel("createdBy"),
+            url: "/tickets/" + ticket.get("id")
+        };
+    })
+    .then(function(notifications) {
+        res.json(notifications);
     })
     .catch(next);
 });
