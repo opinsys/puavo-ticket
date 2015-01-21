@@ -1,7 +1,6 @@
 "use strict";
 
 require("colors");
-process.env.BLUEBIRD_DEBUG = "true";
 
 var _ = require("lodash");
 var Promise = require("bluebird");
@@ -71,25 +70,26 @@ function generateIdForComment(rawComment) {
 
 
 function ensureUser(data) {
-    var userOp;
-    if (data.external_id) {
-        userOp = User.byExternalId(data.external_id).fetch()
-        .then(function(user) {
-            if (user) return user;
-            return User.forge({
-                externalData: {
-                    id: data.external_id, // XXX test this!!
-                    email: data.email,
-                    first_name: data.name,
-                    last_name: ""
-                }
-            }).save();
-        });
-    } else {
-        userOp = User.ensureUserByEmail(data.email, data.name, "");
+
+    if (!data.external_id) {
+        return User.ensureUserByEmail(data.email, data.name, "");
     }
 
-    return userOp;
+    return User.byExternalId(data.external_id).fetch()
+    .then(function(user) {
+        if (user) return user;
+
+        return User.forge({
+            externalId: data.external_id,
+            externalData: {
+                id: data.external_id,
+                email: data.email,
+                first_name: data.name,
+                last_name: ""
+            }
+        }).save();
+    });
+
 }
 
 
