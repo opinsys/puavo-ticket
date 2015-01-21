@@ -141,7 +141,8 @@ function addTicket(rawTicket) {
             return Promise.each(handlers, function(data) {
                 return ensureUser(data)
                 .then(function(user) {
-                    return ticket.addHandler(user, creator);
+                    return ticket.addHandler(user, creator)
+                    .then(function() { return ticket.markAsRead(user); });
                 });
             }).return(ticket);
         })
@@ -159,7 +160,7 @@ function addTicket(rawTicket) {
             }).return(ticket);
         })
         .then(function addComments(ticket) {
-            return Promise.map(rawTicket.comments, function addOtherComment(rawComment) {
+            return Promise.each(rawTicket.comments, function addOtherComment(rawComment) {
 
                 if (!rawComment.commenter) {
                     console.log("------------");
@@ -189,6 +190,9 @@ function addTicket(rawTicket) {
                         } else {
                             return comment.save();
                         }
+                    })
+                    .then(function() {
+                        return ticket.markAsRead(commenter);
                     });
                 });
             }).return(ticket);
