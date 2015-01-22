@@ -104,11 +104,14 @@ function addTicket(rawTicket) {
             zendeskTicketId: rawTicket.zendesk_id
         })
         .then(function(ticket) {
+            ticket.meta = {
+                isNew: ticket.isNew(),
+                comments: 0,
+                newComments: 0
+            };
 
             if (ticket.isNew()) {
                 console.log("Adding new ticket from zendesk id".yellow, ticket.get("zendeskTicketId"));
-            } else {
-                console.log("Updating existing ticket".green, ticket.get("id"), ticket.get("zendeskTicketId"));
             }
 
             ticket.set({
@@ -119,7 +122,6 @@ function addTicket(rawTicket) {
             return ticket.save();
         })
         .then(function addOrganisationTag(ticket) {
-            console.log("Adding tag", "organisation:" + rawTicket.organisation);
             return ticket.addTag("organisation:" + rawTicket.organisation, creator).return(ticket);
         })
         .then(function addHandlers(ticket) {
@@ -178,6 +180,7 @@ function addTicket(rawTicket) {
                         zendeskCommentId: ticket.get("id") + ":" + generateIdForComment(rawComment)
                     })
                     .then(function(comment) {
+                        ticket.meta.comments++;
                         comment.set({
                             hidden: !rawComment.is_public,
                             createdById: commenter.get("id"),
@@ -186,7 +189,7 @@ function addTicket(rawTicket) {
                         });
 
                         if (comment.isNew()) {
-                            console.log("Adding new comment for".yellow, ticket.get("id"), "by", commenter.get("id"));
+                            ticket.meta.newComments++;
                             return comment.save().then(addAttachments.bind(null, rawComment, comment));
                         } else {
                             return comment.save();
@@ -231,10 +234,15 @@ function processTickets(tickets) {
         var diff = Date.now() - started;
         if (ticket) {
             console.log(
-                count + ". Sync ok for",
-                "pt:", ticket.get("id"),
-                "zendesk:",
-                ticket.get("zendeskTicketId"),
+                tickets.length + ". ",
+                "ID:", ticket.get("id"),
+
+                "zendeskID:", ticket.get("zendeskTicketId"),
+
+                "isNew:", ticket.meta.isNew,
+
+                "comments:", ticket.meta.newComments + "/" + ticket.meta.comments,
+
                 "Took:", prettyMs(diff)
             );
         }
