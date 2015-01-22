@@ -179,6 +179,7 @@ function addTicket(rawTicket) {
                     })
                     .then(function(comment) {
                         comment.set({
+                            hidden: !rawComment.is_public,
                             createdById: commenter.get("id"),
                             createdAt: rawComment.created_at,
                             comment: rawComment.comment,

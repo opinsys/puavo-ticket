@@ -88,6 +88,7 @@ ticket_xml_doc.xpath("tickets/ticket").each do |ticket_xml|
   ticket["assignee"] = users_map[ ticket_xml.at_xpath("assignee-id").text ]
 
   ticket["comments"] = []
+  has_hidden_comments = false
   ticket_xml.xpath("comments/comment").each do |comment_xml|
     zendesk_internal_comment_id = comment_xml.at_xpath("author-id").text
     commenter = users_map[ zendesk_internal_comment_id ]
@@ -98,6 +99,15 @@ ticket_xml_doc.xpath("tickets/ticket").each do |ticket_xml|
     comment["type"] = comment_xml.at_xpath("type").text
     comment["commenter"] = commenter
     comment["created_at"] = comment_xml.at_xpath("created-at").text
+
+    comment["is_public"] = comment_xml.at_xpath("is-public").text
+    if comment["is_public"].strip == "false"
+      has_hidden_comments = true
+      comment["is_public"] = false
+    else
+      comment["is_public"] = true
+    end
+
     comment["attachments"] = comment_xml.xpath("attachments/attachment").map do |a|
       {
         "dataType" => a.xpath("content-type").text,
@@ -109,6 +119,9 @@ ticket_xml_doc.xpath("tickets/ticket").each do |ticket_xml|
     ticket["comments"].push comment
   end
 
+  # if has_hidden_comments
+  #   puts "https://support.opinsys.fi/api/zendesk/#{ ticket["zendesk_id"] }"
+  # end
   tickets.push ticket
 end
 
