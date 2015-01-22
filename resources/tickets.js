@@ -89,6 +89,18 @@ app.get("/api/tickets", function(req, res, next) {
     .catch(next);
 });
 
+app.get("/api/zendesk/:id", function(req, res, next) {
+    Ticket.forge({
+        zendeskTicketId: req.params.id
+    })
+    .fetch({ require: true })
+    .then(function(ticket) {
+        res.redirect("/tickets/" + ticket.get("id"));
+    })
+    .catch(next);
+
+});
+
 /**
  * @api {get} /api/tickets/:id Get single ticket
  * @apiName GetTicket
