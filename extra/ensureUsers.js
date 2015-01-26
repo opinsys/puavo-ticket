@@ -23,7 +23,10 @@ Promise.map(argv._, function(organisationDomain) {
     var p = new Puavo({ domain: organisationDomain });
     return p.request("/v3/users")
     .each(function(userData) {
-        return User.ensureUserFromJWTToken(userData);
+        return User.ensureUserFromJWTToken(userData)
+        .catch(User.EmailCollisionError, function(err) {
+            console.error("email collision", userData);
+        });
     })
     .then(function(users) {
         console.log("Ensured", users.length, "users from", organisationDomain);
