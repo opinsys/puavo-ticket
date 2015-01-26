@@ -86,16 +86,16 @@ describe("View tabs", function() {
         .waitForElementByCss(".ViewEditor-name-input").type("Foo-tab")
         .elementByCss(".ViewEditor-query-input")
 
-        // XXX yeah wtf. The input value is reset if we clear it too early
-        .delay(1000)
+        // XXX: wtf the value gets set back to the original
+        .clear().delay(2000).clear()
 
-        .clear()
         .type("tags=foo")
         ;
     });
 
     it("edit preview shows results", function() {
-        return browser.waitForElementByCss(
+        return browser.elementByCss(".ViewEditor-preview-button").click()
+        .waitForElementByCss(
             ".ViewEditor-preview .TicketList-ticket-title",
             aHelpers.safeTextInclude("Ticket has custom tag"),
             1000*5
