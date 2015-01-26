@@ -1,6 +1,7 @@
 "use strict";
 var Promise = require("bluebird");
 var argv = require('minimist')(process.argv.slice(2));
+var s = require("underscore.string");
 
 require("app/db");
 var Puavo = require("app/utils/Puavo");
@@ -14,17 +15,22 @@ if (argv.help) {
     process.exit(1);
 }
 
-var count = 0;
 Promise.map(argv._, function(organisationDomain) {
+    if (!s.endsWith(organisationDomain, ".opinsys.fi")) {
+        organisationDomain += ".opinsys.fi";
+    }
+
     var p = new Puavo({ domain: organisationDomain });
     return p.request("/v3/users")
-    .map(function(user) {
-        count++;
-        return User.ensureUserFromJWTToken(user);
+    .each(function(userData) {
+        return User.ensureUserFromJWTToken(userData);
+    })
+    .then(function(users) {
+        console.log("Ensured", users.length, "users from", organisationDomain);
+        return users.length;
     });
-})
+}, {concurrency: 1})
 .then(function() {
-    console.log("Ensured", count, "users");
     process.exit();
 })
 .catch(function(err) {
