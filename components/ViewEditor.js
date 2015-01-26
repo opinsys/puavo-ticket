@@ -6,6 +6,7 @@ var qs = require("querystring");
 var Badge = require("react-bootstrap/Badge");
 var Input = require("react-bootstrap/Input");
 var Button = require("react-bootstrap/Button");
+var ButtonGroup = require("react-bootstrap/ButtonGroup");
 var Router = require("react-router");
 
 
@@ -70,37 +71,45 @@ var ViewEditor = React.createClass({
         return window.unescape(qs.stringify(this.props.query));
     },
 
-    componentWillMount: function() {
-        this.setTicketsDebounced = _.debounce(this.setTickets, 1000);
-        this.replaceWithDebounced = _.debounce(this.replaceWith, 300);
-    },
-
-    setTickets: function() {
+    fetchTickets: function() {
         var tickets = Ticket.collection([], {
             query: this.props.query
         });
         this.setBackbone({ tickets: tickets });
         this.setState({ searching: true });
-        tickets.fetch()
-        .catch(Actions.error.haltChain("Tukipyyntöjen haku epäonnistui"))
+
+        var op = tickets.fetch();
+        Actions.ajax.read(op);
+        op.catch(Actions.error.haltChain("Tukipyyntöjen haku epäonnistui"))
         .then(() => this.isMounted() && this.setState({ searching: false }));
 
     },
 
+    preview: function() {
+        if (!this.isViewOk()) return;
+        console.log("Setting preview");
+
+        var query = qs.parse(this.state.queryString);
+        this.transitionTo("view-editor", {name: this.state.name}, query);
+    },
+
     componentDidMount: function() {
         if (!_.isEmpty(this.props.query)) {
-            this.setTickets();
+            this.fetchTickets();
         }
     },
 
-    componentWillReceiveProps: function(nextProps) {
-        if (!_.isEqual(this.props.query, nextProps.query)) {
-            this.setTicketsDebounced();
+    componentDidUpdate: function(prevProps) {
+        console.log("GETTING NEW PROPS");
+        if (!_.isEqual(this.props.query, prevProps.query)) {
+            console.log("CHANGED");
+            this.fetchTickets();
         }
     },
 
     saveView: function() {
         if (!this.isViewOk()) return;
+        this.preview();
         this.setState({ saving: true });
         Actions.views.add({
             name: this.props.params.name,
@@ -110,8 +119,12 @@ var ViewEditor = React.createClass({
         });
     },
 
+    hasQuery: function() {
+        return !_.isEmpty(this.state.queryString);
+    },
+
     isViewOk: function() {
-        return !_.isEmpty(this.props.query) && this.props.params.name;
+        return this.hasQuery() && this.state.name;
     },
 
     /**
@@ -121,28 +134,9 @@ var ViewEditor = React.createClass({
      * @param {Object|String} query
      */
     setQuery: function(query) {
-        var queryString = "";
-
-        if (typeof query === "string") {
-            queryString = query;
-            query = qs.parse(queryString);
-        } else {
-            queryString = qs.stringify(query);
-        }
-
-        this.setState({ queryString: queryString });
-        this.replaceWithDebounced("view-editor", this.props.params, query);
     },
 
-    /**
-     * @method setName
-     * @param {String} name
-     */
-    setName: function(name) {
-        this.setState({ name: name });
-        var params = Object.assign({}, this.props.params, { name: name });
-        this.replaceWithDebounced("view-editor", params, this.props.query);
-    },
+
 
     render: function() {
         var self = this;
@@ -150,6 +144,8 @@ var ViewEditor = React.createClass({
         var tickets = this.state.tickets;
         var tagGroups = [].concat(this.props.query.tags).filter(Boolean);
         var saving = this.state.saving;
+        var searching = this.state.searching;
+
 
         return (
             <div className="ViewEditor">
@@ -160,10 +156,10 @@ var ViewEditor = React.createClass({
                             type="text"
                             label="Nimi"
                             className="ViewEditor-name-input"
+                            onBlur={this.preview}
                             value={this.state.name}
-                            onChange={function(e) {
-                                self.setName( e.target.value );
-                            }}
+                            onChange={ e => self.setState({name: e.target.value}) }
+                            onKeyDown={ e => { if (e.key === "Enter") self.preview() }}
                         />
 
                         <Input
@@ -173,20 +169,29 @@ var ViewEditor = React.createClass({
                             className="ViewEditor-query-input"
                             help={queryHelp}
                             value={self.state.queryString}
-                            onChange={function(e) {
-                                self.setQuery(e.target.value);
-                            }}
-                            onKeyDown={function(e) {
-                                if (e.key === "Enter") self.setTickets();
-                            }}
+                            onBlur={this.preview}
+                            onChange={ e => self.setState({queryString: e.target.value}) }
+                            onKeyDown={ e => { if (e.key === "Enter") self.preview() }}
                         />
-                        <Button
-                            className="ViewEditor-save-button"
-                            disabled={!self.isViewOk() || saving}
-                            onClick={self.saveView}>
-                            Tallenna
-                            {saving && <Fa className="ViewEditor-save-spinner" icon="spinner" spin />}
-                        </Button>
+
+                        <ButtonGroup>
+                            <Button
+                                className="ViewEditor-save-button"
+                                disabled={!self.isViewOk() || saving}
+                                onClick={self.saveView}>
+                                Tallenna
+                                {saving && <Fa className="ViewEditor-save-spinner" icon="spinner" spin />}
+                            </Button>
+
+                            <Button
+                                className="ViewEditor-preview-button"
+                                disabled={!self.hasQuery()}
+                                onClick={self.preview}>
+                                Esikatsele
+                                {searching && <Fa className="ViewEditor-save-spinner" icon="spinner" spin />}
+                            </Button>
+                        </ButtonGroup>
+
                     </form>
 
 
