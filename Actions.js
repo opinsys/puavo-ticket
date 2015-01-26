@@ -20,9 +20,15 @@ Actions.ticket = Reflux.createActions([
 
 Actions.views = Reflux.createActions([
     "fetch",
+    "fetchCount",
     "add",
     "set",
     "destroy"
+]);
+
+Actions.ajax = Reflux.createActions([
+    "read",
+    "write",
 ]);
 
 

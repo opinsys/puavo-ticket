@@ -64,6 +64,7 @@ var ViewTabContent = React.createClass({
         });
 
         var op = tickets.fetch().cancellable();
+        Actions.ajax.read(op);
 
         this.setState({
             tickets: tickets,

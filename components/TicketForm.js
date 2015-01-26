@@ -49,21 +49,25 @@ var TicketForm = React.createClass({
         var self = this;
         self.setState({ saving: true });
 
-        new Ticket({})
-        .save({
+        var op = new Ticket({}).save({
             title: self.state.title,
             description: self.state.description
-        })
-        .then(function(savedTicket) {
+        });
+        Actions.ajax.write(op);
+
+        op.then(function(savedTicket) {
             var comment = savedTicket.comments()[0];
             var files = self.refs.attachments.getFiles();
 
             if (files.length === 0) return savedTicket;
 
             self.refs.attachments.clear();
-            return comment.addAttachments(files, {onProgress: function(e) {
+            var op = comment.addAttachments(files, {onProgress: function(e) {
                 self.setState({ uploadProgress: e });
-            }}).return(savedTicket);
+            }});
+            Actions.ajax.write(op);
+
+            return op.return(savedTicket);
         })
         .then(function(savedTicket) {
             self.refs.title.clearBackup();

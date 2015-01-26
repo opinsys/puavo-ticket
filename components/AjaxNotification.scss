@@ -1,0 +1,55 @@
+
+
+.AjaxNotification {
+    position: absolute;
+    z-index: 10;
+    top: 15px;
+    right: 15px;
+    width: 50px;
+    float: right;
+    opacity: 0.1;
+
+    .cloud {
+        fill: $input-color;
+    }
+
+    .write-arrow {
+        fill: white;
+    }
+
+    .arrow {
+        display: none;
+        fill: white;
+        @include animation-name(pulse);
+        @include animation-duration(2s);
+        @include animation-iteration-count(infinite);
+    }
+
+}
+
+.AjaxNotification-visible {
+    @include animation-name(pulse);
+    @include animation-duration(0.5s);
+    @include animation-iteration-count(1);
+}
+
+.AjaxNotification-reading .read-arrow {
+    display: inline;
+}
+
+.AjaxNotification-writing .write-arrow {
+    display: inline;
+}
+
+
+@include keyframes(pulse) {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

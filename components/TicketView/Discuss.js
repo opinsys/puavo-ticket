@@ -178,8 +178,10 @@ var Discuss = React.createClass({
         var self = this;
         self.setState({ saving: true });
 
-        self.props.ticket.addComment(e.comment, {hidden: e.hidden})
-        .then(function(comment) {
+        var op = self.props.ticket.addComment(e.comment, {hidden: e.hidden});
+        Actions.ajax.write(op);
+
+        op.then(function(comment) {
             var files = self.refs.attachments.getFiles();
             if (files.length > 0) {
                 self.refs.attachments.clear();
@@ -221,8 +223,9 @@ var Discuss = React.createClass({
         if (!this.isMounted()) return;
 
         this.setState({ fetching: true });
-        return this.props.ticket.fetch()
-            .bind(this)
+        var op = this.props.ticket.fetch();
+        Actions.ajax.read(op);
+        return op.bind(this)
             .then(function() {
                 if (this.isMounted()) this.setState({ fetching: false });
             })
@@ -310,8 +313,11 @@ var Discuss = React.createClass({
         this._markAsReadTimer = setTimeout(() => {
             setImmediate(this.stopAnimateMarkAsRead);
             console.log("actually marking as read");
-            this.props.ticket.markAsRead()
-            .catch(Actions.error.haltChain("Tukipyynnön merkkaaminen luetuksi epäonnistui"))
+
+            var op = this.props.ticket.markAsRead();
+            Actions.ajax.write(op);
+
+            op.catch(Actions.error.haltChain("Tukipyynnön merkkaaminen luetuksi epäonnistui"))
             .then(Actions.refresh);
         }, 5000);
     },

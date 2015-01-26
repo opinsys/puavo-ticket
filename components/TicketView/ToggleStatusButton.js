@@ -30,8 +30,9 @@ var ToggleStatusButton = React.createClass({
 
     handleChangeStatus: function(status) {
         this.setState({ saving: true });
-        this.props.ticket.addTag("status:" + status)
-        .catch(Actions.error.haltChain("Tukipyynnön tilan muuttaminen epäonnistui"))
+        var op = this.props.ticket.addTag("status:" + status);
+        Actions.ajax.write(op);
+        op.catch(Actions.error.haltChain("Tukipyynnön tilan muuttaminen epäonnistui"))
         .then(() => {
             if (!this.props.onChange) return;
             setImmediate(() => this.props.onChange({ target: { value: status } }));

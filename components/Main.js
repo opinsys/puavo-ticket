@@ -17,6 +17,7 @@ var ErrorMessage = require("./ErrorMessage");
 var UserInformation = require("./UserInformation");
 var NotificationsHub = require("./NotificationsHub");
 var NotificationBox = require("./NotificationBox");
+var AjaxNotification = require("./AjaxNotification");
 
 
 
@@ -176,11 +177,14 @@ var Main = React.createClass({
 
         return (
             <div className="Main">
+                <AjaxNotification />
 
                 {this.state.lastUpdate && this.renderNotificationBox()}
 
                 <div className="wrapper container-fluid">
-                    <h1 className="site-header"><a href="/">Opinsys tukipalvelu</a></h1>
+                    <h1 className="site-header">
+                        <a href="/">Opinsys tukipalvelu</a>
+                    </h1>
                     {this.state.renderModalContent && this.state.renderModalContent()}
                     <div className="topmenu row">
 
