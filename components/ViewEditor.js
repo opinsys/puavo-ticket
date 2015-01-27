@@ -87,7 +87,6 @@ var ViewEditor = React.createClass({
 
     preview: function() {
         if (!this.isViewOk()) return;
-        console.log("Setting preview");
 
         var query = qs.parse(this.state.queryString);
         this.transitionTo("view-editor", {name: this.state.name}, query);
@@ -100,9 +99,7 @@ var ViewEditor = React.createClass({
     },
 
     componentDidUpdate: function(prevProps) {
-        console.log("GETTING NEW PROPS");
         if (!_.isEqual(this.props.query, prevProps.query)) {
-            console.log("CHANGED");
             this.fetchTickets();
         }
     },
