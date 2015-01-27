@@ -2,14 +2,13 @@
 
 var axios = require("axios");
 var Promise = require("bluebird");
-var _ = require("lodash");
 
 var defaultOptions = {
     headers: {}
 };
 
 function fetch(options) {
-    options = _.extend({}, defaultOptions, options);
+    options = Object.assign({}, defaultOptions, options);
     var csrfToken = fetch.getCsrfToken();
     if (!csrfToken) {
         throw new Error("Cannot find window.CSRF_TOKEN");
@@ -26,7 +25,7 @@ function fetch(options) {
         options = options || {};
         if (data) options.data = data;
         if (url) options.url = url;
-        return fetch(_.extend({}, options, {method: method}));
+        return fetch(Object.assign({}, options, {method: method}));
     };
 });
 
