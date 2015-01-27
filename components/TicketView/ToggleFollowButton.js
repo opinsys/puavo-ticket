@@ -1,9 +1,12 @@
 /** @jsx React.DOM */
 "use strict";
+
 var React = require("react/addons");
 var Button = require("react-bootstrap/Button");
+
 var Ticket = require("../../models/client/Ticket");
 var User = require("../../models/client/User");
+var Actions = require("../../Actions");
 
 
 /**
@@ -33,18 +36,28 @@ var ToggleFollowButton = React.createClass({
         var ticket = this.props.ticket;
         this.setState({ fetching: true });
 
-        (this.props.ticket.isFollower(this.props.user) ?
-            ticket.removeFollower(this.props.user) :
-            ticket.addFollower(this.props.user)
-        ).then(function() {
-            return ticket.fetch();
-        })
-        .bind(this)
-        .then(function() {
-            if (!this.isMounted()) return;
-            this.setState({ fetching: false });
-        });
+        var op;
+        if (this.props.ticket.isFollower(this.props.user)) {
+            op = ticket.removeFollower(this.props.user);
+        } else {
+            op = ticket.addFollower(this.props.user);
+        }
 
+        Actions.ajax.write(op);
+        op.catch(Actions.error.haltChain("Tukipyynnön seuraaminen epäonnistui"))
+        .then(Actions.refresh);
+
+    },
+
+    componentWillReceiveProps: function(nextProps) {
+        var followingChanged = (
+            this.props.ticket.isFollower(this.props.user) !==
+            nextProps.ticket.isFollower(this.props.user));
+
+        if (followingChanged) {
+            // remove spinner on successful toggle
+            this.setState({ fetching: false });
+        }
     },
 
     render: function() {
