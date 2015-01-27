@@ -30,7 +30,7 @@ var View = Base.extend({
      */
     tickets: function() {
         return Ticket.collection([], {
-            query: this.get("query")
+            query: Object.assign({limit: 99}, this.get("query"))
         });
     },
 

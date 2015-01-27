@@ -43,6 +43,10 @@ var queryHelp = <div>
 
     </ul>
 
+    <p>
+        Haku palauttaa maksimissaan 99 tykipyyntöä
+    </p>
+
 
 </div>;
 
