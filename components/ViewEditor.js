@@ -44,7 +44,7 @@ var queryHelp = <div>
     </ul>
 
     <p>
-        Haku palauttaa maksimissaan 99 tykipyyntöä
+        Haku palauttaa maksimissaan 99 tukipyyntöä
     </p>
 
 
