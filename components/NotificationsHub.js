@@ -23,7 +23,8 @@ var NotificationsHub = React.createClass({
 
     render: function() {
         var items = this.state.notifications.map(function(n) {
-            return <NotificationItem title={n.title} href={n.url} />;
+            var key = n.url + n.title;
+            return <NotificationItem key={key} title={n.title} href={n.url} />;
         });
         var count = items.length;
 
@@ -32,8 +33,10 @@ var NotificationsHub = React.createClass({
                 className="NotificationsHub NotificationsHub-label"
                 title={"Ilmoitukset " + count}>
 
+                {/*
                 {count > 0 &&
                 <a className="NotificationsHub-mark-all-as-read" href="#">Merkitse kaikki luetuiksi</a>}
+                */}
 
                 {count === 0 &&
                 <MenuItem header>
