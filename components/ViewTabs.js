@@ -48,12 +48,22 @@ var ViewTabs = React.createClass({
             <div className="ViewTabs">
                 <Tabs>
 
-                    {views.map(function(view) {
-                        return <li key={view.get("id")}>
-                            <Link to="view" params={{ id: view.get("id") || "WTF" }}>
-                                {view.get("name")}
-                            </Link>
-                        </li>;
+                    {views.map((view) => {
+                        var count = this.state.ticketCounts[view.get("id")];
+                        if (count === null || count === undefined) {
+                            count = "";
+                        } else {
+                            count = "(" + count + ")";
+                        }
+
+
+                        return (
+                            <li key={view.get("id")}>
+                                <Link to="view" params={{ id: view.get("id") || "WTF" }}>
+                                    {view.get("name")} {count}
+                                </Link>
+                            </li>
+                        );
                     })}
 
 

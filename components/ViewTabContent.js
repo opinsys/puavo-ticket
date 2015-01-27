@@ -57,11 +57,7 @@ var ViewTabContent = React.createClass({
             this.state.fetching.cancel();
         }
 
-        var view = this.props.view;
-
-        var tickets = Ticket.collection([], {
-            query: view.get("query")
-        });
+        var tickets = this.props.view.tickets();
 
         var op = tickets.fetch().cancellable();
         Actions.ajax.read(op);

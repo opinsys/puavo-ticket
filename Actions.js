@@ -20,11 +20,13 @@ Actions.ticket = Reflux.createActions([
 
 Actions.views = Reflux.createActions([
     "fetch",
-    "fetchCount",
+    "fetchCounts",
     "add",
     "set",
+    "setCount",
     "destroy"
 ]);
+Actions.views.throttledFetchCounts = _.throttle(Actions.views.fetchCounts, 10000);
 
 Actions.ajax = Reflux.createActions([
     "read",
@@ -36,7 +38,9 @@ Actions.refresh = Reflux.createAction();
 Actions.refresh.listen(_.throttle(function() {
     Actions.notifications.fetch();
     Actions.ticket.fetch();
+    Actions.views.throttledFetchCounts();
 }, 1000, {trailing: false}));
+
 
 
 Actions.error = {display: Reflux.createAction()};
@@ -52,6 +56,7 @@ Actions.error.haltChain = function(message) {
 };
 
 
+window.Actions = Actions;
 module.exports = Actions;
 
 

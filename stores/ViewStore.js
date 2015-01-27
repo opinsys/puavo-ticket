@@ -22,6 +22,8 @@ var ViewStore = Reflux.createStore({
 
     init: function() {
 
+        this.ticketCounts = {};
+
         this.openTickets = new View({
             name: "Avoimet",
             id: "open",
@@ -52,10 +54,20 @@ var ViewStore = Reflux.createStore({
         return this.getState();
     },
 
+    onSetCount: function(id, count) {
+        this.ticketCounts[id] = count;
+        this.emitState();
+    },
+
+    getViews: function() {
+        return [this.openTickets, this.closedTickets].concat(this.views.toArray());
+    },
+
     getState: function() {
         return {
             loading: this.loading,
-            views: [this.openTickets, this.closedTickets].concat(this.views.toArray())
+            ticketCounts: this.ticketCounts,
+            views: this.getViews()
         };
     },
 
@@ -73,6 +85,7 @@ var ViewStore = Reflux.createStore({
     },
 
     onSet: function(views) {
+        if (!views) throw new TypeError("Cannot set falsy value as views");
         this.views = views;
         this.loading = false;
         this.emitState();

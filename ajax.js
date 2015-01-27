@@ -1,7 +1,10 @@
 "use strict";
 
+var Promise = require("bluebird");
+
 var View = require("./models/client/View");
 var TicketStore = require("./stores/TicketStore");
+var ViewStore = require("./stores/ViewStore");
 var fetch = require("./utils/fetch");
 
 var Actions = require("./Actions");
@@ -10,10 +13,12 @@ Actions.views.fetch.listen(function(onSuccess) {
     View.collection().fetch()
     .catch(Actions.error.haltChain("Näkymien lataaminen epäonnistui"))
     .then(Actions.views.set)
+    .then(Actions.views.fetchCount)
     .then(function() {
         if (typeof onSuccess === "function") {
             process.nextTick(onSuccess);
         }
+        Actions.refresh();
     });
 });
 
@@ -38,6 +43,18 @@ Actions.views.destroy.listen(function(view) {
     .then(Actions.views.fetch));
 });
 
+Actions.views.fetchCounts.listen(function() {
+    Promise.map(ViewStore.getViews(), function(view) {
+        var op = view.fetchCount();
+        Actions.ajax.read(op);
+        op.catch(Actions.error.haltChain("Näkymän tukipyyntöjen lukumäärän haku epäonnistui"))
+        .then(function(count) {
+            Actions.views.setCount(view.get("id"), count);
+        });
+    });
+});
+
+
 
 Actions.ticket.fetch.shouldEmit = function() {
     return !!TicketStore.state.ticket.get("id");
@@ -61,4 +78,5 @@ Actions.notifications.fetch.listen(function fetchNotifcations() {
     }));
 });
 
+setImmediate(Actions.views.fetch);
 setImmediate(Actions.notifications.fetch);

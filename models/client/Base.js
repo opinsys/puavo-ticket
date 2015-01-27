@@ -37,6 +37,19 @@ function createReplaceMixin(parentPrototype) {
 
 
         /**
+         * @method formatUrl
+         * @param {Object} query
+         * @return {String}
+         */
+        formatURL: function(query) {
+            var resourceURL = url.parse(_.result(this, "url"));
+            return url.format({
+                pathname: resourceURL.pathname,
+                query: Object.assign({}, resourceURL.query, this.query, query)
+            });
+        },
+
+        /**
          * Fetch model state from the server
          * http://backbonejs.org/#Model-fetch
          *
@@ -54,14 +67,9 @@ function createReplaceMixin(parentPrototype) {
                 throw new Error("fetch() without id makes no sense on a model");
             }
 
+            var resourceURL = this.formatURL(options && options.query);
 
-            var resourceURL = url.parse(_.result(this, "url"));
-            resourceURL = url.format({
-                pathname: resourceURL.pathname,
-                query: _.extend({}, resourceURL.query, this.query, options && options.query)
-            });
-
-            var op = fetch.get(resourceURL)
+            var op = fetch({ method: "get", url: resourceURL })
             .bind(this)
             .then(function(res) {
                 return this.optionsClone(res.data);

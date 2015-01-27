@@ -1,6 +1,8 @@
 "use strict";
 
 var Base = require("./Base");
+var Ticket = require("./Ticket");
+var fetch = require("../../utils/fetch");
 
 /**
  * Client View model
@@ -22,6 +24,28 @@ var View = Base.extend({
         return "/api/views";
     },
 
+    /**
+     * @method tickets
+     * @return {models.client.Ticket.Collection}
+     */
+    tickets: function() {
+        return Ticket.collection([], {
+            query: this.get("query")
+        });
+    },
+
+    /**
+     * @method fetchCount
+     * @return {Bluebird.Promise} with number of tickets in the view
+     */
+    fetchCount: function() {
+        var tickets = this.tickets();
+        var url = tickets.formatURL({ return: "count" });
+        return fetch({ method: "get", url })
+        .then(function(res) {
+            return res.data.count;
+        });
+    },
 
     defaults: function() {
         return {
