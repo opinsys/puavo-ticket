@@ -22,6 +22,18 @@ app.get("/api/tickets", function(req, res, next) {
     var tickets = Ticket.collection()
     .byUserVisibilities(req.user);
 
+    if (req.query.limit) {
+        tickets.query(function(q) {
+            q.limit(parseInt(req.query.limit, 10));
+        });
+    }
+
+    if (req.query.offset) {
+        tickets.query(function(q) {
+            q.offset(parseInt(req.query.offset, 10));
+        });
+    }
+
     if (req.query.tags) {
         tickets.withTags([].concat(req.query.tags).map(tag => tag.split("|")));
     }
@@ -46,8 +58,13 @@ app.get("/api/tickets", function(req, res, next) {
         .catch(next);
     }
 
+    var orderBy = "updatedAt";
+    var direction = "desc";
+    if (req.query.orderBy) orderBy = req.query.orderBy;
+    if (req.query.direction) direction = req.query.direction;
+
     tickets.query(function(q) {
-        q.orderBy("tickets.updatedAt", "desc");
+        q.orderBy("tickets." + orderBy, direction);
     });
 
     tickets.fetch({
