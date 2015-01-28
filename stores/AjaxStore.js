@@ -16,7 +16,6 @@ var AjaxStore = Reflux.createStore({
     },
 
     onWrite: function(promise) {
-        console.log("on write");
         this.state.writeOps++;
         this.emitState();
         promise
@@ -25,7 +24,6 @@ var AjaxStore = Reflux.createStore({
     },
 
     onRead: function(promise) {
-        console.log("on read");
         this.state.readOps++;
         this.emitState();
         promise
@@ -34,7 +32,6 @@ var AjaxStore = Reflux.createStore({
     },
 
     getInitialState: function() {
-        console.log("initials state");
         return this.state;
     },
 

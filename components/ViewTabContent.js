@@ -2,21 +2,18 @@
 "use strict";
 var React = require("react/addons");
 var Navigation = require("react-router").Navigation;
-var Promise = require("bluebird");
 var Link = require("react-router").Link;
 var Button = require("react-bootstrap/Button");
 var ButtonGroup = require("react-bootstrap/ButtonGroup");
 var url = require("url");
 var Input = require("react-bootstrap/Input");
-var _ = require("lodash");
+var Reflux = require("reflux");
 
 var app = require("../index");
+var ViewStore = require("../stores/ViewStore");
 var Actions = require("../Actions");
 var View = require("../models/client/View");
-var Ticket = require("../models/client/Ticket");
-var BackboneMixin = require("./BackboneMixin");
 var TicketList = require("./TicketList");
-var Loading = require("./Loading");
 
 /**
  * @namespace components
@@ -31,54 +28,16 @@ var ViewTabContent = React.createClass({
         view: React.PropTypes.instanceOf(View).isRequired,
     },
 
-    mixins: [BackboneMixin, Navigation],
-
-    getInitialState: function() {
-        return {
-            fetching: false,
-            tickets: Ticket.collection(),
-        };
-    },
+    mixins: [Reflux.connect(ViewStore), Navigation],
 
     componentDidMount: function() {
-        this.fetchTickets();
+        Actions.views.fetchContent(this.props.view);
     },
-
 
     componentWillReceiveProps: function(nextProps) {
-        if (!_.isEqual(this.props.view.get("query"),  nextProps.view.get("query"))) {
-            process.nextTick(this.fetchTickets);
+        if (nextProps.view.get("id") !== this.props.view.get("id")) {
+            Actions.views.fetchContent(nextProps.view);
         }
-    },
-
-    fetchTickets: function() {
-        if (!this.isMounted()) return;
-        if (this.state.fetching && this.state.fetching.isPending()) {
-            this.state.fetching.cancel();
-        }
-
-        var tickets = this.props.view.tickets();
-
-        var op = tickets.fetch().cancellable();
-        Actions.ajax.read(op);
-
-        this.setState({
-            tickets: tickets,
-            fetching: op
-        });
-
-        var self = this;
-        op.then(function(tickets) {
-            if (!self.isMounted()) return;
-            self.setState({
-                tickets: tickets,
-                fetching: false
-            });
-        })
-        .catch(Promise.CancellationError, function(err) {
-            // pass
-        })
-        .catch(Actions.error.haltChain("Tukipyyntöjen haku epäonnistui"));
     },
 
     destroyView: function() {
@@ -110,15 +69,13 @@ var ViewTabContent = React.createClass({
 
     render: function() {
         var self = this;
-        var tickets = this.state.tickets;
-        var fetching = this.state.fetching;
+        var tickets = this.state.content;
         var view = this.props.view;
 
         return (
             <div className="ViewTabContent">
-                <Loading style={{position: "absolute", top: "5px", right: "5px"}} visible={fetching} />
 
-                <TicketList tickets={tickets.toArray()} />
+                <TicketList tickets={tickets} />
                 <div className="clearfix"></div>
                 {!view.isNew() &&
                     <ButtonGroup>

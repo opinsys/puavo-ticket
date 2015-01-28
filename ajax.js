@@ -55,6 +55,26 @@ Actions.views.fetchCounts.listen(function() {
 });
 
 
+var fetchOperation = Promise.resolve();
+
+Actions.views.fetchContent.listen(function(view) {
+    if (fetchOperation.isPending()) {
+        fetchOperation.cancel();
+    }
+
+    var op = view.tickets().fetch().cancellable()
+    .then(function(tickets) {
+        Actions.views.setContent(tickets.toArray());
+    })
+    .catch(Promise.CancellationError, function() {
+        console.log("Ticket fetch cancelled");
+    })
+    .catch(Actions.error.haltChain("Tukipyyntöjen listaus epäonnistui"));
+
+    Actions.ajax.read(op);
+    fetchOperation = op;
+});
+
 
 Actions.ticket.fetch.shouldEmit = function() {
     return !!TicketStore.state.ticket.get("id");

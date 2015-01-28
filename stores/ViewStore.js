@@ -46,8 +46,10 @@ var ViewStore = Reflux.createStore({
             }
         });
 
+        this.currentView = this.openTickets;
         this.views = View.collection();
         this.loading = false;
+        this.content = [];
     },
 
     getInitialState: function() {
@@ -59,6 +61,24 @@ var ViewStore = Reflux.createStore({
         this.emitState();
     },
 
+    onClearContent: function() {
+        this.content = [];
+        this.emitState();
+    },
+
+    onFetchContent: function(view) {
+        if (this.currentView.get("id") === view.get("id")) return;
+
+        this.content = [];
+        this.currentView = view;
+        this.emitState();
+    },
+
+    onSetContent: function(content) {
+        this.content = content;
+        this.emitState();
+    },
+
     getViews: function() {
         return [this.openTickets, this.closedTickets].concat(this.views.toArray());
     },
@@ -67,7 +87,8 @@ var ViewStore = Reflux.createStore({
         return {
             loading: this.loading,
             ticketCounts: this.ticketCounts,
-            views: this.getViews()
+            views: this.getViews(),
+            content: this.content
         };
     },
 
