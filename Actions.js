@@ -6,11 +6,11 @@ var Promise = require("bluebird");
 
 var Actions = {};
 
-Actions.notifications = Reflux.createActions([
-    "fetch",
-    "set",
-    "markAllAsRead",
-]);
+Actions.notifications = Reflux.createActions({
+    fetch: {},
+    set: {},
+    markAllAsRead: { asyncResult: true },
+});
 
 Actions.ticket = Reflux.createActions([
     "fetch",

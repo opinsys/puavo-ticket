@@ -6,6 +6,7 @@ var MenuItem = require("react-bootstrap/MenuItem");
 var Link = require("react-router").Link;
 var Reflux = require("reflux");
 
+var Actions = require("../Actions");
 var NotificationsStore = require("../stores/NotificationsStore");
 
 /**
@@ -33,10 +34,11 @@ var NotificationsHub = React.createClass({
                 className="NotificationsHub NotificationsHub-label"
                 title={"Ilmoitukset " + count}>
 
-                {/*
                 {count > 0 &&
-                <a className="NotificationsHub-mark-all-as-read" href="#">Merkitse kaikki luetuiksi</a>}
-                */}
+                <a className="NotificationsHub-mark-all-as-read"
+                    disabled={!!this.state.markingAllAsRead}
+                    href="#"
+                    onClick={Actions.notifications.markAllAsRead}>Merkitse kaikki luetuiksi</a>}
 
                 {count === 0 &&
                 <MenuItem header>
