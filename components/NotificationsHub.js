@@ -34,9 +34,8 @@ var NotificationsHub = React.createClass({
                 className="NotificationsHub NotificationsHub-label"
                 title={"Ilmoitukset " + count}>
 
-                {count > 0 &&
+                {count > 0 && !this.state.markingAllAsRead &&
                 <a className="NotificationsHub-mark-all-as-read"
-                    disabled={!!this.state.markingAllAsRead}
                     href="#"
                     onClick={Actions.notifications.markAllAsRead}>Merkitse kaikki luetuiksi</a>}
 
