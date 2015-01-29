@@ -2,12 +2,10 @@
 
 var Promise = require("bluebird");
 
-var View = require("./models/client/View");
-var TicketStore = require("./stores/TicketStore");
-var ViewStore = require("./stores/ViewStore");
-var fetch = require("./utils/fetch");
+var Actions = require("../Actions");
+var View = require("../models/client/View");
+var ViewStore = require("../stores/ViewStore");
 
-var Actions = require("./Actions");
 
 Actions.views.fetch.listen(function(onSuccess) {
     View.collection().fetch()
@@ -75,28 +73,3 @@ Actions.views.fetchContent.listen(function(view) {
     fetchOperation = op;
 });
 
-
-Actions.ticket.fetch.shouldEmit = function() {
-    return !!TicketStore.state.ticket.get("id");
-};
-
-Actions.ticket.fetch.listen(function refreshTicket() {
-    Actions.ajax.read(TicketStore.state.ticket.fetch()
-    .catch(Actions.error.haltChain("Tukipyynnön lataus epännistui"))
-    .then(Actions.ticket.set));
-});
-
-
-Actions.notifications.fetch.listen(function fetchNotifcations() {
-    console.log("Fetching notifications");
-    Actions.ajax.read(fetch({
-        url: "/api/notifications"
-    })
-    .catch(Actions.error.haltChain("Päivitysten lataus epäonnistui"))
-    .then(function(res) {
-        Actions.notifications.set(res.data);
-    }));
-});
-
-setImmediate(Actions.views.fetch);
-setImmediate(Actions.notifications.fetch);
