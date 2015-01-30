@@ -14,8 +14,6 @@ var NotificationsStore = Reflux.createStore({
             markingAllAsRead: false,
             notifications: []
         };
-
-        Actions.notifications.markAllAsRead.completed.listen(this.onMarkAllAsReadSuccess);
     },
 
     onMarkAllAsRead: function() {
@@ -23,7 +21,7 @@ var NotificationsStore = Reflux.createStore({
         this.emitState();
     },
 
-    onMarkAllAsReadSuccess: function() {
+    onMarkAllAsReadCompleted: function() {
         this.state.markingAllAsRead = false;
         this.emitState();
     },
