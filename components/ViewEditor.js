@@ -90,7 +90,7 @@ var ViewEditor = React.createClass({
     },
 
     preview: function() {
-        if (!this.isViewOk()) return;
+        if (!this.hasQuery()) return;
 
         var query = qs.parse(this.state.queryString);
         this.transitionTo("view-editor", {name: this.state.name}, query);
