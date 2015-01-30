@@ -42,6 +42,10 @@ app.get("/api/tickets", function(req, res, next) {
         tickets.withFollower(req.query.follower);
     }
 
+    if (req.query.handler) {
+        tickets.withHandler(req.query.handler);
+    }
+
     if (req.query.text) {
         tickets.withText(req.query.text);
     }

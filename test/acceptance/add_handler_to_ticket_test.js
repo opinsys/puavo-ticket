@@ -99,7 +99,7 @@ describe("ticket handlers", function() {
         return browser
         .elementByCss(".CommentForm-input").type("A comment by bob")
         .elementByCss(".CommentForm-save-comment").click()
-        .waitForElementByCss(".CommentUpdate .content", asserters.textInclude("A comment by bob"))
+        .waitForElementByCss(".CommentUpdate .content", asserters.textInclude("A comment by bob"), 1000*10)
         ;
     });
 

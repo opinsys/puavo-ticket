@@ -119,6 +119,21 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
     },
 
     /**
+     *
+     * @method withHandler
+     * @param {models.server.User|Number} user
+     * @return {Bookshelf.Collection} of models.server.Ticket
+     */
+    withHandler: function(user){
+        var ref = this._genJoinRef("f");
+        return this.query(function(q) {
+            q.join("handlers as " + ref, "tickets.id", "=", ref + ".ticketId");
+            q.where(ref + ".handler", "=",  Base.toId(user));
+            q.whereNull(ref + ".deletedAt");
+        });
+    },
+
+    /**
      * Return collection of tickets that have unread comments by the user
      *
      * @method withUnreadComments
