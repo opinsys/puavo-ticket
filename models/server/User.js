@@ -8,6 +8,7 @@ var Bookshelf = require("bookshelf");
 var UserMixin = require("../UserMixin");
 var Puavo = require("../../utils/Puavo");
 var config = require("../../config");
+var AccessTag = require("./AccessTag");
 var debug = require("debug")("app:server/models/User");
 
 /**
@@ -55,6 +56,40 @@ var User = Base.extend({
         }
 
         return this.getOrganisationDomain() === config.managerOrganisationDomain;
+    },
+
+    /**
+     * @method addAccessTag
+     * @param {models.server.User|Number} addedBy
+     */
+    addAccessTag: function(tag, addedBy){
+        return AccessTag.fetchOrCreate({
+            tag: tag,
+            userId: this.get("id"),
+            deleted: 0
+        }).then(function(tag) {
+            if (tag.isNew()) {
+                tag.set({createdById: Base.toId(addedBy)});
+                return tag.save();
+            }
+            return tag;
+        });
+
+    },
+
+    /**
+     * @method removeAccessTag
+     * @param {models.server.User|Number} deletedBy
+     */
+    removeAccessTag: function(tag, deletedBy) {
+        return AccessTag.forge({
+            tag: tag,
+            userId: this.get("id"),
+        }).fetch()
+        .then(function(accessTag) {
+            if (!accessTag) return;
+            return accessTag.softDelete(deletedBy);
+        });
     },
 
     toJSON: function() {
@@ -130,6 +165,9 @@ var User = Base.extend({
                 });
 
                 return user.save();
+            })
+            .tap(function(user) {
+                return user.addAccessTag("user:" + user.get("id"));
             });
     },
 

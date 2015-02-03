@@ -1,6 +1,7 @@
 "use strict";
 var Bookshelf = require("bookshelf");
 
+var db = require("../../db");
 var Base = require("./Base");
 
 /**
@@ -195,11 +196,32 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
      */
     byVisibilities: function(visibilities) {
         return this.query(function(queryBuilder) {
-                queryBuilder
-                .join("visibilities", "tickets.id", "=", "visibilities.ticketId")
-                .whereIn("visibilities.entity", visibilities)
-                .whereNull("visibilities.deletedAt");
-            });
+            queryBuilder
+            .join("visibilities", "tickets.id", "=", "visibilities.ticketId")
+            .whereIn("visibilities.entity", visibilities)
+            .whereNull("visibilities.deletedAt");
+        });
+    },
+
+
+    /**
+     * @param {models.server.User|Number} user
+     * @return {models.server.Base.Collection} with models.server.Ticket models
+     */
+    withAccessTags: function(user) {
+        var userId = Base.toId(user);
+
+        var userAccessTags = db.knex
+        .column(["tag"])
+        .from("accessTags")
+        .where("userId", userId)
+        .whereNull("deletedAt");
+
+        return this.query(function(q) {
+            q.join("tags", "tickets.id", "=", "tags.ticketId")
+            .whereIn("tags.tag", userAccessTags)
+            .whereNull("tags.deletedAt");
+        });
     },
 
 });

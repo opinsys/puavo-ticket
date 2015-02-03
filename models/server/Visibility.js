@@ -2,6 +2,7 @@
 require("../../db");
 
 var User = require("./User");
+var Ticket = require("./Ticket");
 var Base = require("./Base");
 
 var Visibility = Base.extend({
@@ -17,6 +18,10 @@ var Visibility = Base.extend({
 
     createdBy: function() {
         return this.belongsTo(User, "createdById");
+    },
+
+    ticket: function() {
+        return this.belongsTo(Ticket, "ticketId");
     }
 
 }, {
