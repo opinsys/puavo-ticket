@@ -123,6 +123,10 @@ Acl.prototype = {
      * @return {Boolean}
      */
     canFollow: function(ticket) {
+        if (this.user.isManager()) {
+            return true;
+        }
+
         // All users can follow any ticket they can see but the ticket creator
         // cannot stop following they've created
         return ticket.get("createdById") !== this.user.get("id");
