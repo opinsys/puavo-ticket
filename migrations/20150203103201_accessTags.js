@@ -4,25 +4,15 @@ var addLifecycleColumns = require("app/utils/migrationHelpers").addLifecycleColu
 var User = require("../models/server/User");
 var Visibility = require("../models/server/Visibility");
 
-exports.up = function(knex, Promise) {
-    return knex.schema.createTable("accessTags", function(table) {
-        table.increments("id");
-        addLifecycleColumns(table);
-        table.integer("userId")
-            .notNullable()
-            .references("id")
-            .inTable("users");
-        table.string("tag").notNullable();
-        table.unique(["tag", "createdById", "deleted"]);
-    })
-    .then(function() {
-        return User.collection().fetch();
-    })
+function migrateData() {
+    return User.collection().fetch()
     .then(function(c) {
+        console.log("Adding accessTags for", c.size(), "users");
         return c.models;
     })
     .each(function(user) {
-        return user.addAccessTag("user:" + user.get("id"));
+        var tag = "user:" + user.get("id");
+        return user.addAccessTag(tag, user);
     })
     .then(function() {
         return Visibility.collection()
@@ -34,14 +24,27 @@ exports.up = function(knex, Promise) {
         });
     })
     .then(function(c) {
+        console.log("Adding tags for", c.size(), "tickets");
         return c.models;
     })
     .each(function(vis) {
         var tag = vis.get("entity");
-        console.log("Add ticket tag", tag);
         return vis.rel("ticket").addTag(tag, vis.get("createdById"));
     });
+}
 
+exports.up = function(knex, Promise) {
+    return knex.schema.createTable("accessTags", function(table) {
+        table.increments("id");
+        addLifecycleColumns(table);
+        table.integer("userId")
+            .notNullable()
+            .references("id")
+            .inTable("users");
+        table.string("tag").notNullable();
+        table.unique(["tag", "createdById", "deleted"]);
+    })
+    .then(migrateData);
 };
 
 exports.down = function(knex, Promise) {
