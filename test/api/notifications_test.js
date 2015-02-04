@@ -12,59 +12,58 @@ var Ticket = require("app/models/server/Ticket");
 
 describe("/api/tickets/:id/read", function() {
 
+    var ticket, otherTicket, yetAnotherTicket, agent, manager, user, otherUser;
+
     before(function() {
-        var self = this;
         return helpers.clearTestDatabase()
-            .then(function() {
-                return Promise.join(
-                    User.ensureUserFromJWTToken(helpers.user.manager),
-                    User.ensureUserFromJWTToken(helpers.user.teacher),
-                    User.ensureUserFromJWTToken(helpers.user.teacher2)
-                );
-            })
-            .spread(function(manager, user, otherUser) {
-                self.manager = manager;
-                self.user = user;
-                self.otherUser = otherUser;
+        .then(() => Promise.join(
+            User.ensureUserFromJWTToken(helpers.user.manager)
+            .then((u) => manager = u),
 
-                return Promise.join(
-                    Ticket.create(
-                        "The Ticket",
-                        "Will get notifications (first comment)",
-                        self.user
-                    ),
-                    Ticket.create(
-                        "An other ticket",
-                        "This is other ticket without any notifications for the user",
-                        self.otherUser
-                    ),
-                    Ticket.create(
-                        "Yet another ticket",
-                        "This is an yet another ticket",
-                        self.otherUser
-                    ),
-                    helpers.loginAsUser(helpers.user.teacher)
-                );
-            })
-            .spread(function(ticket, otherTicket, yetAnother, agent) {
-                self.ticket = ticket;
-                self.otherTicket = otherTicket;
-                self.agent = agent;
+            User.ensureUserFromJWTToken(helpers.user.teacher)
+            .then((u) => user = u),
 
-                return yetAnother.addComment("yet another ticket has a random comment", self.otherUser);
-            });
+            User.ensureUserFromJWTToken(helpers.user.teacher2)
+            .then((u) => otherUser = u)
+        ))
+
+        .then(() => Ticket.create(
+            "The Ticket",
+            "Will get notifications (first comment)",
+            user
+        ))
+        .then((t) => ticket = t)
+
+        .then(() => Ticket.create(
+            "An other ticket",
+            "This is other ticket without any notifications for the user",
+            otherUser
+        ))
+        .then((t) => otherTicket = t)
+
+        .then(() => Ticket.create(
+            "Yet another ticket",
+            "This is an yet another ticket",
+            otherUser
+        ))
+        .then((t) => yetAnotherTicket = t)
+
+
+        .then(() => helpers.loginAsUser(helpers.user.teacher))
+        .then((a) => agent = a)
+
+        .then(() => yetAnotherTicket.addComment("yet another ticket has a random comment", otherUser))
+        ;
+
     });
 
-    after(function() {
-        return this.agent.logout();
-    });
+    after(() => agent.logout());
 
 
     it("marks ticket as read", function() {
-        var self = this;
-        return this.agent
-            .post("/api/tickets/" + self.ticket.get("id") + "/read")
-            .set("x-csrf-token", self.agent.csrfToken)
+        return agent
+            .post("/api/tickets/" + ticket.get("id") + "/read")
+            .set("x-csrf-token", agent.csrfToken)
             .send()
             .promise()
             .then(function(res) {
@@ -73,29 +72,28 @@ describe("/api/tickets/:id/read", function() {
                 assert.equal("notifications", res.body.type);
             })
             .then(function() {
-                return Notification.forge({ ticketId: self.ticket.get("id") }).fetch();
+                return Notification.forge({ ticketId: ticket.get("id") }).fetch();
             })
             .then(function(notification) {
-                assert.equal(notification.get("ticketId"), self.ticket.get("id"));
+                assert.equal(notification.get("ticketId"), ticket.get("id"));
             });
     });
 
     it("makes the ticket as read in /api/tickets", function() {
-        var self = this;
-        return this.agent
+        return agent
             .get("/api/tickets")
             .promise()
             .then(function(res) {
                 assert.equal(200, res.status, res.text);
                 assert(_.find(res.body[0].titles, { title: "The Ticket" }));
-                assert.equal(self.ticket.get("id"), res.body[0].notifications[0].ticketId);
-                assert.equal(self.user.get("id"), res.body[0].notifications[0].targetId);
+                assert.equal(ticket.get("id"), res.body[0].notifications[0].ticketId);
+                assert.equal(user.get("id"), res.body[0].notifications[0].targetId);
             });
     });
 
     describe("/api/notifications", function() {
         it("does not list the ticket if it does not have unread comments", function() {
-            return this.agent
+            return agent
                 .get("/api/notifications")
                 .promise()
                 .then(function(res) {
@@ -105,10 +103,9 @@ describe("/api/tickets/:id/read", function() {
         });
 
         it("lists the ticket when a comment is added to it by other user", function() {
-            var self = this;
-            return self.ticket.addComment("Comment by other user", self.otherUser)
+            return ticket.addComment("Comment by other user", otherUser)
                 .then(function() {
-                    return self.agent.get("/api/notifications").promise();
+                    return agent.get("/api/notifications").promise();
                 })
                 .then(function(res) {
                     assert.equal(200, res.status, res.text);
@@ -122,7 +119,7 @@ describe("/api/tickets/:id/read", function() {
                     assert(data.createdBy, "has creator object");
                     // the comment was created by the other user
                     assert.equal(
-                        self.otherUser.getUsername(),
+                        otherUser.getUsername(),
                         data.createdBy.externalData.username
                     );
                 });
@@ -130,16 +127,15 @@ describe("/api/tickets/:id/read", function() {
 
 
         it("can list multiple tickets", function() {
-            var self = this;
-            return self.otherTicket.addFollower(self.user, self.user)
+            return otherTicket.addFollower(user, user)
                 .then(function() {
-                    return self.otherTicket.markAsRead(self.user);
+                    return otherTicket.markAsRead(user);
                 })
                 .then(function() {
-                    return self.otherTicket.addComment("Comment for the other ticket", self.otherUser);
+                    return otherTicket.addComment("Comment for the other ticket", otherUser);
                 })
                 .then(function() {
-                    return self.agent.get("/api/notifications").promise();
+                    return agent.get("/api/notifications").promise();
                 })
                 .then(function(res) {
                     assert.equal(200, res.status, res.text);
