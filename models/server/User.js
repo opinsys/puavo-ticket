@@ -1,10 +1,11 @@
 "use strict";
+var Promise = require("bluebird");
+var Cocktail = require("backbone.cocktail");
+var Bookshelf = require("bookshelf");
 
 require("../../db");
 var Base = require("./Base");
 var Acl = require("../Acl");
-var Cocktail = require("backbone.cocktail");
-var Bookshelf = require("bookshelf");
 var UserMixin = require("../UserMixin");
 var Puavo = require("../../utils/Puavo");
 var config = require("../../config");
@@ -56,6 +57,16 @@ var User = Base.extend({
         }
 
         return this.getOrganisationDomain() === config.managerOrganisationDomain;
+    },
+
+
+    /**
+     *
+     * @method accessTags
+     */
+    accessTags: function(){
+        return this.hasMany(AccessTag, "userId")
+        .query((q) => q.where({deleted:0}));
     },
 
     /**
@@ -166,9 +177,10 @@ var User = Base.extend({
 
                 return user.save();
             })
-            .tap(function(user) {
-                return user.addAccessTag("user:" + user.get("id"));
-            });
+            .tap((user) => Promise.join(
+                user.addAccessTag("follower:" + user.get("id"), user),
+                user.addAccessTag("handler:" + user.get("id"), user)
+            ));
     },
 
     /**

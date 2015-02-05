@@ -7,38 +7,52 @@ var helpers = require("../../../test/helpers");
 var Ticket = require("../../../models/server/Ticket");
 var User = require("../../../models/server/User");
 
-describe("AccessTags on users:", function() {
+describe("Access tags: User", function() {
 
     var ticket, manager, teacher, teacher2;
 
     before(function() {
         return helpers.clearTestDatabase()
-            .then(function() {
-                return Promise.join(
-                    User.ensureUserFromJWTToken(helpers.user.manager),
-                    User.ensureUserFromJWTToken(helpers.user.teacher),
-                    User.ensureUserFromJWTToken(helpers.user.teacher2)
-                );
-            })
-            .spread(function(_manager, _teacher, _teacher2){
-                manager = _manager;
-                teacher = _teacher;
-                teacher2 = _teacher2;
+        .then(() => Promise.join(
+            User.ensureUserFromJWTToken(helpers.user.manager)
+            .then((u) => manager = u),
 
-                return Ticket.create(
-                    "A title",
-                    "This ticket has some tags",
-                    manager
-                );
-            })
-            .then(function(_ticket) {
-                ticket = _ticket;
+            User.ensureUserFromJWTToken(helpers.user.teacher)
+            .then((u) => teacher = u),
 
-                return ticket.addTag("foo", manager);
-            });
+            User.ensureUserFromJWTToken(helpers.user.teacher2)
+            .then((u) => teacher2 = u)
+
+        ))
+        .then(() => Ticket.create(
+            "A title",
+            "This ticket has some tags",
+            manager
+        ))
+        .then((t) => ticket = t)
+        .then((t) => t.addTag("foo", manager))
+        .then(() => teacher.load("accessTags"));
     });
 
-    describe("without matching AccessTag", function() {
+    describe("on creation", function() {
+
+        it("has follower access tag", function() {
+            assert(
+                teacher.rel("accessTags")
+                .findWhere({ tag: "follower:" + teacher.get("id") })
+            );
+        });
+
+        it("has handler access tag", function() {
+            assert(
+                teacher.rel("accessTags")
+                .findWhere({ tag: "handler:" + teacher.get("id") })
+            );
+        });
+
+    });
+
+    describe("without matching access tag", function() {
 
         var tickets;
 
@@ -55,7 +69,7 @@ describe("AccessTags on users:", function() {
 
     });
 
-    describe("with matching AccessTag", function() {
+    describe("with matching access tag", function() {
 
         var tickets;
 
@@ -75,22 +89,20 @@ describe("AccessTags on users:", function() {
 
     });
 
-    describe("User#addAccessTag()", function() {
+    describe("method User#addAccessTag()", function() {
         it("can be called multiple times for the same tag", function() {
             return teacher.addAccessTag("foo", manager);
         });
     });
 
-    describe("other users without matching AccessTags", function() {
+    describe("elsewhere without matching AccessTags", function() {
 
         var tickets;
 
-        before(function() {
-            return Ticket.collection().withAccessTags(teacher2).fetch()
-            .then(function(_tickets) {
-                tickets = _tickets;
-            });
-        });
+        before(() =>
+            Ticket.collection().withAccessTags(teacher2).fetch()
+            .then((_tickets) => tickets = _tickets)
+        );
 
         it("don't get tickets", function() {
             assert.equal(0, tickets.size());

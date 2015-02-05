@@ -412,10 +412,9 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
         return Follower.fetchOrCreate({
             ticketId: this.get("id"),
             followedById: Base.toId(follower),
-            createdById: Base.toId(addedBy),
             deleted: 0
         })
-        .then((followerRel) => followerRel.ensureSaved())
+        .then((followerRel) => followerRel.ensureSaved(addedBy))
         .tap((followerRel) => Promise.join(
             this.addVisibility(follower.getPersonalVisibility(), addedBy),
             this.ensureNotification(follower),
