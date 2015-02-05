@@ -8,73 +8,67 @@ var Ticket = require("app/models/server/Ticket");
 var User = require("app/models/server/User");
 
 describe("Follower model", function() {
+    var manager, teacher, teacher2, ticket;
 
     before(function() {
-        var self = this;
         return helpers.clearTestDatabase()
-            .then(function() {
-                return Promise.all([
-                    User.ensureUserFromJWTToken(helpers.user.manager),
-                    User.ensureUserFromJWTToken(helpers.user.teacher),
-                    User.ensureUserFromJWTToken(helpers.user.teacher2)
-                ]);
-            })
-            .spread(function(manager, user, otherUser) {
-                self.manager = manager;
-                self.user = user;
-                self.otherUser = otherUser;
+        .then(() => Promise.join(
+            User.ensureUserFromJWTToken(helpers.user.manager)
+            .then((u) => manager = u),
 
-                return Ticket.create(
-                    "A handler test title",
-                    "Handler test ticket",
-                    self.user
-                );
-            })
-            .then(function(ticket) {
-                self.ticket = ticket;
-            });
+            User.ensureUserFromJWTToken(helpers.user.teacher)
+            .then((u) => teacher = u),
+
+            User.ensureUserFromJWTToken(helpers.user.teacher2)
+            .then((u) => teacher2 = u)
+        ))
+
+        .then(() => Ticket.create(
+            "A handler test title",
+            "Handler test ticket",
+            teacher
+        ))
+        .then((t) => ticket = t);
     });
 
     it("can be added for a ticket", function() {
-        var self = this;
-        return self.ticket.addFollower(self.otherUser, self.manager)
-            .then(function(follower) {
-                return self.ticket.followers().fetch({
-                    withRelated: "follower"
-                });
+        return ticket.addFollower(teacher2, manager)
+        .then((follower) =>
+             ticket.followers().fetch({
+                withRelated: "follower"
             })
-            .then(function(followers) {
-                var usernames = followers.map(function(f) {
-                    return f.relations.follower.getUsername();
-                });
+        )
+        .then(function(followers) {
+            var usernames = followers.map((f) =>
+                f.relations.follower.getUsername()
+            );
 
-                // Creator and the new follower is present
-                assert.deepEqual(
-                    ["olli.opettaja", "matti.meikalainen"].sort(),
-                    usernames.sort()
-                );
-            });
+            // Creator and the new follower is present
+            assert.deepEqual(
+                ["olli.opettaja", "matti.meikalainen"].sort(),
+                usernames.sort()
+            );
+        });
     });
 
     it("does not make duplicates", function() {
-        var self = this;
-        return self.ticket.addFollower(self.otherUser, self.manager)
-            .then(function(follower) {
-                return self.ticket.followers().fetch({
-                    withRelated: "follower"
-                });
+        return ticket.addFollower(teacher2, manager)
+        .then((follower) =>
+            ticket.followers().fetch({
+                withRelated: "follower"
             })
-            .then(function(followers) {
-                var usernames = followers.map(function(f) {
-                    return f.relations.follower.getUsername();
-                });
+        )
+        .then(function(followers) {
+            var usernames = followers.map((f) =>
+                f.relations.follower.getUsername()
+            );
 
-                // No changes from the previous
-                assert.deepEqual(
-                    ["olli.opettaja", "matti.meikalainen"].sort(),
-                    usernames.sort()
-                );
-            });
+            // No changes from the previous
+            assert.deepEqual(
+                ["olli.opettaja", "matti.meikalainen"].sort(),
+                usernames.sort()
+            );
+        });
     });
 
 
