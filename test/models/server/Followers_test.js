@@ -31,45 +31,86 @@ describe("Follower model", function() {
         .then((t) => ticket = t);
     });
 
-    it("can be added for a ticket", function() {
-        return ticket.addFollower(teacher2, manager)
-        .then((follower) =>
-             ticket.followers().fetch({
+
+    describe("added using Ticket#addFollower(...)", function() {
+        before(() => ticket.addFollower(teacher2, manager));
+
+        it("is visible in Ticket#followers()", function() {
+             return ticket.followers().fetch({
                 withRelated: "follower"
             })
-        )
-        .then(function(followers) {
-            var usernames = followers.map((f) =>
-                f.relations.follower.getUsername()
-            );
+            .then(function(followers) {
+                var usernames = followers.map((f) =>
+                    f.relations.follower.getUsername()
+                );
 
-            // Creator and the new follower is present
-            assert.deepEqual(
-                ["olli.opettaja", "matti.meikalainen"].sort(),
-                usernames.sort()
-            );
+                // Creator and the new follower is present
+                assert.deepEqual(
+                    ["olli.opettaja", "matti.meikalainen"].sort(),
+                    usernames.sort()
+                );
+            });
         });
+
+        it("cannot be duplicated", function() {
+            return ticket.addFollower(teacher2, manager)
+            .then((follower) => ticket.followers().fetch({
+                withRelated: "follower"
+            }))
+            .then(function(followers) {
+                var usernames = followers.map((f) =>
+                    f.relations.follower.getUsername()
+                );
+
+                // No changes from the previous
+                assert.deepEqual(
+                    ["olli.opettaja", "matti.meikalainen"].sort(),
+                    usernames.sort()
+                );
+            });
+        });
+
+        it("adds corresponding tag", function() {
+            return ticket.tags().query((q) => q.where({
+                deleted: 0,
+                tag: "follower:" + teacher2.get("id")
+            }))
+            .fetch()
+            .then(function(tags) {
+                assert.equal(1, tags.size());
+            });
+        });
+
     });
 
-    it("does not make duplicates", function() {
-        return ticket.addFollower(teacher2, manager)
-        .then((follower) =>
-            ticket.followers().fetch({
+    describe("removed using Ticket#removeFollower(...)", function() {
+        before(() => ticket.removeFollower(teacher2, manager));
+
+        it("removes follower from Ticket#followers()", function() {
+             return ticket.followers().fetch({
                 withRelated: "follower"
             })
-        )
-        .then(function(followers) {
-            var usernames = followers.map((f) =>
-                f.relations.follower.getUsername()
-            );
+            .then(function(followers) {
+                var usernames = followers.map((f) =>
+                    f.relations.follower.getUsername()
+                );
 
-            // No changes from the previous
-            assert.deepEqual(
-                ["olli.opettaja", "matti.meikalainen"].sort(),
-                usernames.sort()
-            );
+                // Creator and the new follower is present
+                assert.deepEqual(["olli.opettaja"], usernames);
+            });
         });
-    });
 
+        it("removes corresponding tag", function() {
+            return ticket.tags().query((q) => q.where({
+                deleted: 0,
+                tag: "follower:" + teacher2.get("id")
+            }))
+            .fetch()
+            .then(function(tags) {
+                assert.equal(0, tags.size());
+            });
+        });
+
+    });
 
 });

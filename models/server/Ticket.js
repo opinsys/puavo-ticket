@@ -409,32 +409,18 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Bluebird.Promise} with models.server.Handler
      */
     addFollower: function(follower, addedBy) {
-        var self = this;
-
-        var followerOp = Follower.forge({
-            ticketId: self.get("id"),
-            followedById: Base.toId(follower)
+        return Follower.fetchOrCreate({
+            ticketId: this.get("id"),
+            followedById: Base.toId(follower),
+            createdById: Base.toId(addedBy),
+            deleted: 0
         })
-        .query(queries.notSoftDeleted)
-        .fetch()
-        .then(function(followerRelation) {
-            if (followerRelation) return followerRelation;
-            return Follower.forge({
-                ticketId: self.get("id"),
-                followedById: Base.toId(follower),
-                createdById: Base.toId(addedBy)
-            }).save();
-        });
-
-
-        return Promise.join(
-            followerOp,
-            self.addVisibility(follower.getPersonalVisibility(), addedBy),
-            self.ensureNotification(follower)
-        ).spread(function(followerRelation) {
-            return followerRelation;
-        });
-
+        .then((followerRel) => followerRel.ensureSaved())
+        .tap((followerRel) => Promise.join(
+            this.addVisibility(follower.getPersonalVisibility(), addedBy),
+            this.ensureNotification(follower),
+            this.addTag("follower:" + follower.get("id"), addedBy)
+        ));
     },
 
     /**
@@ -536,16 +522,11 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      */
     removeFollower: function(user, removedBy){
         return this.followers()
-            .query(function(qb) {
-                qb.where("followedById", "=", user.get("id"));
-            })
-            .fetch()
-            .then(function(coll) {
-                return coll.models;
-            })
-            .map(function(followerRelation) {
-                return followerRelation.softDelete(removedBy);
-            });
+        .query((q) => q.where({followedById: user.get("id")}))
+        .fetch()
+        .then((c) => c.models)
+        .map((followerRelation) => followerRelation.softDelete(removedBy))
+        .tap(() => this.removeTag("follower:" + user.get("id"), removedBy));
     },
 
     handlerUsers: function() {
