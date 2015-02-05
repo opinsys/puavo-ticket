@@ -1,5 +1,7 @@
 "use strict";
 
+var Promise = require("bluebird");
+
 require("../../db");
 var Bookshelf = require("bookshelf");
 var Cocktail = require("backbone.cocktail");
@@ -66,6 +68,20 @@ var Base = Bookshelf.DB.Model.extend({
     },
 
     /**
+     * Save the model if this.isNew() returns true
+     *
+     * @method ensureSaved
+     * @return {Bluebird.Promise} with the model instance
+     */
+    ensureSaved: function(createdBy){
+        if (this.isNew()) {
+            this.set({ createdById: Base.toId(createdBy) });
+            return this.save();
+        }
+        return Promise.resolve(this);
+    },
+
+    /**
      * Set timestamp to deletedAt
      *
      * @method softDelete
@@ -96,17 +112,19 @@ var Base = Bookshelf.DB.Model.extend({
      * @return {Bluebird.Promise} with the model instance
      */
     fetchOrCreate: function(identifier, options) {
-        var model =  this.forge(identifier);
 
         if (options && options.noSoftDeleted) {
-            model.query({ where: { deleted: 0 }});
+            identifier.deleted = 0;
         }
+
+        var model =  this.forge(identifier);
 
         return model.fetch()
         .then(function(existing) {
             return existing || model;
         });
     },
+
 
     /**
      * Shortcut for getting models by id
