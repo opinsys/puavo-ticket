@@ -53,6 +53,9 @@ var BaseMixin = {
      * @return {Object|Array} Relation data
      */
     rel: function(key) {
+        if (typeof window === "undefined" && typeof this[key] !== "function") {
+            throw new Error(`Unknown relation "${key}" for the model of the "${this.tableName}" table`);
+        }
         var rel = this.relations[key];
         if (!rel) throw new Error("Relation '" + key + "' is not loaded");
         return rel;
