@@ -460,35 +460,26 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @param {models.server.User|Number} addedBy User model or id of the user who adds the handler
      * @return {Bluebird.Promise} with models.server.Handler
      */
-    addHandler: function(handler, addedBy) {
-        var self = this;
-
-        if (Base.isModel(handler)) handler = Promise.resolve(handler);
-        else handler = User.byId(handler).fetch({ require: true });
-
-        return handler.then(function(handler) {
-            return Promise.join(
-
-                Handler.fetchOrCreate({
-                    ticketId: self.get("id"),
-                    handler: Base.toId(handler)
-                }, { noSoftDeleted: true })
-                .then(function(h) {
-                    if (!h.isNew()) return h;
-                    h.set({ createdById: Base.toId(addedBy) });
-                    return h.save();
-                }),
-
-                Promise.try(function(){
-                    if (handler.isManager()) {
-                        return self.setStatus("open", addedBy);
-                    }
-                }),
-                self.addFollower(handler, addedBy)
-            );
+    addHandler(user, addedBy) {
+        return Handler.fetchOrCreate({
+            ticketId: this.get("id"),
+            handler: Base.toId(user),
+            deleted: 0
         })
-        .spread(function(handler) {
-            return handler;
+        .then((handlerRel) => handlerRel.ensureSaved(addedBy))
+        .tap(() => this.load("tags"))
+        .tap((handlerRel) => {
+            // Ensure fresh handler user object
+            return handlerRel.handler().fetch({require:true})
+            .tap((user) => {
+                // Set ticket from pending to open if a manager handler is added to it
+                if (user.isManager() && this.getCurrentStatus() === "pending") {
+                    return this.setStatus("open", addedBy);
+                }
+            })
+            // Handlers always start following the ticket
+            .tap((user) => this.addFollower(user, addedBy))
+            .tap((user) => this.addTag("handler:" + user.get("id"), addedBy));
         });
 
     },

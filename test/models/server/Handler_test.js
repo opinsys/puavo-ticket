@@ -2,13 +2,12 @@
 
 var assert = require("assert");
 var Promise = require("bluebird");
-var _ = require("lodash");
 
 var helpers = require("app/test/helpers");
 var User = require("app/models/server/User");
 var Ticket = require("app/models/server/Ticket");
 
-describe("Ticket handlers", function() {
+describe("Handler model", function() {
 
     var manager, teacher, teacher2, ticket;
 
@@ -33,48 +32,50 @@ describe("Ticket handlers", function() {
 
     );
 
+    describe("added using Ticket#addHandler(...)", () => {
+        before(() => ticket.addHandler(teacher2, manager));
 
-    it("can be added from a ticket", () =>
-        ticket.addHandler(teacher2, manager)
-        .then(() => ticket.handlers().fetch({
-            withRelated: "handler"
-        }))
-        .then((handlers) => {
-            handlers = handlers.toJSON();
+        it("is visible in Ticket#handlers()", () =>
 
-            var handler = _.find(handlers, (h) =>
-                h.handler.id === teacher2.id
-            );
+           ticket.handlers()
+           .query((q) => q.where({handler: teacher2.get("id")}))
+           .fetchOne({ withRelated: "handler", require: true })
 
-            assert(handler, "has the other user as handler");
+            .then((handler) => {
+                assert.equal(teacher2.get("id"), handler.get("handler"));
+                assert.equal(
+                    handler.get("createdById"),
+                    manager.get("id"),
+                    "manager is the creator"
+                );
+            })
+        );
 
-            assert.equal(
-                handler.createdById,
-                manager.get("id"),
-                "manager is the creator"
-            );
+        it("makes Ticket#isHandler(user) return true for the handler", () =>
+            Promise.join(
+                User.byExternalId(helpers.user.teacher.id).fetch({ require: true }),
+                ticket.load("handlerUsers")
+            )
+            .spread((user) => {
+                assert(ticket.isHandler(user) === true);
+            })
+        );
 
-        })
-    );
-
-    it("returns true (promise) from Ticket#isHandler(user) for handlers", () =>
-        Promise.join(
-            User.byExternalId(helpers.user.teacher.id).fetch({ require: true }),
-            ticket.load("handlerUsers")
-        )
-        .spread((user) => {
-            assert(ticket.isHandler(user) === true);
-        })
-    );
+        it("adds handler:<id> tag for the ticket", () =>
+            ticket.tags().query((q) => q.where({deleted: 0})).fetch()
+            .then((tags) => {
+                assert(tags.findWhere({ tag: "handler:" + teacher.get("id") }));
+            })
+        );
 
 
-    it("personal visibility is given to the handler", () =>
-        ticket.visibilities().fetch()
-        .then((visibilities) => {
-            visibilities = visibilities.map((v) => v.get("entity"));
-            assert(visibilities.indexOf(teacher.getPersonalVisibility()) !== -1);
-        })
-    );
+    });
 
+    describe("removed using Ticket#addHandler(...)", () => {
+
+        it("removes handler:<id> tag from the ticket", () => {
+            assert(false);
+        });
+    });
 
 });
