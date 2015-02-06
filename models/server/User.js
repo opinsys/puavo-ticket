@@ -239,6 +239,7 @@ var User = Base.extend({
      * @return {Bluebird.Promise} models.server.User
      */
     ensureUserByEmail: function(emailAddress, first_name, last_name) {
+        // XXX Access tags
         return User.byEmailAddress(emailAddress).fetch()
             .then(function(user) {
                 if (user) return user;
