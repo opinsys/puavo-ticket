@@ -484,6 +484,19 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
 
     },
 
+    removeHandler(user, removedBy) {
+       return this.handlers()
+       .query({ where: {
+           handler: Base.toId(user),
+           deleted:0
+       }})
+       .fetchOne()
+       .tap((handler) => Promise.join(
+           handler.softDelete(removedBy),
+           this.removeTag("handler:" + Base.toId(user), removedBy)
+       ));
+    },
+
     /**
      *
      * @method handlers
