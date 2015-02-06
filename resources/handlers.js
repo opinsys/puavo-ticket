@@ -40,36 +40,17 @@ app.post("/api/tickets/:id/handlers", function(req, res, next) {
 });
 
 app.delete("/api/tickets/:id/handlers/:userId", function(req, res, next) {
-    Ticket.collection()
-    .query({ where: { "tickets.id": req.params.id }})
-    .byUserVisibilities(req.user)
-    .fetch({
-        require: true,
-        withRelated: [
-            {handlers: function(q) {
-                q.where({
-                    handler: req.params.userId,
-                    deleted: 0
-                });
-            }}
-        ]
-    })
-    .then(function(tickets) {
-        if (tickets.size() > 1) {
-            throw new Error("found extra tickets wtf?");
-        }
-        var ticket = tickets.first();
+
+    Ticket.byId(req.params.id).fetch({require:true})
+    .then((ticket) => {
         if (!req.user.acl.canEditHandlers(ticket)) {
             throw new Acl.PermissionDeniedError();
         }
-        var handler = ticket.relations.handlers.first();
-        return handler.softDelete(req.user).return(handler);
-    })
-    .then(function(handler) {
-        res.json(handler);
-    })
-    .catch(next);
 
+        return ticket.removeHandler(req.params.userId, req.user);
+    })
+    .then((handler) => res.json(handler))
+    .catch(next);
 
 });
 
