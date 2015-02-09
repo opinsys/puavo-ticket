@@ -51,6 +51,7 @@ app.get("/api/notifications", function(req, res, next) {
     Ticket.collection()
     .byUserVisibilities(req.user)
     .withUnreadComments(req.user)
+    .query(q => q.orderBy("updatedAt", "asc"))
     .fetch({
         withRelated: [
             {comments: function(q) {
