@@ -1,5 +1,4 @@
 "use strict";
-var Promise = require("bluebird");
 var Cocktail = require("backbone.cocktail");
 var Bookshelf = require("bookshelf");
 
@@ -33,6 +32,9 @@ var User = Base.extend({
 
     initialize: function() {
         this.acl = new Acl(this);
+        this.on("saved", () =>
+            this.addAccessTag("user:" + this.get("id"), this)
+        );
     },
 
     /**
@@ -66,7 +68,7 @@ var User = Base.extend({
      */
     accessTags: function(){
         return this.hasMany(AccessTag, "userId")
-        .query((q) => q.where({deleted:0}));
+        .query(q => q.where({deleted:0}));
     },
 
     /**
@@ -78,7 +80,7 @@ var User = Base.extend({
             tag: tag,
             userId: this.get("id"),
             deleted: 0
-        }).then(function(tag) {
+        }).then(tag => {
             if (tag.isNew()) {
                 tag.set({createdById: Base.toId(addedBy)});
                 return tag.save();
@@ -176,11 +178,7 @@ var User = Base.extend({
                 });
 
                 return user.save();
-            })
-            .tap((user) => Promise.join(
-                user.addAccessTag("follower:" + user.get("id"), user),
-                user.addAccessTag("handler:" + user.get("id"), user)
-            ));
+            });
     },
 
     /**
