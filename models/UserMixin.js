@@ -192,16 +192,19 @@ var UserMixin = {
      */
     getProfileImage: function() {
         if (this.get("externalData")) {
-            return [
+            var urlData = [
                 "/api/puavo/",
                 this.getOrganisationDomain(),
                 "/v3/users/",
                 this.get("externalData").username,
                 "/profile.jpg"
-            ].join("");
-        } else {
-            return "/images/anonymous.jpg";
+            ];
+
+            var dataOk = urlData.every(part => !!part);
+            if (dataOk) return urlData.join("");
         }
+
+        return "/images/anonymous.jpg";
     },
 
     /**
