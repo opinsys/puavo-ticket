@@ -408,7 +408,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @param {models.server.User|Number} addedBy User model or id of the user who adds the handler
      * @return {Bluebird.Promise} with models.server.Handler
      */
-    addFollower: function(follower, addedBy) {
+    addFollower(follower, addedBy) {
         return Follower.fetchOrCreate({
             ticketId: this.get("id"),
             followedById: Base.toId(follower),
@@ -418,7 +418,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
         .tap((followerRel) => Promise.join(
             this.addVisibility(follower.getPersonalVisibility(), addedBy),
             this.ensureNotification(follower),
-            this.addTag("follower:" + follower.get("id"), addedBy)
+            this.addTag("user:" + follower.get("id"), addedBy)
         ));
     },
 
@@ -466,20 +466,19 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
             handler: Base.toId(user),
             deleted: 0
         })
-        .then((handlerRel) => handlerRel.ensureSaved(addedBy))
+        .then(handlerRel => handlerRel.ensureSaved(addedBy))
         .tap(() => this.load("tags"))
-        .tap((handlerRel) => {
+        .tap(handlerRel => {
             // Ensure fresh handler user object
             return handlerRel.handler().fetch({require:true})
-            .tap((user) => {
+            .tap(user => {
                 // Set ticket from pending to open if a manager handler is added to it
                 if (user.isManager() && this.getCurrentStatus() === "pending") {
                     return this.setStatus("open", addedBy);
                 }
             })
             // Handlers always start following the ticket
-            .tap((user) => this.addFollower(user, addedBy))
-            .tap((user) => this.addTag("handler:" + user.get("id"), addedBy));
+            .tap(user => this.addFollower(user, addedBy));
         });
 
     },

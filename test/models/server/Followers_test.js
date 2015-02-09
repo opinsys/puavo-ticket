@@ -73,7 +73,7 @@ describe("Follower model", function() {
         it("adds corresponding tag", function() {
             return ticket.tags().query((q) => q.where({
                 deleted: 0,
-                tag: "follower:" + teacher2.get("id")
+                tag: "user:" + teacher2.get("id")
             }))
             .fetch()
             .then(function(tags) {
@@ -97,17 +97,6 @@ describe("Follower model", function() {
 
                 // Creator and the new follower is present
                 assert.deepEqual(["olli.opettaja"], usernames);
-            });
-        });
-
-        it("removes corresponding tag", function() {
-            return ticket.tags().query((q) => q.where({
-                deleted: 0,
-                tag: "follower:" + teacher2.get("id")
-            }))
-            .fetch()
-            .then(function(tags) {
-                assert.equal(0, tags.size());
             });
         });
 

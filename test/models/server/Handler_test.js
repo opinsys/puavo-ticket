@@ -61,10 +61,10 @@ describe("Handler model", function() {
             });
         });
 
-        it("adds handler:<id> tag for the ticket", () => {
+        it("adds user:<id> tag for the ticket", () => {
             return ticket.tags().query({where:{deleted: 0}}).fetch()
             .then((tags) => {
-                assert(tags.findWhere({ tag: "handler:" + teacher.get("id") }));
+                assert(tags.findWhere({ tag: "user:" + teacher.get("id") }));
             });
         });
 
@@ -79,13 +79,6 @@ describe("Handler model", function() {
            .query({where:{handler: teacher2.get("id"), deleted:0 }})
            .fetchOne()
            .then((handler) => assert(!handler));
-        });
-
-        it("removes handler:<id> tag from the ticket", () => {
-            return ticket.tags().query({where:{deleted: 0}}).fetch()
-            .then((tags) => {
-                assert(!tags.findWhere({ tag: "handler:" + teacher2.get("id") }));
-            });
         });
 
         it("other handlers are not removed", () => {
