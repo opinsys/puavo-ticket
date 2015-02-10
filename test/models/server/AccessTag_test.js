@@ -34,24 +34,6 @@ describe("Access tags: User", function() {
         .then(() => teacher.load("accessTags"));
     });
 
-    describe("on creation", function() {
-
-        it("has follower access tag", function() {
-            assert(
-                teacher.rel("accessTags")
-                .findWhere({ tag: "follower:" + teacher.get("id") })
-            );
-        });
-
-        it("has handler access tag", function() {
-            assert(
-                teacher.rel("accessTags")
-                .findWhere({ tag: "handler:" + teacher.get("id") })
-            );
-        });
-
-    });
-
     describe("without matching access tag", function() {
 
         var tickets;
