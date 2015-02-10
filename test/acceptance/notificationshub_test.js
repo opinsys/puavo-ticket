@@ -73,6 +73,7 @@ describe("ticket handlers", function() {
     it("can navigate to the ticket via the notification", function() {
         return browser
         .elementByCss(".NotificationsHub-label").click()
+        .delay(1000)
         .elementByCss(".NotificationsHub-item a").click()
         .waitForElementByCss(".Discuss-title").text()
         .then(function(val) {
