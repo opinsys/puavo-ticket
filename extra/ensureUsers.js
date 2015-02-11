@@ -2,6 +2,8 @@
 var Promise = require("bluebird");
 var argv = require('minimist')(process.argv.slice(2));
 var s = require("underscore.string");
+var winston = require('winston');
+winston.add(winston.transports.File, { filename: 'ensureUsers-' + Date.now() + '.log' });
 
 require("app/db");
 var Puavo = require("app/utils/Puavo");
@@ -25,11 +27,18 @@ Promise.map(argv._, function(organisationDomain) {
     .each(function(userData) {
         return User.ensureUserFromJWTToken(userData)
         .catch(User.EmailCollisionError, function(err) {
-            console.error("email collision", userData);
+            winston.error("email collision", {user: userData, error: err.message});
+        })
+        .catch(function(err) {
+            winston.error("cannot ensure", {user: userData, error: err.message});
         });
     })
     .then(function(users) {
-        console.log("Ensured", users.length, "users from", organisationDomain);
+        winston.info("Users ensured", {
+            count: users.length,
+            organisation: organisationDomain
+        });
+
         return users.length;
     });
 }, {concurrency: 1})

@@ -8,7 +8,8 @@ var crypto = require('crypto');
 var exec = require("child_process").exec;
 var request = require("request");
 var Readable = require('stream').Readable;
-var prettyMs = require("pretty-ms");
+var winston = require('winston');
+winston.add(winston.transports.File, { filename: 'import-' + Date.now() + '.log' });
 
 var Ticket = require("app/models/server/Ticket");
 var User = require("app/models/server/User");
@@ -24,7 +25,11 @@ if (!process.argv[2]) {
 
 function addAttachments(rawComment, comment) {
     return Promise.map(rawComment.attachments, function(attachment) {
-        console.log("Fetching attachment", attachment.url);
+        winston.info("Fetching attachment", {
+            url:attachment.url,
+            comment: comment.toJSON()
+        });
+
         return new Promise(function(resolve, reject){
             var req = new Readable().wrap(request(attachment.url)).on("error", reject);
             resolve(comment.addAttachment(
@@ -32,6 +37,12 @@ function addAttachments(rawComment, comment) {
                 attachment.dataType,
                 req
             ));
+        })
+        .catch(function(err) {
+            winston.error("Attachment fetch failed", {
+                url: attachment.url,
+                comment: comment.toJSON()
+            });
         });
     });
 }
@@ -39,7 +50,9 @@ function addAttachments(rawComment, comment) {
 function setStatus(ticket, creator, rawTicket) {
             var status = rawTicket.status;
             if (!status) {
-                console.error("Invalid status in".red, rawTicket.zendesk_id, rawTicket.title);
+                winston.warn("Invalid status in zendeskID:%s title:%s", rawTicket.zendesk_id, rawTicket.title, {
+                    rawTicket: rawTicket
+                });
                 status = "open";
             }
 
@@ -95,9 +108,12 @@ function ensureUser(data) {
 
 function addTicket(rawTicket) {
     if (!rawTicket.title) {
-        console.log("Ticket has no title".red, rawTicket.zendesk_id);
-        return Promise.resolve();
+        winston.warn("Ticket has no title zendeskID:%s", rawTicket.zendesk_id, {
+            rawTicket: rawTicket
+        });
+        rawTicket.title = "Ei otsikkoa. Zendesk ID: " + rawTicket.zendesk_id;
     }
+
     return ensureUser(rawTicket.submitter)
     .then(function(creator) {
         return Ticket.fetchOrCreate({
@@ -109,10 +125,6 @@ function addTicket(rawTicket) {
                 comments: 0,
                 newComments: 0
             };
-
-            if (ticket.isNew()) {
-                console.log("Adding new ticket from zendesk id".yellow, ticket.get("zendeskTicketId"));
-            }
 
             ticket.set({
                 createdById: creator.get("id"),
@@ -165,11 +177,9 @@ function addTicket(rawTicket) {
             return Promise.each(rawTicket.comments, function addOtherComment(rawComment) {
 
                 if (!rawComment.commenter) {
-                    console.log("------------");
-                    console.log("NO COMMENTER on ticket", rawTicket.zendesk_id);
-                    console.log("-----------------------------------------");
-                    console.log(rawComment.comment);
-                    console.log("-----------------------------------------");
+                    winston.error("NO COMMENTER on ticket zendeskID:%s", rawTicket.zendesk_id, {
+                        rawComment: rawComment
+                    });
                     return;
                 }
 
@@ -224,6 +234,7 @@ function addTicket(rawTicket) {
 
 
 var count = 0;
+var durations = 0;
 
 function processTickets(tickets) {
     if (tickets.length === 0) return;
@@ -231,26 +242,29 @@ function processTickets(tickets) {
     return addTicket(tickets[0])
     .then(function(ticket) {
         count++;
-        var diff = Date.now() - started;
+        var diff = (Date.now() - started) / 1000;
         if (ticket) {
-            console.log(
-                tickets.length + ". ",
-                "ID:", ticket.get("id"),
+            durations += diff;
+            var avg = durations / count;
+            var remainingTickets = tickets.length - 1;
 
-                "zendeskID:", ticket.get("zendeskTicketId"),
+            winston.info("Ticket %s/%s synced", count, remainingTickets, {
+                ID: ticket.get("id"),
+                zendeskID: ticket.get("zendeskTicketId"),
+                isNew: ticket.meta.isNew,
+                newComments: ticket.meta.newComments,
+                totalComments: ticket.meta.comments,
+                tookSec: diff,
+                avgSec:  avg,
+                etaMin: (avg * remainingTickets) / 60
+            });
 
-                "isNew:", ticket.meta.isNew,
-
-                "comments:", ticket.meta.newComments + "/" + ticket.meta.comments,
-
-                "Took:", prettyMs(diff)
-            );
         }
         return processTickets(tickets.slice(1));
     });
 }
 
-exec("extra/zendesk2json.rb " + process.argv[2], {maxBuffer: 1024 * 5000}, function(err, stdout, stderr) {
+exec("extra/zendesk2json.rb " + process.argv[2], {maxBuffer: 1024 * 50000}, function(err, stdout, stderr) {
     console.error(stderr);
     if (err) {
         console.error("Failed to execute extra/zendesk2json.rb");
