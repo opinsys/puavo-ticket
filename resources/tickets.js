@@ -22,11 +22,14 @@ app.get("/api/tickets", function(req, res, next) {
     var tickets = Ticket.collection()
     .byUserVisibilities(req.user);
 
+    var limit = 99;
     if (req.query.limit) {
-        tickets.query(function(q) {
-            q.limit(parseInt(req.query.limit, 10));
-        });
+        limit = parseInt(req.query.limit, 10);
     }
+
+    tickets.query(function(q) {
+        q.limit(limit);
+    });
 
     if (req.query.offset) {
         tickets.query(function(q) {
