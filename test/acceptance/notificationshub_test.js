@@ -23,8 +23,8 @@ describe("ticket handlers", function() {
                     "heroes.opinsys.net"
                  ),
                 User.ensureUserByUsername(
-                    "bob",
-                    "hogwarts.opinsys.net"
+                    "han.solo",
+                    "heroes.opinsys.net"
                  )
              );
         })

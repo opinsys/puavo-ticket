@@ -94,63 +94,6 @@ https://support.opinsys.fi/tickets/1
             });
     });
 
-    it("is not listed with bad visibility", function() {
-        return Ticket.collection().byVisibilities(["badvisibility"])
-            .fetch()
-            .then(function(coll) {
-                assert.equal(0, coll.size());
-            });
-    });
-
-    it("has personal visibility for the creator", function() {
-        return Ticket.collection().byVisibilities([this.user.getPersonalVisibility()])
-            .fetch({ withRelated: "comments" })
-            .then(function(coll) {
-                // does not list other tickets by other users
-                assert.equal(1, coll.size());
-                assert.equal(
-                    "Computer does not work :(",
-                    coll.first().getDescription()
-                );
-            });
-    });
-
-    it("has organisation admin visibility", function() {
-        return Ticket.collection().byVisibilities([this.user.getOrganisationAdminVisibility()])
-            .fetch({ withRelated: "comments" })
-            .then(function(coll) {
-                assert.equal(2, coll.size(), "does list all tickets in the organisation");
-
-                assert(coll.find(function(m) {
-                    return m.getDescription() === "Computer does not work :(";
-                }));
-
-                assert(coll.find(function(m) {
-                    return m.getDescription() === "Other ticket, by other user";
-                }));
-
-            });
-    });
-
-    it("ticket is not fetched in Ticket.collection().byVisibilities(...) for a soft deleted visibility", function() {
-        var self = this;
-        return Ticket.collection().byVisibilities([self.user.getPersonalVisibility()])
-            .fetch({ withRelated: "visibilities" })
-            .then(function(coll) {
-                var visibility = coll.first().related("visibilities")
-                .findWhere({
-                    entity: self.user.getPersonalVisibility()
-                });
-
-                return visibility.softDelete(self.user);
-            })
-            .then(function() {
-                return Ticket.collection().byVisibilities([self.user.getPersonalVisibility()]).fetch();
-            })
-            .then(function(coll) {
-                assert.equal(0, coll.size());
-            });
-    });
 
     it("can have comments", function() {
         var self = this;

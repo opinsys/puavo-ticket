@@ -180,7 +180,7 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
     byUserVisibilities: function(user) {
         // Manager is not restricted by visibilities. Just return everything.
         if (user.acl.canSeeAllTickets()) return this;
-        else return this.byVisibilities(user.getVisibilities());
+        else return this.withAccessTags(user);
     },
 
     /**
@@ -195,12 +195,7 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
      * @return {models.server.Base.Collection} with models.server.Ticket models
      */
     byVisibilities: function(visibilities) {
-        return this.query(function(queryBuilder) {
-            queryBuilder
-            .join("visibilities", "tickets.id", "=", "visibilities.ticketId")
-            .whereIn("visibilities.entity", visibilities)
-            .whereNull("visibilities.deletedAt");
-        });
+        throw new Error("use this.withAccessTags(user) instead");
     },
 
 
