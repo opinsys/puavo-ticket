@@ -164,7 +164,8 @@ var ViewEditor = React.createClass({
                         />
 
                         <Input
-                            type="text"
+                            type="textarea"
+                            rows="5"
                             label={<span>Kysely{this.state.searching &&
                                 <Fa className="ViewEditor-save-spinner" icon="spinner" spin />}</span>}
                             className="ViewEditor-query-input"
