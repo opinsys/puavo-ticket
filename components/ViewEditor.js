@@ -198,15 +198,21 @@ var ViewEditor = React.createClass({
 
                 </div>
 
+                <hr />
+
                 <p>
                 Haetaan seuraavilla tageilla
                 </p>
-                <p>
-                    {tagGroups.map(function(tags) {
-                        return <Badge key={tags} >{tags.split("|").join(" tai ")}</Badge>;
-                    })}
-                </p>
+                <ul>
+                    {tagGroups.map(tags => <li key={tags} >
+                        <span>{tags.split("|").map(tag => <span><Badge>{tag}</Badge></span>)}</span>
+                    </li>)}
+
+                </ul>
                 {tickets && <div className="ViewEditor-preview">
+
+
+                    {tickets.size()} kpl
                     <TicketList title="Mukautettu listaus" user={user} tickets={tickets.toArray()} />
                 </div>}
 
