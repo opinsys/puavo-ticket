@@ -5,6 +5,8 @@ set -eux
 export DISPLAY=:99
 export NODE_ENV=test
 
+ls -la /
+
 sudo apt-get update
 sudo apt-get install -y wget make devscripts git
 
