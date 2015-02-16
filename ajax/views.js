@@ -11,7 +11,7 @@ Actions.views.fetch.listen(function(onSuccess) {
     View.collection().fetch()
     .catch(Actions.error.haltChain("Näkymien lataaminen epäonnistui"))
     .then(Actions.views.set)
-    .then(Actions.views.fetchCount)
+    .then(Actions.views.fetchCounts)
     .then(function() {
         if (typeof onSuccess === "function") {
             process.nextTick(onSuccess);
