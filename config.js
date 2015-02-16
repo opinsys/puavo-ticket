@@ -1,4 +1,4 @@
-require("./6to5-register");
+require("./babel-register");
 var _ = require("lodash");
 var nodemailer = require("nodemailer");
 var stubTransport = require("nodemailer-stub-transport");

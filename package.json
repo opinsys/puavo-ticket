@@ -15,9 +15,9 @@
     ]
   },
   "dependencies": {
-    "6to5": "^3.0.0",
     "apidoc": "~0.6.0",
     "axios": "^0.4.1",
+    "babel": "^4.0.1",
     "backbone": "~1.1.2",
     "backbone.cocktail": "~0.5.8",
     "bluebird": "^2.0.0",

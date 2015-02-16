@@ -298,16 +298,16 @@ debug.enable("app:*");
 
 ### ECMAScript 6
 
-We use [6to5](http://6to5.github.io/) (node) and react-tools es6 option
+We use [babel](https://babeljs.io/) (node) and react-tools es6 option
 (browser) for ECMAScript 6 support. Please use the features conservatively.
 
 Only
 
-  - [arrow functions](http://6to5.github.io/features.html#arrow-functions)
-  - [classes](http://6to5.github.io/features.html#classes-1)
-  - [destructuring](http://6to5.github.io/features.html#destructuring)
-  - [rest](http://6to5.github.io/features.html#rest-parameters) and [spread](http://6to5.github.io/features.html#rest-parameters) operators
-  - [template literals](http://6to5.github.io/features.html#template-literals)
+  - arrow functions
+  - classes
+  - destructuring
+  - rest
+  - template literals
 
 Mainly fat arrows and classes for now.
 
