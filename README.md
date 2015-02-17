@@ -1,5 +1,7 @@
 # puavo-ticket
 
+[![Join the chat at https://gitter.im/opinsys/puavo-ticket](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/opinsys/puavo-ticket?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Cool new ticketing system with deep puavo integration.
 
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
