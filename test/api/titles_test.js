@@ -90,7 +90,7 @@ describe("/api/tickets/:id/titles", function() {
     it("other users cannot set title to other tickets", function() {
         var self = this;
 
-        return self.ticket.addVisibility(self.otherUser.getPersonalVisibility(), self.user)
+        return self.ticket.addTag("user:" + self.otherUser.get("id"), self.user)
         .then(function() {
             return helpers.loginAsUser(helpers.user.teacher2);
         })
