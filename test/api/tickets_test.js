@@ -130,34 +130,6 @@ describe("/api/tickets", function() {
             });
     });
 
-    it("user in the same organisation can see the ticket if ticket has the organisation visibility", function() {
-        var self = this;
-        return this.agent
-            .post("/api/tickets/" + this.ticket.id + "/visibilities")
-            .set("x-csrf-token", self.agent.csrfToken)
-            .send({
-                visibilities: [ "organisation:" + helpers.user.teacher2.organisation_domain ]
-            })
-            .promise()
-            .then(function(res) {
-                assert.equal(200, res.status, res.text);
-                assert.equal(res.body[0].entity, "organisation:testing.opinsys.fi");
-            })
-            .then(function() {
-                return helpers.loginAsUser(helpers.user.teacher2);
-            })
-            .then(function(agent) {
-                return agent.get("/api/tickets").promise();
-            })
-            .then(function(res) {
-                assert.equal(res.status, 200);
-                assert.equal(1, res.body.length);
-                assert(
-                    _.find(res.body[0].titles, { title: "A title" }),
-                    "has a title"
-                );
-            });
-    });
 
     it("can get single ticket using GET", function() {
         var self = this;
