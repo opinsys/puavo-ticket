@@ -9,7 +9,6 @@ var Base = require("./Base");
 var Comment = require("./Comment");
 var Tag = require("./Tag");
 var RelatedUser = require("./RelatedUser");
-var Visibility = require("./Visibility");
 var Follower = require("./Follower");
 var Handler = require("./Handler");
 var Device = require("./Device");
@@ -135,7 +134,6 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
 
                 return Promise.join(
                     status,
-                    ticket.addVisibility(creator.getOrganisationAdminVisibility(), creator),
                     ticket.addTag("organisation:" + organisation, creator)
                 );
             });
@@ -185,49 +183,9 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
         return this.hasMany(Title, "ticketId");
     },
 
-    /**
-     * @method visibilities
-     * @return {models.server.Visibility}
-     */
-    visibilities: function() {
-        return this.hasMany(Visibility, "ticketId");
-    },
 
     notifications: function() {
         return this.hasMany(Notification, "ticketId");
-    },
-
-    /**
-     * Add visibility to the ticket. If the visibility already exists for the
-     * ticket the existing visibility is returned.
-     *
-     * Visibility strings can be accessed for example from User#getVisibilities()
-     *
-     * @method addVisibility
-     * @param {String} visibility Visibility string
-     * @param {models.server.User|Number} addedBy User model or id of user who adds the visibility
-     * @param {String} [comment] Optional comment for the visibility
-     * @return {Bluebird.Promise} with models.server.Visibility
-     */
-    addVisibility: function(visibility, addedBy, comment) {
-        var self = this;
-        if (typeof visibility !== "string" || !visibility) {
-            throw new Error("visibility must be a non empty string");
-        }
-
-        return Visibility.forge({
-                ticketId: self.get("id"),
-                entity: visibility,
-            }).fetch()
-            .then(function(existingVisibility) {
-                if (existingVisibility) return existingVisibility;
-                return Visibility.forge({
-                    ticketId: self.get("id"),
-                    entity: visibility,
-                    comment: comment,
-                    createdById: Base.toId(addedBy)
-                }).save();
-            });
     },
 
     /**
@@ -416,7 +374,6 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
         })
         .then((followerRel) => followerRel.ensureSaved(addedBy))
         .tap((followerRel) => Promise.join(
-            this.addVisibility(follower.getPersonalVisibility(), addedBy),
             this.ensureNotification(follower),
             this.addTag("user:" + follower.get("id"), addedBy)
         ));
