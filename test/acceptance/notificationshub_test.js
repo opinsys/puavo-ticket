@@ -11,52 +11,41 @@ var browser = aHelpers.browser;
 var User = require("app/models/server/User");
 var Ticket = require("app/models/server/Ticket");
 
-describe("ticket handlers", function() {
+describe("NotificationsHub", function() {
+    var user, handler, ticket;
 
     before(function() {
-        var self = this;
         return helpers.clearTestDatabase()
-         .then(function() {
-             return Promise.join(
-                User.ensureUserByUsername(
-                    "bruce.wayne",
-                    "heroes.opinsys.net"
-                 ),
-                User.ensureUserByUsername(
-                    "han.solo",
-                    "heroes.opinsys.net"
-                 )
-             );
-        })
-        .spread(function(user, manager) {
+        .then(() => Promise.join(
+            User.ensureUserByUsername(
+                "bruce.wayne",
+                "heroes.opinsys.net"
+            ).then(u => user = u),
+            User.ensureUserByUsername(
+                "han.solo",
+                "heroes.opinsys.net"
+            ).then(u => handler = u)
+        ))
+        .then(() => {
             return Ticket.create(
                 "Capture Joker",
                 "That dude is evil!",
                 user
             )
+            .tap(t => ticket = t)
             .then(function(ticket) {
-                return ticket.addHandler(manager, manager);
+                return ticket.addHandler(handler, handler);
             });
         })
-        .then(function(ticket) {
-            self.ticket = ticket;
-            return browser.init({ browserName: aHelpers.browserName });
-        })
-        .then(function() {
-            return browser.get(aHelpers.url);
-        })
-        .then(function() {
-            return aHelpers.login("bob@hogwarts.opinsys.net", "secret");
-        });
+        .then(() => browser.init({ browserName: aHelpers.browserName }))
+        .then(() => browser.get(aHelpers.url))
+        .then(() => aHelpers.login(handler.getDomainUsername(), "secret"));
     });
 
-    after(function() {
-        return browser.quit();
-    });
+    after(() => browser.quit());
 
 
-
-    it("has notification about new ticket", function() {
+    it("has notification about handled ticket", function() {
         return browser
         .elementByCss(".NotificationsHub-label").text()
         .then(function(val) {
