@@ -16,6 +16,10 @@ wget -qO - https://github.com/opinsys/puavo-standalone/raw/master/setup.sh | sud
 # Install build dependencies
 sudo make install-build-dep
 
+# Fix /tmp/babel.json permission issue
+sudo stop puavo-ticket
+sudo rm -f /tmp/babel.json
+
 # Build debian package
 make deb
 
