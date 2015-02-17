@@ -4,6 +4,7 @@ set -eux
 
 export DISPLAY=:99
 export NODE_ENV=test
+export BABEL_DISABLE_CACHE=1
 
 ls -la /
 
