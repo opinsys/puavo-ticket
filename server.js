@@ -8,7 +8,6 @@ var STARTED = Date.now();
 var VERSION = "loading";
 var HOSTNAME = require("os").hostname();
 require("moment/locale/fi");
-console.log("NODE_ENV is ", process.env.NODE_ENV);
 
 if (!PRODUCTION) {
     // Use environment variable to set the Bluebird long stack traces in order
@@ -23,6 +22,7 @@ if (!PRODUCTION) {
 
 
 require("./db");
+var winston = require("winston");
 var Promise = require("bluebird");
 var express = require("express");
 var Server = require("http").Server;
@@ -41,11 +41,30 @@ var csrf = require("csurf");
 var session = require("express-session");
 var RedisStore = require("connect-redis")(session);
 
+var WinstonChild = require("./utils/WinstonChild");
 var User = require("./models/server/User");
 var Acl = require("./models/Acl");
 var Ticket = require("./models/server/Ticket");
 
 var config = require("./config");
+winston.add(winston.transports.File, { filename: config.logpath, level: "debug" });
+
+// WTF somebody is already listening to this
+process.removeAllListeners('uncaughtException');
+process.on('uncaughtException', function(err) {
+    winston.error("uncaughtException", {error: {
+        message: err.message,
+        stack: err.stack
+    }});
+
+    // use some timeout to allow logs to flush
+    setTimeout(function() {
+        process.exit(99);
+    }, 2000);
+});
+
+winston.info("process starting");
+
 /**
  * http://expressjs.com/4x/api.html#req.params
  *
@@ -60,9 +79,11 @@ var config = require("./config");
  * @class Response
  */
 var app = express();
+app.use(require("./utils/middleware/createResponseLogger")());
 var server = Server(app);
 var sio = require("socket.io")(server);
 app.sio = sio;
+
 
 var sessionMiddleware = session({
     name: "puavo-ticket-sid",
@@ -83,6 +104,11 @@ sio.use(function(socket, next) {
     })
     .then(function(user) {
         socket.user = user;
+        socket.logger = new WinstonChild(winston, {
+            userId: user.get("id"),
+            sio: true
+        });
+        socket.logger.info("socket.io auth ok");
         debug("%s authenticated with socket.io", user);
     })
     .then(next.bind(this, null))
@@ -117,6 +143,7 @@ sio.sockets.on("connection", function(socket) {
     });
 
     socket.on("disconnect", function() {
+        socket.logger.info("socket.io disconnect");
         debug(
             "%s disconnected from socket.io",
             socket.user
@@ -126,7 +153,6 @@ sio.sockets.on("connection", function(socket) {
 });
 
 app.use(require("./utils/middleware/createSlowInternet")());
-app.use(require("./utils/middleware/createResponseLogger")());
 app.use(bodyParser());
 app.use(cookieParser());
 app.use(sessionMiddleware);
@@ -152,13 +178,14 @@ app.use(jwtsso({
 
     hook: function(token, done) {
         User.ensureUserFromJWTToken(token)
+        .then(function(user) {
+            winston.info("user authenticated", {userId: user.get("id")});
+        })
         .then(done.bind(this, null))
         .catch(done);
     }
 
 }));
-
-
 
 app.use("/styles", serveStatic(__dirname + "/styles"));
 app.use("/components", serveStatic(__dirname + "/components"));
@@ -208,6 +235,10 @@ app.use(function ensureAuthentication(req, res, next) {
             return res.redirect("/");
         }
         req.user = user;
+        req.logger = new WinstonChild(req.logger, {
+            userId: user.get("id"),
+            req: true
+        });
         next();
     })
     .catch(next);
@@ -292,6 +323,11 @@ app.use("/api", function(err, req, res, next) {
     }
 
     if (err instanceof Acl.PermissionDeniedError) {
+        req.logger.error("acl permission error", {
+            error: {
+                message: err.message
+            }
+        });
         return res.status(403).json({
             error: "permission denied",
             message: err.message
@@ -303,12 +339,21 @@ app.use("/api", function(err, req, res, next) {
 
 app.use(function(err, req, res, next) {
     if (err instanceof User.EmailCollisionError) {
+        req.logger.error("email collision", err.meta);
         return res.status("406").render("emailCollisionError.ejs");
     }
 
     if (err.code === "EBADCSRFTOKEN") {
+        req.logger.error("invalid csrf token");
         return res.status(403).json({ error: "invalid csrf token" });
     }
+
+    req.logger.error("unhandled error", {
+        error: {
+            message: err.message,
+            stack: err.stack
+        }
+    });
 
     if (process.env.NODE_ENV !== "test") return next(err);
     res.status(500).send(err.message + "\n" + err.stack);
@@ -323,6 +368,7 @@ if (require.main === module) {
 
         var addr = server.address();
         console.log('Listening on  http://%s:%d', addr.address, addr.port);
+        winston.info("process listening");
     });
 
     if (!PRODUCTION && !process.env.START_TEST_SERVER) {

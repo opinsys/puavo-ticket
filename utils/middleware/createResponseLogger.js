@@ -1,6 +1,9 @@
 "use strict";
 
-var debug = require("debug")("puavo-ticket:utils/middleware/createResponseLogger");
+var url = require("url");
+var winston = require("winston");
+var WinstonChild = require("../WinstonChild");
+var uuid = require("uuid");
 
 function noop() {}
 
@@ -17,8 +20,12 @@ function noop() {}
  */
 function createResponseLogger(){
   return function(req, res, next){
-    // express Router middlewares can alter this. Save it before continuing.
-    var reqUrl = req.url;
+    var child = new WinstonChild(winston, {
+        method: req.method,
+        path: url.parse(req.url).pathname,
+        reqUuid: uuid.v4()
+    });
+    req.logger = child;
 
     next = next || noop;
     if (res._responseTime) return next();
@@ -28,7 +35,18 @@ function createResponseLogger(){
     res.writeHead = function(){
       var duration = Date.now() - start;
       res.setHeader('X-Response-Time', duration + 'ms');
-      debug(req.method + " " + reqUrl + " " + duration + 'ms');
+
+      var meta = {
+        duration: duration,
+        headers: req.headers,
+        statusCode: res.statusCode
+      };
+
+      if (req.body) meta.body = req.body;
+      if (req.params) meta.body = req.params;
+
+      req.logger.info("request end", meta);
+
       writeHead.apply(res, arguments);
     };
     next();

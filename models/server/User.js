@@ -163,7 +163,12 @@ var User = Base.extend({
                                    emailUser.get("externalData").organisation_domain +
                                    ", username: " +
                                    emailUser.get("externalData").organisation_domain );
-                            throw new User.EmailCollisionError("Email address collision!");
+                            var err = new User.EmailCollisionError("Email address collision!");
+                            err.meta = {
+                                token: token,
+                                collidingUser: emailUser.toJSON()
+                            };
+                            throw err;
                         }
 
                         return emailUser;

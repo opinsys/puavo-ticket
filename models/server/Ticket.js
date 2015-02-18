@@ -3,6 +3,7 @@ var fs = require("fs");
 var _ = require("lodash");
 var Promise = require("bluebird");
 var crypto = require("crypto");
+var winston = require("winston");
 
 var config = require("../../config");
 var Base = require("./Base");
@@ -213,6 +214,12 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Bluebird.Promise} with models.server.Comment
      */
     addComment: function(comment, user, opts) {
+        winston.debug("adding comment", {
+            ticketId: this.get("id"),
+            comment: comment,
+            addedById: Base.toId(user)
+        });
+
         var self = this;
         return Promise.join(
             Comment.forge({
@@ -243,6 +250,12 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Bluebird.Promise} with models.server.Title
      */
     addTitle: function(title, user, opts) {
+        winston.debug("adding title", {
+            ticketId: this.get("id"),
+            title: title,
+            addedById: Base.toId(user)
+        });
+
         return Title.forge({
             ticketId: this.get("id"),
             title: title,
@@ -266,6 +279,11 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Bluebird.Promise} with models.server.Tag
      */
     addTag: function(tagName, user, opts) {
+        winston.debug("adding tag", {
+            ticketId: this.get("id"),
+            tag: tagName,
+            addedById: Base.toId(user)
+        });
         if (Base.isModel(tagName))  tagName = tagName.get("tag");
         var self = this;
 
@@ -300,6 +318,11 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Bluebird.Promise}
      */
     removeTag: function(tag, removedBy, options){
+        winston.debug("removing tag", {
+            ticketId: this.get("id"),
+            tag: tag,
+            removedById: Base.toId(removedBy)
+        });
         var self = this;
         return Tag.collection()
             .query(queries.notSoftDeleted)
@@ -367,6 +390,11 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Bluebird.Promise} with models.server.Handler
      */
     addFollower(follower, addedBy) {
+        winston.debug("adding follower", {
+            ticketId: this.get("id"),
+            handlerId: Base.toId(follower),
+            addedById: Base.toId(addedBy)
+        });
         return Follower.fetchOrCreate({
             ticketId: this.get("id"),
             followedById: Base.toId(follower),
@@ -418,6 +446,12 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Bluebird.Promise} with models.server.Handler
      */
     addHandler(user, addedBy) {
+        winston.debug("adding handler", {
+            ticketId: this.get("id"),
+            handlerId: Base.toId(user),
+            addedById: Base.toId(addedBy)
+        });
+
         return Handler.fetchOrCreate({
             ticketId: this.get("id"),
             handler: Base.toId(user),
@@ -441,6 +475,11 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
     },
 
     removeHandler(user, removedBy) {
+        winston.debug("removing handler", {
+            ticketId: this.get("id"),
+            handlerId: Base.toId(user),
+            removedById: Base.toId(removedBy)
+        });
        return this.handlers()
        .query({ where: {
            handler: Base.toId(user),
@@ -480,6 +519,11 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      *
      */
     removeFollower: function(user, removedBy){
+        winston.debug("removing follower", {
+            ticketId: this.get("id"),
+            followerId: Base.toId(user),
+            removedById: Base.toId(removedBy)
+        });
         return this.followers()
         .query((q) => q.where({followedById: user.get("id")}))
         .fetch()
@@ -594,6 +638,11 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Bluebird.Promise} with models.server.Notification
      */
     markAsRead: function(user, options) {
+        winston.debug("marking as read", {
+            ticketId: this.get("id"),
+            userId: Base.toId(user)
+        });
+
         var self = this;
         return Notification.fetchOrCreate({
             ticketId: self.get("id"),
@@ -703,7 +752,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
             );
 
             var from = "Opinsys tukipalvelu <"+ self.getReplyEmailAddress() +">";
-            return self.sendMail({
+            var emailData = {
                 from: from,
                 replyTo: from,
                 to: email,
@@ -712,7 +761,9 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
                     comments: comments,
                     url: self.getURL()
                 })
-            })
+            };
+            winston.info("Sending email", {emailData});
+            return self.sendMail(emailData)
             .then(function() {
                 return self.markAsRead(user, { emailOnly: true });
             });

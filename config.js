@@ -1,5 +1,6 @@
 require("./babel-register");
 var _ = require("lodash");
+var winston = require("winston");
 var nodemailer = require("nodemailer");
 var stubTransport = require("nodemailer-stub-transport");
 var smtpTransport = require("nodemailer-smtp-transport");
@@ -9,6 +10,7 @@ if (typeof window !== "undefined") {
 }
 
 var config = {
+    logpath: __dirname + "/log/production.json.log",
     database: {
         connection: {
             host: "127.0.0.1",
@@ -32,12 +34,20 @@ try {
 }
 
 if (process.env.NODE_ENV === "test" || process.env.ACCEPTANCE) {
+    winston.remove(winston.transports.Console);
     config.database.connection = {
         host: "127.0.0.1",
         user: "puavo-ticket",
         password: "password",
         database: "puavo-ticket-test"
     };
+
+    if (process.env.ACCEPTANCE) {
+        config.logpath =  __dirname + "/log/acceptance.json.log";
+    } else {
+        config.logpath =  __dirname + "/log/test.json.log";
+    }
+
     config.domain = "support.opinsys.net";
     config.puavo.restServerAddress = "https://test-api.opinsys.example";
     config.puavo.sharedSecret = "secret";

@@ -70,7 +70,6 @@ function isMultipartPost(req) {
  * @return {Bluebird.Promise}
  */
 function parseMailgunPost(req) {
-    debug("Receiving %s POST from Mailgun", req.get("content-type"));
 
     // If not multipart assume body-parser parsed
     // application/x-www-form-urlencoded or application/json
@@ -142,6 +141,7 @@ function parseMailgunPost(req) {
 function receiveEmail(email, req, res) {
 
     if (!email.isReply()) {
+        req.logger.info("Creating new ticket from email", {email: email.toJSON()});
         debug(
             "Creating new ticket from '%s' -> '%s'",
             email.getFrom(), email.getRecipient()
@@ -150,8 +150,12 @@ function receiveEmail(email, req, res) {
         .then(function(ticket) {
             var comment = ticket.relations.comments.first();
             var user = comment.relations.createdBy;
-            debug("User %s created new ticket %s from email",
-                  user.get("id"), ticket.get("id"));
+            req.logger.info("Created new ticket from email", {ticket: {
+                externalId: user.getExternalId(),
+                userId: user.get("id"),
+                ticketId: ticket.get("id"),
+                commentId: comment.get("id")
+            }});
             res.json({
                 externalId: user.getExternalId(),
                 userId: user.get("id"),
@@ -161,10 +165,7 @@ function receiveEmail(email, req, res) {
         });
     }
 
-    debug(
-        "Adding comment from '%s' -> '%s'",
-        email.getFrom(), email.getRecipient()
-    );
+    req.logger.info("Adding comment from email", {email: email.toJSON()});
     return Ticket.byId(email.getTicketId()).fetch()
     .then(function(ticket) {
         if (!ticket) {
@@ -184,8 +185,12 @@ function receiveEmail(email, req, res) {
         .then(function(comment) {
             var user = email.user;
 
-            debug("User %s created new reply %s for ticket %s from email",
-                  user.get("id"), comment.get("id"), ticket.get("id"));
+            req.logger.info("Created new comment from email", {ticket: {
+                externalId: user.getExternalId(),
+                userId: user.get("id"),
+                ticketId: ticket.get("id"),
+                commentId: comment.get("id")
+            }});
 
             return ticket.sendLiveNotifications(comment, req.sio)
             .then(function() {
