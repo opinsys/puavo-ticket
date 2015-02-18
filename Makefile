@@ -3,7 +3,7 @@ export PATH := node_modules/.bin:$(PATH)
 prefix ?= /usr/local
 
 # Use jsxhint wrapper since we use JSX for the React components
-JSHINT=jsxhint
+JSHINT=jsxhint --babel
 KARMA=node_modules/karma/bin/karma
 
 all: npm doc install-git-hooks js css-min protip
