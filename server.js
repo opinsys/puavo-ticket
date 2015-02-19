@@ -49,19 +49,22 @@ var Ticket = require("./models/server/Ticket");
 var config = require("./config");
 winston.add(winston.transports.File, { filename: config.logpath, level: "debug" });
 
-// WTF somebody is already listening to this
-process.removeAllListeners('uncaughtException');
-process.on('uncaughtException', function(err) {
-    winston.error("uncaughtException", {error: {
-        message: err.message,
-        stack: err.stack
-    }});
+if (process.env.NODE_ENV !== "test") {
+    // WTF somebody is already listening to this
+    process.removeAllListeners('uncaughtException');
+    process.on('uncaughtException', function(err) {
+        winston.error("uncaughtException", {error: {
+            message: err.message,
+            stack: err.stack
+        }});
 
-    // use some timeout to allow logs to flush
-    setTimeout(function() {
-        process.exit(99);
-    }, 2000);
-});
+        // use some timeout to allow logs to flush
+        console.error("Captured uncaughtException and exiting soon!");
+        setTimeout(function() {
+            process.exit(666);
+        }, 2000);
+    });
+}
 
 winston.info("process starting");
 
