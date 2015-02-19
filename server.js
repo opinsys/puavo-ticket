@@ -55,6 +55,7 @@ if (process.env.NODE_ENV !== "test") {
     process.on('uncaughtException', function(err) {
         winston.error("uncaughtException", {error: {
             message: err.message,
+            meta: err.meta || null,
             stack: err.stack
         }});
 
@@ -354,6 +355,7 @@ app.use(function(err, req, res, next) {
     req.logger.error("unhandled error", {
         error: {
             message: err.message,
+            meta: err.meta || null,
             stack: err.stack
         }
     });
