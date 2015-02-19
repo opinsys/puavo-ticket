@@ -9,7 +9,7 @@ env BABEL_DISABLE_CACHE=1
 
 pre-start script
     touch /var/log/puavo-ticket.json.log
-    chown puavo-ticket:puavo-ticket /var/log/puavo-ticket.json.log
+    chown puavo-ticket /var/log/puavo-ticket.json.log
     chmod a+r /var/log/puavo-ticket.json.log
 end script
 
