@@ -6,6 +6,7 @@ var Promise = require("bluebird");
 require("../../db");
 var Base = require("./Base");
 var User = require("./User");
+var Ticket = require("./Ticket");
 var parseReplyEmailAddress = require("../../utils/parseReplyEmailAddress");
 
 var STATES = {
@@ -141,6 +142,10 @@ var Email = Base.extend({
         return parseReplyEmailAddress(this.get("email").fields.recipient);
     },
 
+    getContentUUID() {
+        return this.get("email").fields.recipient + this.getBody();
+    },
+
     /**
      * Get raw sender email
      *
@@ -214,6 +219,15 @@ var Email = Base.extend({
                 }).save();
             }).return(ticket);
         });
+    },
+
+    submitAsReplyAuto() {
+        if (!this.isReply()) {
+            return Promise.reject(new Error("Cannot create reply from a non reply email"));
+        }
+
+        return Ticket.byId(this.getTicketId()).fetch({require:true})
+        .then(ticket => this.submitAsReply(ticket));
     },
 
     /**
