@@ -18,10 +18,10 @@ protip:
 	@echo
 
 repl:
-	@node extra/repl.js
+	@babel-node extra/repl.js
 
 psql:
-	@node extra/psql.js
+	@babel-node extra/psql.js
 
 npm:
 	npm install
@@ -35,7 +35,7 @@ drop-db:
 	sudo -u postgres psql -c "drop database \"puavo-ticket-test\"";
 
 drop-tables:
-	node extra/dropAllTables.js
+	babel-node extra/dropAllTables.js
 
 rollback:
 	knex migrate:rollback
@@ -130,7 +130,7 @@ test:
 
 
 serve-tests: browserify-test
-	node test/server.js
+	babel-node test/server.js
 
 clean-build:
 	rm -f public/build/*.json
@@ -159,7 +159,7 @@ install-git-hooks:
 	@echo
 
 send-emails:
-	node extra/sendEmails.js
+	babel-node extra/sendEmails.js
 
 install-build-dep:
 	mk-build-deps --install debian.default/control \
