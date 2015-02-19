@@ -6,8 +6,6 @@ export DISPLAY=:99
 export NODE_ENV=test
 export BABEL_DISABLE_CACHE=1
 
-ls -la /
-
 sudo apt-get update
 sudo apt-get install -y wget make devscripts git
 
