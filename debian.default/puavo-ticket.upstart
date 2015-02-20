@@ -7,12 +7,6 @@ env NODE_ENV=production
 env DEBUG=app:email
 env BABEL_DISABLE_CACHE=1
 
-pre-start script
-    touch /var/log/puavo-ticket.json.log
-    chown puavo-ticket /var/log/puavo-ticket.json.log
-    chmod a+r /var/log/puavo-ticket.json.log
-end script
-
 setuid puavo-ticket
 chdir /usr/lib/puavo-ticket
 
