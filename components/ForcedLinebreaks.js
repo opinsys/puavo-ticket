@@ -38,7 +38,12 @@ var ForcedLinebreaks = React.createClass({
 
                 urlLine.push(currentChunk + " ");
                 currentChunk = "";
-                urlLine.push(<a href={word}>{word}</a>);
+                var href = word;
+                if (!/^https?:\/\//.test(href)) {
+                    href = "http://" + href;
+                }
+
+                urlLine.push(<a href={href}>{word}</a>);
             });
             if (currentChunk) urlLine.push(currentChunk);
 
