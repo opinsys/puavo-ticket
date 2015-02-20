@@ -35,6 +35,12 @@ var ProfileDetails = React.createClass({
     },
 
     componentDidMount: function() {
+        if (this.state.user.isPuavoUser()) {
+            this._syncUser();
+        }
+    },
+
+    _syncUser() {
         var self = this;
         this.setState({ syncing: true });
         this.state.user.sync()
