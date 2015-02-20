@@ -1,10 +1,18 @@
 /** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
-
+var url = require("url");
+var {Link} = require("react-router");
+var Glyphicon = require("react-bootstrap/Glyphicon");
 
 // http://stackoverflow.com/a/3809435/153718
 var urlPattern = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+
+var currentHost = "support.opinsys.fi";
+if (typeof window !== "undefined") {
+    currentHost = url.parse("http://puavoenv.opinsys.net:3002/tickets/5/discuss").host;
+}
+
 
 /**
  * Render linebreaks as <br />s into a <p>
@@ -38,12 +46,28 @@ var ForcedLinebreaks = React.createClass({
 
                 urlLine.push(currentChunk + " ");
                 currentChunk = "";
+
                 var href = word;
+
                 if (!/^https?:\/\//.test(href)) {
                     href = "http://" + href;
                 }
 
-                urlLine.push(<a href={href}>{word}</a>);
+                var hrefObject = url.parse(href);
+
+                if (hrefObject.host !== currentHost) {
+                    urlLine.push(
+                        <a href={href}
+                           target="_blank"
+                           className="external-link">
+                             {word} <Glyphicon bsSize="xsmall" glyph="globe" />
+                        </a>
+                    );
+                } else {
+                    urlLine.push(<Link to={hrefObject.pathname}>{hrefObject.pathname}</Link>);
+                }
+
+
             });
             if (currentChunk) urlLine.push(currentChunk);
 
