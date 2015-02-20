@@ -10,7 +10,7 @@ var urlPattern = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.
 
 var currentHost = "support.opinsys.fi";
 if (typeof window !== "undefined") {
-    currentHost = url.parse("http://puavoenv.opinsys.net:3002/tickets/5/discuss").host;
+    currentHost = url.parse(window.location.toString()).host;
 }
 
 
