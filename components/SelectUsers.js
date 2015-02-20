@@ -200,8 +200,14 @@ var SelectUsers = React.createClass({
     },
 
     handleSelectUser: function(user) {
+        this.cancelCurrentSearch();
         this.refs.search.getDOMNode().focus();
         this.props.onSelect(user);
+        this.setState({
+            searchString: "",
+            searching: false,
+            searchedUsers: []
+        });
     },
 
 
@@ -260,7 +266,7 @@ var SelectUsers = React.createClass({
                                         checked={disable}
                                         onSelect={function(user) {
                                             if (disable) return;
-                                            self.props.onSelect(user);
+                                            self.handleSelectUser(user);
                                         }} />
                                 </li>
                             );
