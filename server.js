@@ -251,28 +251,11 @@ app.use(function ensureAuthentication(req, res, next) {
 
 app.use(require("./utils/middleware/blockUsersWithoutEmail"));
 
-app.use(function setDebugMode(req, res, next) {
-    req.debugMode = !PRODUCTION;
-    if (req.session.forceDebugMode) {
-        req.debugMode = true;
-    }
-    next();
-});
-
 app.get("/logout", function(req, res) {
     req.session.destroy();
     res.redirect("/");
 });
 
-app.get("/debugmode", function(req, res, next) {
-
-    req.session.forceDebugMode = !req.session.forceDebugMode;
-    console.log("forceDebugMode is now", req.session.forceDebugMode);
-    // req.session.save(function(err) {
-    //     if (err) return next(err);
-        res.render("debugmode.ejs", { debugmode: req.session.forceDebugMode });
-    // });
-});
 
 app.use("/api", require("./resources/json-human"));
 app.use(require("./resources/tickets"));
@@ -294,15 +277,10 @@ var loadingHTMLString = React.renderToString(loadingEl);
 app.get("/*", function(req, res) {
     var csrfToken = req.csrfToken();
 
-    var jsBundle = "/build/bundle.min.js";
-    var cssBundle = "/build/styles.min.css";
+    var jsBundle = "/build/bundle.js";
+    var cssBundle = "/build/styles.css";
     var cacheKey = CACHE_KEY;
 
-    if (req.debugMode) {
-        jsBundle = "/build/bundle.js";
-        cssBundle = "/build/styles.css";
-        cacheKey = Date.now();
-    }
 
     res.header("x-csrf-token", csrfToken);
     res.render("index.ejs", {
@@ -314,8 +292,7 @@ app.get("/*", function(req, res) {
         user: req.user.toJSON(),
         serverHostname: HOSTNAME,
         uptime: prettyMs(Date.now() - STARTED),
-        ptVersion: VERSION,
-        debugMode: req.debugMode,
+        ptVersion: VERSION
     });
 });
 

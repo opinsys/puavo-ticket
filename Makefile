@@ -80,10 +80,7 @@ jshint: $(js_files)
 	$(JSHINT) $?
 
 js:
-	browserify --debug client.js > public/build/bundle.js
-	NODE_ENV=production browserify -t envify client.js > public/build/bundle.premin.js
-	uglifyjs public/build/bundle.premin.js --mangle > public/build/bundle.min.js
-
+	webpack --optimize-minimize --optimize-dedupe
 
 css:
 	node-sass --source-map styles.css.map --source-comments map styles/index.scss --output styles.css
@@ -91,8 +88,7 @@ css:
 	mv styles.css.map public/build/
 	cleancss public/build/styles.css > public/build/styles.min.css
 
-css-min:
-	node-sass styles/index.scss > public/build/styles.css
+css-min: css
 	cleancss public/build/styles.css > public/build/styles.min.css
 
 browserify-test: jshint

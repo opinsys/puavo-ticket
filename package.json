@@ -4,20 +4,12 @@
   "description": "",
   "author": "",
   "license": "GPLv2",
-  "browserify": {
-    "transform": [
-      [
-        "reactify",
-        {
-          "es6": true
-        }
-      ]
-    ]
-  },
   "dependencies": {
     "apidoc": "~0.6.0",
     "axios": "^0.4.1",
     "babel": "^4.1.1",
+    "babel-core": "^4.4.5",
+    "babel-loader": "^4.0.0",
     "backbone": "~1.1.2",
     "backbone.cocktail": "~0.5.8",
     "bluebird": "^2.0.0",
@@ -25,7 +17,6 @@
     "bookshelf": "^0.7.9",
     "bootstrap": "^3.2.0",
     "bourbon": "thoughtbot/bourbon#v3.2.1",
-    "browserify": "^8.0.0",
     "class-merge": "^0.1.1",
     "colors": "^0.6.2",
     "concat-stream": "^1.4.6",
@@ -37,8 +28,8 @@
     "ejs": "~1.0.0",
     "email-addresses": "^2.0.1",
     "emailreplyparser": "0.0.5",
-    "envify": "^3.0.0",
-    "exorcist": "^0.1.6",
+    "envify": "^1.2.1",
+    "envify-loader": "^0.1.0",
     "express": "~4.9.0",
     "express-session": "^1.8.0",
     "filesize": "^2.0.3",
@@ -67,7 +58,6 @@
     "react-bootstrap": "~0.13.0",
     "react-inlinesvg": "^0.2.4",
     "react-router": "~0.11.2",
-    "reactify": "~0.17.1",
     "reflux": "^0.2.0",
     "repl-promised": "^0.1.0",
     "request": "~2.37.0",
@@ -77,12 +67,11 @@
     "socket.io-client": "^1.0.6",
     "sqlite3": "~2.2.4",
     "through2": "^0.6.2",
-    "uglify-js": "~2.4.15",
     "underscore": "~1.6.0",
     "underscore.string": "^3.0.0",
     "uuid": "^2.0.1",
-    "watchify": "^1.0.5",
     "wd": "^0.3.10",
+    "webpack": "^1.5.3",
     "winston": "^0.9.0",
     "xtend": "~3.0.0"
   },

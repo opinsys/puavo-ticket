@@ -31,7 +31,7 @@ io.on("jschange", function() {
 io.on("jserror", function(err) {
     window.document.title = "!FAILED!";
     window.document.body.innerHTML += "<h1>Failed</h1>";
-    window.document.body.innerHTML += "<pre>" + err.stack + "</pre>";
+    window.document.body.innerHTML += "<pre>" + JSON.stringify(err, null, "  ") + "</pre>";
 });
 
 io.on("csschange", function() {
