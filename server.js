@@ -88,6 +88,9 @@ var server = Server(app);
 var sio = require("socket.io")(server);
 app.sio = sio;
 
+// Configure test resource before authentication so it can be accessed by
+// monitors
+app.use(require("./resources/test"));
 
 var sessionMiddleware = session({
     name: "puavo-ticket-sid",
@@ -168,6 +171,11 @@ app.use(function(req, res, next) {
     csrfMiddleware(req, res, next);
 });
 
+// Must be set here before the `ensureAuthentication` middleware because it
+// must be accessed without Puavo credentials
+app.use(require("./resources/emails"));
+
+
 app.use(jwtsso({
 
     // Service endpoint that issues the jwt tokens
@@ -205,13 +213,6 @@ app.use(function setSiotoReq(req, res, next) {
     next();
 });
 
-// Must be set here before the `ensureAuthentication` middleware because it
-// must be accessed without Puavo credentials
-app.use(require("./resources/emails"));
-
-// Also configure test resource before authentication so it can be accessed by
-// monitors
-app.use(require("./resources/test"));
 
 /**
  * Set an instance of models.User to the request object when user has been
