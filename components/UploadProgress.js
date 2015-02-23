@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 "use strict";
 var React = require("react/addons");
 var ProgressBar = require("react-bootstrap/ProgressBar");
