@@ -80,7 +80,7 @@ jshint: $(js_files)
 	$(JSHINT) $?
 
 js:
-	webpack --optimize-minimize --optimize-dedupe
+	webpack -p
 
 css:
 	node-sass --source-map styles.css.map --source-comments map styles/index.scss --output styles.css
