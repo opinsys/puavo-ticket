@@ -171,9 +171,6 @@ app.use(function(req, res, next) {
     csrfMiddleware(req, res, next);
 });
 
-// Must be set here before the `ensureAuthentication` middleware because it
-// must be accessed without Puavo credentials
-app.use(require("./resources/emails"));
 
 
 app.use(jwtsso({
@@ -212,7 +209,7 @@ app.use(function setSiotoReq(req, res, next) {
     req.sio = sio;
     next();
 });
-
+app.use(require("./resources/emails"));
 
 /**
  * Set an instance of models.User to the request object when user has been
