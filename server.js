@@ -209,6 +209,7 @@ app.use(function setSiotoReq(req, res, next) {
 // must be accessed without Puavo credentials
 app.use(require("./resources/emails"));
 
+app.use(require("./resources/test"));
 
 /**
  * Set an instance of models.User to the request object when user has been
