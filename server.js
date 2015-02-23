@@ -35,6 +35,7 @@ var debug = require("debug")("app:live");
 var debugMem = require("debug")("memory");
 var serveStatic = require("serve-static");
 var bodyParser = require("body-parser");
+var compression = require("compression");
 var jwtsso = require("jwtsso");
 var cookieParser = require("cookie-parser");
 var csrf = require("csurf");
@@ -83,6 +84,7 @@ winston.info("process starting");
  * @class Response
  */
 var app = express();
+app.use(compression());
 app.use(require("./utils/middleware/createResponseLogger")());
 var server = Server(app);
 var sio = require("socket.io")(server);
