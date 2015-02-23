@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * Resource endpoint testing that everything is working as expected
+ * */
 
 var User = require("app/models/server/User");
 var Puavo = require("../utils/Puavo");
@@ -13,10 +16,9 @@ app.get("/api/test", function(req, res, next) {
         puavo: false,
     };
 
-    User.collection()
-    .query(q => q.limit(1))
+    User.forge({})
+    .query(q => q.limit(1).whereNotNull("externalId"))
     .fetch({ require: true })
-    .then(c => c.first())
     .then(u => {
         if (!u) throw new Error("Failed to find user from postgresql");
 
@@ -32,8 +34,18 @@ app.get("/api/test", function(req, res, next) {
         result.puavo = !!puavoData;
         res.json(result);
     })
-    .catch(next);
+    .catch(err => {
+        result.error = err;
+        res.status(500).json(result);
+    });
 
+});
+
+/*
+ * Manual error for testing for errors :)
+ * */
+app.get("/api/test_error", function(req, res, next) {
+    next(new Error("You asked for it! Here's an error!"));
 });
 
 module.exports = app;

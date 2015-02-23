@@ -209,6 +209,8 @@ app.use(function setSiotoReq(req, res, next) {
 // must be accessed without Puavo credentials
 app.use(require("./resources/emails"));
 
+// Also configure test resource before authentication so it can be accessed by
+// monitors
 app.use(require("./resources/test"));
 
 /**
