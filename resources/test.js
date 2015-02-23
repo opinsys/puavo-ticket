@@ -9,7 +9,7 @@ var Puavo = require("../utils/Puavo");
 var express = require("express");
 var app = express();
 
-app.get("/api/test", function(req, res, next) {
+app.get("/test", function(req, res, next) {
 
     var result = {
         postgresql: false,
@@ -44,7 +44,7 @@ app.get("/api/test", function(req, res, next) {
 /*
  * Manual error for testing for errors :)
  * */
-app.get("/api/test_error", function(req, res, next) {
+app.get("/test_error", function(req, res, next) {
     next(new Error("You asked for it! Here's an error!"));
 });
 
