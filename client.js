@@ -1,6 +1,6 @@
 "use strict";
-require("./polyfills");
 
+require("babel/polyfill");
 var Promise = require("bluebird");
 Promise.longStackTraces();
 var $ = require("jquery");
