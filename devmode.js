@@ -18,7 +18,7 @@ var webpackCompiler = webpack(require("./webpack.config"));
  */
 function startDevMode(sio) {
 
-    var logStream = fs.createWriteStream("./webpack.log");
+    var logStream = fs.createWriteStream("./client-build.log");
     function log(message) {
         console.log(message);
         logStream.write(message.toString() + "\n");
@@ -29,6 +29,11 @@ function startDevMode(sio) {
     function handleWebpackError(err) {
         sio.sockets.emit("jserror", err);
     }
+
+    webpackCompiler.plugin("compile", function() {
+        log("JS starting");
+        sio.sockets.emit("jschangebegin");
+    });
 
     webpackCompiler.watch(200, function(err, stats) {
         if(err) {
@@ -45,7 +50,7 @@ function startDevMode(sio) {
             handleWebpackError(jsonStats.warnings);
         }
 
-        log("Webpack OK");
+        log("JS OK");
         sio.sockets.emit("jschange");
         sio.sockets.emit("assetchange");
     });

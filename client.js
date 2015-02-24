@@ -19,6 +19,7 @@ io.on("connect", function(s) {
 io.on("jschangebegin", function() {
     window.document.title = "!COMPILING!";
     window.document.body.innerHTML = "<h1>Compiling Javascript...</h1>";
+    unmountReact();
 });
 
 io.on("jschange", function() {
@@ -31,6 +32,7 @@ io.on("jserror", function(err) {
     window.document.title = "!FAILED!";
     window.document.body.innerHTML += "<h1>Failed</h1>";
     window.document.body.innerHTML += "<pre>" + JSON.stringify(err, null, "  ") + "</pre>";
+    unmountReact();
 });
 
 io.on("csschange", function() {
@@ -91,17 +93,20 @@ router.run(function(Handler, state) {
     React.render(<Handler params={state.params} query={state.query} />, appContainer);
 });
 
+function unmountReact() {
+    // Try to remove the application
+    try {
+        React.unmountComponentAtNode(appContainer);
+    } catch (err) { }
+}
+
 /**
  * Render given error to the body using plain javascript overriding everything else
  */
 var renderLowLevelErrorMessage = function (error, source) {
     // Only render the initial error message
     renderLowLevelErrorMessage = function(e) { throw e; };
-
-    // Try to remove the application
-    try {
-        React.unmountComponentAtNode(appContainer);
-    } catch (err) { }
+    unmountReact();
 
     var html = "<h1>Virhe :(</h1>";
     html += "Sovellus kaatui. ";
