@@ -91,23 +91,6 @@ css:
 css-min: css
 	cleancss public/build/styles.css > public/build/styles.min.css
 
-browserify-test: jshint
-	browserify test/client.js -o test/bundle.js
-
-export CHROME_BIN := chromium-browser
-test-chrome: browserify-test
-	$(KARMA) start --single-run --browsers Chrome
-
-test-firefox: browserify-test
-	$(KARMA) start --single-run --browsers Firefox
-
-test-browsers: test-chrome test-firefox
-
-test-browsers-watch: browserify-test
-	@echo
-	@echo "Also run 'make browserify-test-watch'"
-	@echo
-	$(KARMA) start
 
 test-server: jshint
 	mocha test/models/server/*_test.js test/api/*_test.js test/utils/*_test.js
@@ -120,13 +103,8 @@ test:
 	NODE_ENV=test $(MAKE) migrate
 	$(MAKE) jshint
 	$(MAKE) test-server
-	$(MAKE) test-browsers
 	$(MAKE) test-acceptance
 
-
-
-serve-tests: browserify-test
-	babel-node test/server.js
 
 clean-build:
 	rm -f public/build/*.json
