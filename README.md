@@ -144,7 +144,7 @@ Stop the puavo-standalone installed puavo-ticket server and start a development
 server
 
     sudo stop puavo-ticket
-    node server.js
+    make server
 
 ## Development tools
 
