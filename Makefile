@@ -91,6 +91,8 @@ css:
 css-min: css
 	cleancss public/build/styles.css > public/build/styles.min.css
 
+server:
+	node server.js
 
 test-server: jshint
 	mocha test/models/server/*_test.js test/api/*_test.js test/utils/*_test.js
