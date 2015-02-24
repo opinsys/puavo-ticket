@@ -53,17 +53,20 @@ var ForcedLinebreaks = React.createClass({
                 }
 
                 var hrefObject = url.parse(href);
+                var linkName = hrefObject.host;
+                if (hrefObject.pathname !== "/") {
+                    linkName += hrefObject.pathname;
+                }
 
                 if (hrefObject.host !== currentHost) {
                     urlLine.push(
                         <a href={href}
                            target="_blank"
-                           className="external-link">
-                             {word} <Glyphicon bsSize="xsmall" glyph="globe" />
+                           className="external-link">{linkName} <Glyphicon bsSize="xsmall" glyph="globe" />
                         </a>
                     );
                 } else {
-                    urlLine.push(<Link to={hrefObject.pathname}>{hrefObject.pathname}</Link>);
+                    urlLine.push(<Link to={hrefObject.pathname}>{linkName}</Link>);
                 }
 
 
