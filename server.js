@@ -47,8 +47,16 @@ var User = require("./models/server/User");
 var Acl = require("./models/Acl");
 var Ticket = require("./models/server/Ticket");
 
+var WinstonFluentd = require("./utils/WinstonFluentd");
 var config = require("./config");
-winston.add(winston.transports.File, { filename: config.logpath, level: "debug" });
+
+winston.add(WinstonFluentd, {
+    tag: "puavo-ticket",
+    level: "debug",
+    fluentd: config.fluentd
+});
+
+
 
 if (process.env.NODE_ENV !== "test") {
     // WTF somebody is already listening to this

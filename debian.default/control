@@ -8,6 +8,6 @@ Homepage: https://github.com/opinsys/puavo-ticket
 
 Package: puavo-ticket
 Architecture: all
-Depends: ${misc:Depends}, nodejs-bundle
+Depends: ${misc:Depends}, nodejs-bundle, fluentd (>= 0.10.55-18)
 Description: Ticketing service
  Ticketing service

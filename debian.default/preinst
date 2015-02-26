@@ -14,9 +14,6 @@ set -e
 case "$1" in
     install|upgrade)
         adduser --no-create-home --disabled-password --disabled-login --system puavo-ticket
-        touch /var/log/puavo-ticket.json.log
-        chown puavo-ticket /var/log/puavo-ticket.json.log
-        chmod a+r /var/log/puavo-ticket.json.log
     ;;
 
     abort-upgrade)
