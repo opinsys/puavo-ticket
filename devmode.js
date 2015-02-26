@@ -9,6 +9,7 @@ var spawn = require("child_process").spawn;
 var webpack = require("webpack");
 var watch = require("glob-watcher");
 var _ = require("lodash");
+var prettyMs = require("pretty-ms");
 
 var webpackCompiler = webpack(require("./webpack.config"));
 
@@ -30,8 +31,10 @@ function startDevMode(sio) {
         sio.sockets.emit("jserror", err);
     }
 
+    var started;
     webpackCompiler.plugin("compile", function() {
-        log("JS starting");
+        started = Date.now();
+        log("JS starting...");
         sio.sockets.emit("jschangebegin");
     });
 
@@ -50,7 +53,7 @@ function startDevMode(sio) {
             handleWebpackError(jsonStats.warnings);
         }
 
-        log("JS OK");
+        log("JS OK in " + prettyMs(Date.now() - started));
         sio.sockets.emit("jschange");
         sio.sockets.emit("assetchange");
     });
@@ -58,6 +61,7 @@ function startDevMode(sio) {
     function writeCSS() {
 
         var p = spawn("make", ["css"], { stdio: "inherit" });
+        log("CSS starting...");
 
         p.on("error", console.error);
         p.on("exit", function(code) {
