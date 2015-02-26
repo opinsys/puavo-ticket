@@ -38,7 +38,6 @@ function createResponseLogger(){
 
       var meta = {
         duration: duration,
-        headers: req.headers,
         statusCode: res.statusCode
       };
 
