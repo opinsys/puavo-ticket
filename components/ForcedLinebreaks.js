@@ -4,8 +4,7 @@ var url = require("url");
 var {Link} = require("react-router");
 var Glyphicon = require("react-bootstrap/Glyphicon");
 
-// http://stackoverflow.com/a/3809435/153718
-var urlPattern = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+var httpPrefix = /^https?:\/\//;
 
 var currentHost = "support.opinsys.fi";
 if (typeof window !== "undefined") {
@@ -32,13 +31,15 @@ var ForcedLinebreaks = React.createClass({
             throw new Error("Only string children are supported");
         }
 
+        var keyIds = 0;
+
         // XXX Ugly. And the component name is no good with this in.
         var vDom = string.trim().split("\n").reduce(function(current, rawLine) {
             var urlLine = [];
             var currentChunk = "";
 
             rawLine.split(" ").forEach(function(word) {
-                if (!urlPattern.test(word)) {
+                if (!httpPrefix.test(word)) {
                     currentChunk += " " + word;
                     return;
                 }
@@ -46,27 +47,22 @@ var ForcedLinebreaks = React.createClass({
                 urlLine.push(currentChunk + " ");
                 currentChunk = "";
 
-                var href = word;
-
-                if (!/^https?:\/\//.test(href)) {
-                    href = "http://" + href;
-                }
-
-                var hrefObject = url.parse(href);
+                var hrefObject = url.parse(word);
                 var linkName = hrefObject.host;
                 if (hrefObject.pathname !== "/") {
-                    linkName += hrefObject.pathname;
+                    linkName += hrefObject.path;
                 }
 
                 if (hrefObject.host !== currentHost) {
                     urlLine.push(
-                        <a href={href}
+                        <a href={word}
+                            key={++keyIds}
                            target="_blank"
                            className="external-link">{linkName} <Glyphicon bsSize="xsmall" glyph="globe" />
                         </a>
                     );
                 } else {
-                    urlLine.push(<Link to={hrefObject.pathname}>{linkName}</Link>);
+                    urlLine.push(<Link key={++keyIds} to={hrefObject.pathname}>{linkName}</Link>);
                 }
 
 
@@ -74,7 +70,7 @@ var ForcedLinebreaks = React.createClass({
             if (currentChunk) urlLine.push(currentChunk);
 
             current.push(urlLine);
-            current.push(<br />);
+            current.push(<br key={++keyIds} />);
             return current;
         }, []);
 
