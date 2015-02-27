@@ -34,6 +34,7 @@
     "express": "~4.9.0",
     "express-session": "^1.8.0",
     "filesize": "^2.0.3",
+    "fluent-logger": "^0.2.6",
     "font-awesome": "^4.2.0",
     "jquery": "~2.1.1",
     "json-human": "git+https://github.com/marianoguerra/json.human.js",
