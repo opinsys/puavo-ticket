@@ -9,6 +9,7 @@
     "axios": "^0.4.1",
     "babel": "^4.1.1",
     "babel-core": "^4.4.5",
+    "babel-eslint": "^1.0.12",
     "babel-loader": "^4.0.0",
     "backbone": "~1.1.2",
     "backbone.cocktail": "~0.5.8",
@@ -31,6 +32,7 @@
     "emailreplyparser": "0.0.5",
     "envify": "^1.2.1",
     "envify-loader": "^0.1.0",
+    "eslint": "^0.15.1",
     "express": "~4.9.0",
     "express-session": "^1.8.0",
     "filesize": "^2.0.3",
@@ -90,6 +92,40 @@
     "superagent": "0.18.0",
     "supertest": "~0.13.0",
     "yuidocjs": "~0.3.50"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "rules": {
+      "no-path-concat": false,
+      "no-shadow": true,
+      "quotes": false,
+      "camelcase": false,
+      "curly": [
+        2,
+        "multi-line"
+      ],
+      "consistent-return": false,
+      "new-cap": false,
+      "no-redeclare": [
+        2
+      ],
+      "no-comma-dangle": false,
+      "no-process-exit": false,
+      "no-unused-vars": [
+        2,
+        {
+          "vars": "all",
+          "args": "none"
+        }
+      ],
+      "eol-last": false,
+      "no-underscore-dangle": false
+    },
+    "env": {
+      "browser": true,
+      "mocha": true,
+      "node": true
+    }
   },
   "jshintConfig": {
     "esnext": true,
