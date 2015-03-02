@@ -34,9 +34,10 @@ function createResponseLogger(){
     res._responseTime = true;
     res.writeHead = function(){
       var duration = Date.now() - start;
-      res.setHeader('X-Response-Time', duration + 'ms');
+      res.setHeader("X-Response-Time", duration + "ms");
 
       var meta = {
+        headers: req.headers,
         duration: duration,
         statusCode: res.statusCode
       };
