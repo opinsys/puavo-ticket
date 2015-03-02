@@ -23,6 +23,19 @@ var debugEmail = require("debug")("app:email");
 
 
 /**
+ * Render buffered email update
+ *
+ * @private
+ * @static
+ * @method renderEmailBufferedTemplate
+ * @param {Object} context
+ * @return {String}
+ */
+var renderEmailBufferedTemplate = _.template(
+    fs.readFileSync(__dirname + "/email_buffered_template.txt").toString()
+);
+
+/**
  * Knex query helpers
  *
  * @namespace models.server
@@ -41,11 +54,11 @@ var queries = {
      * @method notSoftDeleted
      */
     notSoftDeleted: function(qb) {
-        qb.where("deleted", "=",  "0");
+        qb.where("deleted", "=", "0");
     },
 
     softDeleted: function(qb) {
-        qb.where("deleted", "!=",  "0");
+        qb.where("deleted", "!=", "0");
     }
 
 
@@ -284,7 +297,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
             tag: tagName,
             addedById: Base.toId(user)
         });
-        if (Base.isModel(tagName))  tagName = tagName.get("tag");
+        if (Base.isModel(tagName)) tagName = tagName.get("tag");
         var self = this;
 
         return Tag.fetchOrCreate({
@@ -461,7 +474,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
         .tap(() => this.load("tags"))
         .tap(handlerRel => {
             // Ensure fresh handler user object
-            return handlerRel.handler().fetch({require:true})
+            return handlerRel.handler().fetch({require: true})
             .tap(user => {
                 // Set ticket from pending to open if a manager handler is added to it
                 if (user.isManager() && this.getCurrentStatus() === "pending") {
@@ -483,7 +496,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
        return this.handlers()
        .query({ where: {
            handler: Base.toId(user),
-           deleted:0
+           deleted: 0
        }})
        .fetchOne()
        .tap((handler) => Promise.join(
@@ -568,7 +581,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
             throw new Error("No comments - no description!");
         }
 
-        return _.min(this.relations.comments.models,  function(m) {
+        return _.min(this.relations.comments.models, function(m) {
             return m.createdAt().getTime();
         }).get("comment");
     },
@@ -722,7 +735,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
         })
         .then(function(collection) {
 
-            comments = collection.filter(function(comment) {
+            var comments = collection.filter(function(comment) {
                 return !comment.get("hidden");
             });
 
@@ -742,7 +755,7 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
                 return;
             }
 
-            var comments = comments.map(function(comment) {
+            comments = comments.map(function(comment) {
                 return comment.toPlainText();
             }).join("\n----------------------------------------------\n");
 
@@ -927,18 +940,6 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
 
 });
 
-/**
- * Render buffered email update
- *
- * @private
- * @static
- * @method renderEmailBufferedTemplate
- * @param {Object} context
- * @return {String}
- */
-var renderEmailBufferedTemplate = _.template(
-    fs.readFileSync(__dirname + "/email_buffered_template.txt").toString()
-);
 
 
 

@@ -60,8 +60,8 @@ winston.add(WinstonFluentd, {
 
 if (process.env.NODE_ENV !== "test") {
     // WTF somebody is already listening to this
-    process.removeAllListeners('uncaughtException');
-    process.on('uncaughtException', function(err) {
+    process.removeAllListeners("uncaughtException");
+    process.on("uncaughtException", function(err) {
         winston.error("uncaughtException", {error: {
             message: err.message,
             meta: err.meta || null,

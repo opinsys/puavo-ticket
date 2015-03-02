@@ -68,7 +68,7 @@ var User = Base.extend({
      */
     accessTags: function(){
         return this.hasMany(AccessTag, "userId")
-        .query(q => q.where({deleted:0}));
+        .query(q => q.where({deleted: 0}));
     },
 
     /**
@@ -208,7 +208,7 @@ var User = Base.extend({
     byEmailAddress: function(emailAddress) {
         return this.forge()
             .query(function(qb) {
-                qb.where( Bookshelf.DB.knex.raw( "\"externalData\"->>'email' = ?",  [emailAddress] ) );
+                qb.where( Bookshelf.DB.knex.raw( "\"externalData\"->>'email' = ?", [emailAddress] ) );
             });
     },
 
@@ -265,7 +265,7 @@ var User = Base.extend({
     byUsername: function(username) {
         return User.forge()
             .query(function(qb) {
-                qb.where( Bookshelf.DB.knex.raw( "externalData->>'username' = ?",  [username] ) );
+                qb.where(Bookshelf.DB.knex.raw( "externalData->>'username' = ?", [username]));
             });
     },
 

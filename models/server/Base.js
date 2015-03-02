@@ -117,7 +117,7 @@ var Base = Bookshelf.DB.Model.extend({
             identifier.deleted = 0;
         }
 
-        var model =  this.forge(identifier);
+        var model = this.forge(identifier);
 
         return model.fetch()
         .then(function(existing) {

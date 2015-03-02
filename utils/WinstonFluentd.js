@@ -1,3 +1,5 @@
+"use strict";
+
 var winston = require("winston");
 var {createFluentSender} = require("fluent-logger");
 
