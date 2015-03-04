@@ -63,6 +63,9 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
         });
     },
 
+    withoutTags() {
+    },
+
     /**
      * Limit to tickets that have tokens present in the text string.
      *
@@ -114,7 +117,7 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
         var ref = this._genJoinRef("f");
         return this.query(function(q) {
             q.join("followers as " + ref, "tickets.id", "=", ref + ".ticketId");
-            q.where(ref + ".followedById", "=",  Base.toId(user));
+            q.where(ref + ".followedById", "=", Base.toId(user));
             q.whereNull(ref + ".deletedAt");
         });
     },
@@ -129,7 +132,7 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
         var ref = this._genJoinRef("f");
         return this.query(function(q) {
             q.join("handlers as " + ref, "tickets.id", "=", ref + ".ticketId");
-            q.where(ref + ".handler", "=",  Base.toId(user));
+            q.where(ref + ".handler", "=", Base.toId(user));
             q.whereNull(ref + ".deletedAt");
         });
     },
