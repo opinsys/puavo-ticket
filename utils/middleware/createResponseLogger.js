@@ -22,7 +22,7 @@ function createResponseLogger(){
   return function(req, res, next){
     var child = new WinstonChild(winston, {
         method: req.method,
-        path: url.parse(req.url).pathname,
+        path: url.parse(req.url).path,
         reqUuid: uuid.v4()
     });
     req.logger = child;
