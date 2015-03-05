@@ -14,11 +14,13 @@ var ViewEditor = require("./components/ViewEditor");
 var TagEditor = require("./components/TicketView/TagEditor");
 var HandlerEditor = require("./components/TicketView/HandlerEditor");
 var Discuss = require("./components/TicketView/Discuss");
+var ProfilePage = require("./components/ProfilePage");
 
 var routes = (
     <Route handler={Main} >
         <Route name="new" handler={TicketForm} />
         <Redirect name="tickets" from="/" to="view" params={{id: "open"}} />
+        <Route name="view-user" path="/user/:userId" handler={ProfilePage} />
         <Route name="view-editor" path="/edit-view/:name?" handler={ViewTabs} >
             <Route handler={ViewEditor} />
         </Route>
