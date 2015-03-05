@@ -20,12 +20,22 @@ class WinstonFluentd extends winston.Transport {
            timeout: 3.0
         }, options.fluentd));
 
+        this._fluent.on("error", (err) => {
+            console.error("Fluent error: " + err.message);
+        });
+
     }
 
     log(level, msg, meta, cb) {
         var record = {msg, level};
         record[msg] = meta;
-        this._fluent.emit(record, cb);
+        record.timestamp = new Date();
+        this._fluent.emit(record, (err) => {
+            if (err) {
+                console.error("Failed to connect fluentd: " + err.message);
+            }
+            cb();
+        });
     }
 }
 

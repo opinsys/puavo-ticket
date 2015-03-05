@@ -62,17 +62,26 @@ if (process.env.NODE_ENV !== "test") {
     // WTF somebody is already listening to this
     process.removeAllListeners("uncaughtException");
     process.on("uncaughtException", function(err) {
+
+        console.error("Captured uncaughtException and exiting soon!", process.pid);
+        console.error(err.message);
+        console.error(err.stack);
+
+        setTimeout(function() {
+            console.log("Log timeout. Exiting!");
+            process.exit(667);
+        }, 2000);
+
         winston.error("uncaughtException", {error: {
             message: err.message,
             meta: err.meta || null,
             stack: err.stack
-        }});
-
-        // use some timeout to allow logs to flush
-        console.error("Captured uncaughtException and exiting soon!");
-        setTimeout(function() {
+        }}, function(err) {
+            console.log("Exiting!");
+            process.removeAllListeners("uncaughtException");
             process.exit(666);
-        }, 2000);
+        });
+
     });
 }
 
