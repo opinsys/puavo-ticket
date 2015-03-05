@@ -40,6 +40,14 @@ Acl.prototype = {
     },
 
     /**
+     * @method canEditAccessTags
+     * @return {Boolean}
+     */
+    canEditAccessTags: function() {
+        return this.user.isManager();
+    },
+
+    /**
      * @method canSeeTicketDetails
      * @return {Boolean}
      */

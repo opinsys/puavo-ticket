@@ -22,6 +22,19 @@ var User = Base.extend({
         this.acl = new Acl(this);
     },
 
+    url: function() {
+        if (this.get("id")) {
+            return "/api/users/" + this.get("id");
+        }
+        return "/api/users";
+    },
+
+    addAccessTag(accessTag) {
+        var u = `/api/users/${this.get("id")}/access_tags`;
+        console.log("posting to", u, accessTag);
+        return fetch.post(u, {accessTag});
+    },
+
     /**
      * Update user data from puavo-rest
      *

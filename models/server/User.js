@@ -37,6 +37,7 @@ var User = Base.extend({
         );
     },
 
+
     /**
      * Same as models.server.Follower#getSocketIORoom()
      *

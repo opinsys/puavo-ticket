@@ -10,6 +10,7 @@ var BackboneMixin = require("../BackboneMixin");
 var Fa = require("../Fa");
 var User = require("../../models/client/User");
 var ProfileBadge = require("./ProfileBadge");
+var ProfileAccessTagsEditor = require("./ProfileAccessTagsEditor");
 
 /**
  * @namespace components
@@ -43,7 +44,6 @@ var ProfileDetails = React.createClass({
         var self = this;
         this.setState({ syncing: true });
         this.state.user.sync()
-        .delay(2000)
         .then(function(user) {
             if (!self.isMounted()) return;
             self.setState({ syncing: false });
@@ -176,6 +176,11 @@ var ProfileDetails = React.createClass({
                     <h2>Puavo tiedot</h2>
                     {this.renderPuavoDetails()}
                 </div>}
+
+                {app.currentUser.acl.canEditAccessTags() && user.toJSON().accessTags && <div>
+                    <ProfileAccessTagsEditor user={user} />
+                </div>}
+
 
                 {this.renderTicketLinks()}
 
