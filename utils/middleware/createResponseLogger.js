@@ -43,7 +43,7 @@ function createResponseLogger(){
       };
 
       if (req.body) meta.body = req.body;
-      if (req.params) meta.body = req.params;
+      if (req.params) meta.params = req.params;
 
       req.logger.info("request end", meta);
 
