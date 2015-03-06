@@ -26,6 +26,7 @@ function createResponseLogger(){
         reqUuid: uuid.v4()
     });
     req.logger = child;
+    req.logger.info("request start");
 
     next = next || noop;
     if (res._responseTime) return next();
