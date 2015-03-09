@@ -249,7 +249,9 @@ app.use(function ensureAuthentication(req, res, next) {
         return res.requestJwt();
     }
 
-    User.byExternalId(req.session.jwt.id).fetch()
+    User.byExternalId(req.session.jwt.id).fetch({
+        withRelated: "accessTags"
+    })
     .then(function(user) {
         if (!user) {
             // The database was probably destroyed during development and the

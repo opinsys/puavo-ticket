@@ -1,6 +1,7 @@
 "use strict";
 
 var Reflux = require("reflux");
+var _ = require("lodash");
 
 var app = require("../index");
 var Actions = require("../Actions");
@@ -23,6 +24,7 @@ var ViewStore = Reflux.createStore({
     init: function() {
 
         this.ticketCounts = {};
+        this.organisationViews = [];
 
         this.openTickets = new View({
             name: "Avoimet",
@@ -46,7 +48,43 @@ var ViewStore = Reflux.createStore({
             }
         });
 
+
+        var organisationAccessTags = _.pluck(app.currentUser.get("accessTags"), "tag")
+        .filter(t => t.startsWith("organisation:"));
+
+        this.organisationViews = organisationAccessTags.reduce((views, tag) => {
+            var name = tag.replace(/^organisation:/, "");
+            views.push(new View({
+                name: name + " avoimet",
+                id: "tagopen" + tag,
+                query: {
+                    tags: [
+                        "status:pending|status:open",
+                        tag
+                    ]
+                }
+            }));
+
+            views.push(new View({
+                name: name + " suljetut",
+                id: "tagclosed" + tag,
+                query: {
+                    tags: [
+                        "status:closed",
+                        tag
+                    ]
+                }
+            }));
+
+            return views;
+
+        }, []);
+
+
+
+
         this.currentView = this.openTickets;
+
         this.views = View.collection();
         this.loading = false;
         this.content = [];
@@ -80,7 +118,7 @@ var ViewStore = Reflux.createStore({
     },
 
     getViews: function() {
-        return [this.openTickets, this.closedTickets].concat(this.views.toArray());
+        return [this.openTickets, this.closedTickets].concat(this.organisationViews).concat(this.views.toArray());
     },
 
     getState: function() {
@@ -97,12 +135,7 @@ var ViewStore = Reflux.createStore({
     },
 
     getView: function(id) {
-        if (id === "closed") {
-            return this.closedTickets;
-        } else if (id === "open") {
-            return this.openTickets;
-        }
-        return this.views.findWhere({ id: parseInt(id, 10) });
+        return _.find(this.getViews(), (view) => String(view.get("id")) === String(id));
     },
 
     onSet: function(views) {
