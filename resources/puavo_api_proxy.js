@@ -47,6 +47,7 @@ app.all("/:domain*", function(req, res, next) {
                 url: targetURL,
                 pool: {},
                 form: req.body,
+                timeout: 1000*5,
                 auth: {
                     "user": config.puavo.username,
                     "pass": config.puavo.password

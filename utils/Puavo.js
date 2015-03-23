@@ -39,6 +39,7 @@ Puavo.prototype.request = function(pathname) {
                 'user': config.puavo.username,
                 'pass': config.puavo.password
             },
+            timeout: 1000*5,
             pool: {},
             headers: {
                 host: this.domain,
