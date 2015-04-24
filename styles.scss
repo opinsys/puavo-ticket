@@ -1,0 +1,37 @@
+
+@import "bootstrap";
+
+$sidebar-left-width: 200px;
+$sidebar-right-width: 300px;
+
+
+.pt-panel {
+    position: absolute;
+    top: 51px;
+    overflow-y: auto;
+    bottom: 0;
+}
+
+.pt-sidebar-left {
+    border: 1px solid red;
+    width: $sidebar-left-width;
+}
+
+.pt-sidebar-right {
+    border: 1px solid green;
+    right: 0px;
+    width: $sidebar-right-width;
+}
+
+.pt-main {
+    left: $sidebar-left-width;
+    margin-right: $sidebar-right-width;
+    border: 1px solid blue;
+}
+
+@media (min-width: $screen-desktop) {
+    .pt-sidebar-right {
+        background-color: red;
+    }
+
+}
