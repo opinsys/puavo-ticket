@@ -318,7 +318,7 @@ app.get("/*", function(req, res) {
 });
 
 app.use("/api", function(err, req, res, next) {
-    if (err instanceof Ticket.NotFoundError) {
+    if (err.message === "EmptyResponse") {
         return res.status(404).json({
             error: "ticket not found",
             message: err.message
