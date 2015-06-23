@@ -1,14 +1,14 @@
 "use strict";
 var GridSQL = require("./utils/GridSQL");
-var Bookshelf = require("bookshelf");
 var config = require("./config");
-var knex = require("knex");
+var knex = require("knex")(config.database);
+var Bookshelf = require("bookshelf");
+var db = Bookshelf(knex);
 
-var knex = knex(config.database);
-var db = Bookshelf.initialize(knex);
 Bookshelf.DB = db;
-Bookshelf.DB.plugin("virtuals");
-Bookshelf.DB.gridSQL = new GridSQL({
+
+db.plugin("virtuals");
+db.gridSQL = new GridSQL({
     knex: knex,
     // chunkSize: 1024
     // chunkSize: 1024 * 1024
@@ -68,7 +68,7 @@ db.tables = [
  */
 db.emptyAllRows = function() {
     // the chunks table has no incrementing id column
-    return Bookshelf.DB.knex("chunks").del()
+    return db.knex("chunks").del()
     .then(function() {
         return deleteAndReset(db.tables.filter(function(t) {
             return t !== "chunks";
@@ -76,5 +76,5 @@ db.emptyAllRows = function() {
     });
 };
 
-module.exports = Bookshelf.DB;
+module.exports = db;
 
