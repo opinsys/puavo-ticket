@@ -153,7 +153,9 @@ var TicketCollection = Bookshelf.DB.Collection.extend({
         }
 
         return this.query(function(q) {
-                q.distinct()
+                // Workaround for https://github.com/tgriesser/bookshelf/issues/807
+                q.distinct("tickets.*")
+
                 .join("followers", function() {
                     this.on("tickets.id", "=", "followers.ticketId");
                 })
