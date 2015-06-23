@@ -137,6 +137,7 @@
     "newcap": false,
     "lastsemic": true,
     "predef": [
+      "-fetch",
       "-Comment",
       "-Notification",
       "-Promise"
