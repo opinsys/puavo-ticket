@@ -1,7 +1,5 @@
 'use strict';
 
-var Attachment = require("app/models/server/Attachment");
-
 /**
  * Add fileId column to attachments table.
  *
@@ -12,15 +10,6 @@ var Attachment = require("app/models/server/Attachment");
 exports.up = function(knex, Promise) {
     return knex.schema.table("attachments", function (table) {
         table.string("fileId");
-    })
-    .then(function() {
-        return Attachment.collection().fetch();
-    })
-    .then(function(coll) { return coll.models; })
-    .map(function(attachment) {
-        return attachment.set({
-            fileId: attachment.getComputedFileId()
-        }).save();
     });
 };
 
