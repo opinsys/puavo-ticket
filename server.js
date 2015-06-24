@@ -103,10 +103,10 @@ winston.info("process starting");
  */
 var app = express();
 
-// Set env DEBUG=pool2,knexpool
+// Set env DEBUG=pool2,knex*
 debugKnexPool("Knex pool debugging active");
 app.use(function(req, res, next) {
-    debugKnexPool("Knex pool before " + req.url, db.knex.client.pool.stats());
+    debugKnexPool("Knex pool2 on " + req.url + ": " +  JSON.stringify(db.knex.client.pool.stats()));
     next();
 });
 
