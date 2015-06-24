@@ -21,7 +21,7 @@ if (!PRODUCTION) {
 }
 
 
-require("./db");
+var db = require("./db");
 var winston = require("winston");
 var Promise = require("bluebird");
 var express = require("express");
@@ -33,6 +33,7 @@ var React = require("react/addons");
 
 var debug = require("debug")("app:live");
 var debugMem = require("debug")("memory");
+var debugKnexPool = require("debug")("knexpool");
 var serveStatic = require("serve-static");
 var bodyParser = require("body-parser");
 var compression = require("compression");
@@ -101,6 +102,14 @@ winston.info("process starting");
  * @class Response
  */
 var app = express();
+
+// Set env DEBUG=pool2,knex*
+debugKnexPool("Knex pool debugging active");
+app.use(function(req, res, next) {
+    debugKnexPool("Knex pool2 on " + req.url + ": " +  JSON.stringify(db.knex.client.pool.stats()));
+    next();
+});
+
 app.use(compression());
 app.use(require("./utils/middleware/createResponseLogger")());
 var server = Server(app);
@@ -131,6 +140,7 @@ sio.use(function(socket, next) {
     .then(function(user) {
         socket.user = user;
         socket.logger = new WinstonChild(winston, {
+            knexPoolStats: db.knex.client.pool.stats(),
             userId: user.get("id"),
             sio: true
         });
