@@ -43,7 +43,7 @@ describe("Create ticket", function() {
         })
         .elementByCss(".TicketForm-save-ticket").click()
 
-        .waitForElementByCss(".Discuss-update-item .comment").text()
+        .waitForElementByCss(".Discuss-update-item .comment", 1000*10).text()
         .then(function(val) {
             assert.equal("A description for ticket", val);
         })
