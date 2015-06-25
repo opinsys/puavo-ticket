@@ -3,6 +3,8 @@
  * Resource endpoint testing that everything is working as expected
  * */
 
+var db = require("../db");
+
 var User = require("app/models/server/User");
 var Puavo = require("../utils/Puavo");
 
@@ -14,6 +16,7 @@ app.get("/test", function(req, res, next) {
     var result = {
         postgresql: false,
         puavo: false,
+        knexPoolStats: db.knex.client.pool.stats()
     };
 
     User.forge({})
