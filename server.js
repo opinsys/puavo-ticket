@@ -21,6 +21,8 @@ if (!PRODUCTION) {
 }
 
 
+var webpackDevMiddleware = require("webpack-dev-middleware");
+var webpack = require("webpack");
 var db = require("./db");
 var winston = require("winston");
 var Promise = require("bluebird");
@@ -106,11 +108,20 @@ var app = express();
 // Set env DEBUG=pool2,knex*
 debugKnexPool("Knex pool debugging active");
 app.use(function(req, res, next) {
-    debugKnexPool("Knex pool2 on " + req.url + ": " +  JSON.stringify(db.knex.client.pool.stats()));
+    debugKnexPool("Knex pool2 on " + req.url + ": " + JSON.stringify(db.knex.client.pool.stats()));
     next();
 });
 
+var webpackConfig = require("./webpack.config");
+webpackConfig.output.path = "/";
+app.use("/build", webpackDevMiddleware(webpack(webpackConfig)));
+
 app.use(compression());
+
+app.use("/font-awesome", serveStatic(__dirname + "/node_modules/font-awesome"));
+app.use("/bootstrap", serveStatic(__dirname + "node_modules/bootstrap/dist/"));
+
+
 app.use(require("./utils/middleware/createResponseLogger")());
 var server = Server(app);
 var sio = require("socket.io")(server);
@@ -225,14 +236,6 @@ app.use(jwtsso({
 
 }));
 
-app.use("/styles", serveStatic(__dirname + "/styles"));
-app.use("/components", serveStatic(__dirname + "/components"));
-app.use("/bootstrap", serveStatic(__dirname + "/node_modules/bootstrap"));
-app.use("/font-awesome", serveStatic(__dirname + "/node_modules/font-awesome"));
-app.use("/json-human", serveStatic(__dirname + "/node_modules/json-human"));
-app.use(serveStatic(__dirname + "/public"));
-app.use("/doc", serveStatic(__dirname + "/doc"));
-
 // Make socket.io object available from the request object
 app.use(function setSiotoReq(req, res, next) {
     req.sio = sio;
@@ -308,18 +311,10 @@ var loadingHTMLString = React.renderToString(loadingEl);
 app.get("/*", function(req, res) {
     var csrfToken = req.csrfToken();
 
-    var jsBundle = "/build/bundle.js";
-    var cssBundle = "/build/styles.css";
-    var cacheKey = CACHE_KEY;
-
-
     res.header("x-csrf-token", csrfToken);
     res.render("index.ejs", {
         spinner: loadingHTMLString,
         csrfToken: csrfToken,
-        jsBundle: jsBundle,
-        cssBundle: cssBundle,
-        cacheKey: cacheKey,
         user: req.user.toJSON(),
         serverHostname: HOSTNAME,
         uptime: prettyMs(Date.now() - STARTED),
@@ -384,10 +379,6 @@ if (require.main === module) {
         console.log('Listening on  http://%s:%d', addr.address, addr.port);
         winston.info("process listening");
     });
-
-    if (!PRODUCTION && !process.env.START_TEST_SERVER) {
-        require("./devmode")(sio);
-    }
 
 
     if (debugMem.name === "enabled") {

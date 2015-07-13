@@ -2,9 +2,7 @@ export PATH := node_modules/.bin:$(PATH)
 
 prefix ?= /usr/local
 
-# Use jsxhint wrapper since we use JSX for the React components
-JSHINT=jsxhint
-KARMA=node_modules/karma/bin/karma
+js_files=$(shell git ls-files "*.js" | grep -v test/vendor | grep -v vendor)
 
 all: npm doc install-git-hooks js css-min protip
 	@echo
@@ -25,7 +23,11 @@ psql:
 
 npm:
 	npm install
-	rm -f node_modules/app && ln -sf .. node_modules/app
+	$(MAKE) link
+
+link:
+	ln -sf .. node_modules/app
+
 
 migrate:
 	knex migrate:latest
@@ -53,57 +55,31 @@ create-test-db:
 	su -c "createdb -E UNICODE puavo-ticket-test" postgres
 	su -c "createuser -P puavo-ticket-test" postgres
 
-.PHONY: doc
-doc-js:
-	mkdir -p doc
-	rm -f test/components/bundle.js test/bundle.js
-	yuidoc \
-		--themedir yuidoc-theme \
-		--exclude test/vendor,node_modules,doc,resources,build,migrations \
-		--outdir doc/ .
-
-doc-rest:
-	mkdir -p doc/rest
-	apidoc -i resources/ -o doc/rest
-
-doc: doc-js
-
-doc-watch:
-	watch make doc
-
-doc-publish:
-	extra/publish-docs.sh
 
 
-js_files=$(shell git ls-files "*.js" | grep -v test/vendor | grep -v vendor)
-jshint: $(js_files)
-	$(JSHINT) $?
 
 js:
 	webpack -p
 
 css:
-	node-sass --source-map styles.css.map --source-comments map styles/index.scss --output styles.css
-	mv styles.css public/build/
-	mv styles.css.map public/build/
-	cleancss public/build/styles.css > public/build/styles.min.css
+	cd styles/build && \
+		node-sass \
+		$(ARGS) \
+		--include-path ../../node_modules/bootstrap-sass/assets/stylesheets/ \
+		--include-path ../../node_modules/bourbon/dist/ \
+		--source-map styles.css.map ../index.scss styles.css
 
-css-min: css
-	cleancss public/build/styles.css > public/build/styles.min.css
+css-watch:
 
 server:
 	node server.js
 
-test-server: jshint
+test-server:
 	mocha test/models/server/*_test.js test/api/*_test.js test/utils/*_test.js
-
-test-acceptance:
-	NODE_ENV=production START_TEST_SERVER=1 PORT=2000 mocha --timeout 300000 -b test/acceptance/*_test.js
 
 .PHONY: test
 test:
 	NODE_ENV=test $(MAKE) migrate
-	$(MAKE) jshint
 	$(MAKE) test-server
 	$(MAKE) test-acceptance
 

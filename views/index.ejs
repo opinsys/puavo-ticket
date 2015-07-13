@@ -132,12 +132,11 @@
             height: 100px;
         }
         </style>
-        <link href="/font-awesome/css/font-awesome.min.css?cache=<%= cacheKey %>" rel="stylesheet">
-        <link href="/bootstrap/dist/css/bootstrap.min.css?cache=<%= cacheKey %>" rel="stylesheet">
-        <link href="<%= cssBundle %>?cache=<%= cacheKey %>" rel="stylesheet">
+        <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/build/bundle.css" rel="stylesheet">
     </head>
     <body>
-        <div class="initial-spinner">
+        <div class="initial-spinner" id="spinner">
         <%- spinner %>
         </div>
         <div id="app">
@@ -153,6 +152,6 @@
         window.CSRF_TOKEN = "<%- csrfToken %>";
         window.USER = <%- JSON.stringify(user, null, "    ") %>;
         </script>
-        <script src="<%= jsBundle %>?cache=<%= cacheKey %>" charset="utf-8"></script>
+        <script src="/build/bundle.js" charset="utf-8"></script>
     </body>
 </html>

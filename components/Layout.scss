@@ -1,0 +1,116 @@
+
+
+$sidebar-left-width: 200px;
+$sidebar-right-width: 300px;
+
+@mixin scrollbar {
+    &::-webkit-scrollbar {
+        @content
+    }
+    &::scrollbar {
+        @content
+    }
+}
+
+@mixin scrollbar-track {
+    &::-webkit-scrollbar-track {
+        @content
+    }
+    &::scrollbar-track {
+        @content
+    }
+}
+
+@mixin scrollbar-thumb {
+    &::-webkit-scrollbar-thumb {
+        @content
+    }
+    &::scrollbar-thumb {
+        @content
+    }
+}
+
+@include scrollbar {
+    width: 5px;
+}
+
+@include scrollbar-track {
+    background-color: transparent;
+    border-radius: 10px;
+}
+
+@include scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #DDD;
+}
+
+
+
+.pt-panel {
+    position: absolute;
+    top: 51px;
+    overflow-y: auto;
+    bottom: 0;
+}
+
+
+
+.pt-sidebar-left {
+    // border: 1px solid red;
+}
+
+.pt-sidebar-right {
+    // border: 1px solid green;
+}
+
+.pt-panel-force-btn {
+    z-index: 6;
+}
+
+.pt-sidebar {
+    background-color: orange;
+    z-index: 4;
+}
+
+.pt-header {
+    position: absolute;
+    padding-top: 20px;
+    top: 51px;
+    background-color: yellow;
+}
+
+.pt-footer {
+    position: absolute;
+    background-color: blue;
+    bottom: 0;
+}
+
+.pt-main-overlay {
+    width: 100%;
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.60);
+}
+
+.pt-main {
+    // border: 1px solid blue;
+    z-index: 1;
+}
+
+
+nav.navbar {
+    z-index: 10;
+    margin-bottom: 0;
+}
+
+// @media (max-width: $screen-sm) {
+//     .pt-panel {
+//         top: 151px;
+//     }
+// }
+
+// @media (min-width: $screen-desktop) {
+//     .pt-sidebar-right {
+//         background-color: red;
+//     }
+// 
+// }
