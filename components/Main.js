@@ -12,16 +12,13 @@ export default class Main extends React.Component {
     render() {
         return (
             <div>
+                <h1>{typeof this.context.executeAction}</h1>
 
                  <Layout
                     header={<h4>header text sadf sdaf sda dfsa sdaf dasf</h4>}
                     footer={<div>footer jee</div>}
                     leftPanelWidth={200}
-                    leftPanel={
-                        <ul>
-                            {_.range(400).map(i => <li>{i} foo</li>)}
-                        </ul>}
-
+                    leftPanel={this.props.leftPanel}
                     rightPanelWidth={400}
                     rightPanel={
                         <ul>
@@ -60,7 +57,11 @@ export default class Main extends React.Component {
 
 }
 
+Main.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired
+};
 
 Main.propTypes = {
     children: React.PropTypes.element
+    leftPanel: React.PropTypes.element
 };

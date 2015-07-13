@@ -4,7 +4,6 @@ import PureComponent from "react-pure-render/component";
 import throttle from "lodash/function/throttle";
 import Glyphicon from "react-bootstrap/lib/Glyphicon";
 
-import "./Layout.scss";
 
 export default class Layout extends PureComponent {
 
@@ -70,6 +69,9 @@ export default class Layout extends PureComponent {
         } = this.props;
 
         var {showLeftPanel, showRightPanel, forceRight, forceLeft} = this.state;
+
+        if (!leftPanel) showLeftPanel = false;
+        if (!rightPanel) showRightPanel = false;
 
         var contentLeftMargin = leftPanelWidth;
         var contentRightMargin = rightPanelWidth;
@@ -139,7 +141,7 @@ export default class Layout extends PureComponent {
                         marginBottom: footerHeight,
                         marginRight: contentRightMargin
                     }} >
-                    {this.props.children}
+                    {this.props.body || this.props.children}
                 </div>
 
                 {this.props.footer &&
@@ -161,17 +163,20 @@ export default class Layout extends PureComponent {
 
 Layout.propTypes = {
     children: React.PropTypes.element,
-    header: React.PropTypes.element.isRequired,
+    body: React.PropTypes.element,
+    header: React.PropTypes.element,
     headerHeight: React.PropTypes.number,
     footer: React.PropTypes.element,
     footerHeight: React.PropTypes.number,
-    leftPanel: React.PropTypes.element.isRequired,
-    rightPanel: React.PropTypes.element.isRequired,
-    leftPanelWidth: React.PropTypes.number.isRequired,
-    rightPanelWidth: React.PropTypes.number.isRequired
+    leftPanel: React.PropTypes.element,
+    rightPanel: React.PropTypes.element,
+    leftPanelWidth: React.PropTypes.number,
+    rightPanelWidth: React.PropTypes.number
 };
 
 Layout.defaultProps = {
+    leftPanelWidth: 200,
+    rightPanelWidth: 200,
     headerHeight: 50,
     footerHeight: 100
 };

@@ -114,12 +114,17 @@ app.use(function(req, res, next) {
 
 var webpackConfig = require("./webpack.config");
 webpackConfig.output.path = "/";
-app.use("/build", webpackDevMiddleware(webpack(webpackConfig)));
 
 app.use(compression());
+app.use("/build/css", serveStatic(__dirname + "/public/build/css"));
+app.use("/node_modules/bootstrap-sass/assets", serveStatic(__dirname + "/node_modules/bootstrap-sass/assets"));
+app.use("/build/fonts/bootstrap/", serveStatic(__dirname + "/node_modules/bootstrap-sass/assets/fonts/bootstrap"));
 
-app.use("/font-awesome", serveStatic(__dirname + "/node_modules/font-awesome"));
-app.use("/bootstrap", serveStatic(__dirname + "node_modules/bootstrap/dist/"));
+app.use("/components", serveStatic(__dirname + "/components"));
+app.use("/styles", serveStatic(__dirname + "/styles"));
+app.use("/build", webpackDevMiddleware(webpack(webpackConfig)));
+
+
 
 
 app.use(require("./utils/middleware/createResponseLogger")());

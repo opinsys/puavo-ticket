@@ -1,4 +1,4 @@
-export PATH := node_modules/.bin:$(PATH)
+export PATH := $(CURDIR)/node_modules/.bin:$(PATH)
 
 prefix ?= /usr/local
 
@@ -26,6 +26,7 @@ npm:
 	$(MAKE) link
 
 link:
+	rm -f node_modules/app
 	ln -sf .. node_modules/app
 
 
@@ -62,14 +63,15 @@ js:
 	webpack -p
 
 css:
-	cd styles/build && \
+	cd public/build/css && \
 		node-sass \
 		$(ARGS) \
-		--include-path ../../node_modules/bootstrap-sass/assets/stylesheets/ \
-		--include-path ../../node_modules/bourbon/dist/ \
-		--source-map styles.css.map ../index.scss styles.css
+		--include-path ../../../node_modules/bootstrap-sass/assets/stylesheets/ \
+		--include-path ../../../node_modules/bourbon/dist/ \
+		--source-map styles.css.map ../../../styles/index.scss styles.css
 
 css-watch:
+	$(MAKE) css ARGS=--watch
 
 server:
 	node server.js

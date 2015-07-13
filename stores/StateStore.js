@@ -1,5 +1,5 @@
 
-import BaseStore from "fluxible-addons-react/BaseStore";
+import BaseStore from "fluxible/addons/BaseStore";
 
 export default class StateStore extends BaseStore {
 
