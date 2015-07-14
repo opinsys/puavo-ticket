@@ -12,6 +12,7 @@ export default class StateStore extends BaseStore {
 
     setState(state) {
         this.state = Object.assign({}, this.state, state);
+        this.emitChange();
     }
 
     dehydrate() {

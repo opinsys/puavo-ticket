@@ -29,6 +29,7 @@
     "curly": [2, "multi-line"],
     "consistent-return": [0],
     "new-cap": [0],
+    "no-shadow": [0],
     "no-redeclare": [2],
     "no-path-concat": 0,
     "no-comma-dangle": [0],

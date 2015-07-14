@@ -1,13 +1,8 @@
 
+import fetch from "./fetch";
 
 export function fetchViews(context) {
-
-    window.fetch("/api/views", {
-        credentials: "same-origin",
-        "headers": { "x-csrf-token": window.CSRF_TOKEN }
-    })
-    .then(res => {
-        context.dispatch("SET_VIEWS", res.json());
-    });
+    return context.executeAction(fetch, "/api/views")
+    .then(data => context.dispatch("SET_VIEWS", data));
 }
 

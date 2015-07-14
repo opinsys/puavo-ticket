@@ -5,6 +5,7 @@ import throttle from "lodash/function/throttle";
 import Glyphicon from "react-bootstrap/lib/Glyphicon";
 
 
+
 export default class Layout extends PureComponent {
 
     constructor(props) {
@@ -101,7 +102,7 @@ export default class Layout extends PureComponent {
                 </div>
 
 
-                {!showLeftPanel &&
+                {!showLeftPanel && leftPanel &&
                     <button
                         className="pt-panel-force-btn btn"
                         onClick={this.forceShowLeftPanel.bind(this)}
@@ -110,7 +111,7 @@ export default class Layout extends PureComponent {
                     </button>
                 }
 
-                {!showRightPanel &&
+                {!showRightPanel && rightPanel &&
                     <button
                         className="pt-panel-force-btn btn"
                         onClick={this.forceShowRightPanel.bind(this)}
@@ -155,11 +156,14 @@ export default class Layout extends PureComponent {
 
 
             </div>
-
         );
     }
 
 }
+
+Layout.contextTypes = {
+    getStore: React.PropTypes.func.isRequired
+};
 
 Layout.propTypes = {
     children: React.PropTypes.element,

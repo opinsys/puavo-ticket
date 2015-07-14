@@ -6,20 +6,18 @@ import { history } from "react-router/lib/BrowserHistory";
 import {Router, Route, Link} from 'react-router';
 import Fluxible from "fluxible";
 import FluxibleComponent from "fluxible-addons-react/FluxibleComponent";
+import connectToStores from "fluxible-addons-react/connectToStores";
+import provideContext from "fluxible-addons-react/provideContext";
 
-// import Main from "./components/Main";
-import Layout from "./components/Layout";
+import Main from "./components/Main";
 import ViewList from "./components/ViewList";
+import ViewContent from "./components/ViewContent";
+
 import ViewStore from "./stores/ViewStore";
+import AjaxStore from "./stores/AjaxStore";
 import {fetchViews} from "./actions/ViewActions";
-console.log("fetchViews", fetchViews);
+import {fetchTickets} from "./actions/TicketActions";
 
-
-var app = new Fluxible({
-    component: Layout
-});
-
-app.registerStore(ViewStore);
 
 
 class Foo extends React.Component {
@@ -42,41 +40,52 @@ class Bar extends React.Component {
     }
 }
 
-var context = app.createContext();
-window.context = context;
 
-class Main extends React.Component {
+const ViewList_ = connectToStores(ViewList, [ViewStore], (context) => {
+    return {
+        views: context.getStore(ViewStore).state.views
+    };
+});
+
+const ViewContent_ = connectToStores(ViewContent, [ViewStore], (context, props) => {
+
+    return {
+    };
+});
+
+class DefaultPanels extends React.Component {
     render() {
-        return (
-            <FluxibleComponent context={context.getComponentContext()}>
-                <Layout {...this.props} />
-            </FluxibleComponent>
-        );
+        return <Main leftPanel={<ViewList_ />} {...this.props} />;
     }
 }
 
-// const ViewList_ = connectStores(ViewList, {
-//     stores: {viewList: ViewList},
-//     actions: 
-// }
+var app = new Fluxible({
+    component: DefaultPanels
+});
+
+app.registerStore(ViewStore);
+app.registerStore(AjaxStore);
+
+var context = app.createContext();
+window.context = context;
+
+var viewsPromise = context.executeAction(fetchViews);
 
 var routes = {
     path: "/",
-    onEnter: () => context.executeAction(fetchViews),
-    component: Main,
+    onEnter: () => viewsPromise,
+    component: context.getComponent(),
     childRoutes: [
         {
-            path: "foo",
+            path: "views/:id",
+            onEnter: (props) => viewsPromise.then(() => {
+                const viewStore = context.getStore(ViewStore);
+                const view = viewStore.getView(props.params.id);
+                return context.executeAction(fetchTickets, {query: view.query});
+            }),
             components: {
-                leftPanel: ViewList,
-                body: Foo
-            }
-        },
-        {
-            path: "bar",
-            components: {
-                leftPanel: ViewList,
-                body: Bar
+                leftPanel: ViewList_,
+                body: ViewContent_
             }
         }
 
@@ -84,6 +93,11 @@ var routes = {
 };
 
 
-React.render(<Router history={history} children={routes} />, document.getElementById(("app")), () => {
-    document.body.removeChild(document.getElementById("spinner"));
+
+React.render(
+    <FluxibleComponent context={context.getComponentContext()}>
+        <Router history={history} children={routes} />
+    </FluxibleComponent>
+    , document.getElementById(("app")), () => {
+        document.body.removeChild(document.getElementById("spinner"));
 });
