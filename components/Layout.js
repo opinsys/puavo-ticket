@@ -181,6 +181,6 @@ Layout.propTypes = {
 Layout.defaultProps = {
     leftPanelWidth: 200,
     rightPanelWidth: 200,
-    headerHeight: 50,
+    headerHeight: 100,
     footerHeight: 100
 };

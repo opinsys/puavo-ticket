@@ -10,6 +10,11 @@ export function fetchTickets(context, payload) {
     }))
     .then(data => {
         context.dispatch("SET_TICKETS", data);
+
+        context.dispatch("SET_COMMENTS", data.reduce((comments, ticket) => {
+            return comments.concat(ticket.comments);
+        }, []));
+
         if (payload.viewId) {
             context.dispatch("SET_VIEW_TICKETS", {
                 viewId: payload.viewId,

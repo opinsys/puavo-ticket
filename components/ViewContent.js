@@ -2,15 +2,24 @@
 
 import React from "react";
 import PureComponent from "react-pure-render/component";
+import last from "lodash/array/last";
+import {Link} from "react-router";
 
 
 export default class ViewContent extends PureComponent {
     render() {
         return (
             <div className="ViewContent">
-                <h1>view list</h1>
                 <ul>
-                    {this.props.tickets.map(ticket => <li key={ticket.id}>{ticket.title}</li>)}
+                    {this.props.tickets.map(ticket => {
+                        return (
+                            <li key={ticket.id}>
+                                <Link to={"/tickets/" + ticket.id}>
+                                    {last(ticket.titles).title}
+                                </Link>
+                            </li>
+                        );
+                    })}
                 </ul>
             </div>
         );
@@ -22,7 +31,6 @@ ViewContent.defaultProps = {
 };
 
 ViewContent.propTypes = {
-    name: React.PropTypes.string.isRequired,
     tickets: React.PropTypes.array.isRequired
 };
 

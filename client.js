@@ -7,38 +7,23 @@ import {Router, Route, Link} from 'react-router';
 import Fluxible from "fluxible";
 import FluxibleComponent from "fluxible-addons-react/FluxibleComponent";
 import connectToStores from "fluxible-addons-react/connectToStores";
-import provideContext from "fluxible-addons-react/provideContext";
+import PureComponent from "react-pure-render/component";
+import debug from "debug";
+window.debug = debug;
 
 import Main from "./components/Main";
 import ViewList from "./components/ViewList";
 import ViewContent from "./components/ViewContent";
+import TicketComments from "./components/TicketComments";
 
 import ViewStore from "./stores/ViewStore";
 import AjaxStore from "./stores/AjaxStore";
+import TicketStore from "./stores/TicketStore";
+import CommentsStore from "./stores/CommentsStore";
 import {fetchViews} from "./actions/ViewActions";
 import {fetchTickets} from "./actions/TicketActions";
 
 
-
-class Foo extends React.Component {
-    static beforeNavigate() {
-        console.log("foo loading");
-    }
-
-    render() {
-        return <span><Link to="/bar">Go to bar</Link></span>;
-    }
-}
-
-class Bar extends React.Component {
-    static beforeNavigate() {
-        console.log("bar loading");
-    }
-
-    render() {
-        return <span><Link to="/foo">Go to foo</Link></span>;
-    }
-}
 
 
 const ViewList_ = connectToStores(ViewList, [ViewStore], (context) => {
@@ -47,13 +32,31 @@ const ViewList_ = connectToStores(ViewList, [ViewStore], (context) => {
     };
 });
 
-const ViewContent_ = connectToStores(ViewContent, [ViewStore], (context, props) => {
-
+const ViewContent_ = connectToStores(ViewContent, [ViewStore, TicketStore], (context, props) => {
+    const viewStore = context.getStore(ViewStore);
+    const viewId = props.params.id;
     return {
+        tickets: viewStore.getTicketsForView(viewId)
     };
 });
 
-class DefaultPanels extends React.Component {
+const TicketComments_ = connectToStores(TicketComments, [CommentsStore], (context, props) => {
+    let comments = context.getStore(CommentsStore).getComments(props.params.ticketId);
+    return {comments};
+});
+
+
+const ViewHeader = connectToStores(class ViewHeader extends PureComponent {
+    render() {
+        return <h1>{this.props.name}</h1>;
+    }
+}, [ViewStore], (context, props) => ({
+    name: context.getStore(ViewStore).getView(props.params.id).name
+}));
+
+
+
+class DefaultPanels extends PureComponent {
     render() {
         return <Main leftPanel={<ViewList_ />} {...this.props} />;
     }
@@ -65,6 +68,8 @@ var app = new Fluxible({
 
 app.registerStore(ViewStore);
 app.registerStore(AjaxStore);
+app.registerStore(TicketStore);
+app.registerStore(CommentsStore);
 
 var context = app.createContext();
 window.context = context;
@@ -78,17 +83,28 @@ var routes = {
     childRoutes: [
         {
             path: "views/:id",
-            onEnter: (props) => viewsPromise.then(() => {
+            onEnter: (nextState, transition, cb) => viewsPromise.then(() => {
                 const viewStore = context.getStore(ViewStore);
-                const view = viewStore.getView(props.params.id);
-                return context.executeAction(fetchTickets, {query: view.query});
+                const view = viewStore.getView(nextState.params.id);
+                return context.executeAction(fetchTickets, {
+                    query: view.query,
+                    viewId: nextState.params.id
+                })
+                .then(() => cb());
             }),
             components: {
+                header: ViewHeader,
                 leftPanel: ViewList_,
                 body: ViewContent_
             }
+        },
+        {
+            path: "tickets/:ticketId",
+            components: {
+                leftPanel: ViewList_,
+                body: TicketComments_
+            }
         }
-
     ]
 };
 

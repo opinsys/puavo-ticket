@@ -1,13 +1,14 @@
 
 import StateStore from "./StateStore";
-
+import TicketStore from "./TicketStore";
+import I from "icepick";
 
 export default class ViewStore extends StateStore {
 
     constructor(dispatcher) {
         super(dispatcher);
         this.state = {
-            views: []
+            views: [],
             ticketsPerView: {}
         };
     }
@@ -18,19 +19,29 @@ export default class ViewStore extends StateStore {
     }
 
     handleSetViewTickets({viewId, ticketIds}) {
-        const update = {};
-        update[viewId] = ticketIds;
-
-        this.setState({
-            ticketsPerView: Object.assign({}, this.state.ticketsPerView, update)
-        });
-
+        this.state = I.assocIn(this.state, ["ticketsPerView", viewId], ticketIds);
+        this.emitChange();
     }
 
     getView(id) {
-        return this.state.views.find(view => {
+        const view = this.state.views.find(view => {
             return String(view.id) === String(id);
         });
+
+        if (!view) throw new Error("Unknown view id: " + id);
+
+        return view;
+    }
+
+
+    getTicketsForView(viewId) {
+        if (!this.state.ticketsPerView[viewId]) {
+            console.error("Unknown view id: " + viewId);
+            return [];
+        }
+
+        return this.dispatcher.getStore(TicketStore)
+            .getTicketFor(this.state.ticketsPerView[viewId]);
     }
 
 }
