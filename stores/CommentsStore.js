@@ -1,33 +1,27 @@
 import StateStore from "./StateStore";
-import I from "icepick";
-import values from "lodash/object/values";
+import R from "ramda";
 
 
 export default class CommentsStore extends StateStore {
 
     constructor(dispatcher) {
         super(dispatcher);
-        this.state = I.freeze({
+        this.state = {
             comments: {}
-        });
+        };
     }
 
     handleSetComments(comments) {
 
         comments.forEach(comment => {
-            if (!this.state.comments[comment.ticketId]) {
-                this.state = I.assocIn(this.state, ["comments", comment.ticketId], {});
-            }
-
-            console.log("setting", comment.id);
-            this.state = I.assocIn(this.state, ["comments", comment.ticketId, comment.id], comment);
+            this.state = R.assocPath(["comments", comment.ticketId, comment.id], comment, this.state);
         });
 
         this.emitChange();
     }
 
     getComments(ticketId) {
-        return values(this.state.comments[ticketId] || {});
+        return R.values(this.state.comments[ticketId]);
     }
 
 }

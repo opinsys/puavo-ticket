@@ -21,7 +21,7 @@ import AjaxStore from "./stores/AjaxStore";
 import TicketStore from "./stores/TicketStore";
 import CommentsStore from "./stores/CommentsStore";
 import {fetchViews} from "./actions/ViewActions";
-import {fetchTickets} from "./actions/TicketActions";
+import {fetchTickets, fetchFullTicket} from "./actions/TicketActions";
 
 
 
@@ -41,7 +41,8 @@ const ViewContent_ = connectToStores(ViewContent, [ViewStore, TicketStore], (con
 });
 
 const TicketComments_ = connectToStores(TicketComments, [CommentsStore], (context, props) => {
-    let comments = context.getStore(CommentsStore).getComments(props.params.ticketId);
+    let store = context.getStore(CommentsStore);
+    let comments = store.getComments(props.params.ticketId);
     return {comments};
 });
 
@@ -99,6 +100,10 @@ var routes = {
             }
         },
         {
+            onEnter: (nextState, transition, cb) => {
+                context.executeAction(fetchFullTicket, nextState.params.ticketId)
+                .then(() => cb());
+            },
             path: "tickets/:ticketId",
             components: {
                 leftPanel: ViewList_,
