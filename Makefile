@@ -4,7 +4,7 @@ prefix ?= /usr/local
 
 js_files=$(shell git ls-files "*.js" | grep -v test/vendor | grep -v vendor)
 
-all: npm doc install-git-hooks js css-min protip
+all: npm doc install-git-hooks js css protip
 	@echo
 	@echo All OK!
 	@echo
@@ -63,6 +63,7 @@ js:
 	webpack -p
 
 css:
+	mkdir -p public/build/css
 	cd public/build/css && \
 		node-sass \
 		$(ARGS) \
