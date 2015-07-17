@@ -1,13 +1,25 @@
 
+import R from "ramda";
 
 var sequence = 0;
 
-export default function fetch(context, path, options) {
-    const fetchId = ++sequence;
-    options = Object.assign({credentials: "same-origin", method: "GET"});
-    options.headers = Object.assign({"x-csrf-token": window.CSRF_TOKEN}, options.headers);
+const setDefaultHeaders = R.evolve({
+    headers: R.merge({"x-csrf-token": window.CSRF_TOKEN})
+});
 
-    console.log("fetch start");
+const setDefaultOptions = R.compose(setDefaultHeaders, R.merge({
+    credentials: "same-origin",
+    method: "GET",
+    headers: {}
+}));
+
+
+export default function fetch(context, payload) {
+    const fetchId = ++sequence;
+    var options = setDefaultOptions(payload);
+    const path = options.path;
+    if (!path) throw new Error("payload.path is missing");
+
     context.dispatch("FETCH_START", {path, fetchId, options});
 
     return window.fetch(path, options)

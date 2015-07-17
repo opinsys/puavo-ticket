@@ -15,13 +15,16 @@ import Main from "./components/Main";
 import ViewList from "./components/ViewList";
 import ViewContent from "./components/ViewContent";
 import TicketComments from "./components/TicketComments";
+import CommentInput from "./components/CommentInput";
+import bindActions from "./utils/bindActions";
+import propsTransform from "./utils/propsTransform";
 
 import ViewStore from "./stores/ViewStore";
 import AjaxStore from "./stores/AjaxStore";
 import TicketStore from "./stores/TicketStore";
 import CommentsStore from "./stores/CommentsStore";
 import {fetchViews} from "./actions/ViewActions";
-import {fetchTickets, fetchFullTicket} from "./actions/TicketActions";
+import {fetchTickets, fetchFullTicket, createComment} from "./actions/TicketActions";
 
 
 
@@ -55,6 +58,9 @@ const ViewHeader = connectToStores(class ViewHeader extends PureComponent {
     name: context.getStore(ViewStore).getView(props.params.id).name
 }));
 
+var CommentInput_ = CommentInput;
+CommentInput_ = bindActions(CommentInput_, {createComment});
+CommentInput_ = propsTransform(CommentInput_, (props) => ({ticketId: props.params.ticketId}));
 
 
 class DefaultPanels extends PureComponent {
@@ -107,7 +113,8 @@ var routes = {
             path: "tickets/:ticketId",
             components: {
                 leftPanel: ViewList_,
-                body: TicketComments_
+                body: TicketComments_,
+                footer: CommentInput_
             }
         }
     ]

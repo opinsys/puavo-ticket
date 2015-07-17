@@ -41,6 +41,7 @@
     "fluxible": "^0.5.0",
     "fluxible-addons-react": "^0.1.6",
     "font-awesome": "^4.2.0",
+    "hoist-non-react-statics": "^1.0.2",
     "icepick": "^0.4.1",
     "jquery": "~2.1.1",
     "jwt-simple": "~0.2.0",
