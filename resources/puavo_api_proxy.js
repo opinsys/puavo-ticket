@@ -47,7 +47,7 @@ app.all("/:domain*", function(req, res, next) {
                 url: targetURL,
                 pool: {},
                 form: req.body,
-                timeout: 1000*5,
+                timeout: 1000*10,
                 auth: {
                     "user": config.puavo.username,
                     "pass": config.puavo.password
@@ -65,8 +65,8 @@ app.all("/:domain*", function(req, res, next) {
             }),
             res
         ).catch(function(err) {
-            console.error("Proxy connection to puavo-rest failed. Tried GET", targetURL, "with forced Host header:", domain);
-            res.status(500).end("proxy connection failed");
+            console.error("Proxy connection to puavo-rest failed. Tried GET", targetURL, "with forced Host header:", domain, err);
+            res.status(500).end("proxy connection failed: " + err.message);
         });
     }
 
