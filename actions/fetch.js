@@ -1,4 +1,5 @@
 
+import url from "url";
 import R from "ramda";
 
 var sequence = 0;
@@ -17,8 +18,16 @@ const setDefaultOptions = R.compose(setDefaultHeaders, R.merge({
 export default function fetch(context, payload) {
     const fetchId = ++sequence;
     var options = setDefaultOptions(payload);
-    const path = options.path;
-    if (!path) throw new Error("payload.path is missing");
+    var path;
+
+    if (!options.path) throw new Error("payload.path is missing");
+
+    if (typeof options.path === "string") {
+        path = options.path;
+    } else {
+        path = url.format(options.path);
+    }
+
 
     context.dispatch("FETCH_START", {path, fetchId, options});
 
