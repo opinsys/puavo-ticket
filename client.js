@@ -1,5 +1,6 @@
 
 import "babel/polyfill";
+
 import React from "react";
 import Bluebird from "bluebird";
 import { history } from "react-router/lib/BrowserHistory";
@@ -23,6 +24,7 @@ import ViewStore from "./stores/ViewStore";
 import AjaxStore from "./stores/AjaxStore";
 import TicketStore from "./stores/TicketStore";
 import CommentsStore from "./stores/CommentsStore";
+import UsersStore from "./stores/UsersStore";
 import {fetchViews} from "./actions/ViewActions";
 import {fetchTickets, fetchFullTicket, createComment} from "./actions/TicketActions";
 
@@ -77,6 +79,7 @@ app.registerStore(ViewStore);
 app.registerStore(AjaxStore);
 app.registerStore(TicketStore);
 app.registerStore(CommentsStore);
+app.registerStore(UsersStore);
 
 var context = app.createContext();
 window.context = context;

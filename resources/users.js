@@ -1,11 +1,28 @@
 "use strict";
 
 var express = require("express");
+var Promise = require("bluebird");
 
 var User = require("app/models/server/User");
 var Acl = require("../models/Acl");
 
 var app = express.Router();
+
+function expressPromiseJSON(fn) {
+    return function(req, res, next) {
+        Promise.resolve(fn(req, res)).then(function(value) {
+            res.json(value);
+        })
+        .catch(next);
+    };
+}
+
+
+app.get("/api/users", expressPromiseJSON(function(req, res) {
+    return User.collection().query(q => {
+        q.whereIn("id", req.query.ids.split(","));
+    }).fetch();
+}));
 
 
 app.get("/api/users/:id", function(req, res, next) {
@@ -16,6 +33,7 @@ app.get("/api/users/:id", function(req, res, next) {
     .then(u => res.json(u))
     .catch(next);
 });
+
 
 
 app.post("/api/users/:userId/access_tags", function(req, res, next) {
