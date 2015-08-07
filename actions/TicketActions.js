@@ -9,14 +9,7 @@ import {fetchUsers} from "./UserActions";
 const getComments = R.compose(R.flatten, R.map(R.prop("comments")));
 const removeComments = R.map(R.dissoc("comments"));
 
-
-export async function fetchTickets(context, payload) {
-    var path = url.format({
-        pathname: "/api/tickets",
-        query: payload.query
-    });
-
-    var data = await context.executeAction(fetch, {path});
+async function dispatchTickets(context, data) {
     var tickets = removeComments(data);
     var comments = getComments(data);
 
@@ -30,6 +23,18 @@ export async function fetchTickets(context, payload) {
     context.dispatch("SET_TICKETS", tickets);
     context.dispatch("SET_COMMENTS", comments);
 
+}
+
+
+export async function fetchTickets(context, payload) {
+    var path = url.format({
+        pathname: "/api/tickets",
+        query: payload.query
+    });
+
+    var data = await context.executeAction(fetch, {path});
+    await dispatchTickets(context, data);
+
     if (payload.viewId) {
         context.dispatch("SET_VIEW_TICKETS", {
             viewId: payload.viewId,
@@ -38,12 +43,9 @@ export async function fetchTickets(context, payload) {
     }
 }
 
-export function fetchFullTicket(context, ticketId) {
-    return context.executeAction(fetch, {path: "/api/tickets/" + ticketId})
-    .then(data => {
-        context.dispatch("SET_TICKETS", removeComments([data]));
-        context.dispatch("SET_COMMENTS", getComments([data]));
-    });
+export async function fetchFullTicket(context, ticketId) {
+    var ticketData = await context.executeAction(fetch, {path: "/api/tickets/" + ticketId});
+    await dispatchTickets(context, [ticketData]);
 }
 
 export function createComment(context, payload) {
