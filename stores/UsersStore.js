@@ -13,13 +13,19 @@ export default class UsersStore extends StateStore {
     }
 
     handleSetUsers(users) {
-        users = R.reduce((m, u) => {
-            m[u.id] = u;
-            return u;
-        }, {}, users);
-
-        this.state = R.assoc("users", R.merge(users, this.state.users), this.state);
+        users.forEach(u => {
+            this.state = R.assocPath(["users", u.id], u, this.state);
+        });
         this.emitChange();
+        console.log("users", this.state);
+    }
+
+    getUser(userId) {
+        var user = this.state.users[userId];
+        if (!user) {
+            throw new Error("User " + userId + " is not loaded");
+        }
+        return user;
     }
 
     getKnownUserIds() {
