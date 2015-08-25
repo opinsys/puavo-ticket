@@ -38,7 +38,7 @@ app.get("/test", function(req, res, next) {
         res.json(result);
     })
     .catch(err => {
-        result.error = err;
+        result.error = err.message;
         res.status(500).json(result);
     });
 
