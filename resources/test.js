@@ -27,7 +27,7 @@ app.get("/test", function(req, res, next) {
 
         result.postgresql = !!u;
         var puavo = new Puavo({ domain: u.get("externalData").organisation_domain });
-        return puavo.fetchUserByUsername(u.get("externalData").username);
+        return puavo.request("/v3/ldap_connection_test");
     })
     .then(puavoData => {
         if (!puavoData) {
