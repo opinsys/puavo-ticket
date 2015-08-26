@@ -26,7 +26,10 @@ app.get("/test", function(req, res, next) {
         if (!u) throw new Error("Failed to find user from postgresql");
 
         result.postgresql = !!u;
-        var puavo = new Puavo({ domain: u.get("externalData").organisation_domain });
+        var puavo = new Puavo({
+            domain: u.get("externalData").organisation_domain,
+            timeout: 1000 * 20
+        });
         return puavo.request("/v3/ldap_connection_test");
     })
     .then(puavoData => {

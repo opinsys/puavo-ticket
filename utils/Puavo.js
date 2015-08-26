@@ -17,6 +17,7 @@ var config = require("../config.js");
  */
 function Puavo(options) {
     this.domain = options.domain;
+    this.timeout = options.timeout || 1000*5;
 }
 
 /**
@@ -34,12 +35,13 @@ Puavo.prototype.request = function(pathname) {
         pathname: pathname,
     });
 
+    console.log("using timeout", this.timeout);
     return request(puavoUrl, {
             auth: {
                 'user': config.puavo.username,
                 'pass': config.puavo.password
             },
-            timeout: 1000*5,
+            timeout: this.timeout,
             pool: {},
             headers: {
                 host: this.domain,
