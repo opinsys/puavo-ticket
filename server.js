@@ -301,6 +301,10 @@ app.use(require("./resources/views"));
 app.use(require("./resources/users"));
 app.use("/api/puavo", require("./resources/puavo_api_proxy")(config));
 
+app.get("/api/test_auth", function(req, res) {
+    res.json({auth: "ok"});
+});
+
 
 var loadingEl = React.createElement(require("./components/Loading"));
 var loadingHTMLString = React.renderToString(loadingEl);

@@ -1,6 +1,7 @@
 "use strict";
 
 require("babel/polyfill");
+require("./utils/loginCheck");
 var Promise = require("bluebird");
 var $ = require("jquery");
 var Backbone = require("backbone");
