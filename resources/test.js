@@ -30,7 +30,7 @@ app.get("/test", function(req, res, next) {
             domain: u.get("externalData").organisation_domain,
             timeout: 1000 * 20
         });
-        return puavo.request("/v3/ldap_connection_test");
+        return puavo.request("/v3/about");
     })
     .then(puavoData => {
         if (!puavoData) {
