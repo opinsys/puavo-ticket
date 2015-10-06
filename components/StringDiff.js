@@ -1,7 +1,7 @@
 "use strict";
 
 var React = require("react/addons");
-var classSet = React.addons.classSet;
+var classNames = require("classnames");
 var diff = require("diff");
 
 
@@ -28,7 +28,7 @@ var StringDiff = React.createClass({
         return (
             <span className="StringDiff">
                 {diff.diffChars(prev, next).map(function(part) {
-                    var className = classSet({
+                    var className = classNames({
                         added: part.added,
                         removed: part.removed
                     });

@@ -2,8 +2,8 @@
 
 var React = require("react/addons");
 
-var DropdownButton = require("react-bootstrap/DropdownButton");
-var MenuItem = require("react-bootstrap/MenuItem");
+var DropdownButton = require("react-bootstrap/lib/DropdownButton");
+var MenuItem = require("react-bootstrap/lib/MenuItem");
 
 var Profile = require("./Profile");
 var User = require("../models/client/User");
@@ -36,7 +36,7 @@ var UserInformation = React.createClass({
                     <Profile.Badge user={this.props.user} size={40} />
                 </Profile.Overlay>
 
-                <DropdownButton className="menu" bsSize="xsmall"  title={this.props.user.getFullName()} pullRight>
+                <DropdownButton id="UserInformation" className="menu" bsSize="xsmall"  title={this.props.user.getFullName()} pullRight>
 
                     {/* TODO: redirect to puavo profile edit */}
                     <MenuItem header>

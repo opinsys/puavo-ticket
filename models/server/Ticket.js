@@ -292,12 +292,13 @@ var Ticket = Base.extend(_.extend({}, TicketMixin, {
      * @return {Bluebird.Promise} with models.server.Tag
      */
     addTag: function(tagName, user, opts) {
+        if (Base.isModel(tagName)) tagName = tagName.get("tag");
+
         winston.debug("adding tag", {
             ticketId: this.get("id"),
             tag: tagName,
             addedById: Base.toId(user)
         });
-        if (Base.isModel(tagName)) tagName = tagName.get("tag");
         var self = this;
 
         return Tag.fetchOrCreate({

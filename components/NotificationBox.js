@@ -1,7 +1,7 @@
 "use strict";
 
 var React = require("react/addons");
-var Alert = require("react-bootstrap/Alert");
+var Alert = require("react-bootstrap/lib/Alert");
 
 /**
  *

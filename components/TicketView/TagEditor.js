@@ -1,9 +1,9 @@
 "use strict";
 
 var React = require("react/addons");
-var Badge = require("react-bootstrap/Badge");
-var Input = require("react-bootstrap/Input");
-var Button = require("react-bootstrap/Button");
+var Badge = require("react-bootstrap/lib/Badge");
+var Input = require("react-bootstrap/lib/Input");
+var Button = require("react-bootstrap/lib/Button");
 var Reflux = require("reflux");
 
 var Actions = require("../../Actions");

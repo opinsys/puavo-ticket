@@ -2,10 +2,10 @@
 var React = require("react/addons");
 var Navigation = require("react-router").Navigation;
 var Link = require("react-router").Link;
-var Button = require("react-bootstrap/Button");
-var ButtonGroup = require("react-bootstrap/ButtonGroup");
+var Button = require("react-bootstrap/lib/Button");
+var ButtonGroup = require("react-bootstrap/lib/ButtonGroup");
 var url = require("url");
-var Input = require("react-bootstrap/Input");
+var Input = require("react-bootstrap/lib/Input");
 var Reflux = require("reflux");
 
 var app = require("../index");

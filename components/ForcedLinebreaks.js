@@ -2,7 +2,7 @@
 var React = require("react/addons");
 var url = require("url");
 var {Link} = require("react-router");
-var Glyphicon = require("react-bootstrap/Glyphicon");
+var Glyphicon = require("react-bootstrap/lib/Glyphicon");
 
 var httpPrefix = /^https?:\/\//;
 

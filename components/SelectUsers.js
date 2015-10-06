@@ -2,7 +2,7 @@
 
 var _ = require("lodash");
 var React = require("react/addons");
-var classSet = React.addons.classSet;
+var classNames = require("classnames");
 var Promise = require("bluebird");
 
 var Actions = require("../Actions");
@@ -51,7 +51,7 @@ var UserItem = React.createClass({
 
         if (emailMissing) disabled = true;
 
-        var className = classSet({
+        var className = classNames({
             UserItem: true,
             "email-missing": emailMissing
         });

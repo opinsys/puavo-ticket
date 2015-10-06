@@ -1,6 +1,6 @@
 "use strict";
 var React = require("react/addons");
-var Button = require("react-bootstrap/Button");
+var Button = require("react-bootstrap/lib/Button");
 var Navigation = require("react-router").Navigation;
 
 var Actions = require("../Actions");

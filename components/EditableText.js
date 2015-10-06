@@ -1,10 +1,10 @@
 "use strict";
 
 var React = require("react/addons");
-var Glyphicon = require("react-bootstrap/Glyphicon");
-var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
-var Tooltip = require("react-bootstrap/Tooltip");
-var Button = require("react-bootstrap/Button");
+var Glyphicon = require("react-bootstrap/lib/Glyphicon");
+var OverlayTrigger = require("react-bootstrap/lib/OverlayTrigger");
+var Tooltip = require("react-bootstrap/lib/Tooltip");
+var Button = require("react-bootstrap/lib/Button");
 
 /**
  * EditableText
@@ -76,7 +76,7 @@ var EditableText = React.createClass({
                 {!this.props.disabled &&
                 <OverlayTrigger
                     placement="top"
-                    overlay={<Tooltip>Muokkaa otsikkoa</Tooltip>}>
+                    overlay={<Tooltip id="edit-title">Muokkaa otsikkoa</Tooltip>}>
                         <button className="EditableText-start-button" onClick={this.startEditing} >
                             <Glyphicon glyph="edit" />
                         </button>

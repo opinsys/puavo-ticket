@@ -1,7 +1,7 @@
 "use strict";
 var React = require("react/addons");
-var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
-var Tooltip = require("react-bootstrap/Tooltip");
+var OverlayTrigger = require("react-bootstrap/lib/OverlayTrigger");
+var Tooltip = require("react-bootstrap/lib/Tooltip");
 
 var OnViewportMixin = require("../OnViewportMixin");
 var UpdateMixin = require("./UpdateMixin");
@@ -36,7 +36,7 @@ var TitleUpdate = React.createClass({
                     {this.getCreatorName()} asetti otsikoksi
                 </span>
                 <OverlayTrigger placement="top" overlay={
-                    <Tooltip>
+                    <Tooltip id="title-update">
                         <StringDiff previous={previousTitle} next={title} />
                     </Tooltip>
                     }>

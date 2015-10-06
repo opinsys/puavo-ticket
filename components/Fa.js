@@ -1,7 +1,7 @@
 "use strict";
 
 var React = require("react/addons");
-var classSet = React.addons.classSet;
+var classNames = require("classnames");
 
 /**
  * Font-Awesome wrapper
@@ -34,7 +34,7 @@ var Fa = React.createClass({
     },
 
     render: function() {
-        var className = classSet({
+        var className = classNames({
             fa: true,
             "fa-spin": this.props.spin,
         });

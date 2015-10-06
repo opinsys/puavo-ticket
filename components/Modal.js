@@ -1,9 +1,9 @@
 "use strict";
 
 var React = require("react/addons");
-var classSet = React.addons.classSet;
+var classNames = require("classnames");
 
-var BModal = require("react-bootstrap/Modal");
+var BModal = require("react-bootstrap/lib/Modal");
 
 /**
  * @namespace components
@@ -51,7 +51,7 @@ var Modal = React.createClass({
 
     render: function() {
 
-        var className = classSet({
+        var className = classNames({
             Modal: true,
             "no-close": this.props.permanent
         });

@@ -1,8 +1,8 @@
 "use strict";
 
 var React = require("react/addons");
-var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
-var Tooltip = require("react-bootstrap/Tooltip");
+var OverlayTrigger = require("react-bootstrap/lib/OverlayTrigger");
+var Tooltip = require("react-bootstrap/lib/Tooltip");
 
 var app = require("../../index");
 var User = require("../../models/client/User");
@@ -84,7 +84,7 @@ var ProfileOverlay = React.createClass({
         return (
             <OverlayTrigger
                 placement={this.props.tipPlacement}
-                overlay={<Tooltip>{this.renderTooltip()}</Tooltip>}>{children}</OverlayTrigger>
+                overlay={<Tooltip id="ProfileOverlay">{this.renderTooltip()}</Tooltip>}>{children}</OverlayTrigger>
         );
     }
 });

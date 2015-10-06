@@ -1,6 +1,6 @@
 "use strict";
 var React = require("react/addons");
-var classSet = React.addons.classSet;
+var classNames = require("classnames");
 
 var OnViewportMixin = require("../OnViewportMixin");
 var UpdateMixin = require("./UpdateMixin");
@@ -18,7 +18,7 @@ var HandlerUpdate = React.createClass({
     mixins: [UpdateMixin, OnViewportMixin],
 
     render: function() {
-        var className = classSet({
+        var className = classNames({
             HandlerUpdate: true,
             "ticket-update": true,
             small: true,

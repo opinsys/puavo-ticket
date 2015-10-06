@@ -1,8 +1,8 @@
 "use strict";
 var React = require("react/addons");
-var classSet = React.addons.classSet;
-var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
-var Tooltip = require("react-bootstrap/Tooltip");
+var classNames = require("classnames");
+var OverlayTrigger = require("react-bootstrap/lib/OverlayTrigger");
+var Tooltip = require("react-bootstrap/lib/Tooltip");
 
 var app = require("../../index");
 var Actions = require("../../Actions");
@@ -84,7 +84,7 @@ var CommentUpdate = React.createClass({
             return c.getUniqueId() === currentHashId;
         });
 
-        var classes = classSet({
+        var classes = classNames({
             CommentUpdate: true,
             "hidden-comment": comment.get("hidden"),
             "ticket-update": true,

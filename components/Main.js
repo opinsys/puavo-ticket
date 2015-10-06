@@ -3,7 +3,7 @@
 var React = require("react/addons");
 var Link = require("react-router").Link;
 var RouteHandler = require("react-router").RouteHandler;
-var ButtonGroup = require("react-bootstrap/ButtonGroup");
+var ButtonGroup = require("react-bootstrap/lib/ButtonGroup");
 var Reflux = require("reflux");
 
 var app = require("../index");

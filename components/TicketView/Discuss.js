@@ -1,11 +1,11 @@
 "use strict";
 var React = require("react/addons");
-var classSet = React.addons.classSet;
+var classNames = require("classnames");
 var _ = require("lodash");
 var Navigation = require("react-router").Navigation;
 var RouteHandler = require("react-router").RouteHandler;
 
-var Alert = require("react-bootstrap/Alert");
+var Alert = require("react-bootstrap/lib/Alert");
 
 var app = require("../../index");
 var Actions = require("../../Actions");
@@ -400,7 +400,7 @@ var Discuss = React.createClass({
                             }
 
                             var unread = update.isUnreadBy(app.currentUser);
-                            var className = classSet({
+                            var className = classNames({
                                 unread: unread,
                                 "marking-as-read": self.state.markingAsRead && unread,
                                 "Discuss-update-item": true

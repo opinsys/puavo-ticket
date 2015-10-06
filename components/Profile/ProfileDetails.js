@@ -1,7 +1,7 @@
 "use strict";
 
 var React = require("react/addons");
-var Table = require("react-bootstrap/Table");
+var Table = require("react-bootstrap/lib/Table");
 var Link = require("react-router").Link;
 
 var app = require("../../index");

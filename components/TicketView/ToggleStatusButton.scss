@@ -1,13 +1,13 @@
 
-.ToggleStatusButton.closed {
+.ToggleStatusButton.tsb-closed {
     background-color:  $closed-ticket-color;
 }
 
-.ToggleStatusButton.open {
+.ToggleStatusButton.tsb-open {
     background-color: $open-ticket-color;
 }
 
-.ToggleStatusButton.pending {
+.ToggleStatusButton.tsb-pending {
     background-color: $pending-ticket-color;
 }
 

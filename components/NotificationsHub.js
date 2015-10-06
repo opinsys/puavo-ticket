@@ -1,7 +1,7 @@
 "use strict";
 var React = require("react/addons");
-var DropdownButton = require("react-bootstrap/DropdownButton");
-var MenuItem = require("react-bootstrap/MenuItem");
+var DropdownButton = require("react-bootstrap/lib/DropdownButton");
+var MenuItem = require("react-bootstrap/lib/MenuItem");
 var Link = require("react-router").Link;
 var Reflux = require("reflux");
 
@@ -29,7 +29,7 @@ var NotificationsHub = React.createClass({
         var count = items.length;
 
         return (
-            <DropdownButton {...this.props}
+            <DropdownButton id="NotificationsHub" {...this.props}
                 className="NotificationsHub NotificationsHub-label"
                 title={"Ilmoitukset " + count}>
 
@@ -66,8 +66,8 @@ var NotificationItem = React.createClass({
 
     render: function() {
         return (
-            <MenuItem header className="NotificationsHub-item">
-                <Link to={this.props.href}>{this.props.title}</Link>
+            <MenuItem header>
+                <Link className="NotificationsHub-item" to={this.props.href}>{this.props.title}</Link>
             </MenuItem>
         );
     }

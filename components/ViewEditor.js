@@ -2,10 +2,10 @@
 var React = require("react/addons");
 var _ = require("lodash");
 var qs = require("querystring");
-var Badge = require("react-bootstrap/Badge");
-var Input = require("react-bootstrap/Input");
-var Button = require("react-bootstrap/Button");
-var ButtonGroup = require("react-bootstrap/ButtonGroup");
+var Badge = require("react-bootstrap/lib/Badge");
+var Input = require("react-bootstrap/lib/Input");
+var Button = require("react-bootstrap/lib/Button");
+var ButtonGroup = require("react-bootstrap/lib/ButtonGroup");
 var Router = require("react-router");
 
 

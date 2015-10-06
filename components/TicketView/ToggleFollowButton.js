@@ -1,7 +1,7 @@
 "use strict";
 
 var React = require("react/addons");
-var Button = require("react-bootstrap/Button");
+var Button = require("react-bootstrap/lib/Button");
 
 var Ticket = require("../../models/client/Ticket");
 var User = require("../../models/client/User");

@@ -105,7 +105,7 @@ describe("ticket handlers", function() {
 
     it("can close the ticket", function() {
         return browser
-        .elementByCss(".ToggleStatusButton").click()
+        .elementByCss("button.ToggleStatusButton").click()
         .elementByCss(".ToggleStatusButton-closed a").click()
         .waitForElementsByCss(".Discuss .ToggleStatusButton", asserters.textInclude("Ratkaistu"), 1000*5)
         ;

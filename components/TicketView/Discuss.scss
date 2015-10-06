@@ -48,9 +48,6 @@
         margin-bottom: 1em;
     }
 
-    .ticket-actions-row .btn {
-        margin-right: 10px;
-    }
 
 
     @include only-on(phones-and-smaller) {

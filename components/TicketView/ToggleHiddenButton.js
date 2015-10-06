@@ -1,9 +1,9 @@
 "use strict";
 var React = require("react/addons");
-var classSet = React.addons.classSet;
+var classNames = require("classnames");
 
-var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
-var Tooltip = require("react-bootstrap/Tooltip");
+var OverlayTrigger = require("react-bootstrap/lib/OverlayTrigger");
+var Tooltip = require("react-bootstrap/lib/Tooltip");
 
 var Fa = require("../Fa");
 
@@ -28,14 +28,14 @@ var ToggleHiddenButton = React.createClass({
 
     render() {
 
-        var hiddenToggleClasses = classSet({
+        var hiddenToggleClasses = classNames({
             "ToggleHiddenButton": true,
             active: !!this.props.value
         });
 
         return (
             <OverlayTrigger placement="left"
-                overlay={<Tooltip>Tee kommentista piilotettu kommentti jonka vain toiset ylläpitäjät näkevät</Tooltip>}>
+                overlay={<Tooltip id="make-hidden">Tee kommentista piilotettu kommentti jonka vain toiset ylläpitäjät näkevät</Tooltip>}>
                 <button className={hiddenToggleClasses} onClick={this.onChange}>
                     <Fa icon="eye-slash" />
                 </button>

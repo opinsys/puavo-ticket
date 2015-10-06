@@ -1,8 +1,8 @@
 "use strict";
 var React = require("react/addons");
 
-var DropdownButton = require("react-bootstrap/DropdownButton");
-var MenuItem = require("react-bootstrap/MenuItem");
+var DropdownButton = require("react-bootstrap/lib/DropdownButton");
+var MenuItem = require("react-bootstrap/lib/MenuItem");
 
 var app = require("../../index");
 var Actions = require("../../Actions");
@@ -27,7 +27,9 @@ var ToggleStatusButton = React.createClass({
         onChange: React.PropTypes.func
     },
 
-    handleChangeStatus: function(status) {
+    handleChangeStatus: function(e, status) {
+        e.preventDefault();
+
         this.setState({ saving: true });
         var op = this.props.ticket.addTag("status:" + status);
         Actions.ajax.write(op);
@@ -74,7 +76,8 @@ var ToggleStatusButton = React.createClass({
 
         return (
             <DropdownButton disabled={this.state.saving}
-                className={"ToggleStatusButton " + status}
+                id="ToggleStatusButton"
+                className={"ToggleStatusButton tsb-" + status}
                 title={title}
                 onSelect={this.handleChangeStatus} >
 

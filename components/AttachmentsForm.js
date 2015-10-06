@@ -2,7 +2,7 @@
 
 var _ = require("lodash");
 var React = require("react/addons");
-var classSet = React.addons.classSet;
+var classNames = require("classnames");
 var filesize = require("filesize");
 
 var FileItem = require("./FileItem");
@@ -115,7 +115,7 @@ var AttachmentsForm = React.createClass({
                 <EditableList>
                     {files.map(function(f) {
                         var isTooLarge = !self.isUnderSizeLimit(f);
-                        var classes = classSet({
+                        var classes = classNames({
                             "too-large": isTooLarge
                         });
 

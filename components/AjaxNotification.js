@@ -1,6 +1,6 @@
 "use strict";
 var React = require("react/addons");
-var classSet = React.addons.classSet;
+var classNames = require("classnames");
 
 var Reflux = require("reflux");
 var InlineSVG = require('react-inlinesvg');
@@ -44,7 +44,7 @@ var AjaxNotification = React.createClass({
         }
 
         return (
-            <div className={classSet(classes)} title={tooltip}>
+            <div className={classNames(classes)} title={tooltip}>
                 <InlineSVG src="/images/cloud.svg" />
             </div>
         );

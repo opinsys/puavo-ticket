@@ -1,14 +1,14 @@
 "use strict";
 
 var React = require("react/addons");
-var classSet = React.addons.classSet;
+var classNames = require("classnames");
 var $ = require("jquery");
 var _ = require("lodash");
 
-var Button = require("react-bootstrap/Button");
-var OverlayTrigger = require("react-bootstrap/OverlayTrigger");
-var Tooltip = require("react-bootstrap/Tooltip");
-var Label = require("react-bootstrap/Label");
+var Button = require("react-bootstrap/lib/Button");
+var OverlayTrigger = require("react-bootstrap/lib/OverlayTrigger");
+var Tooltip = require("react-bootstrap/lib/Tooltip");
+var Label = require("react-bootstrap/lib/Label");
 
 var User = require("../../models/client/User");
 var ElasticTextarea = require("../ElasticTextarea");
@@ -203,7 +203,7 @@ var CommentForm = React.createClass({
             warning = <span className="warning">lähettämätön kommentti</span>;
         }
 
-        var className = classSet({
+        var className = classNames({
             CommentForm: true,
             "hidden-comment": this.state.hidden,
             selected: this.state.focus
@@ -215,7 +215,7 @@ var CommentForm = React.createClass({
             toolbar = <span>
                 <ToggleHiddenButton value={this.state.hidden} onChange={this.toggleHidden} />
 
-                <OverlayTrigger placement="left" overlay={<Tooltip>{tip.desc}</Tooltip>}>
+                <OverlayTrigger placement="left" overlay={<Tooltip id="make-hidden">{tip.desc}</Tooltip>}>
                     <Label bsStyle={tip.bsStyle} className="linemode-tooltip">{tip.title}</Label>
                 </OverlayTrigger>
             </span>;

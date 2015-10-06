@@ -61,9 +61,9 @@ describe("NotificationsHub", function() {
 
     it("can navigate to the ticket via the notification", function() {
         return browser
-        .elementByCss(".NotificationsHub-label").click()
+        .elementByCss("button.NotificationsHub-label").click()
         .delay(1000)
-        .elementByCss(".NotificationsHub-item a").click()
+        .elementByCss(".NotificationsHub-item").click()
         .waitForElementByCss(".Discuss-title").text()
         .then(function(val) {
             assert.equal("#1 Capture Joker", val);

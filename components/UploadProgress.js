@@ -1,6 +1,6 @@
 "use strict";
 var React = require("react/addons");
-var ProgressBar = require("react-bootstrap/ProgressBar");
+var ProgressBar = require("react-bootstrap/lib/ProgressBar");
 
 /**
  * UploadProgress
