@@ -241,9 +241,6 @@ var CommentForm = React.createClass({
                     onBlur={function() {
                         self.setState({ focus: false });
                     }}
-                    onResize={function(e) {
-                        if (e.active) self.scrollToCommentButton();
-                    }}
                 />
 
                 <div className="ticket-update-buttons">
