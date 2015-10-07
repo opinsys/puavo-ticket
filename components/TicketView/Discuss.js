@@ -355,17 +355,18 @@ var Discuss = React.createClass({
 
         return (
             <div className="row Discuss">
-
                 <div className="ticket-view col-md-8">
 
                     <Loading visible={fetching} />
 
                     <div className="row ticket-actions-row">
                         <div className="col-md-12">
-                            {user.acl.canChangeStatus(ticket) &&
-                                <ToggleStatusButton ticket={ticket} onChange={Actions.refresh} />}
+                            {user.acl.canChangeStatus(ticket) && <span>
+                                <ToggleStatusButton ticket={ticket} onChange={Actions.refresh} />
+                                {" "}
+                            </span>}
 
-                                <RouteHandler params={self.props.params} query={self.props.query} />
+                            <RouteHandler params={self.props.params} query={self.props.query} />
 
                             {user.acl.canFollow(ticket) &&
                                 <ToggleFollowButton ticket={ticket} user={user} />}
