@@ -389,11 +389,6 @@ if (require.main === module) {
         winston.info("process listening");
     });
 
-    if (!PRODUCTION && !process.env.START_TEST_SERVER) {
-        require("./devmode")(sio);
-    }
-
-
     if (debugMem.name === "enabled") {
         var filesize = require("filesize");
         var last = process.memoryUsage().rss;

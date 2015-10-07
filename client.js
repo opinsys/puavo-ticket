@@ -1,7 +1,10 @@
 "use strict";
 
+require("./styles/index.scss");
+
 require("babel/polyfill");
 require("./utils/loginCheck");
+
 var Promise = require("bluebird");
 var $ = require("jquery");
 var Backbone = require("backbone");
@@ -15,37 +18,6 @@ app.currentUser = new User(window.USER);
 
 io.on("connect", function(s) {
     console.log("Socket.IO connected");
-});
-
-io.on("jschangebegin", function() {
-    window.document.title = "!COMPILING!";
-    window.document.body.innerHTML = "<h1>Compiling Javascript...</h1>";
-    unmountReact();
-});
-
-io.on("jschange", function() {
-    window.document.title = "!RELOADING!";
-    window.document.body.innerHTML += "<h1>Ok. Reloading...</h1>";
-    window.location.reload();
-});
-
-io.on("jserror", function(err) {
-    window.document.title = "!FAILED!";
-    window.document.body.innerHTML += "<h1>Failed</h1>";
-    window.document.body.innerHTML += "<pre>" + JSON.stringify(err, null, "  ") + "</pre>";
-    unmountReact();
-});
-
-io.on("csschange", function() {
-    // Refresh stylesheets when css has been changed
-    var links = document.getElementsByTagName("link");
-    var queryString = "?reload=" + new Date().getTime();
-    for (var i = 0; i < links.length;i++) {
-        var link = links[i];
-        if (link.rel === "stylesheet") {
-            link.href = link.href.replace(/\?.*|$/, queryString);
-        }
-    }
 });
 
 // Load Finnish locale for Moment

@@ -134,13 +134,17 @@
         </style>
         <link href="/font-awesome/css/font-awesome.min.css?cache=<%= cacheKey %>" rel="stylesheet">
         <link href="/bootstrap/dist/css/bootstrap.min.css?cache=<%= cacheKey %>" rel="stylesheet">
-        <link href="<%= cssBundle %>?cache=<%= cacheKey %>" rel="stylesheet">
     </head>
     <body>
         <div class="initial-spinner">
         <%- spinner %>
         </div>
         <div id="app">
+        <% if (process.env.NODE_ENV !== "production") { %>
+        <pre>
+        Devmode. Remember to start `make js-server`
+        </pre>
+        <% } %>
         </div>
 
         <pre class="meta" >
@@ -152,7 +156,15 @@
         <script charset="utf-8">
         window.CSRF_TOKEN = "<%- csrfToken %>";
         window.USER = <%- JSON.stringify(user, null, "    ") %>;
+        var scriptURL = "";
+        <% if (process.env.NODE_ENV !== "production") { %>
+        scriptURL = "http://" + (location.host || 'localhost').split(':')[0] + ":3851";
+        <% } %>
+
+        scriptURL += "<%= jsBundle %>?cache=<%= cacheKey %>";
+
+        document.write('<script src="' + scriptURL + '"></' + 'script>');
         </script>
-        <script src="<%= jsBundle %>?cache=<%= cacheKey %>" charset="utf-8"></script>
+        <!-- <script src="http://puavo&#45;standalone.opinsys.net:3851<%= jsBundle %>?cache=<%= cacheKey %>" charset="utf&#45;8"></script> -->
     </body>
 </html>

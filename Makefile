@@ -6,7 +6,7 @@ prefix ?= /usr/local
 JSHINT=jsxhint
 KARMA=node_modules/karma/bin/karma
 
-all: npm doc install-git-hooks js css-min protip
+all: npm doc install-git-hooks js protip
 	@echo
 	@echo All OK!
 	@echo
@@ -80,16 +80,10 @@ jshint: $(js_files)
 	$(JSHINT) $?
 
 js:
-	webpack -p
+	NODE_ENV=production webpack -p
 
-css:
-	node-sass --source-map styles.css.map --source-comments map styles/index.scss --output styles.css
-	mv styles.css public/build/
-	mv styles.css.map public/build/
-	cleancss public/build/styles.css > public/build/styles.min.css
-
-css-min: css
-	cleancss public/build/styles.css > public/build/styles.min.css
+js-server:
+	webpack-dev-server --port 3851 --host 0.0.0.0 --inline --progress
 
 server:
 	node server.js
