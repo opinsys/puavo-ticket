@@ -7,6 +7,7 @@ var ButtonGroup = require("react-bootstrap/lib/ButtonGroup");
 var url = require("url");
 var Input = require("react-bootstrap/lib/Input");
 var Reflux = require("reflux");
+var Modal = require("react-bootstrap/lib/Modal");
 
 var app = require("../index");
 var ViewStore = require("../stores/ViewStore");
@@ -33,6 +34,10 @@ var ViewTabContent = React.createClass({
         Actions.views.fetchContent(this.props.view);
     },
 
+    getInitialState() {
+        return {shareWindowVisible: false};
+    },
+
     componentWillReceiveProps: function(nextProps) {
         if (nextProps.view.get("id") !== this.props.view.get("id")) {
             Actions.views.fetchContent(nextProps.view);
@@ -45,34 +50,46 @@ var ViewTabContent = React.createClass({
     },
 
     displayShareWindow: function() {
-        var self = this;
+        this.setState({shareWindowVisible: true});
+    },
+
+    hideShareWindow() {
+        this.setState({shareWindowVisible: false});
+    },
+
+    renderModal() {
         var view = this.props.view;
         var u = url.parse(window.location.toString());
-        var editUrl = u.protocol + "//" + u.host + self.makePath("view-editor", {name: view.get("name")}, view.get("query"));
+        var editUrl = u.protocol + "//" + u.host + this.makePath("view-editor", {name: view.get("name")}, view.get("query"));
 
-        app.renderInModal("Jaa", function(close) {
-            return (
-                <div className="modal-body">
-                    <p>
-                        Näkymän asetukset ovat tallennettu tähän osoitteeseen.
-                        Lähetä se jakaaksesi näkymän.
-                    </p>
-                    <Input type="textarea"
-                        onChange={function(){/*supress react warning*/}}
-                        value={editUrl} />
-                    <Button onClick={close} >ok</Button>
-                </div>
-            );
-        });
+        return (
+            <Modal show={this.state.shareWindowVisible} onHide={this.hideShareWindow}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Jaa näkymä</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div>
+                        <p>
+                            Näkymän asetukset ovat tallennettu tähän osoitteeseen.
+                            Lähetä se jakaaksesi näkymän.
+                        </p>
+                        <Input type="textarea"
+                            onChange={function(){/*supress react warning*/}}
+                            value={editUrl} />
+                        <Button onClick={this.hideShareWindow} >ok</Button>
+                    </div>
+                </Modal.Body>
+            </Modal>
+        );
     },
 
     render: function() {
-        var self = this;
         var tickets = this.state.content;
         var view = this.props.view;
 
         return (
             <div className="ViewTabContent">
+                {this.renderModal()}
 
                 <TicketList tickets={tickets} />
                 <div className="clearfix"></div>
@@ -83,14 +100,14 @@ var ViewTabContent = React.createClass({
                             query={view.get("query")}
                             params={{name: view.get("name")}} >Muokkaa</Link>
 
-                        <Button onClick={function(e) {
+                        <Button onClick={e => {
                             e.preventDefault();
-                            self.displayShareWindow();
+                            this.displayShareWindow();
                         }}>Jaa</Button>
 
-                        <Button bsStyle="danger" onClick={function(e) {
+                        <Button bsStyle="danger" onClick={e => {
                             e.preventDefault();
-                            if (window.confirm("Oikeasti?")) self.destroyView();
+                            if (window.confirm("Oikeasti?")) this.destroyView();
                         }}>Poista</Button>
 
                 </ButtonGroup>}
