@@ -3,6 +3,7 @@
 var React = require("react/addons");
 var OverlayTrigger = require("react-bootstrap/lib/OverlayTrigger");
 var Tooltip = require("react-bootstrap/lib/Tooltip");
+var Modal = require("react-bootstrap/lib/Modal");
 
 var app = require("../../index");
 var User = require("../../models/client/User");
@@ -30,6 +31,10 @@ var ProfileOverlay = React.createClass({
         return { display: "inline" };
     },
 
+    getInitialState() {
+        return {showModal: false};
+    },
+
     renderTooltip: function() {
         var user = this.props.user;
         return (
@@ -52,13 +57,7 @@ var ProfileOverlay = React.createClass({
     },
 
     handleOnClick: function() {
-        var user = this.props.user;
-        app.renderInModal({
-            title: "Käyttäjätiedot",
-            allowClose: true
-        }, function() {
-            return <ProfileDetails user={user} />;
-        });
+        this.setState({showModal: true});
     },
 
     render: function() {
@@ -82,9 +81,20 @@ var ProfileOverlay = React.createClass({
         }
 
         return (
-            <OverlayTrigger
-                placement={this.props.tipPlacement}
-                overlay={<Tooltip id="ProfileOverlay">{this.renderTooltip()}</Tooltip>}>{children}</OverlayTrigger>
+            <div>
+                <Modal show={this.state.showModal} onHide={_ => this.setState({showModal: false})}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Käyttäjätiedot</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <ProfileDetails user={user} />
+                    </Modal.Body>
+                </Modal>
+
+                <OverlayTrigger
+                    placement={this.props.tipPlacement}
+                    overlay={<Tooltip id="ProfileOverlay">{this.renderTooltip()}</Tooltip>}>{children}</OverlayTrigger>
+            </div>
         );
     }
 });
