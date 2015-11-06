@@ -5,12 +5,12 @@ var Link = require("react-router").Link;
 var RouteHandler = require("react-router").RouteHandler;
 var ButtonGroup = require("react-bootstrap/lib/ButtonGroup");
 var Reflux = require("reflux");
+var Modal = require("react-bootstrap/lib/Modal");
 
 var app = require("../index");
 var Actions = require("../Actions");
 var Ticket = require("../models/client/Ticket");
 var Comment = require("../models/client/Comment");
-var Modal = require("./Modal");
 var BackboneMixin = require("./BackboneMixin");
 var ErrorMessage = require("./ErrorMessage");
 var UserInformation = require("./UserInformation");
@@ -59,6 +59,7 @@ var Main = React.createClass({
                 })
             });
         }
+        app.handleUnhandledError = this.handleUnhandledError;
     },
 
 
@@ -72,8 +73,6 @@ var Main = React.createClass({
         Ticket.on("markedAsRead", this.throttledFetchUnreadTickets);
         window.addEventListener("focus", this.throttledFetchUnreadTickets);
         app.io.on("followerUpdate", this.handleFollowerUpdate);
-        app.renderInModal = this.renderInModal;
-        app.closeModal = this.closeModal;
     },
 
     componentWillUnmount: function() {
@@ -81,67 +80,27 @@ var Main = React.createClass({
         app.io.off("followerUpdate", this.handleFollowerUpdate);
     },
 
-    displayLogoutError: function() {
-        this.renderInModal({
-            title: "Uups! Jotain odottamatonta tapahtui :(",
-            permanent: true
-        }, function() {
-            // TODO proper padding
-            return (
-                <p>
-                    Istuntosi on vanhentunut tai olet kirjautunut ulos toisessa
-                    ikkunassa. <a href="">Kirjaudu uudestaan</a> jatkaaksesi.
-                </p>
-            );
-        });
+    renderFatalError: function() {
+        var error = this.state.error;
+        return (
+            <Modal show>
+                <Modal.Header closeButton>
+                    <Modal.Title style={{color: "red"}}>Odottomaton virhe!</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <ErrorMessage error={error.error} customMessage={error.message} />
+                </Modal.Body>
+            </Modal>
+        );
     },
 
     handleUnhandledError: function(error) {
-        if (error && error.data && error.data.code === "NOAUTH") {
-            return this.displayLogoutError();
-        }
-
         console.error(error.message + ":", error.message);
         if (error.stack) console.error(error.stack);
-        this.renderInModal({
-            title: "Uups! Jotain odottamatonta tapahtui :(",
-            permanent: true
-        }, function(){
-            return <ErrorMessage error={error.error} customMessage={error.message} />;
-        });
+        this.setState({error});
     },
 
 
-    /**
-     * @method renderInModal
-     * @param {Object} options
-     * @param {Object} options.title
-     * @param {Function} renderModalContent
-     *      Function returning a React component
-     * @param {Function} renderModalContent.close
-     *      Call this function to close the modal window
-     */
-    renderInModal: function(options, render, cb) {
-        var self = this;
-        if (typeof options === "string") {
-            options = {title: options};
-        }
-
-        this.setState({ renderModalContent: function() {
-            return (
-                <Modal
-                    onRequestHide={self.closeModal}
-                    permanent={!!options.permanent}
-                    title={options.title} >
-                    {render(self.closeModal)}
-                </Modal>
-            );
-        }}, cb);
-    },
-
-    closeModal: function(e) {
-        this.setState({ renderModalContent: null });
-    },
 
     /**
      * Remove the NotificationBox from the the view
@@ -184,7 +143,9 @@ var Main = React.createClass({
                     <h1 className="site-header">
                         <a href="/">Opinsys tukipalvelu</a>
                     </h1>
-                    {this.state.renderModalContent && this.state.renderModalContent()}
+
+                    {this.state.error && this.renderFatalError()}
+
                     <div className="topmenu row">
 
                         <div className="user-info pull-right">
@@ -209,7 +170,6 @@ var Main = React.createClass({
                             <RouteHandler
                                 params={self.props.params}
                                 query={self.props.query}
-                                renderInModal={this.renderInModal}
                                 userTickets={this.state.userTickets}
                                 user={this.props.user} />
                         </div>

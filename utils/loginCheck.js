@@ -1,5 +1,6 @@
 "use strict";
 var fetch = require("./fetch");
+var app = require("../index");
 
 function reload() {
     window.location.reload();
@@ -13,5 +14,6 @@ window.addEventListener("focus", function(event) {
             return reload();
         }
         console.error("Unknown error from loginCheck", error);
+        app.handleUnhandledError(error);
     });
 });
