@@ -5,7 +5,6 @@ var OverlayTrigger = require("react-bootstrap/lib/OverlayTrigger");
 var Tooltip = require("react-bootstrap/lib/Tooltip");
 var Modal = require("react-bootstrap/lib/Modal");
 
-var app = require("../../index");
 var User = require("../../models/client/User");
 var ProfileDetails = require("./ProfileDetails");
 
