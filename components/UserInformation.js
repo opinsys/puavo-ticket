@@ -1,6 +1,6 @@
 "use strict";
 
-var React = require("react/addons");
+var React = require("react");
 
 var DropdownButton = require("react-bootstrap/lib/DropdownButton");
 var MenuItem = require("react-bootstrap/lib/MenuItem");

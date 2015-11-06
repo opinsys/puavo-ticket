@@ -1,5 +1,5 @@
 "use strict";
-var React = require("react/addons");
+var React = require("react");
 
 var User = require("../../models/client/User");
 var Profile = require("../Profile");

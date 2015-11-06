@@ -1,5 +1,5 @@
 "use strict";
-var React = require("react/addons");
+var React = require("react");
 var url = require("url");
 var {Link} = require("react-router");
 var Glyphicon = require("react-bootstrap/lib/Glyphicon");

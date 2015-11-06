@@ -1,7 +1,7 @@
 "use strict";
 
 var _ = require("lodash");
-var React = require("react/addons");
+var React = require("react");
 var classNames = require("classnames");
 var Promise = require("bluebird");
 
@@ -182,7 +182,7 @@ var SelectUsers = React.createClass({
     },
 
     componentDidMount: function() {
-        this.refs.search.getDOMNode().focus();
+        this.refs.search.focus();
     },
 
     cancelCurrentSearch: function() {
@@ -200,7 +200,7 @@ var SelectUsers = React.createClass({
 
     handleSelectUser: function(user) {
         this.cancelCurrentSearch();
-        this.refs.search.getDOMNode().focus();
+        this.refs.search.focus();
         this.props.onSelect(user);
         this.setState({
             searchString: "",

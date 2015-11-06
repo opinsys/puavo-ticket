@@ -1,6 +1,7 @@
 "use strict";
 
-var React = require("react/addons");
+var React = require("react");
+var ReactDOM = require("react-dom");
 var classNames = require("classnames");
 var $ = require("jquery");
 var _ = require("lodash");
@@ -155,7 +156,7 @@ var CommentForm = React.createClass({
             clear: this.clear,
             scrollToCommentButton: this.scrollToCommentButton
         });
-        this.refs.textarea.getDOMNode().focus();
+        ReactDOM.findDOMNode(this.refs.textarea).focus();
     },
 
     _handleCommentChange: function(e) {
@@ -184,14 +185,14 @@ var CommentForm = React.createClass({
             return;
         }
 
-        var $el = $(this.refs.commentButton.getDOMNode());
+        var $el = $(ReactDOM.findDOMNode(this.refs.commentButton));
         if (isScrolledIntoView($el, 10)) return;
         scrollElBottom($el, 50);
     },
 
     toggleHidden: function() {
         this.setState({ hidden: !this.state.hidden });
-        this.refs.textarea.getDOMNode().focus();
+        ReactDOM.findDOMNode(this.refs.textarea).focus();
     },
 
     render: function() {

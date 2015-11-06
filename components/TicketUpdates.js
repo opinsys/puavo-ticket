@@ -1,12 +1,12 @@
 "use strict";
 
-var React = require("react/addons");
+var React = require("react");
 var MetadataButtons = require("./MetadataButtons");
 
 var TicketUpdates = React.createClass({
 
     handleAddTextUpdate: function(e) {
-        var el = this.refs.updateText.getDOMNode();
+        var el = this.refs.updateText;
         this.props.ticketModel.addUpdate({
             type: "text",
             value: el.value

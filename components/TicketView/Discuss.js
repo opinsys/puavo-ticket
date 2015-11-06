@@ -1,5 +1,5 @@
 "use strict";
-var React = require("react/addons");
+var React = require("react");
 var classNames = require("classnames");
 var _ = require("lodash");
 var Navigation = require("react-router").Navigation;

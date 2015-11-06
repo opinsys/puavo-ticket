@@ -1,6 +1,6 @@
 "use strict";
 
-var React = require("react/addons");
+var React = require("react");
 
 /**
  * Dumb tabs component. Mainly for sharing CSS styles between different tab

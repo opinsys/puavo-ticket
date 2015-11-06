@@ -1,6 +1,6 @@
 "use strict";
 
-var React = require("react/addons");
+var React = require("react");
 var {State} = require("react-router");
 
 var User = require("../models/client/User");

@@ -1,5 +1,5 @@
 "use strict";
-var React = require("react/addons");
+var React = require("react");
 var Router = require("react-router");
 var Reflux = require("reflux");
 var Link = Router.Link;

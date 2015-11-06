@@ -26,7 +26,8 @@ require("moment/locale/fi");
 // Make it possible to enable debug logs
 window.debug = require("debug");
 
-var React = require("react/addons");
+var React = require("react");
+var ReactDOM = require("react-dom");
 // React devtools requires a global access to the React object to work
 // http://fb.me/react-devtools
 window.React = React;
@@ -63,7 +64,7 @@ app.router = router;
 require("./ajax");
 
 router.run(function(Handler, state) {
-    React.render(<Handler params={state.params} query={state.query} />, appContainer);
+    ReactDOM.render(<Handler params={state.params} query={state.query} />, appContainer);
 });
 
 function unmountReact() {

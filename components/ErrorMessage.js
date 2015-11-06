@@ -1,6 +1,6 @@
 "use strict";
 
-var React = require("react/addons");
+var React = require("react");
 
 function mailtoEscape(value) {
     // borrowed from https://github.com/oncletom/mailto/blob/02aa8796cf6e2a0d66276693bab57e892dd0f7c1/lib/mailto.js#L120

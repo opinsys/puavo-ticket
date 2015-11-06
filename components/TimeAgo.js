@@ -1,6 +1,6 @@
 "use strict";
 
-var React = require("react/addons");
+var React = require("react");
 var moment = require("moment");
 var OverlayTrigger = require("react-bootstrap/lib/OverlayTrigger");
 var Tooltip = require("react-bootstrap/lib/Tooltip");

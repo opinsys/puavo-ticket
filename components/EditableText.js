@@ -1,6 +1,6 @@
 "use strict";
 
-var React = require("react/addons");
+var React = require("react");
 var Glyphicon = require("react-bootstrap/lib/Glyphicon");
 var OverlayTrigger = require("react-bootstrap/lib/OverlayTrigger");
 var Tooltip = require("react-bootstrap/lib/Tooltip");

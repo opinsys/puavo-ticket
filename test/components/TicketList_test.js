@@ -4,7 +4,7 @@ var sinon = window.sinon;
 var $ = require("jquery");
 var Route = require("../../utils/react-route");
 
-var React = require("react/addons");
+var React = require("react");
 var assert = require("assert");
 
 var TicketList = require("../../components/TicketList");
@@ -44,8 +44,7 @@ describe("TicketList", function() {
         var list = React.addons.TestUtils.renderIntoDocument(<TicketList />);
 
         return list.state.ticketCollection.fetching.then(function() {
-            console.log($);
-            var el = list.refs.list.getDOMNode();
+            var el = list.refs.list;
             var itemList = $(el).find("li").map(function(i, item) {
                 return $(item).text();
             });

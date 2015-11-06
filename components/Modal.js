@@ -1,6 +1,6 @@
 "use strict";
 
-var React = require("react/addons");
+var React = require("react");
 var classNames = require("classnames");
 
 var BModal = require("react-bootstrap/lib/Modal");

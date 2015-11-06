@@ -1,5 +1,6 @@
 "use strict";
-var React = require("react/addons");
+var React = require("react");
+var ReactDOM = require("react-dom");
 
 var WINDOW_FOCUS = true;
 
@@ -92,7 +93,7 @@ var OnViewportMixin = {
      */
     isInViewport: function() {
         if (!this.isMounted()) return false;
-        var rect = this.getDOMNode().getBoundingClientRect();
+        var rect = ReactDOM.findDOMNode(this).getBoundingClientRect();
         var html = document.documentElement;
         return (
             rect.top >= 0 &&

@@ -3,7 +3,7 @@
 var sinon = window.sinon;
 var Route = require("../../utils/react-route");
 
-var React = require("react/addons");
+var React = require("react");
 var assert = require("assert");
 
 var TicketForm = require("../../components/TicketForm");
@@ -27,8 +27,8 @@ describe("TicketForm", function() {
         Route.navigate("/");
         var form = React.addons.TestUtils.renderIntoDocument(<TicketForm />);
         assert(!form.refs.comment, "new ticket form must not have comments input");
-        assert.equal(form.refs.title.getDOMNode().value, "");
-        assert.equal(form.refs.description.getDOMNode().value, "");
+        assert.equal(form.refs.title.value, "");
+        assert.equal(form.refs.description.value, "");
     });
 
     it("loads a ticket on /tickets/1", function() {
@@ -53,8 +53,8 @@ describe("TicketForm", function() {
 
         return form.state.ticketModel.fetching
         .then(function() {
-            assert.equal(form.refs.title.getDOMNode().value, "foo");
-            assert.equal(form.refs.description.getDOMNode().value, "bar");
+            assert.equal(form.refs.title.value, "foo");
+            assert.equal(form.refs.description.value, "bar");
             assert(form.refs.comment, "has comments input");
         });
 

@@ -29,7 +29,7 @@ var Server = require("http").Server;
 var prettyMs = require("pretty-ms");
 var exec = require("child_process").exec;
 var crypto = require("crypto");
-var React = require("react/addons");
+var React = require("react");
 
 var debug = require("debug")("app:live");
 var debugMem = require("debug")("memory");

@@ -1,6 +1,6 @@
 "use strict";
 
-var React = require("react/addons");
+var React = require("react");
 var OverlayTrigger = require("react-bootstrap/lib/OverlayTrigger");
 var Tooltip = require("react-bootstrap/lib/Tooltip");
 var Modal = require("react-bootstrap/lib/Modal");
@@ -75,12 +75,11 @@ var ProfileOverlay = React.createClass({
         if (this.props.clickForDetails) {
             var className = children.props.className || "";
             className += " ProfileOverlay-details-click";
-            children.props.className = className;
-            children.props.onClick = this.handleOnClick;
+            children = React.cloneElement(children, {className, onClick: this.handleOnClick});
         }
 
         return (
-            <div>
+            <span>
                 <Modal show={this.state.showModal} onHide={_ => this.setState({showModal: false})}>
                     <Modal.Header closeButton>
                         <Modal.Title>Käyttäjätiedot</Modal.Title>
@@ -93,7 +92,7 @@ var ProfileOverlay = React.createClass({
                 <OverlayTrigger
                     placement={this.props.tipPlacement}
                     overlay={<Tooltip id="ProfileOverlay">{this.renderTooltip()}</Tooltip>}>{children}</OverlayTrigger>
-            </div>
+            </span>
         );
     }
 });

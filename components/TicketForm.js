@@ -1,5 +1,5 @@
 "use strict";
-var React = require("react/addons");
+var React = require("react");
 var Button = require("react-bootstrap/lib/Button");
 var Navigation = require("react-router").Navigation;
 
@@ -34,11 +34,12 @@ var TicketForm = React.createClass({
         };
     },
 
-    handleChange: function() {
-        this.setState({
-            title: this.refs.title.getDOMNode().value,
-            description: this.refs.description.getDOMNode().value
-        });
+    setTitle(e) {
+        this.setState({title: e.target.value});
+    },
+
+    setDescription(e) {
+        this.setState({description: e.target.value});
     },
 
     /**
@@ -97,8 +98,8 @@ var TicketForm = React.createClass({
                         disabled={this.state.saving}
                         autoFocus
                         type="text"
-                        onChange={this.handleChange}
-                        onRestore={this.handleChange}
+                        onChange={this.setTitle}
+                        onRestore={this.setTitle}
                         value={this.state.title}
                         placeholder="Tukipyyntöä kuvaava otsikko" />
                     <BackupInput
@@ -111,8 +112,8 @@ var TicketForm = React.createClass({
                         ref="description"
                         placeholder="Tarkka kuvaus tuen tarpeesta."
                         value={this.state.description}
-                        onChange={this.handleChange}
-                        onRestore={this.handleChange}
+                        onChange={this.setDescription}
+                        onRestore={this.setDescription}
                     />
 
                     <div className="button-wrap">

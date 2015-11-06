@@ -1,6 +1,6 @@
 "use strict";
 
-var React = require("react/addons");
+var React = require("react");
 var Tabs = require("./Tabs");
 var Link = require("react-router").Link;
 var State = require("react-router").State;

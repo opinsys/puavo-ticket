@@ -1,7 +1,7 @@
 "use strict";
 
 var _ = require("lodash");
-var React = require("react/addons");
+var React = require("react");
 var classNames = require("classnames");
 var filesize = require("filesize");
 
@@ -72,7 +72,7 @@ var AttachmentsForm = React.createClass({
             files: _.uniq(this.state.files.concat(_.toArray(e.target.files)), toUniqueId)
         });
         // http://stackoverflow.com/a/13351234/153718
-        this.refs.form.getDOMNode().reset();
+        this.refs.form.reset();
     },
 
     /**
@@ -95,7 +95,7 @@ var AttachmentsForm = React.createClass({
      */
     openFileDialog: function(e) {
         if (e) e.preventDefault();
-        this.refs.file.getDOMNode().click();
+        this.refs.file.click();
     },
 
     render: function() {

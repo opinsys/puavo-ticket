@@ -1,6 +1,6 @@
 "use strict";
 
-var React = require("react/addons");
+var React = require("react");
 var _ = require("lodash");
 
 /**
@@ -39,7 +39,7 @@ var ElasticTextarea = React.createClass({
             return;
         }
 
-        var el = this.refs.textarea.getDOMNode();
+        var el = this.refs.textarea;
 
         // Resizing the textarea causes some scrolling glitches when the
         // textarea is very large. Workaround it by forcing the scroll position

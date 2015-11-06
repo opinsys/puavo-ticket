@@ -1,5 +1,5 @@
 "use strict";
-var React = require("react/addons");
+var React = require("react");
 var _ = require("lodash");
 var qs = require("querystring");
 var Badge = require("react-bootstrap/lib/Badge");
