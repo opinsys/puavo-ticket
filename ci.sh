@@ -18,3 +18,4 @@ sudo make install-build-dep
 make deb
 
 cp ../puavo-ticket_* $HOME/results
+
