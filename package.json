@@ -83,7 +83,7 @@
   },
   "devDependencies": {
     "clean-css": "~2.2.16",
-    "glob-watcher": "epeli/glob-watcher",
+    "glob-watcher": "opinsys/glob-watcher",
     "jshint": "^2.6.0",
     "jsonlint": "~1.6.0",
     "jsxhint": "^0.11.1",
