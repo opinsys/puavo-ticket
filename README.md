@@ -408,7 +408,7 @@ from the puavo-ticket server.
 
 For testing
 
-  - [Mocha](http://visionmedia.github.io/mocha/)
+  - [Mocha](http://mochajs.org/)
   - [supertest](https://github.com/visionmedia/supertest) for api testing
   - [React Test Utilities](http://facebook.github.io/react/docs/test-utils.html)
 
@@ -418,7 +418,7 @@ For testing
 [Backbone]: http://backbonejs.org/
 [Express]: http://expressjs.com/
 [apiDoc]: http://apidocjs.com/
-[Mocha]: http://visionmedia.github.io/mocha/
+[Mocha]: http://mochajs.org/
 [Browserify]: http://browserify.org/
 [JSHint]: http://www.jshint.com/
 [YUIDoc]: http://yui.github.io/yuidoc/syntax/
